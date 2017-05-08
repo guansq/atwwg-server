@@ -26,6 +26,9 @@ class Index
     public $apiurl_supper = "http://u9.ruitukeji.cc:8081/U9POPR/UFIDA.U9.ZHC.ISupplier.Supplier.svc?wsdl";//供应商
     public $apiurl_item = "http://u9.ruitukeji.cc:8081/U9POPR/UFIDA.U9.ZHC.IItem.Item.svc?wsdl";//料品
 
+    public function index(){
+        echo 'test';
+    }
     //请购单 列表
     public function approve()
     {

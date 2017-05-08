@@ -1,7 +1,7 @@
 {extend name="extra@admin/main" /}
 
 {block name="style"}
-<link rel="stylesheet" href="__PUBLIC__/static/theme/default/css/login.css">
+<link rel="stylesheet" href="/static/theme/default/css/login.css">
 {/block}
 
 {block name="body"}
@@ -12,7 +12,7 @@
     <div class="clouds clouds-fast"></div>
 
     <div class="header">
-        <span>欢迎登录后台管理界面平台</span>
+        <span>欢迎登录安特威物控管理系统</span>
         <ul>
             <li><a target="_blank" href="{:url('@')}">回首页</a></li>
             <li>
@@ -26,7 +26,6 @@
                     <b style="color:#fff">推荐谷歌浏览器</b>
                 </a>
             </li>
-            <li><a target="_blank" href="http://www.cuci.cc">楚才官网</a></li>
         </ul>
     </div>
 
@@ -59,14 +58,14 @@
                            title="请输入4位及以上的字符"
                            type="password"
                            name="password"
-                           value="admin"
+                           value="111111"
                            autocomplete="off"
                            class="login-input password"
                            placeholder="请输入密码"/>
                 </li>
                 <li class="text-center">
                     <button type="submit" class="layui-btn layui-disabled" data-form-loaded="立 即 登 入">正 在 载 入</button>
-                    <a style="position:absolute;display:block;right:0" href="javascript:void(0)">忘记密码？</a>
+                    <!--<a style="position:absolute;display:block;right:0" href="javascript:void(0)">忘记密码？</a>-->
                 </li>
             </ul>
         </form>

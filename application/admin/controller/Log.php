@@ -51,7 +51,7 @@ class Log extends BasicAdmin {
     /**
      * 列表数据处理
      * @param $data
-     */
+
     protected function _index_data_filter(&$data) {
         $ip = new \Ip2Region();
         foreach ($data as &$vo) {
@@ -59,7 +59,7 @@ class Log extends BasicAdmin {
             $vo['isp'] = isset($result['region']) ? $result['region'] : '';
             $vo['isp'] = str_replace(['|0|0|0|0', '|'], ['', ' '], $vo['isp']);
         }
-    }
+    }*/
 
     /**
      * 日志删除操作

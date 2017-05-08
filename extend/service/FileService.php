@@ -15,9 +15,9 @@
 namespace service;
 
 use Exception;
-use Qiniu\Auth;
-use Qiniu\Storage\BucketManager;
-use Qiniu\Storage\UploadManager;
+//use Qiniu\Auth;
+//use Qiniu\Storage\BucketManager;
+//use Qiniu\Storage\UploadManager;
 use think\Config;
 use think\Log;
 
@@ -58,6 +58,7 @@ class FileService {
         if (self::hasFile($filename, $storage) === false) {
             return false;
         }
+        //echo 'test123';die;
         switch (empty($storage) ? sysconf('storage_type') : $storage) {
             case 'local':
                 return self::getBaseUriLocal() . $filename;
@@ -139,7 +140,8 @@ class FileService {
     static public function hasFile($filename, $storage = null) {
         switch (empty($storage) ? sysconf('storage_type') : $storage) {
             case 'local':
-                return file_exists(ROOT_PATH . 'static/upload/' . $filename);
+                //echo ROOT_PATH;die;
+                return file_exists(ROOT_PATH . 'public/static/upload/' . $filename);
             case 'qiniu':
                 $auth = new Auth(sysconf('storage_qiniu_access_key'), sysconf('storage_qiniu_secret_key'));
                 $bucketMgr = new BucketManager($auth);

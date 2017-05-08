@@ -8,7 +8,8 @@
 /.svn
 /runtime/
 /composer.lock
-/public/upload
+/public/upload/
+/public/static/upload/
 /nbproject
 /static/runtime/
 

@@ -65,7 +65,9 @@ class Plugs extends BasicAdmin {
             $md5s = str_split($this->request->post('md5'), 16);
             if (($info = $this->request->file('file')->move('static' . DS . 'upload' . DS . $md5s[0], $md5s[1], true))) {
                 $filename = join('/', $md5s) . '.' . $info->getExtension();
+                //echo '12';
                 $site_url = FileService::getFileUrl($filename, 'local');
+                //echo $site_url;die;
                 if ($site_url) {
                     return json(['data' => ['site_url' => $site_url], 'code' => 'SUCCESS']);
                 }

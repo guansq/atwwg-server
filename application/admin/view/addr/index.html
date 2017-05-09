@@ -1,0 +1,78 @@
+{extend name='extra@admin/content' /}
+
+{block name="button"}
+<div class="nowrap pull-right" style="margin-top:10px">
+    {if auth("$classuri/add")}
+    <button data-modal='{:url("$classuri/add")}' data-title='添加顶级地区' data-action=''
+            class='layui-btn layui-btn-small'><i class='fa fa-plus'></i> 添加顶级地区
+    </button>
+    {/if}
+    {if auth("$classuri/del")}
+    <button data-update data-field='delete' data-action='{:url("$classuri/del")}'
+            class='layui-btn layui-btn-small layui-btn-danger'><i class='fa fa-remove'></i> 删除地区
+    </button>
+    {/if}
+
+    <a href='javascript:window.history.go(-1);' class='layui-btn  layui-btn-small layui-btn-normal'>返回上一页</a>
+</div>
+{/block}
+
+{block name="content"}
+
+<!-- 表单搜索 开始 -->
+<form class="animated form-search" action='{:url("$classuri/index")}' onsubmit="return false" method="get">
+
+    <div class="row">
+        <div class="col-xs-3">
+            <div class="form-group">
+                <input type="text" name="name" value="{$Think.get.name|default=''}" placeholder="地区名称"
+                       class="input-sm form-control">
+            </div>
+        </div>
+
+
+        <div class="col-xs-1">
+            <div class="form-group">
+                <button type="submit" class="btn btn-sm btn-white"><i class="fa fa-search"></i> 搜索</button>
+            </div>
+        </div>
+    </div>
+</form>
+<!-- 表单搜索 结束 -->
+
+<form onsubmit="return false;" data-auto="" method="POST">
+    <input type="hidden" value="resort" name="action"/>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th class='list-table-check-td'>
+                <input data-none-auto="" data-check-target='.list-check-box' type='checkbox'/>
+            </th>
+            <th class='text-center'>地区ID</th>
+            <th class='text-center'>地区名称</th>
+            <th class='text-center'>操作内容</th>
+        </tr>
+        </thead>
+        <tbody>
+        {foreach $list as $key=>$vo}
+        <tr>
+            <td class='list-table-check-td'>
+                <input class="list-check-box" value='{$vo.id}' type='checkbox'/>
+            </td>
+            <td class='text-center'>{$vo.id}</td>
+            <td class='text-center'>{$vo.name}</td>
+            <td class='text-center'>
+                {if auth("$classuri/index")}
+                <a class="layui-btn" data-open='{:url("$classuri/index")}?pid={$vo.id}' href='javascript:;'>管理</a>
+                {/if}
+
+                <button class="layui-btn">添加</button>
+                <button class="layui-btn">删除</button>
+            </td>
+        </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    {if isset($page)}<p>{$page}</p>{/if}
+</form>
+{/block}

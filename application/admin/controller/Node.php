@@ -45,7 +45,7 @@ class Node extends BasicAdmin {
         ];
         $this->assign('alert', $alert);
         $this->assign('title', '系统节点管理');
-        dump(ToolsService::arr2table(NodeModel::get()));
+        //dump(ToolsService::arr2table(NodeModel::get()));
         $this->assign('nodes', ToolsService::arr2table(NodeModel::get(), 'node', 'pnode'));
         return view();
     }

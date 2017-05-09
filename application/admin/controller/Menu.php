@@ -61,8 +61,11 @@ class Menu extends BasicAdmin {
      */
     public function add() {
         if ($this->request->isPost()) {
-            $this->error('系统开发中，不要动菜单哦！');
-
+            $data = $this->request->post();
+            DataService::save($this->table, $data);
+            $this->success('菜单保存成功！', '');
+            //dump($data);die;
+            //$this->error('系统开发中，不要动菜单哦！');
         }
         return $this->_form($this->table, 'form');
     }

@@ -18,7 +18,7 @@ use service\DataService;
 use think\Controller;
 use think\db\Query;
 use think\Db;
-
+use think\Request;
 /**
  * 后台权限基础控制器
  *
@@ -52,6 +52,7 @@ class BasicAdmin extends Controller {
      */
     protected $checkAuth = true;
 
+
     /**
      * 后台权限控制初始化方法
      */
@@ -65,6 +66,7 @@ class BasicAdmin extends Controller {
         if ($this->checkLogin && $this->checkAuth && !auth("{$module}/{$controller}/{$action}")) {
             $this->error('抱歉，您没有访问该模块的权限！');
         }
+        $request = Request::instance();
         // 初始化赋值常用变量
         $this->assign('classuri', strtolower("{$module}/{$controller}"));
     }

@@ -63,11 +63,14 @@
             <td class='text-center'>{$vo.name}</td>
             <td class='text-center'>
                 {if auth("$classuri/index")}
-                <a class="layui-btn" data-open='{:url("$classuri/index")}?pid={$vo.id}' href='javascript:;'>管理</a>
+                <a class="layui-btn" data-open='{:url("$classuri/index")}?pid={$vo.id}'>管理</a>
                 {/if}
-
-                <button class="layui-btn">添加</button>
-                <button class="layui-btn">删除</button>
+                {if auth("$classuri/add")}
+                <a class="layui-btn" data-modal='{:url("$classuri/add")}?id={$vo.id}'>添加</a>
+                {/if}
+                {if auth("$classuri/del")}
+                <a class="layui-btn" data-update="{$vo.id}" data-field="delete" data-action='{:url("$classuri/del")}'>删除</a>
+                {/if}
             </td>
         </tr>
         {/foreach}

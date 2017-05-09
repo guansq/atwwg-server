@@ -8,18 +8,17 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-
-return [
+$DATABASE_CONFIG =  [
     // 数据库类型
     'type'            => 'mysql',
     // 服务器地址
-    'hostname'        => '',
+    'hostname'        => getenv('DATABASE_HOSTNAME'),
     // 数据库名
-    'database'        => '',
+    'database'        => getenv('DATABASE_DATABASE'),
     // 用户名
-    'username'        => '',
+    'username'        => getenv('DATABASE_USERNAME'),
     // 密码
-    'password'        => '',
+    'password'        => getenv('DATABASE_PASSWORD'),
     // 端口
     'hostport'        => '3306',
     // 连接dsn
@@ -55,3 +54,4 @@ return [
     // Query类
     'query'           => '\\think\\db\\Query',
 ];
+return $DATABASE_CONFIG;

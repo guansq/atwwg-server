@@ -1,16 +1,9 @@
 !.gitignore
-/application/database.php
-/application/config.php
-.idea/
 /Vagrantfile
 /.vagrant/
 /.idea
 /.svn
-/runtime/
 /composer.lock
-/public/upload/
-/public/static/upload/
 /nbproject
 /static/runtime/
-
 /.env

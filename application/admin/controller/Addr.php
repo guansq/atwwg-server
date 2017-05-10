@@ -49,6 +49,7 @@ class Addr extends BasicAdmin{
         }
         //halt($field);
         if (DataService::update($this->table)) {
+            LogService::write('地区管理', '删除地区');
             $this->success("地址删除成功！", '');
         }
         $this->error("地址删除失败，请稍候再试！");
@@ -68,6 +69,7 @@ class Addr extends BasicAdmin{
             //halt($data);
             $result = DataService::save($this->table, $data);//Db::name($this->table)->allowField(true)->insert($data);
             if (false !== $result) {
+                LogService::write('地区管理', '添加地区');
                 $result !== false ? $this->success('恭喜，保存成功哦！', '') : $this->error('保存失败，请稍候再试！');
             }
             return $result;

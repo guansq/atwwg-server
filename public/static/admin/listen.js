@@ -101,7 +101,7 @@ define(['jquery', 'admin.plugs'], function () {
         var method = $(this).attr('data-file') === 'one' ? 'one' : 'mtl';
         var title = $(this).attr('data-title') || '文件上传';
         var uptype = $(this).attr('data-uptype') || '';
-        var url = window.ROOT_URL + '/index.php/admin/plugs/upfile/mode/' + method + '.html?uptype=' + uptype + '&type=' + type + '&field=' + field;
+        var url = window.ROOT_URL + '/index.php/plugs/upfile/mode/' + method + '.html?uptype=' + uptype + '&type=' + type + '&field=' + field;
         $.form.iframe(url, title || '文件管理');
     });
 
@@ -113,7 +113,7 @@ define(['jquery', 'admin.plugs'], function () {
     /*! 注册 data-icon 事件行为 */
     this.$body.on('click', '[data-icon]', function () {
         var field = $(this).attr('data-icon') || $(this).attr('data-field') || 'icon';
-        var url = window.ROOT_URL + '/index.php/admin/plugs/icon.html?field=' + field;
+        var url = window.ROOT_URL + '/index.php/plugs/icon.html?field=' + field;
         $.form.iframe(url, '图标选择');
     });
 

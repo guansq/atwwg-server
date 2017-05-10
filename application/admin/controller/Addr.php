@@ -94,7 +94,4 @@ class Addr extends BasicAdmin{
         }
     }
 
-    public function test(){
-        echo '11111111111';
-    }
 }

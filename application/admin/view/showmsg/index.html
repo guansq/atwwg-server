@@ -1,14 +1,114 @@
 {extend name='extra@admin/content' /}
 
+{block name="style"}
+<link rel="stylesheet" href="//cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
+{/block}
 {block name="button"}
-
+{/block}
+{block name="content"}
+<main class="main">
+  <div class="rd_box">
+    <p class="rd_title">
+      <span>您目前有</span><span style="color:#FF0000;">15</span><span>个待办事项，</span>
+      <span style="color:#0000FF;">1</span><span>条询价待审批，</span>
+      <span style="color:#0000FF;">2</span><span>个订单逾期警告 ，</span>
+      <span style="color:#0000FF;">3</span><span>个供应商资质将要过期，</span>
+      <span style="color:#0033FF;">9</span><span>条消息</span>
+    </p>
+    <section class="rd_chart">
+      <ul>
+        <li style="background: #63c2eb;">
+          <span>询价待审批</span>
+          <i>20</i>
+        </li>
+        <li style="background: #28b878;">
+          <span>订单逾期警告</span>
+          <i>20</i>
+        </li>
+        <li style="background: #842c98;">
+          <span>供应商资质过期</span>
+          <i>20</i>
+        </li>
+        <li style="background: #ffb847;">
+          <span>流拍询价数量</span>
+          <i>20</i>
+        </li>
+      </ul>
+    </section>
+    <div class="rd_table">
+      <form class="search form-inline">
+        <span>运营情况一览表（默认一周）</span>
+        <input type="text" class="form-control">
+        到
+        <input type="text" class="form-control">
+        <button type="button" class="btn btn-primary">查询</button>
+      </form>
+      <table id="example" class="cell-border" width="100%" cellspacing="0" style="margin-bottom: 20px;">
+        <thead>
+        <tr>
+          <th>日期</th>
+          <th>未处理请购单数量</th>
+          <th>已发送询价单数量</th>
+          <th>已发送订单数量</th>
+          <th>处理请购单数量失败数量</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>2017/3/19</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>2017/3/19</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>2017/3/19</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>2017/3/19</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>2017/3/19</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>2017/3/19</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr><tr>
+          <td>2017/3/19</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
 {/block}
 
-{block name="content"}
-
-<!-- 表单搜索 开始 -->
-
-<!-- 表单搜索 结束 -->
-
-
+{block name="script"}
+<script src="/static/admin/showmsg/index.js"/>
 {/block}

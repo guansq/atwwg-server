@@ -44,6 +44,7 @@ require.config({
         'zeroclipboard': ['../plugs/ueditor/third-party/zeroclipboard/ZeroClipboard.min'],
         'jquery.cookies': ['../plugs/jquery/jquery.cookie'],
         'jquery.masonry': ['../plugs/jquery/masonry.min'],
+        'jquery.dataTables': ['http://cdn.datatables.net/1.10.15/js/jquery.dataTables.min'],
     },
     shim: {
         'layui': {deps: ['jquery']},

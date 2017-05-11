@@ -1,14 +1,249 @@
 {extend name='extra@admin/content' /}
 
+{block name="style"}
+<link href="https://cdn.bootcss.com/iCheck/1.0.2/skins/minimal/minimal.css" rel="stylesheet">
+{/block}
+
 {block name="button"}
 
 {/block}
 
 {block name="content"}
 
-<!-- 表单搜索 开始 -->
+<main class="main">
+  <div class="mt_box">
+    <div class="inquiry_box">
+      <form id="requireOrder" class="form-inline">
+        <div class="pb_15">
+          <input type="text" class="form-control" placeholder="请购单号">
+          <input type="text" class="form-control" placeholder="请购日期">
+          <input type="text" class="form-control" placeholder="料号">
+          <input type="text" class="form-control" placeholder="物料描述">
+          <input type="text" class="form-control" placeholder="项目号">
+          <input type="text" class="form-control" placeholder="物料采购属性">
+        </div>
+        <div>
+          <select class="form-control">
+            <option>状态</option>
+            <option>询价中</option>
+            <option>已下单</option>
+          </select>
+          <select class="form-control">
+            <option>是否指定供应商</option>
+            <option>是</option>
+            <option>否</option>
+          </select>
+          <select class="form-control">
+            <option>审批状态</option>
+            <option>已审批</option>
+            <option>待审批</option>
+          </select>
+          <button type="button" class="btn btn-info">查询</button>
+        </div>
+      </form>
+    </div>
+    <div class="mt_table">
+      <div>
+        <table class="table table-bordered">
+          <thead>
+          <tr>
+            <th>请购单号</th>
+            <th>请购日期</th>
+            <th>料号</th>
+            <th>物料描述</th>
+            <th>项目号</th>
+            <th>交易单位</th>
+            <th>交易单位数量</th>
+            <th>计价单位</th>
+            <th>计价单位数量</th>
+            <th>交期</th>
+            <th>状态</th>
+            <th>物料采购属性</th>
+            <th>是否指定供应商</th>
+            <th>询价方式</th>
+            <th>主管审批</th>
+          </tr>
+          </thead>
+          <tr>
+            <td></td>
+            <td></td>
+            <td>1503010168</td>
+            <td>限位开关-WESTLOCK-2649ABYN00022AAA-AR2</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>412.24500</td>
+            <td>2017-02-28</td>
+            <td>询价中</td>
+            <td>单一资源型</td>
+            <td>
+              <input style="margin-right: 15px;" type="checkbox" class="ver_top" value="">指定
+            </td>
+            <td><a class="select_sell" href="#">选择供应商</a></td>
+            <td>通过</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td>1503010168</td>
+            <td>限位开关-WESTLOCK-2649ABYN00022AAA-AR2</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>412.24500</td>
+            <td>2017-02-28</td>
+            <td>询价中</td>
+            <td>单一资源型</td>
+            <td>
+              <input style="margin-right: 15px;" type="checkbox" class="ver_top" value="">指定
+            </td>
+            <td>自动询价</td>
+            <td>通过</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td>1503010168</td>
+            <td>限位开关-WESTLOCK-2649ABYN00022AAA-AR2</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>412.24500</td>
+            <td>2017-02-28</td>
+            <td>询价中</td>
+            <td>充分竞争型</td>
+            <td>
+              <input style="margin-right: 15px;" type="checkbox" class="ver_top" value="">指定
+            </td>
+            <td>自动询价</td>
+            <td>通过</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td>1503010168</td>
+            <td>限位开关-WESTLOCK-2649ABYN00022AAA-AR2</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>412.24500</td>
+            <td>2017-02-28</td>
+            <td>询价中</td>
+            <td>单一资源型</td>
+            <td>
+              <input style="margin-right: 15px;" type="checkbox" class="ver_top" value="">指定
+            </td>
+            <td>自动询价</td>
+            <td>通过</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td>1503010168</td>
+            <td>限位开关-WESTLOCK-2649ABYN00022AAA-AR2</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>412.24500</td>
+            <td>2017-02-28</td>
+            <td>询价中</td>
+            <td>单一资源型</td>
+            <td>
+              <input style="margin-right: 15px;" type="checkbox" class="ver_top" value="">指定
+            </td>
+            <td>自动询价</td>
+            <td>通过</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+<div class="barcode_box" style="">
+  <div class="bomb_table">
+    <p><i  class="close_box"></i></p>
+    <h5>根据物流可选属性筛选出可选供应商</h5>
+    <table class="table table-bordered">
+      <thead>
+      <tr>
+        <th>选择</th>
+        <th>供应商编码</th>
+        <th>供应商名称</th>
+        <th>状态</th>
+      </tr>
+      </thead>
+      <tr>
+        <td>
+          <input type="checkbox">
+        </td>
+        <td></td>
+        <td></td>
+        <td>禁用</td>
+      </tr>
+      <tr>
+        <td><input type="checkbox"></td>
+        <td></td>
+        <td></td>
+        <td>正常</td>
+      </tr>
+      <tr>
+        <td>
+          <input type="checkbox">
+        </td>
+        <td></td>
+        <td></td>
+        <td>禁用</td>
+      </tr>
+      <tr>
+        <td><input type="checkbox"></td>
+        <td></td>
+        <td></td>
+        <td>正常</td>
+      </tr>
+      <tr>
+        <td>
+          <input type="checkbox">
+        </td>
+        <td></td>
+        <td></td>
+        <td>禁用</td>
+      </tr>
+      <tr>
+        <td><input type="checkbox"></td>
+        <td></td>
+        <td></td>
+        <td>正常</td>
+      </tr>
+      <tr>
+        <td>
+          <input type="checkbox">
+        </td>
+        <td></td>
+        <td></td>
+        <td>禁用</td>
+      </tr>
+      <tr>
+        <td><input type="checkbox"></td>
+        <td></td>
+        <td></td>
+        <td>正常</td>
+      </tr>
+    </table>
+    <section>
+      <span class="col_red mr_15 fs_13">选择指定供应商后提交申请，等待采购主管审核通过，审核信息可以在消息中心看到</span>
+      <button type="button" class="btn btn-primary fr">重置</button>
+      <button type="button" class="btn btn-primary fr mr_15">提交</button>
+    </section>
+  </div>
+</div>
 
-<!-- 表单搜索 结束 -->
+{/block}
 
-
+{block name="script"}
+<script src="/static/admin/requireorder/index.js"/>
 {/block}

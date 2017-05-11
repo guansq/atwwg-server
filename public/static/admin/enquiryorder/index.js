@@ -1,11 +1,9 @@
 /**
- *
- * Created by Administrator on 2017/5/10.
+ * 询价单
+ * Created by Administrator on 2017/5/11.
  */
-require(["jquery.dataTables","laydate"],function(){
-  $('#example').DataTable();
 
-  //时间选择
+require(["laydate"],function(){
   $(".date_time").focus(function(){
     /*
      laydate插件提供显示日期控件的方法
@@ -32,6 +30,3 @@ require(["jquery.dataTables","laydate"],function(){
     });
   });
 });
-
-
-

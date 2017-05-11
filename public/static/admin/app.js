@@ -45,6 +45,8 @@ require.config({
         'jquery.cookies': ['../plugs/jquery/jquery.cookie'],
         'jquery.masonry': ['../plugs/jquery/masonry.min'],
         'jquery.dataTables': ['http://cdn.datatables.net/1.10.15/js/jquery.dataTables.min'],
+        'cityselect':['../plugs/cityselect/cityselect'],
+        'icheck': ['http://cdn.bootcss.com/iCheck/1.0.2/icheck.min'],
     },
     shim: {
         'layui': {deps: ['jquery']},

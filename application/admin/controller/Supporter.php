@@ -31,4 +31,8 @@ class Supporter extends BasicAdmin{
 
     }
 
+    public function edit(){
+        return view();
+    }
+
 }

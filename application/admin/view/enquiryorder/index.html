@@ -1,14 +1,186 @@
 {extend name='extra@admin/content' /}
 
+
 {block name="button"}
 
 {/block}
 
 {block name="content"}
 
-<!-- 表单搜索 开始 -->
+<main class="main">
+  <div class="mt_box">
+    <div class="inquiry_box">
+      <form class="form-inline">
+        <select class="form-control">
+          <option>全部</option>
+          <option>询价中</option>
+          <option>已下单</option>
+          <option>流标</option>
+        </select>
+        <span>下单日期</span>
+        <input type="text" class="date_time form-control w20b">
+        到
+        <input type="text" class="date_time form-control w20b">
+        <button type="button" class="btn btn-info">查询</button>
+      </form>
+    </div>
+    <div class="mt_table">
+      <div>
+        <table class="table table-bordered">
+          <thead>
+          <tr>
+            <th>询价单号</th>
+            <th>请购单号</th>
+            <th>料号</th>
+            <th>物料描述</th>
+            <th>项目号</th>
+            <th>交易单位</th>
+            <th>计价单位</th>
+            <th>数量</th>
+            <th>交期</th>
+            <th>询价日期</th>
+            <th>报价截止日期</th>
+            <th>报价状态</th>
+            <th>状态</th>
+            <th>详情</th>
+          </tr>
+          </thead>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>2017-02-28</td>
+            <td>2017-02-28</td>
+            <td>2017-02-28</td>
+            <td>1/3</td>
+            <td><a href="#">询价中</a></td>
+            <td><a class="" href="#">详情</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>2017-02-28</td>
+            <td>2017-02-28</td>
+            <td>2017-02-28</td>
+            <td>1/3</td>
+            <td><a href="#">询价中</a></td>
+            <td><a href="#">详情</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>2017-02-28</td>
+            <td>2017-02-28</td>
+            <td>2017-02-28</td>
+            <td>1/3</td>
+            <td><a href="#">询价中</a></td>
+            <td><a href="#">详情</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>2017-02-28</td>
+            <td>2017-02-28</td>
+            <td>2017-02-28</td>
+            <td>1/3</td>
+            <td><a href="#">询价中</a></td>
+            <td><a href="#">详情</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>2017-02-28</td>
+            <td>2017-02-28</td>
+            <td>2017-02-28</td>
+            <td>1/3</td>
+            <td><a href="#">询价中</a></td>
+            <td><a href="#">详情</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>2017-02-28</td>
+            <td>2017-02-28</td>
+            <td>2017-02-28</td>
+            <td>1/3</td>
+            <td><a href="#">询价中</a></td>
+            <td><a href="#">详情</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>2017-02-28</td>
+            <td>2017-02-28</td>
+            <td>2017-02-28</td>
+            <td>1/3</td>
+            <td><a href="#">询价中</a></td>
+            <td><a href="#">详情</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>2017-02-28</td>
+            <td>2017-02-28</td>
+            <td>2017-02-28</td>
+            <td>1/3</td>
+            <td><a href="#">询价中</a></td>
+            <td><a href="#">详情</a></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
 
-<!-- 表单搜索 结束 -->
+{/block}
 
-
+{block name="script"}
+<script src="/static/admin/enquiryorder/index.js"></script>
 {/block}

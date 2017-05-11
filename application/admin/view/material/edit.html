@@ -1,0 +1,171 @@
+{extend name='extra@admin/content' /}
+
+{block name="button"}
+
+{/block}
+
+{block name="content"}
+
+<main class="main">
+  <div class="mt_box">
+    <div class="edit-head">
+      <a><i class="glyphicon glyphicon-home"></i>物供平台</a>
+      <a><i class="glyphicon glyphicon-menu-right"></i>物料管理</a>
+      <a><i class="glyphicon glyphicon-menu-right"></i>编辑物料详情</a>
+    </div>
+    <div id="item" class="edit_form">
+      <form class="form-horizontal">
+        <fieldset disabled>
+          <div class="form-group">
+            <label class="col-sm-1 control-label">料号</label>
+            <div class="col-sm-5">
+              <input type="text" class="form-control" placeholder="主料">
+            </div>
+          </div>
+        </fieldset>
+        <div class="form-group">
+          <label class="col-sm-1 control-label">主分类</label>
+          <div class="col-sm-5">
+            <select class="form-control">
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-1 control-label">品牌</label>
+          <div class="col-sm-5">
+            <select class="form-control">
+              <option>SMC</option>
+              <option>BETTIS</option>
+              <option>ASCO</option>
+              <option>NORGREN</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-1 control-label">品名</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" placeholder="物料描述">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-1 control-label">物料属性可选</label>
+          <div class="col-sm-5">
+            <select class="form-control">
+              <option>技术型</option>
+              <option>单一资源型</option>
+              <option>充分竞争型</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-1 control-label">是否需要停顿</label>
+          <div class="col-sm-5">
+            <input type="radio" name="inlineRadioOptions" id="yes" class="ml_12" value="yes"> 是
+            <input type="radio" name="inlineRadioOptions" id="no" class="ml_50" value="no"> 否
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-1 control-label">货期让步比例</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control w90" placeholder="货期让步比例">
+            <span class="scale_span">%</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-1 control-label">价格采购权重</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" placeholder="价格采购权重">
+            <span class="scale_span">%</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-1 control-label">技术采购权重</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" placeholder="技术采购权重">
+            <span class="scale_span">%</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-1 control-label">商务权重</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" placeholder="商务权重">
+            <span class="scale_span">%</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-1 control-label">标准货期</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" placeholder="标准货期">
+            <span class="scale_span">D</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-1 control-label"></label>
+          <div class="col-sm-5">
+            <button type="submit" class="btn btn-info col-sm-2">提交</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="edit_table">
+      <h4>关联供应商</h4>
+      <table class="table table-bordered table-hover">
+        <thead>
+        <tr>
+          <th>供应商编码</th>
+          <th>供应商名称</th>
+          <th>技术分</th>
+          <th>供应风险</th>
+          <th>信用等级</th>
+          <th>状态</th>
+        </tr>
+        </thead>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>生效</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>生效</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>生效</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>生效</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>生效</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</main>
+
+{/block}

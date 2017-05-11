@@ -1,0 +1,430 @@
+{extend name='extra@admin/content' /}
+
+{block name="style"}
+<link rel="stylesheet" href="/static/admin/cityLayout.css">
+{/block}
+
+{block name="button"}
+
+{/block}
+
+{block name="content"}
+
+<main class="main">
+  <div class="mt_box">
+    <div class="edit-head">
+      <a><i class="glyphicon glyphicon-home"></i>物供平台</a>
+      <a><i class="glyphicon glyphicon-menu-right"></i>供应商管理</a>
+      <a><i class="glyphicon glyphicon-menu-right"></i>供应商详情</a>
+    </div>
+    <div class="edit_form">
+      <form class="form-horizontal" style="overflow: hidden;padding-top: 15px;">
+        <div class="form-group col-sm-6">
+          <label class="col-sm-2 control-label">供应商编码</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" placeholder="供应商编码" disabled>
+          </div>
+        </div>
+        <div class="form-group col-sm-6">
+          <label class="col-sm-2 control-label">供应商名称</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" placeholder="供应商名称" disabled>
+          </div>
+        </div>
+        <div class="form-group col-sm-6">
+          <label class="col-sm-2 control-label">登录帐号</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" placeholder="登录帐号" disabled>
+          </div>
+        </div>
+        <div class="form-group col-sm-6">
+          <label class="col-sm-2 control-label">帐号注册日期</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" placeholder="帐号注册日期" disabled>
+          </div>
+        </div>
+        <div class="form-group col-sm-6">
+          <label class="col-sm-2 control-label">供应商分类</label>
+          <div class="col-sm-10">
+            <select class="form-control">
+              <option>原材料</option>
+              <option>气控件</option>
+              <option>电磁阀</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group col-sm-6">
+          <label class="col-sm-2 control-label">税号</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" placeholder="税号">
+          </div>
+        </div>
+        <div class="form-group col-sm-6">
+          <label class="col-sm-2 control-label">成立日期</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" placeholder="成立日期">
+          </div>
+        </div>
+        <div class="form-group col-sm-6">
+          <label class="col-sm-2 control-label">联系人</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" placeholder="联系人">
+          </div>
+        </div>
+        <div class="form-group col-sm-6">
+          <label class="col-sm-2 control-label">电话</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" placeholder="电话">
+          </div>
+        </div>
+        <div class="form-group col-sm-6">
+          <label class="col-sm-2 control-label">传真</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" placeholder="传真">
+          </div>
+        </div>
+        <div class="form-group col-sm-6">
+          <label class="col-sm-2 control-label">邮箱</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" placeholder="邮箱">
+          </div>
+        </div>
+        <div class="form-group col-sm-6">
+          <label class="col-sm-2 control-label">地址</label>
+          <div class="col-sm-10">
+            <input id="citySelect"  type="text"  class="city_input form-control w30b" readonly="readonly">
+            <input type="text" class="form-control w60b" placeholder="详细地址">
+          </div>
+        </div>
+        <div class="form-group col-sm-6">
+          <label class="col-sm-2 control-label">付款方式</label>
+          <div class="col-sm-10">
+            <select class="form-control">
+              <option>货到验收合格，票到120天付款</option>
+              <option>货到验收合格，票到90天付款</option>
+              <option>货到验收合格，票到30天付款</option>
+              <option>预付30%，发货前付70%</option>
+              <option>预付30%，货到现场30%，安装调试合格30%，一年质保金10%</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group col-sm-6">
+          <label class="col-sm-2 control-label">地址</label>
+          <div class="col-sm-10">
+            <select class="form-control">
+              <option>独家采购</option>
+              <option>充分竞争</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group col-sm-6">
+          <label class="col-sm-2 control-label">状态</label>
+          <div class="col-sm-10">
+            <select class="form-control">
+              <option>正常</option>
+              <option>禁用</option>
+              <option>待审核</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group col-sm-6">
+          <label class="col-sm-2 control-label">建立日期</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" placeholder="供应商建立日期">
+          </div>
+        </div>
+        <div class="form-group col-sm-6">
+          <label class="col-sm-2 control-label">技术分</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" value="88" disabled>
+          </div>
+        </div>
+        <div class="form-group col-sm-6">
+          <label class="col-sm-2 control-label">责任采购</label>
+          <div class="col-sm-10">
+            <select class="form-control">
+              <option>8080-wyh</option>
+              <option>8081-why</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group col-sm-6">
+          <label class="col-sm-2 control-label">信用等级</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" value="优秀" disabled>
+          </div>
+        </div>
+        <div class="form-group col-sm-6">
+          <label class="col-sm-2 control-label">供应风险</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" value="极大" disabled>
+          </div>
+        </div>
+        <div class="form-group col-sm-6">
+          <label class="col-sm-2 control-label">质检方式</label>
+          <div class="col-sm-10">
+            <select class="form-control">
+              <option>抽检</option>
+              <option>全检</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group col-sm-6">
+          <label class="col-sm-2 control-label">抽检比例</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" placeholder="抽检比例">
+            <span class="scale_span">%</span>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="edit-table">
+      <table class="table table-bordered">
+        <tr>
+          <td class="col-sm-1 tex_r">供应商交货及时率</td>
+          <td class="col-sm-3">98</td>
+          <td class="col-sm-1 tex_r">供应商质量合格率</td>
+          <td class="col-sm-3">60</td>
+        </tr>
+        <tr>
+          <td class="col-sm-1 tex_r">供应商资质评分</td>
+          <td class="col-sm-3">50</td>
+          <td class="col-sm-1 tex_r"></td>
+          <td class="col-sm-3"></td>
+        </tr>
+      </table>
+    </div>
+    <div class="aptitude">
+      <h4>企业资质</h4>
+      <table class="table table-bordered">
+        <tr class="tr_tit">
+          <td>经营信息</td>
+          <td>操作</td>
+        </tr>
+        <tr class="tr_con">
+          <td>
+            <div>
+              <section class="col-sm-4">
+                <label class="w20b">公司名称</label>
+                <input type="text" class="form-control w75b" placeholder="公司名称">
+              </section>
+              <section class="col-sm-8">
+                <label class="w10b">证件有效期</label>
+                <input type="text" class="date_time form-control w30b">
+                到
+                <input type="text" class="date_time form-control w30b">
+              </section>
+            </div>
+            <div style="line-height: 25px;">
+              <section class="col-sm-4">
+                <label class="w20b">资质照片</label>
+                <label class="radio-inline mr_15">
+                  <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> 三证合一
+                </label>
+                <label class="radio-inline">
+                  <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> 三证
+                </label>
+              </section>
+            </div>
+            <div class="credentials_box">
+              <ul>
+                <li>
+                  <p>营业执照</p>
+                  <img src="/static/admin/img/entering_pic.png" alt="">
+                </li>
+                <li>
+                  <p>税务登记证</p>
+                  <img src="/static/admin/img/entering_pic.png" alt="">
+                </li>
+                <li>
+                  <p>组织代码证</p>
+                  <img src="/static/admin/img/entering_pic.png" alt="">
+                </li>
+              </ul>
+            </div>
+          </td>
+          <td style="vertical-align: middle;">
+            <section class="btn_box">
+              <button type="button" class="btn btn-success">通过</button>
+              <button type="button" class="btn btn-warning">拒绝</button>
+            </section>
+          </td>
+        </tr>
+        <tr class="tr_tit">
+          <td>ISO90001</td>
+          <td></td>
+        </tr>
+        <tr class="tr_con">
+          <td>
+            <img class="" src="/static/admin/img/entering_pic.png" alt="">
+            <section class="dis_inb ml_20 w75b">
+              <label class="mr_15">证件有效期</label>
+              <input type="text" class="date_time form-control w30b">
+              到
+              <input type="text" class="date_time form-control w30b">
+            </section>
+          </td>
+          <td>
+            <section class="btn_box">
+              <button type="button" class="btn btn-success">通过</button>
+              <button type="button" class="btn btn-warning">拒绝</button>
+            </section>
+          </td>
+        </tr>
+        <tr class="tr_tit">
+          <td>TS认证</td>
+          <td></td>
+        </tr>
+        <tr class="tr_con">
+          <td>
+            <img class="" src="/static/admin/img/entering_pic.png" alt="">
+            <section class="dis_inb ml_20 w75b">
+              <label class="mr_15">证件有效期</label>
+              <input type="text" class="date_time form-control w30b">
+              到
+              <input type="text" class="date_time form-control w30b">
+            </section>
+          </td>
+          <td>
+            <section class="btn_box">
+              <button type="button" class="btn btn-success">通过</button>
+              <button type="button" class="btn btn-warning">拒绝</button>
+            </section>
+          </td>
+        </tr>
+        <tr class="tr_tit">
+          <td>PED</td>
+          <td></td>
+        </tr>
+        <tr class="tr_con">
+          <td>
+            <img class="" src="/static/admin/img/entering_pic.png" alt="">
+            <section class="dis_inb ml_20 w75b">
+              <label class="mr_15">证件有效期</label>
+              <input type="text" class="date_time form-control w30b">
+              到
+              <input type="text" class="date_time form-control w30b">
+            </section>
+          </td>
+          <td>
+            <section class="btn_box">
+              <button type="button" class="btn btn-success">通过</button>
+              <button type="button" class="btn btn-warning">拒绝</button>
+            </section>
+          </td>
+        </tr>
+        <tr class="tr_tit">
+          <td>API</td>
+          <td></td>
+        </tr>
+        <tr class="tr_con">
+          <td>
+            <img class="" src="/static/admin/img/entering_pic.png" alt="">
+            <section class="dis_inb ml_20 w75b">
+              <label class="mr_15">证件有效期</label>
+              <input type="text" class="date_time form-control w30b">
+              到
+              <input type="text" class="date_time form-control w30b">
+            </section>
+          </td>
+          <td>
+            <section class="btn_box">
+              <button type="button" class="btn btn-success">通过</button>
+              <button type="button" class="btn btn-warning">拒绝</button>
+            </section>
+          </td>
+        </tr>
+        <tr class="tr_tit">
+          <td>CE</td>
+          <td></td>
+        </tr>
+        <tr class="tr_con">
+          <td>
+            <img class="" src="/static/admin/img/entering_pic.png" alt="">
+            <section class="dis_inb ml_20 w75b">
+              <label class="mr_15">证件有效期</label>
+              <input type="text" class="date_time form-control w30b">
+              到
+              <input type="text" class="date_time form-control w30b">
+            </section>
+          </td>
+          <td>
+            <section class="btn_box">
+              <button type="button" class="btn btn-success">通过</button>
+              <button type="button" class="btn btn-warning">拒绝</button>
+            </section>
+          </td>
+        </tr>
+        <tr class="tr_tit">
+          <td>SIL</td>
+          <td></td>
+        </tr>
+        <tr class="tr_con">
+          <td>
+            <img class="" src="/static/admin/img/entering_pic.png" alt="">
+            <section class="dis_inb ml_20 w75b">
+              <label class="mr_15">证件有效期</label>
+              <input type="text" class="date_time form-control w30b">
+              到
+              <input type="text" class="date_time form-control w30b">
+            </section>
+          </td>
+          <td>
+            <section class="btn_box">
+              <button type="button" class="btn btn-success">通过</button>
+              <button type="button" class="btn btn-warning">拒绝</button>
+            </section>
+          </td>
+        </tr>
+        <tr class="tr_tit">
+          <td>SIL</td>
+          <td></td>
+        </tr>
+        <tr class="tr_con">
+          <td>
+            <img class="" src="/static/admin/img/entering_pic.png" alt="">
+            <section class="dis_inb ml_20 w75b">
+              <label class="mr_15">证件有效期</label>
+              <input type="text" class="date_time form-control w30b">
+              到
+              <input type="text" class="date_time form-control w30b">
+            </section>
+          </td>
+          <td>
+            <section class="btn_box">
+              <button type="button" class="btn btn-success">通过</button>
+              <button type="button" class="btn btn-warning">拒绝</button>
+            </section>
+          </td>
+        </tr>
+        <tr class="tr_tit">
+          <td>其他</td>
+          <td></td>
+        </tr>
+        <tr class="tr_con">
+          <td>
+            <img class="" src="/static/admin/img/entering_pic.png" alt="">
+            <section class="dis_inb ml_20 w75b">
+              <label class="mr_15">证件有效期</label>
+              <input type="text" class="date_time form-control w30b">
+              到
+              <input type="text" class="date_time form-control w30b">
+            </section>
+          </td>
+          <td>
+            <section class="btn_box">
+              <button type="button" class="btn btn-success">通过</button>
+              <button type="button" class="btn btn-warning">拒绝</button>
+            </section>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</main>
+
+{/block}
+
+{block name="script"}
+<script src="/static/admin/supporter/index.js"/>
+{/block}

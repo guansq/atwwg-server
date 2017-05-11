@@ -1,14 +1,150 @@
 {extend name='extra@admin/content' /}
 
+{block name="style"}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
+<link href="https://cdn.bootcss.com/iCheck/1.0.2/skins/minimal/minimal.css" rel="stylesheet">
+{/block}
+
 {block name="button"}
 
 {/block}
 
 {block name="content"}
 
-<!-- 表单搜索 开始 -->
+<main class="main">
+  <div class="mt_box">
+    <div class="inquiry_box">
+      <form class="form-inline">
+        <input type="text" class="form-control" placeholder="订单编号">
+        <input type="text" class="form-control" placeholder="采购单编号">
+        <input type="text" class="form-control" placeholder="需求部门">
+        <input type="text" class="form-control" placeholder="需求人员">
+        <input type="text" class="form-control" placeholder="交期">
+        <button type="button" class="btn btn-info">查询</button>
+      </form>
+    </div>
+    <div class="order_table">
+      <div class="pb_15">
+        <button type="button" id="remove_btn" class="btn btn-danger">删除</button>
+      </div>
+      <div class="order_box">
+        <table id="example" class="display" cellspacing="0" width="100%">
+          <thead>
+          <tr>
+            <th>
+              <input type="checkbox">
+            </th>
+            <th>订单编号</th>
+            <th>请购单编号</th>
+            <th>请购日期</th>
+            <th>下单日期</th>
+            <th>供应商名称</th>
+            <th>执行情况</th>
+            <th>操作</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td class="plr_18"><input type="checkbox"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a class="detail" href="#">详情</a></td>
+          </tr>
+          <tr>
+            <td class="plr_18"><input type="checkbox"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a class="detail" href="#">详情</a></td>
+          </tr>
+          <tr>
+            <td class="plr_18"><input type="checkbox"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a class="detail" href="#">详情</a></td>
+          </tr>
+          <tr>
+            <td class="plr_18"><input type="checkbox"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a class="detail" href="#">详情</a></td>
+          </tr>
+          <tr>
+            <td class="plr_18"><input type="checkbox"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a class="detail" href="#">详情</a></td>
+          </tr>
+          <tr>
+            <td class="plr_18"><input type="checkbox"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a class="detail" href="#">详情</a></td>
+          </tr>
+          <tr>
+            <td class="plr_18"><input type="checkbox"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a class="detail" href="#">详情</a></td>
+          </tr>
+          <tr>
+            <td class="plr_18"><input type="checkbox"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a class="detail" href="#">详情</a></td>
+          </tr>
+          <tr>
+            <td class="plr_18"><input type="checkbox"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a class="detail" href="#">详情</a></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
 
-<!-- 表单搜索 结束 -->
+{/block}
 
+{block name="script"}
+
+<script src="/static/admin/order/index.js"></script>
 
 {/block}

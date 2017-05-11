@@ -1,3 +1,16 @@
+*{
+  box-sizing: border-box;
+  font-style: normal;
+}
+html,body{
+  min-height: 100%;
+}
+.main{
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  overflow: hidden;
+}
 .rd_box{
   width: 100%;
   height: auto;
@@ -55,7 +68,7 @@
 
 /*----------- 物料管理页面 -------------*/
 .mt_box{
-  padding: 20px 10px 0 10px;
+  padding: 00px 10px 0 10px;
 }
 .mt_box h3{
   margin: 0;
@@ -107,8 +120,9 @@
   display: inline-block;
   width: 25px;
   height: 25px;
-  background: url("../image/u1111.svg") no-repeat;
+  background: url("/static/admin/img/u1111.svg") no-repeat;
   background-size: 100% 100%;
+  cursor: pointer;
 }
 .mpr_25{
   margin-right: 25px;
@@ -126,7 +140,6 @@
 }
 .edit-head i{
   margin-right: 5px;
-  vertical-align: text-top;
 }
 .edit_form{
   padding: 20px 0 20px 0;
@@ -134,6 +147,10 @@
 }
 .edit_form .form-horizontal .form-group{
   margin: 0 0 15px 0;
+}
+#item .form-horizontal .form-group label{
+  font-weight: normal;
+  min-width: 120px;
 }
 .edit_form .form-horizontal .form-group label{
   font-weight: normal;
@@ -160,6 +177,7 @@
 }
 .edit_table h4{
   font-size: 17px;
+  margin: 10px 0;
 }
 .edit_table th,.edit_table td{
   text-align: center;
@@ -280,7 +298,7 @@
   width: 20%;
 }
 .particulars_table,.particulars_tableTwo{
-  padding: 0px 0 20px 0;
+  padding: 0 0 20px 0;
 }
 .tex_r{
   text-align: right;
@@ -294,7 +312,9 @@
 .order_box table tbody .plr_18{
   padding: 8px 18px;
 }
-
+#requireOrder .pb_15 input{
+  margin-bottom: 10px;
+}
 
 
 

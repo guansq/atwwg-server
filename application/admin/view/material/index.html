@@ -1,14 +1,220 @@
 {extend name='extra@admin/content' /}
-
+{block name="style"}
+<link rel="stylesheet" href="//cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
+{/block}
 {block name="button"}
 
 {/block}
 
 {block name="content"}
 
-<!-- 表单搜索 开始 -->
+<main class="main">
+  <div class="mt_box">
+    <div class="inquiry_box">
+      <form class="form-inline">
+        <input type="text" class="form-control" id="classification" placeholder="主分类">
+        <input type="text" class="form-control" id="describe" placeholder="物料描述">
+        <input type="text" class="form-control" id="number" placeholder="料号">
+        <input type="text" class="form-control" id="attribute" placeholder="物料采购属性">
+        <button type="button" class="btn btn-info">查询</button>
+      </form>
+    </div>
+    <div class="mt_table">
+      <div class="pb_15">
+        <button type="button" id="synchronization_btn" class="btn btn-info" style="margin-right: 15px;">立即同步ERP</button>
+        <button type="button" id="remove_btn" class="btn btn-danger">删除物料</button>
+      </div>
+      <div>
+        <table id="example" class="display" cellspacing="0" width="100%">
+          <thead>
+          <tr>
+            <th>主分类</th>
+            <th>料号</th>
+            <th>物料描述</th>
+            <th>物料采购属性</th>
+            <th>货期让步比例</th>
+            <th>价格权重</th>
+            <th>技术权重</th>
+            <th>商务权重</th>
+            <th>查看\打印条形码</th>
+            <th>操作</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>技术型</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a class="barcode" href="#">条形码</a></td>
+            <td><a class="edit" href="#">编辑</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>技术型</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a class="barcode" href="#">条形码</a></td>
+            <td><a class="edit" href="#">编辑</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>技术型</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a class="barcode" href="#">条形码</a></td>
+            <td><a class="edit" href="#">编辑</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>技术型</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a class="barcode" href="#">条形码</a></td>
+            <td><a class="edit" href="#">编辑</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>技术型</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a class="barcode" href="#">条形码</a></td>
+            <td><a class="edit" href="#">编辑</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>技术型</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a class="barcode" href="#">条形码</a></td>
+            <td><a class="edit" href="#">编辑</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>技术型</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a class="barcode" href="#">条形码</a></td>
+            <td><a class="edit" href="#">编辑</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>技术型</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a class="barcode" href="#">条形码</a></td>
+            <td><a class="edit" href="#">编辑</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>技术型</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a class="barcode" href="#">条形码</a></td>
+            <td><a class="edit" href="#">编辑</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>技术型</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a class="barcode" href="#">条形码</a></td>
+            <td><a class="edit" href="#">编辑</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>技术型</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a class="barcode" href="#">条形码</a></td>
+            <td><a class="edit" href="#">编辑</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>技术型</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a class="barcode" href="#">条形码</a></td>
+            <td><a class="edit" href="#">编辑</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>技术型</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a class="barcode" href="#">条形码</a></td>
+            <td><a class="edit" href="#">编辑</a></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+<div class="barcode_box">
+  <div class="img_box">
+    <p><i href="#" class="close_box"></i></p>
+    <section>
+      <!--startprint1--><img class="img_code" src="/static/admin/img/u1115.png" alt="条形码"><!--endprint1-->
+    </section>
+    <p><button id="stamp" type="button" class="mpr_25 btn btn-info">打印</button></p>
+  </div>
+</div>
 
-<!-- 表单搜索 结束 -->
+{/block}
 
-
+{block name="script"}
+<script src="/static/admin/material/matter.js"/>
 {/block}

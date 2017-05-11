@@ -1,14 +1,270 @@
 {extend name='extra@admin/content' /}
 
+{block name="style"}
+<link rel="stylesheet" href="//cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
+{/block}
+
 {block name="button"}
 
 {/block}
 
 {block name="content"}
 
-<!-- 表单搜索 开始 -->
+<main class="main">
+  <div class="mt_box">
+    <div class="inquiry_box">
+      <form class="form-inline">
+        <input type="text" class="form-control" placeholder="供应商编码">
+        <input type="text" class="form-control" placeholder="供应商名称">
+        <select class="form-control">
+          <option>供应商分类</option>
+        </select>
+        <select class="form-control">
+          <option>状态</option>
+          <option>正常</option>
+          <option>禁用</option>
+        </select>
+        <select class="form-control">
+          <option>付款方式审核</option>
+          <option>待审核</option>
+          <option>不需要审核</option>
+        </select>
+        <select class="form-control">
+          <option>供应商资质审核</option>
+          <option>待审核</option>
+          <option>不需要审核</option>
+        </select>
+        <button type="button" class="btn btn-info">查询</button>
+      </form>
+    </div>
+    <div class="mt_table">
+      <div class="pb_15">
+        <button type="button" id="synchronization_btn" class="btn btn-info mr_15">立即同步ERP数据</button>
+        <button type="button" id="lookThrough" class="btn btn-warning mr_15">审核供应商</button>
+        <button type="button" id="remove_btn" class="btn btn-danger mr_15">删除物料</button>
+      </div>
+      <div>
+        <table id="example" class="display" cellspacing="0" width="100%">
+          <thead>
+          <tr>
+            <th>供应商编码</th>
+            <th>供应商名称</th>
+            <th>供应商分类</th>
+            <th>技术评分</th>
+            <th>供应商交货及时率</th>
+            <th>供应商质量合格率</th>
+            <th>供应商资质评分</th>
+            <th>状态</th>
+            <th>付款方式审核</th>
+            <th>供应商资质</th>
+            <th>操作</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>正常</td>
+            <td><a href="#" class="col_red">待审核</a></td>
+            <td><a class="barcode" href="#">查看</a></td>
+            <td><a class="edit" href="#">编辑</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>禁用</td>
+            <td><a href="#" class="col_red">待审核</a></td>
+            <td><a class="barcode" href="#">查看</a></td>
+            <td><a class="edit" href="#">编辑</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>待审核</td>
+            <td></td>
+            <td><a class="barcode col_red" href="#">待审核</a></td>
+            <td><a class="edit" href="#">编辑</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a href="#" class="col_red">待审核</a></td>
+            <td><a class="barcode" href="#">查看</a></td>
+            <td><a class="edit" href="#">编辑</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a href="#" class="col_red">待审核</a></td>
+            <td><a class="barcode" href="#">查看</a></td>
+            <td><a class="edit" href="#">编辑</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a class="barcode col_red" href="#">待审核</a></td>
+            <td><a class="edit" href="#">编辑</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a href="#" class="col_red">待审核</a></td>
+            <td><a class="barcode" href="#"></a></td>
+            <td><a class="edit" href="#">编辑</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a href="#" class="col_red"></a></td>
+            <td><a class="barcode" href="#">查看</a></td>
+            <td><a class="edit" href="#">编辑</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a class="barcode col_red" href="#"></a></td>
+            <td><a class="edit" href="#">编辑</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>正常</td>
+            <td><a href="#" class="col_red">待审核</a></td>
+            <td><a class="barcode" href="#">查看</a></td>
+            <td><a class="edit" href="#">编辑</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a href="#" class="col_red"></a></td>
+            <td><a class="barcode" href="#">查看</a></td>
+            <td><a class="edit" href="#">编辑</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a class="barcode col_red" href="#">待审核</a></td>
+            <td><a class="edit" href="#">编辑</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a href="#" class="col_red"></a></td>
+            <td><a class="barcode" href="#">查看</a></td>
+            <td><a class="edit" href="#">编辑</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a href="#" class="col_red">待审核</a></td>
+            <td><a class="barcode" href="#"></a></td>
+            <td><a class="edit" href="#">编辑</a></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a class="barcode col_red" href="#"></a></td>
+            <td><a class="edit" href="#">编辑</a></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
 
-<!-- 表单搜索 结束 -->
+{/block}
 
-
+{block name="script"}
+<script src="/static/admin/supporter/index.js"/>
 {/block}

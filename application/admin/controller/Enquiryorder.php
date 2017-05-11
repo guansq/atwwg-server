@@ -31,4 +31,8 @@ class Enquiryorder extends BasicAdmin{
 
     }
 
+    public function particulars(){
+        return view();
+    }
+
 }

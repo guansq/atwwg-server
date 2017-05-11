@@ -31,4 +31,7 @@ class Order extends BasicAdmin{
 
     }
 
+    public function detailed(){
+        return view();
+    }
 }

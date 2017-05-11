@@ -47,7 +47,6 @@ class Login extends Base{
      * 退出登录
      */
     public function out() {
-        LogService::write('系统管理', '用户退出系统成功');
         session('spl_user', null);
         session_destroy();
         $this->success('退出登录成功！', '@spl/login');

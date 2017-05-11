@@ -1,8 +1,23 @@
 <div class="framework-topbar">
     <div class="console-topbar">
         <div class="topbar-wrap topbar-clearfix">
-
-
+            <div class="topbar-head topbar-left">
+                <a href="{:url('@admin')}" class="topbar-logo topbar-left">
+                    <span class="icon-logo">{:sysconf('app_name')} <sup>{:sysconf('app_version')}</sup></span>
+                </a>
+            </div>
+            {volist name='menus' id='pmenu'}
+            {empty name='pmenu.sub'}
+            <a data-menu-node='m-{$pmenu.id}' data-open="{$pmenu.url}"
+               class="topbar-home-link topbar-btn topbar-left">
+                <span>{notempty name='$pmenu.icon'}<i class="{$pmenu.icon}"></i>{/notempty} {$pmenu.title}</span>
+            </a>
+            {else/}
+            <a data-menu-target='m-{$pmenu.id}' class="topbar-home-link topbar-btn topbar-left">
+                <span>{notempty name='$pmenu.icon'}<i class="{$pmenu.icon}"></i>{/notempty} {$pmenu.title}</span>
+            </a>
+            {/empty}
+            {/volist}
 
             <div class="topbar-info topbar-right">
                 <a data-reload data-tips-text='刷新'
@@ -27,17 +42,17 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li class="topbar-info-btn">
-                                <a data-modal="{:url('admin/index/pass')}?id={:session('user.id')}">
+                                <a data-modal="{:url('spl/index/pass')}?id={:session('user.id')}">
                                     <span><i class='glyphicon glyphicon-lock'></i> 修改密码</span>
                                 </a>
                             </li>
-                            <li class="topbar-info-btn">
-                                <a data-modal="{:url('admin/index/info')}?id={:session('user.id')}">
+                            <!--<li class="topbar-info-btn">
+                                <a data-modal="{:url('spl/index/info')}?id={:session('user.id')}">
                                     <span><i class='glyphicon glyphicon-edit'></i> 修改资料</span>
                                 </a>
-                            </li>
+                            </li>-->
                             <li class="topbar-info-btn">
-                                <a data-load="{:url('admin/login/out')}" data-confirm='确定要退出登录吗？'>
+                                <a data-load="{:url('spl/login/out')}" data-confirm='确定要退出登录吗？'>
                                     <span><i class="glyphicon glyphicon-log-out"></i> 退出登录</span>
                                 </a>
                             </li>

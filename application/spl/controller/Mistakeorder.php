@@ -16,4 +16,8 @@ class Mistakeorder extends BasicSpl{
     public function index(){
         return view();
     }
+
+    public function detail(){
+        return view();
+    }
 }

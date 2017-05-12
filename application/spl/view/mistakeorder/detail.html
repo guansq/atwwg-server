@@ -1,0 +1,134 @@
+{extend name='extra@spl/content' /}
+
+{block name="button"}
+
+{/block}
+
+{block name="content"}
+
+<main class="main">
+  <div class="atw-head">
+    <p>
+      <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+      <a>物供平台</a>
+      <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
+      <a>订单详情</a>
+    </p>
+  </div>
+  <div class="atw-orderdet-title">订单基本信息 <span class="glyphicon glyphicon-circle-arrow-left"></span></div>
+  <div class="atw-orderdet-list">
+    <div class="top"><p>订单编号：P13256565865</p><p>订单合同签订日期：2017-03-22</p></div>
+    <div class="center">
+      合同影像：<a href="">下载合同模板</a>
+      <img src="/static/spl/img/add.png" alt="">
+      <img src="/static/spl/img/add.png" alt="">
+      <img src="/static/spl/img/add.png" alt="">
+      <span>*下载合同模版后请 打印 盖公章后 扫描或者拍照上传由平台运营人员审核通过后会通过绑定邮箱和手机通知到您。</span>
+    </div>
+    <div class="bottom">订单采购内容 <button class="btn btn-primary">打印送货单</button><button class="btn btn-primary">取消订单</button></div>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-bordered atw-orddet-tab">
+      <thead>
+      <tr class="active">
+        <td>全选 <i></i></td>
+        <td>物料名称</td>
+        <td>采购数量</td>
+        <td>单位</td>
+        <td>交期</td>
+        <td>单价</td>
+        <td>总价</td>
+        <td>备注</td>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td><i></i></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><i></i></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><i></i></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><i></i></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><i></i></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      </tbody>
+
+    </table>
+  </div>
+  <div class="table-responsive atw-excdet-tab">
+    <p>订单执行情况</p>
+    <table class="table table-bordered ">
+      <tr class="active">
+        <td>全选</td>
+        <td>物料名称</td>
+      </tr>
+      <tr>
+        <td>
+          <p>2017/03/23到货200mm已质检通过</p>
+          <p>2017/03/23到货200mm已质检通过</p>
+          <p>2017/03/23到货200mm已质检通过</p>
+        </td>
+        <td>
+          <p>2017/03/23到货200mm已质检通过</p>
+          <p>2017/03/23到货200mm已质检通过</p>
+          <p>2017/03/23到货200mm已质检通过</p>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class="atw-orddet-text1">
+    <p>订单异常情况</p>
+    <textarea name="" id="" cols="30" rows="10" disabled></textarea>
+  </div>
+  <div class="atw-orddet-text2">
+    <p>订单异常情况说明</p>
+    <textarea name="" cols="30" rows="10"></textarea>
+  </div>
+</main>
+
+{/block}
+
+{block name="script"}
+<script src="/static/spl/mistakeorder/detail.js"></script>
+{/block}

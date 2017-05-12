@@ -1,0 +1,538 @@
+.main{
+    padding: 5px;
+}
+/*===============================================登录=========================================*/
+.login-bg{
+    background-color: #E4E4E4;
+}
+.login-content{
+    text-align: center;
+    margin-top:10% ;
+}
+.login-content .title{
+    line-height: 60px;
+    font-size: 25px;
+}
+.login-content .block{
+    width: 400px;
+    background-color: white;
+    margin: 0 auto;
+}
+.login-content .block .name{
+    line-height: 50px;
+    font-size: 18px;
+}
+.login-content .block p{
+    width: 88%;
+    margin: 0 auto;
+    overflow: hidden;
+}
+.login-content .block input{
+    height: 35px;
+    padding: 0 10px;
+    margin-bottom: 15px;
+}
+.login-content .block .inp{
+    width: 100%;
+}
+.login-content .block .pos{
+    position: relative;
+}
+.login-content .block .pos input{
+     padding: 0 40px 0 10px;
+ }
+.login-content .block .pos span{
+    position: absolute;
+    right: 10px;
+    top: 8px;
+    font-size: 20px;
+    color: #666666;
+}
+
+.login-content .block .code input{
+    float: left;
+}
+.login-content .block .code img{
+    float: right;
+    width: 36%;
+    height: 35px;
+}
+.login-content .block button{
+    width: 100%;
+    height: 36px;
+}
+.login-content .block  .bot a{
+    text-decoration:underline;
+    line-height: 40px;
+}
+.login-content .block  .bot a:first-child{
+    float: left;
+}
+.login-content .block  .bot a:last-child{
+    float: right;
+}
+/*====================================找回密码/注册=============================================*/
+.ret-pwd-content{
+    margin-top:10%;
+}
+.register-content{
+    margin-top: 6%;
+}
+.ret-pwd-content .title{
+    text-align: center;
+    line-height: 60px;
+    font-size: 25px;
+}
+.ret-pwd-content .block{
+    width: 600px;
+    background-color: white;
+    margin: 0 auto;
+    padding: 15px 25px;
+}
+.ret-pwd-content .block p{
+    line-height: 45px;
+    border-bottom: 1px solid #E1E1E1;
+    color: #FF0000;
+}
+.ret-pwd-content .block p span{
+    color: #333333;
+}
+.ret-pwd-content .block ul{
+    width: 70%;
+    margin: 0 auto;
+    font-size: 16px;
+}
+.ret-pwd-content .block ul input{
+    height: 30px;
+}
+.ret-pwd-content .block ul li{
+    margin-top: 15px;
+}
+.ret-pwd-content .block ul li div{
+    display: inline-block;
+}
+.ret-pwd-content .block ul li div:first-child{
+    width: 25%;
+    text-align: right;
+}
+.ret-pwd-content .block ul li div:last-child{
+    width: 73%;
+    padding-left: 15px;
+}
+.ret-pwd-content .tel input{
+    width: 100%;
+}
+.ret-pwd-content .code input{
+    width: 55%;
+}
+.ret-pwd-content .code span{
+    float: right;
+    display: inline-block;
+    border: 1px solid #797979;
+    line-height: 28px;
+    width: 40%;
+    text-align: center;
+    cursor: pointer;
+}
+.ret-pwd-content .block ul button{
+    width: 100%;
+    margin: 25px 0;
+}
+.ret-pwd-content .tel input[type="checkbox"]{
+    width: 16px;
+    height: 16px;
+    vertical-align: text-bottom;
+    margin-right: 6px;
+}
+.ret-pwd-content .tel label{
+    font-weight: 500;
+    font-size: 13px;
+    color: #FF0000;
+    cursor: pointer;
+}
+.ret-pwd-content .block>div{
+    text-align: center;
+    margin: 20px 0;
+}
+.ret-pwd-content .block>div button{
+    width: 70%;
+}
+.ret-pwd-content .block select{
+    width:40%;
+    font-size: 15px;
+}
+/*=====================================首页===============================================*/
+.atw-head{
+    padding: 10px 0;
+}
+.atw-head p{
+    line-height: 40px;
+    border: 1px solid #E4E4E4;
+    padding: 0 20px;
+}
+.glyphicon-home{
+    font-size: 18px;
+    color: #909090;
+    vertical-align: text-top;
+    margin-right: 10px;
+}
+.glyphicon-menu-right{
+    color: #E2E2E2;
+    font-size: 18px;
+    vertical-align: text-top;
+}
+.atw-list{
+    margin: 20px 0;
+    overflow: hidden;
+}
+.atw-list li{
+    float: left;
+    width: 12%;
+    text-align: center;
+    height: 80px;
+    line-height: 80px;
+    color: white;
+    background-color: #2F3847;
+    margin-left: 3%;
+    position: relative;
+}
+.atw-list li span{
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 50%;
+    color: red;
+    background-color: white;
+    position: absolute;
+    top: 2px;
+    right: 2px;
+}
+.atw-title{
+    margin-top: 66px;
+    padding-left: 3%;
+}
+#main, #main1{
+    /*display: inline-block;*/
+}
+/*=======================================报价中心===============================*/
+.atw-inquiry{
+    line-height: 50px;
+    border-bottom: 1px solid #E4E4E4;
+}
+.atw-inquiry select{
+    width: 100px;
+    height: 30px;
+    margin: 0 6px;
+}
+.atw-inquiry input{
+    height: 30px;
+    width: 200px;
+    margin: 0 6px;
+}
+.atw-inquiry button{
+    width:80px;
+}
+.atw-qcent-btn {
+    padding: 20px 0 0 0;
+}
+.atw-qcent-btn button{
+    margin-right: 20px;
+}
+.table-responsive{
+    margin: 15px 0;
+}
+.table-responsive table{
+
+    text-align: center;
+
+}
+.table-responsive table tr td{
+    height: 35px;
+}
+.table-responsive table tr td input{
+    width:96%;
+}
+.atw-order-tab tr>td:nth-of-type(2){
+    width: 46%;
+}
+.atw-order-tab .status{
+    color:red;
+}
+.atw-order-tab a{
+    text-decoration: underline;
+}
+.atw-abnormal-tab tr>td:nth-of-type(2),
+.atw-abnormal-tab tr>td:nth-of-type(3){
+    width: 40%;
+}
+.table-responsive .atw-abnormal-tab tr td{
+    height: 55px;
+}
+.atw-abnormal-tab tr>td:nth-of-type(1),
+.atw-abnormal-tab tr>td:nth-of-type(4){
+    line-height: 55px;
+}
+.atw-abnormal-tab tr:nth-of-type(1)>td{
+    line-height: 30px;
+    height: 30px;
+}
+.atw-abnormal-tab tr>td textarea{
+    width: 99%;
+    height: 110%;
+    resize: none;
+}
+.atw-abnormal-tab a{
+    text-decoration: underline;
+}
+.atw-orderdet-title{
+    line-height: 40px;
+    border-bottom: 1px solid #E4E4E4;
+}
+.atw-orderdet-title span{
+    float: right;
+    font-size: 24px;
+    color: #909090;
+    margin-top: 8px;
+    cursor: pointer;
+}
+.atw-orderdet-list{
+    width: 95%;
+    margin: 0 auto;
+    border-bottom: 1px solid #E4E4E4;
+}
+.atw-orderdet-list .top{
+    overflow: hidden;
+    line-height: 40px;
+}
+.atw-orderdet-list .top p{
+    display: inline-block;
+    margin-right: 50px;
+}
+.atw-orderdet-list .center{
+    line-height: 40px;
+}
+.atw-orderdet-list .center img{
+    width: 60px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+.atw-orderdet-list .center span{
+    color: red;
+    margin-left: 16px;
+}
+.atw-orderdet-list  .bottom{
+    line-height: 50px;
+}
+.atw-orderdet-list  .bottom button{
+    margin-left: 15px;
+}
+.table-responsive .atw-orddet-tab tr td {
+    line-height: 30px;
+}
+.atw-orddet-tab i{
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background: url("/static/spl/img/nocheck.png") no-repeat;
+    background-size: 16px;
+    vertical-align: middle;
+}
+.atw-orddet-tab .select{
+    background: url("/static/spl/img/check.png") no-repeat;
+    background-size: 16px;
+}
+.atw-orddet-tab tr:nth-of-type(1) td{
+    line-height: 25px;
+}
+.atw-orddet-tab tr td:nth-of-type(1){
+    width: 70px;
+}
+.atw-orddet-tab .laydate-icon{
+    width: 80%;
+    height: 30px;
+}
+.atw-orddet-tab button{
+    padding: 4px 5px;
+    margin-left: 5px;
+}
+.atw-orddet-tab .active input{
+    width: 13px;
+    height: 13px;
+    vertical-align: text-top;
+    margin-left: 6px;
+}
+.atw-orddet-text1{
+    width: 95%;
+    margin: 0 auto;
+}
+.atw-orddet-text1 p{
+    line-height: 40px;
+}
+.atw-orddet-text1 textarea{
+    width: 100%;
+    height: 120px;
+    background-color: #EBEBE4;
+}
+.atw-orddet-text2{
+    width: 95%;
+    margin: 0 auto;
+}
+.atw-orddet-text2 p{
+    line-height: 40px;
+}
+.atw-orddet-text2 textarea{
+    width: 100%;
+    height: 120px;
+}
+.atw-excdet-tab>p{
+    line-height: 40px;
+}
+.atw-excdet-tab .table tr td{
+    width: 50%;
+    text-align: left;
+}
+.atw-excdet-tab .table tr td p{
+    color: #0099FF;
+}
+.atw-supplier-tab tr td:nth-of-type(1),
+.atw-supplier-tab tr td:nth-of-type(3){
+    text-align: right;
+    width: 15%;
+    line-height: 30px;
+}
+.atw-supplier-tab tr td{
+    line-height: 30px;
+}
+.atw-supplier-tab tr td input{
+    height: 30px;
+}
+.atw-supplier-tab tr .colspan{
+    text-align: left;
+}
+.atw-supplier-tab tr .colspan select{
+    width: 40%;
+    height: 30px;
+    margin-left:1%;
+}
+.atw-supplier-tab tr .annotate {
+    color:red;
+    font-size: 12px;
+}
+.atw-supplier-tab1 tr td{
+    text-align: left;
+}
+.atw-supplier-tab1 tr td:nth-of-type(1),
+.atw-supplier-tab1 tr td:nth-of-type(3){
+    text-align: right;
+    width: 15%;
+}
+.atw-supplier-tab .laydate-icon{
+    padding-right: 0;
+}
+.atw-supplier-upload{
+    border: 1px solid #E4E4E4;
+    padding: 10px 15px;
+}
+.atw-supplier-upload input{
+    vertical-align: text-top;
+    margin-right: 2px;
+    cursor: pointer;
+}
+
+.atw-supplier-upload .upload {
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+}
+.atw-supplier-upload .upload img{
+    width:60px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+.atw-supplier-upload .upload .hint{
+    margin-top: 10px;
+}
+.atw-supplier-title{
+    line-height: 50px;
+    font-size: 16px;
+}
+.atw-supplier-tab2 .active td{
+    font-weight: 700;
+}
+.atw-supplier-tab2 tr>td:first-child{
+    width: 80%;
+    text-align: left;
+}
+.table-responsive .atw-supplier-tab2 .name {
+    width: 200px;
+    height: 30px;
+}
+.table-responsive .atw-supplier-tab2 .time {
+    width: 180px;
+    height: 30px;
+}
+
+.atw-supplier-tab2 .top,
+.atw-supplier-tab2 .center{
+    line-height: 40px;
+}
+.atw-supplier-tab2 .center span{
+    margin-right: 10px;
+    cursor: pointer;
+}
+.atw-supplier-tab2 .center i{
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background: url("../image/select_no.png") no-repeat;
+    background-size: 18px;
+    vertical-align: text-top;
+    margin-right: 3px;
+}
+.atw-supplier-tab2 .center .select i{
+    background: url("../image/select.png") no-repeat;
+    background-size: 18px;
+}
+
+.atw-supplier-tab2 .bottom .three>div,
+.atw-supplier-tab2 .bottom .one>div{
+    display: inline-block;
+    text-align: center;
+}
+.atw-supplier-tab2 .bottom .three>div img,
+.atw-supplier-tab2 .bottom .one>div img{
+    margin: 15px 10px;
+}
+.atw-supplier-tab2 .cont p{
+    display: inline-block;
+    margin-left: 16px;
+}
+.atw-supplier-tab2 .cont img{
+    width: 80px;
+    height: 80px;
+}
+.atw-supplier-tab2 .cont input{
+    width: 180px;
+    margin:0 20px;
+    height: 30px;
+}
+.atw-supplier-tab2 .btn1{
+    line-height: 246px;
+}
+.atw-supplier-tab2 .btn2{
+    line-height: 80px;
+}
+.atw-supplier-tab2 button{
+    width: 80px;
+}
+
+.atw-head>p a{
+    color: #666;
+}
+
+
+
+
+
+

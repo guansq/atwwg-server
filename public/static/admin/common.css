@@ -337,6 +337,13 @@ html,body{
 .other_box .other_oneimg img{
   width: 114px;
 }
+#report_form .minw{
+  min-width: 220px;
+}
+.echarts_box{
+  width: 100%;
+  height: 500px;
+}
 
 
 

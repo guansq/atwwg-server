@@ -47,6 +47,7 @@ require.config({
         'jquery.dataTables': ['http://cdn.datatables.net/1.10.15/js/jquery.dataTables.min'],
         'cityselect':['../plugs/cityselect/cityselect'],
         'icheck': ['http://cdn.bootcss.com/iCheck/1.0.2/icheck.min'],
+        'echarts':['http://cdn.bootcss.com/echarts/3.5.4/echarts.min'],
     },
     shim: {
         'layui': {deps: ['jquery']},

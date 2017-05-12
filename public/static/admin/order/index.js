@@ -14,7 +14,7 @@ require(["jquery.dataTables","icheck"],function(){
 
   // 点击详情
   $(".detail").click(function(e){
-    e.stopPropagation();
+    // e.stopPropagation();
   });
 
   $(document).ready(function() {

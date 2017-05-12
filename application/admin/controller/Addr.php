@@ -20,15 +20,10 @@ class Addr extends BasicAdmin{
     public function index(){
         $pid = $this->request->get('pid', '0');
         $name = $this->request->get('name');
-        //$this->title = '地区管理';
-        if(empty($name)){
-            $where = ['pid'=>$pid];
-        }else{
-            $where = ['name'=>['like','%'.$name.'%']];
-        }
-        //dump($where);
-        $addr = AddrModel::getAddrInfo($where);
-        $this->assign('list',$addr);
+
+        $logic = \think\Loader::model('Addr', 'logic');
+        $this->assign('list',$logic->getAddrList($pid,$name));
+
         $this->assign('title',$this->title);
         return view();
     }

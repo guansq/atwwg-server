@@ -47,16 +47,10 @@ class NodeModel {
      * @staticvar array $nodes
      * @return array
      */
-    public static function getAuthNode() {
-        static $nodes = [];
-        if (empty($nodes)) {
-            $nodes = cache('need_access_node');
-            if (empty($nodes)) {
-                $nodes = Db::name('SystemNode')->where('is_auth', '1')->column('node');
-                cache('need_access_node', $nodes);
-            }
-        }
-        return $nodes;
+    public static function getAuthNode(){
+        $logic = \think\Loader::model('Node', 'logic');
+        return $logic->getAuthNode();
+
     }
 
     /**
@@ -89,7 +83,6 @@ class NodeModel {
             'index',
             'wechat/api', 'wechat/notify', 'wechat/review',
             'admin/plugs', 'admin/login', 'admin/index',
-            'spl','api',
         ];
         foreach (self::getNodeTree(APP_PATH) as $thr) {
             foreach ($ignore as $str) {

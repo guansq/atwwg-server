@@ -6,9 +6,156 @@
 
 {block name="content"}
 
-<!-- 表单搜索 开始 -->
+<main class="main">
+  <div class="atw-head">
+    <p>
+      <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+      <a>物供平台</a>
+      <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
+      <a>供应商中心</a>
+    </p>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-bordered atw-supplier-tab">
+      <tr>
+        <td>成立日期：</td>
+        <td><input type="text" class="laydate-icon"></td>
+        <td>供应商名称：</td>
+        <td><input type="text"></td>
+      </tr>
+      <tr>
+        <td>电话：</td>
+        <td><input type="text"></td>
+        <td>税号：</td>
+        <td><input type="text"></td>
+      </tr>
+      <tr>
+        <td>邮箱：</td>
+        <td><input type="text"></td>
+        <td>联系人：</td>
+        <td><input type="text"></td>
+      </tr>
+      <tr>
+        <td>地址：</td>
+        <td><input type="text"></td>
+        <td>传真：</td>
+        <td><input type="text"></td>
+      </tr>
+      <tr>
+        <td>付款方式：</td>
+        <td colspan="3" class="colspan">
+          <select name="" id="">
+            <option value=""></option>
+          </select>
+          <span class="annotate">*选择修改后需要平台运营人员审核通过，通过后会通过邮件和手机短信息通知您</span>
+        </td>
+      </tr>
+    </table>
+    <table class="table table-bordered atw-supplier-tab1">
+      <tr>
+        <td>供应商交货及时率：</td>
+        <td>98</td>
+        <td>供应商质量合格率：</td>
+        <td>60</td>
+      </tr>
+      <tr>
+        <td>信用等级：</td>
+        <td>优</td>
+        <td></td>
+        <td></td>
+      </tr>
+    </table>
+    <div class="atw-supplier-upload">
+      <input type="checkbox">
+      <span>同意安特威采购合同条约</span>
+      <a href="">下载打印采购合同条约</a>
+      <div class="upload">
+        <p>
+          <img src="/static/spl/img/add.png" alt="">
+          <img src="/static/spl/img/add.png" alt="">
+          <img src="/static/spl/img/add.png" alt="">
+        </p>
+        <p class="hint">上传采购合同条约</p>
+      </div>
+    </div>
+    <div class="atw-supplier-title">企业资质</div>
+    <table class="table table-bordered atw-supplier-tab2">
+      <tr class="active">
+        <td>经营信息</td>
+        <td>操作</td>
+      </tr>
+      <tr>
+        <td>
+          <div class="top">公司名称：<input class="name" type="text"> 证件有效期：<input class="time laydate-icon" type="text"> 到 <input class="time laydate-icon" type="text"></div>
+          <div class="center">资质照片：
+            <span class="select"><i></i>三证合一</span>
+            <span><i></i>三证</span>
+          </div>
+          <div class="bottom">
+            <div class="three">
+              <div>
+                <p>营业执照</p>
+                <img src="/static/spl/img/add.png" alt="">
+              </div>
+              <div>
+                <p>营业执照</p>
+                <img src="/static/spl/img/add.png" alt="">
+              </div>
+              <div>
+                <p>营业执照</p>
+                <img src="/static/spl/img/add.png" alt="">
+              </div>
+            </div>
+            <div class="one" style="display: none">
+              <div>
+                <p>营业执照</p>
+                <img src="/static/spl/img/add.png" alt="">
+              </div>
+            </div>
+          </div>
+        </td>
+        <td class="btn1"><button class="btn btn-primary">提交</button></td>
+      </tr>
+      <tr class="active">
+        <td>ISO90001</td>
+        <td></td>
+      </tr>
+      <tr class="cont">
+        <td>
+          <img src="/static/spl/img/add.png" alt="">
+          <p>证件有效期 <input type="text" class="laydate-icon"><input type="text" class="laydate-icon"></p>
+        </td>
+        <td class="btn2"><button class="btn btn-primary">提交</button></td>
+      </tr>
+      <tr class="active">
+        <td>TS认证</td>
+        <td></td>
+      </tr>
+      <tr class="cont">
+        <td>
+          <img src="/static/spl/img/add.png" alt="">
+          <p>证件有效期 <input type="text" class="laydate-icon"><input type="text" class="laydate-icon"></p>
+        </td>
+        <td class="btn2"><button class="btn btn-primary">提交</button></td>
+      </tr>
+      <tr class="active">
+        <td>其他</td>
+        <td></td>
+      </tr>
+      <tr class="cont">
+        <td>
+          <img src="/static/spl/img/add.png" alt="">
+          <p>证件有效期 <input type="text" class="laydate-icon"><input type="text" class="laydate-icon"></p>
+        </td>
+        <td class="btn2"><button class="btn btn-primary">提交</button></td>
+      </tr>
+    </table>
+  </div>
+</main>
 
-<!-- 表单搜索 结束 -->
+{/block}
 
 
+{block name="script"}
+<script src="/static/spl/suppliercenter/index.js"></script>
 {/block}

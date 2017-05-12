@@ -249,6 +249,7 @@
 }
 .table-responsive table tr td{
     height: 35px;
+    text-align: center;
 }
 .table-responsive table tr td input{
     width:96%;
@@ -485,13 +486,13 @@
     display: inline-block;
     width: 18px;
     height: 18px;
-    background: url("../image/select_no.png") no-repeat;
+    background: url("/static/spl/img/select_no.png") no-repeat;
     background-size: 18px;
     vertical-align: text-top;
     margin-right: 3px;
 }
 .atw-supplier-tab2 .center .select i{
-    background: url("../image/select.png") no-repeat;
+    background: url("/static/spl/img/select.png") no-repeat;
     background-size: 18px;
 }
 

@@ -6,12 +6,11 @@
  * Time: 16:59
  */
 namespace app\admin\controller;
+
+use controller\BasicAdmin;
 use think\Controller;
 use think\Request;
 
-class Base extends Controller{
-    public function _initialize(){
-        $request = Request::instance();
-        $aid = is_login();
-    }
+class Base extends BasicAdmin{
+
 }

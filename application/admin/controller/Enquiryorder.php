@@ -13,9 +13,9 @@ use service\DataService;
 use app\admin\model\AddrModel;
 use think\Db;
 
-class Enquiryorder extends BasicAdmin{
+class Enquiryorder extends Base{
     protected $table = 'SystemArea';
-    protected $title = '相关信息';
+    protected $title = '询价单管理';
 
     public function index(){
         //echo '111111111';die;

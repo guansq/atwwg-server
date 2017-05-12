@@ -24,11 +24,19 @@ class Index extends Base{
     /**
      * 发送邮件
      */
-    function send_mail($to='tan3250204@sina.com',$subject='test',$html='来自管管的邮件，收到了吗') {
-
+    function send_mail($istrigger = true,$to='tan3250204@sina.com',$subject='test',$html='来自管管的邮件，收到了吗') {
+        input('to');
+        input('subject');
+        input('html');
         $url = $this->url;
-        $API_USER = config('send_trigger_mail')['use'];
-        $API_KEY = config('send_trigger_mail')['key'];
+        if($istrigger){
+            $API_USER = config('send_trigger_mail')['use'];
+            $API_KEY = config('send_trigger_mail')['key'];
+        }else{
+            $API_USER = config('send_accord_mail')['use'];
+            $API_KEY = config('send_accord_mail')['key'];
+        }
+
 
         $param = array(
             'apiUser' => $API_USER, # 使用api_user和api_key进行验证
@@ -102,7 +110,7 @@ class Index extends Base{
             'from' => '94600115@qq.com', # 发信人，用正确邮件地址替代
             'fromName' => 'SendCloud',
             'xsmtpapi' => $vars,
-            'templateInvokeName' => 'test12346',
+            'templateInvokeName' => 'test_template_active',
             'subject' => 'Sendcloud php webapi template example',
             'respEmailId' => 'true'
         );

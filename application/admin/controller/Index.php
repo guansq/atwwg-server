@@ -28,7 +28,7 @@ use think\View;
  * @author Anyon <zoujingli@qq.com>
  * @date 2017/02/15 10:41
  */
-class Index extends BasicAdmin {
+class Index extends Base {
 
     /**
      * 后台框架布局

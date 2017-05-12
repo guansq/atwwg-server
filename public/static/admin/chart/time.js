@@ -19,11 +19,11 @@ require(["echarts","laydate"],function(echarts){
     },
     tooltip: {
       trigger: 'item',
-      formatter: '{c}'
+      formatter: '{a} <br/> {b} : {c}'+"%"
     },
     legend: {
       left: 'left',
-      data: [ '得分']
+      data: [ '交货及时率']
     },
     xAxis: {
       type: 'category',
@@ -39,11 +39,11 @@ require(["echarts","laydate"],function(echarts){
     },
     yAxis: {
       type: 'value',
-      name: '得分'
+      name: '交货及时率(%)'
     },
     series: [
       {
-        name: '得分',
+        name: '交货及时率',
         type: 'line',
         data: [3, 50, 36, 18, 68, 35,60,23,88]
       },

@@ -13,7 +13,7 @@ require(["echarts","laydate"],function(echarts){
     },
     tooltip: {
       trigger: 'item',
-      formatter: '{c}'
+      formatter: '{a} <br/> {b} : {c}'+"%"
     },
     legend: {
       left: 'left',
@@ -33,11 +33,11 @@ require(["echarts","laydate"],function(echarts){
     },
     yAxis: {
       type: 'value',
-      name: '合格率'
+      name: '质量合格率(%)'
     },
     series: [
       {
-        name: '合格率',
+        name: '质量合格率',
         type: 'line',
         data: [3, 20, 44, 18, 68, 35,60,23,88]
       },

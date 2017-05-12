@@ -27,7 +27,7 @@ use think\Db;
  * @author Anyon <zoujingli@qq.com>
  * @date 2017/02/15
  */
-class Menu extends BasicAdmin {
+class Menu extends Base {
 
     /**
      * 绑定操作模型

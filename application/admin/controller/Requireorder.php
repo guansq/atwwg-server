@@ -15,7 +15,7 @@ use think\Db;
 
 class Requireorder extends BasicAdmin{
     protected $table = 'SystemArea';
-    protected $title = '相关信息';
+    protected $title = '请购单管理';
 
     public function index(){
         //echo '111111111';die;

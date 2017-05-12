@@ -26,7 +26,7 @@ use think\Db;
  * @author Anyon <zoujingli@qq.com>
  * @date 2017/02/10 13:59
  */
-class Login extends BasicAdmin {
+class Login extends Base {
 
     /**
      * 控制器基础方法

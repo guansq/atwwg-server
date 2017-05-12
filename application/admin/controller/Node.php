@@ -26,7 +26,7 @@ use service\ToolsService;
  * @author Anyon <zoujingli@qq.com>
  * @date 2017/02/15 18:13
  */
-class Node extends BasicAdmin {
+class Node extends Base {
 
     /**
      * 指定当前默认模型

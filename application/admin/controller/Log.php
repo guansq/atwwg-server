@@ -25,7 +25,7 @@ use think\Db;
  * @author Anyon <zoujingli@qq.com>
  * @date 2017/02/15 18:12
  */
-class Log extends BasicAdmin {
+class Log extends Base {
 
     /**
      * 指定当前数据表

@@ -83,6 +83,7 @@ class NodeModel {
             'index',
             'wechat/api', 'wechat/notify', 'wechat/review',
             'admin/plugs', 'admin/login', 'admin/index',
+            'spl','api',
         ];
         foreach (self::getNodeTree(APP_PATH) as $thr) {
             foreach ($ignore as $str) {

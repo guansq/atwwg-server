@@ -15,7 +15,7 @@ use think\Db;
 
 class Supporter extends BasicAdmin{
     protected $table = 'SystemArea';
-    protected $title = '相关信息';
+    protected $title = '供应商管理';
 
     public function index(){
         //echo '111111111';die;

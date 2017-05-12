@@ -13,9 +13,9 @@ use service\DataService;
 use app\admin\model\AddrModel;
 use think\Db;
 
-class Material extends BasicAdmin{
+class Material extends Base{
     protected $table = 'SystemArea';
-    protected $title = '相关信息';
+    protected $title = '物料管理';
 
     public function index(){
         //echo '111111111';die;

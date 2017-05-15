@@ -11,6 +11,8 @@ use think\Request;
 use think\Db;
 
 class Reg extends Base{
+
+    protected $checkLogin = false;
     /**
      * 用户登录
      * @return string

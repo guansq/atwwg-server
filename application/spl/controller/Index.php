@@ -12,7 +12,7 @@ use think\Db;
 use think\View;
 use controller\BasicSpl;
 
-class Index extends BasicSpl{
+class Index extends Base{
     protected $title = '相关信息';
 
     public function index(){

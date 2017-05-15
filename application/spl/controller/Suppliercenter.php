@@ -11,7 +11,7 @@ use service\DataService;
 use think\Db;
 use controller\BasicSpl;
 
-class Suppliercenter extends BasicSpl{
+class Suppliercenter extends Base{
 
     public function index(){
         return view();

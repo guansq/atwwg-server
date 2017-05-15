@@ -17,6 +17,7 @@ require(["jquery.dataTables","cityselect","laydate"],function(){
      * options - 选项,格式为 { key : value }
      * 选项
      * format - 日期格式
+     *
      默认格式为 YYYY-MM-DD hh:mm:ss(标准格式)
      * 客户端
      * 服务器端
@@ -42,7 +43,13 @@ require(["jquery.dataTables","cityselect","laydate"],function(){
   })
 
   $(document).ready(function() {
-    var table = $('#example').DataTable();
+    $('#example').DataTable({
+      //paging: false, 设置是否分页
+      "info": false,  //去除左下角的信息
+      "lengthChange": false, //是否允许用户改变表格每页显示的记录数
+      "ordering": false, //是否允许Datatables开启排序
+      "searching": false  //是否允许Datatables开启本地搜索
+    });
 
     // tr点击选中事件
     $('#example tbody').on( 'click', 'tr', function () {

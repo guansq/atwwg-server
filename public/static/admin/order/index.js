@@ -18,7 +18,13 @@ require(["jquery.dataTables","icheck"],function(){
   });
 
   $(document).ready(function() {
-    var table = $('#example').DataTable();
+    $('#example').DataTable({
+      //paging: false, 设置是否分页
+      "info": false,  //去除左下角的信息
+      "lengthChange": false, //是否允许用户改变表格每页显示的记录数
+      "ordering": false, //是否允许Datatables开启排序
+      "searching": false  //是否允许Datatables开启本地搜索
+    });
 
     // tr点击选中事件
     $('#example tbody').on( 'click', 'tr', function () {

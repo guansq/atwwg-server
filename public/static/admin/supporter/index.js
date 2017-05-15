@@ -36,6 +36,11 @@ require(["jquery.dataTables","cityselect","laydate"],function(){
     });
   });
 
+  $('#example .edit').click(function(e){
+    e.stopPropagation();
+
+  })
+
   $(document).ready(function() {
     var table = $('#example').DataTable();
 

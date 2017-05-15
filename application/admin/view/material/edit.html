@@ -1,5 +1,9 @@
 {extend name='extra@admin/content' /}
 
+{block name="style"}
+<link href="https://cdn.bootcss.com/iCheck/1.0.2/skins/minimal/minimal.css" rel="stylesheet">
+{/block}
+
 {block name="button"}
 
 {/block}
@@ -63,8 +67,10 @@
         <div class="form-group">
           <label class="col-sm-1 control-label">是否需要停顿</label>
           <div class="col-sm-5">
-            <input type="radio" name="inlineRadioOptions" id="yes" class="ml_12" value="yes"> 是
-            <input type="radio" name="inlineRadioOptions" id="no" class="ml_50" value="no"> 否
+            <input type="radio" name="inlineRadioOptions" id="yes" class="ml_12" value="yes">
+            <span class="ver_sub mr_15">是</span>
+            <input type="radio" name="inlineRadioOptions" id="no" class="ml_50" value="no">
+            <span class="ver_sub">否</span>
           </div>
         </div>
         <div class="form-group">
@@ -168,4 +174,8 @@
   </div>
 </main>
 
+{/block}
+
+{block name="script"}
+<script src="/static/admin/material/edit.js"></script>
 {/block}

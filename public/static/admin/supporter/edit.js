@@ -1,9 +1,23 @@
 /**
- * 询价单
- * Created by Administrator on 2017/5/11.
+ * Created by Administrator on 2017/5/15.
  */
 
-require(["laydate"],function(){
+
+
+require(["cityselect","laydate","icheck"],function(){
+
+  //编辑页面，选择城市插件
+  $(function(){
+    init_city_select($("#citySelect"));
+
+    // input 的样式
+    $('input').iCheck({
+      checkboxClass: 'icheckbox_minimal',
+      radioClass: 'iradio_minimal',
+      increaseArea: '20%' // optional
+    });
+  });
+
   $(".date_time").focus(function(){
     /*
      laydate插件提供显示日期控件的方法
@@ -29,17 +43,4 @@ require(["laydate"],function(){
       issure : true
     });
   });
-
-
-  //待审批弹框点击事件
-  $(".approve").click(function(){
-    $(".barcode_box").css("display","block");
-  })
-
-  //关闭弹框
-  $(".close_box").click(function(){
-    $(".barcode_box").css("display","none");
-  })
-
-
 });

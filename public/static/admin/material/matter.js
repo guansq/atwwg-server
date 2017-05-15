@@ -17,11 +17,6 @@ require(["jquery.dataTables"],function(){
     $('#synchronization_btn').click( function () {
       alert( table.rows('.selected').data().length +' row(s) selected' );
     });
-
-    //删除物料
-    $('#remove_btn').click( function () {
-      table.rows('.selected').remove().draw( false );
-    } );
   } );
 })
 

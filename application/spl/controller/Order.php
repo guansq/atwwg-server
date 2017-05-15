@@ -11,7 +11,7 @@ use service\DataService;
 use think\Db;
 use controller\BasicSpl;
 
-class Order extends BasicSpl{
+class Order extends Base{
 
     public function index(){
         return view();

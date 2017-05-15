@@ -11,7 +11,7 @@ use service\DataService;
 use think\Db;
 use controller\BasicSpl;
 
-class Mistakeorder extends BasicSpl{
+class Mistakeorder extends Base{
 
     public function index(){
         return view();

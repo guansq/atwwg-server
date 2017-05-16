@@ -17,7 +17,7 @@ require(["jquery.dataTables"],function(){
     // tr点击选中事件
     $('#example tbody').on( 'click', 'tr', function () {
       $(this).toggleClass('selected');
-    } );
+    });
 
     // 立即同步ERP 点击事件
     $('#synchronization_btn').click( function () {
@@ -41,9 +41,7 @@ $(".close_box").click(function(){
 
 // 编辑的点击事件
 $("#example .edit").click(function(e){
-  e.stopPropagation();
-  e.preventDefault();
-  console.log($(this));
+  // e.stopPropagation();
 })
 
 // 打印的点击事件

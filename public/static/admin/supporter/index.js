@@ -37,9 +37,9 @@ require(["jquery.dataTables","cityselect","laydate"],function(){
     });
   });
 
+  //编辑事件
   $('#example .edit').click(function(e){
-    e.stopPropagation();
-
+    //
   })
 
   $(document).ready(function() {

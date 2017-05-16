@@ -3,6 +3,12 @@
  * Created by Administrator on 2017/5/10.
  */
 require(["jquery.dataTables","laydate"],function(){
+  $(document).ready(function(){
+    initPage();
+  })
+});
+
+function initPage(){
   $('#example').DataTable({
     //paging: false, 设置是否分页
     "info": false,  //去除左下角的信息
@@ -37,7 +43,7 @@ require(["jquery.dataTables","laydate"],function(){
       issure : true
     });
   });
-});
+}
 
 
 

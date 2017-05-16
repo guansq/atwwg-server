@@ -6,16 +6,20 @@
 
 require(["cityselect","laydate","icheck"],function(){
 
-  //编辑页面，选择城市插件
-  $(function(){
-    init_city_select($("#citySelect"));
+  $(document).ready(function(){
+    initPage();
+  });
 
-    // input 的样式
-    $('input').iCheck({
-      checkboxClass: 'icheckbox_minimal',
-      radioClass: 'iradio_minimal',
-      increaseArea: '20%' // optional
-    });
+});
+
+function initPage(){
+  init_city_select($("#citySelect"));
+
+  // input 的样式
+  $('input').iCheck({
+    checkboxClass: 'icheckbox_minimal',
+    radioClass: 'iradio_minimal',
+    increaseArea: '20%' // optional
   });
 
   $(".date_time").focus(function(){
@@ -43,4 +47,4 @@ require(["cityselect","laydate","icheck"],function(){
       issure : true
     });
   });
-});
+}

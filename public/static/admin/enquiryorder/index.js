@@ -4,6 +4,12 @@
  */
 
 require(["laydate"],function(){
+  $(document).ready(function(){
+    initPage();
+  })
+});
+
+function initPage(){
   $(".date_time").focus(function(){
     /*
      laydate插件提供显示日期控件的方法
@@ -29,17 +35,14 @@ require(["laydate"],function(){
       issure : true
     });
   });
+}
 
+//待审批弹框点击事件
+$(".approve").click(function(){
+  $(".barcode_box").css("display","block");
+})
 
-  //待审批弹框点击事件
-  $(".approve").click(function(){
-    $(".barcode_box").css("display","block");
-  })
-
-  //关闭弹框
-  $(".close_box").click(function(){
-    $(".barcode_box").css("display","none");
-  })
-
-
-});
+//关闭弹框
+$(".close_box").click(function(){
+  $(".barcode_box").css("display","none");
+})

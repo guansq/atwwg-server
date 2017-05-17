@@ -107,7 +107,7 @@ class Index extends Base {
             if ($data['password'] !== $data['repassword']) {
                 $this->error('两次输入的密码不一致，请重新输入！');
             }
-            $user = Db::name('SystemUser')->where('id', session('user.id'))->find();
+            $user = Db::name('SystemAdmin')->where('id', session('user.id'))->find();
             if (md5($data['oldpassword']) !== $user['password']) {
                 $this->error('旧密码验证失败，请重新输入！');
             }

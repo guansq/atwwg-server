@@ -6,21 +6,22 @@
  * Time: 10:20
  */
 namespace app\admin\model;
+use app\common\model\BaseModel;
 use think\Db;
 
-class AddrModel {
+class SystemArea extends BaseModel{
+
     /**
      * Auther: guanshaoqiu
      * Describe: 通过pid获取子地区
      */
-    public static function getAddrInfo($where){
-        $data = Db::name('SystemArea')->field('id,pid,name,merger_name,level')->where($where)->select();
+    public static function getList($where){
+        $data = self::field('id,pid,name,merger_name,level')->where($where)->select();
         return $data;
     }
 
     public static function haveChild($id){
-        $count = Db::name('SystemArea')->where('pid',$id)->count();
-        //echo Db::name('SystemArea')->getLastSql();
+        $count = self::where('pid',$id)->count();
         return $count;
     }
 }

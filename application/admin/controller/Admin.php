@@ -25,13 +25,13 @@ use think\Db;
  * @author Anyon <zoujingli@qq.com>
  * @date 2017/02/15 18:12
  */
-class User extends BasicAdmin {
+class Admin extends BasicAdmin {
 
     /**
      * 指定当前数据表
      * @var string
      */
-    protected $table = 'SystemUser';
+    protected $table = 'SystemAdmin';
 
     /**
      * 用户列表

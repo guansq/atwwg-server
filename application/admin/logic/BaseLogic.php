@@ -14,12 +14,11 @@
 
 namespace app\admin\logic;
 
-use think\Db;
 use think\Model;
 
 /**
  */
-class Base extends Model{
+class BaseLogic extends Model{
 
 
 }

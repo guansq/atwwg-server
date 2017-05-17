@@ -6,7 +6,6 @@
  * Time: 10:15
  */
 namespace app\common\model;
-use think\Model;
-class SupItem extends Model{
+class SupItem extends BaseModel{
 
 }

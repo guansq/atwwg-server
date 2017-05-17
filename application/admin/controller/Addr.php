@@ -10,7 +10,7 @@ namespace app\admin\controller;
 use controller\BasicAdmin;
 use service\LogService;
 use service\DataService;
-use app\admin\model\AddrModel;
+use app\admin\model\SystemArea;
 use think\Db;
 
 class Addr extends Base{
@@ -21,7 +21,7 @@ class Addr extends Base{
         $pid = $this->request->get('pid', '0');
         $name = $this->request->get('name');
 
-        $logic = \think\Loader::model('Addr', 'logic');
+        $logic = model('SystemArea', 'logic');
         $this->assign('list',$logic->getAddrList($pid,$name));
 
         $this->assign('title',$this->title);
@@ -32,7 +32,7 @@ class Addr extends Base{
         $ids = explode(',', input("post.id", ''));
         $isrelease = true;
         foreach($ids as $v){
-            $isHaveRecord = AddrModel::haveChild($v);
+            $isHaveRecord = SystemArea::haveChild($v);
             if(!empty($isHaveRecord)){
                 $isrelease = false;
                 break;

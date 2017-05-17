@@ -14,7 +14,7 @@
 
 namespace app\admin\logic;
 use \think\Db;
-use app\admin\model\AddrModel;
+use app\admin\model\SystemArea as SystemAreaModel;
 /**
  * 系统权限节点读取器
  * Class Node
@@ -22,7 +22,7 @@ use app\admin\model\AddrModel;
  * @author Anyon <zoujingli@qq.com>
  * @date 2017/03/14 18:12
  */
-class Addr extends Base{
+class SystemArea extends BaseLogic{
 
     /**
      * 获取授权节点
@@ -37,7 +37,7 @@ class Addr extends Base{
             $where = ['name'=>['like','%'.$name.'%']];
         }
         //dump($where);
-        $addr = AddrModel::getAddrInfo($where);
+        $addr = SystemAreaModel::getList($where);
         return $addr;
     }
 

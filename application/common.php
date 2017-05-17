@@ -16,7 +16,9 @@
 use service\DataService;
 use think\Db;
 
-//use Wechat\Loader;
+
+
+
 
 /**
  * 打印输出数据到文件
@@ -117,9 +119,41 @@ if(!function_exists("array_column")){
 
 }
 
-/**
- * array_column 函数兼容
- */
+
+if(!function_exists('returnJson')){
+    function returnJson($status = 0, $msg = '', $data = ''){
+        if(empty($data)){
+            $data = new stdClass();
+        }
+        $info['status'] = $status;
+        $info['msg'] = $msg;
+        $info['result'] = $data;
+        header('Content-type:application/json; charset=utf-8');
+        header("Access-Control-Allow-Origin: *");
+        exit(json_encode($info));
+    }
+}
+
+if(!function_exists('assureNotEmpty')){
+    /**
+     * Auther: WILL<314112362@qq.com>
+     * Time: 2017-3-20 17:51:09
+     * Describe: 校验参数是否有空值
+     * @return bool
+     */
+    function assureNotEmpty($params = []){
+        if(empty($params)){
+            returnJson(4001, '缺少必要参数.');
+        }
+        foreach($params as $param){
+            if(empty($param)){
+                returnJson(4001, '缺少必要参数或者参数不合法.');
+            }
+        }
+        return true;
+    }
+}
+
 if(!function_exists("dd")){
 
     function dd($obj){

@@ -7,20 +7,87 @@
  */
 
 namespace app\api\controller;
-use think\Controller;
 use think\Request;
 
-
-class Index extends Base{
+class Index extends BaseController{
     private $url = 'http://api.sendcloud.net/apiv2/mail/send';//普通发送
     private $templateurl = 'http://api.sendcloud.net/apiv2/mail/sendtemplate';
 
-    function index(){
-        //dump(config('send_trigger_mail'));
-        //dump(config('send_accord_mail'));
-        echo $this->send_tmp_mail();
-        echo send_sms();
+    /**
+     * 显示资源列表
+     *
+     * @return \think\Response
+     */
+    public function index(){
+        returnJson();
     }
+
+    /**
+     * 显示创建资源表单页.
+     *
+     * @return \think\Response
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * 保存新建的资源
+     *
+     * @param  \think\Request  $request
+     * @return \think\Response
+     */
+    public function save(Request $request)
+    {
+        //
+    }
+
+    /**
+     * 显示指定的资源
+     *
+     * @param  int  $id
+     * @return \think\Response
+     */
+    public function read($id)
+    {
+        returnJson($id);
+    }
+
+    /**
+     * 显示编辑资源表单页.
+     *
+     * @param  int  $id
+     * @return \think\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * 保存更新的资源
+     *
+     * @param  \think\Request  $request
+     * @param  int  $id
+     * @return \think\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * 删除指定资源
+     *
+     * @param  int  $id
+     * @return \think\Response
+     */
+    public function delete($id)
+    {
+        //
+    }
+
 
     /**
      * 发送邮件
@@ -138,7 +205,7 @@ class Index extends Base{
             'smsUser' => '***',
             'templateId' => '1',
             'msgType' => '0',
-            'phone' => '13412345678',
+            'phone' => '18068015721',
             'vars' => '{"%code%":"123456"}'
         );
 

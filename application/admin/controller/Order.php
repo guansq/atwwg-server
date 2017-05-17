@@ -13,7 +13,7 @@ use service\DataService;
 use app\admin\model\AddrModel;
 use think\Db;
 
-class Order extends BasicAdmin{
+class Order extends BaseController{
     protected $table = 'SystemArea';
     protected $title = '订单管理';
 

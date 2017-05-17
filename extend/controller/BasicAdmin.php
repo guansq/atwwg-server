@@ -14,6 +14,7 @@
 
 namespace controller;
 
+use service\NodeService;
 use service\DataService;
 use think\Controller;
 use think\db\Query;
@@ -27,7 +28,6 @@ use think\Request;
  * @date 2017/02/13 14:24
  */
 class BasicAdmin extends Controller {
-
     /**
      * 页面标题
      * @var string
@@ -63,7 +63,7 @@ class BasicAdmin extends Controller {
         }
         list($module, $controller, $action) = [$this->request->module(), $this->request->controller(), $this->request->action()];
         // 节点访问权限检查
-        if ($this->checkLogin && $this->checkAuth && !auth("{$module}/{$controller}/{$action}")) {
+        if ($this->checkLogin && $this->checkAuth && ! NodeService::checkAuthNode("{$module}/{$controller}/{$action}")) {
             $this->error('抱歉，您没有访问该模块的权限！');
         }
         $request = Request::instance();
@@ -175,5 +175,6 @@ class BasicAdmin extends Controller {
         }
         return true;
     }
+
 
 }

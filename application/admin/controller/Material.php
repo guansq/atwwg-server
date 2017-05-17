@@ -13,7 +13,7 @@ use service\DataService;
 use app\admin\model\AddrModel;
 use think\Db;
 
-class Material extends Base{
+class Material extends BaseController{
     protected $table = 'SystemArea';
     protected $title = '物料管理';
 

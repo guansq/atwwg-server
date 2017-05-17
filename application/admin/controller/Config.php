@@ -25,7 +25,7 @@ use service\LogService;
  * @author Anyon <zoujingli@qq.com>
  * @date 2017/02/15 18:05
  */
-class Config extends Base {
+class Config extends BaseController {
 
     /**
      * 当前默认数据模型

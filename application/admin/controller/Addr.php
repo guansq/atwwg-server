@@ -13,7 +13,7 @@ use service\DataService;
 use app\admin\model\SystemArea;
 use think\Db;
 
-class Addr extends Base{
+class Addr extends BaseController{
     protected $table = 'SystemArea';
     protected $title = '地区管理';
 

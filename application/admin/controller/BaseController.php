@@ -11,6 +11,6 @@ use controller\BasicAdmin;
 use think\Controller;
 use think\Request;
 
-class Base extends BasicAdmin{
+class BaseController extends BasicAdmin{
 
 }

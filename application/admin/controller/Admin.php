@@ -25,7 +25,7 @@ use think\Db;
  * @author Anyon <zoujingli@qq.com>
  * @date 2017/02/15 18:12
  */
-class Admin extends BasicAdmin {
+class Admin extends BaseController {
 
     /**
      * 指定当前数据表

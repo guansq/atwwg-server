@@ -13,7 +13,7 @@ use service\DataService;
 use app\admin\model\AddrModel;
 use think\Db;
 
-class Enquiryorder extends Base{
+class Enquiryorder extends BaseController{
     protected $table = 'SystemArea';
     protected $title = '询价单管理';
 

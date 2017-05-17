@@ -14,7 +14,7 @@
 
 namespace app\admin\logic;
 use \think\Db;
-use app\admin\model\SystemArea as SystemAreaModel;
+use app\common\model\SystemArea as SystemAreaModel;
 /**
  * 系统权限节点读取器
  * Class Node

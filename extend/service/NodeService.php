@@ -12,9 +12,9 @@
 // | github开源项目：https://github.com/zoujingli/Think.Admin
 // +----------------------------------------------------------------------
 
-namespace app\admin\model;
+namespace  service;
 
-use think\Db;
+use \think\Db;
 
 /**
  * 系统权限节点读取器
@@ -23,7 +23,7 @@ use think\Db;
  * @author Anyon <zoujingli@qq.com>
  * @date 2017/03/14 18:12
  */
-class NodeModel {
+class NodeService{
 
     /**
      * 应用用户权限节点
@@ -41,17 +41,23 @@ class NodeModel {
         }
         return false;
     }
-
     /**
      * 获取授权节点
      * @staticvar array $nodes
      * @return array
      */
-    public static function getAuthNode(){
-        $logic = \think\Loader::model('Node', 'logic');
-        return $logic->getAuthNode();
-
+    public static function getAuthNode() {
+        static $nodes = [];
+        if (empty($nodes)) {
+            $nodes = cache('need_access_node');
+            if (empty($nodes)) {
+                $nodes = Db::name('SystemNode')->where('is_auth', '1')->column('node');
+                cache('need_access_node', $nodes);
+            }
+        }
+        return $nodes;
     }
+
 
     /**
      * 检查用户节点权限
@@ -73,7 +79,7 @@ class NodeModel {
      * 获取系统代码节点
      * @return array
      */
-    static public function get() {
+    static public function getNodes() {
         $alias = [];
         foreach (Db::name('SystemNode')->select() as $vo) {
             $alias["{$vo['node']}"] = $vo;
@@ -100,6 +106,8 @@ class NodeModel {
         }
         return $nodes;
     }
+
+
 
     /**
      * 获取节点列表

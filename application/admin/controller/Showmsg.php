@@ -13,7 +13,7 @@ use service\DataService;
 use app\admin\model\AddrModel;
 use think\Db;
 
-class Showmsg extends BasicAdmin{
+class Showmsg extends BaseController{
     protected $table = 'SystemArea';
     protected $title = '相关信息';
 

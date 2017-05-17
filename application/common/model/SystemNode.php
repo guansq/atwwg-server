@@ -12,14 +12,18 @@
 // | github开源项目：https://github.com/zoujingli/Think.Admin
 // +----------------------------------------------------------------------
 
-namespace app\common\logic;
+namespace app\common\model;
 
 use think\Db;
-use think\Model;
 
 /**
+ * 系统权限节点读取器
+ * Class Node
+ * @package app\admin\model
+ * @author Anyon <zoujingli@qq.com>
+ * @date 2017/03/14 18:12
  */
-class Base extends Model{
+class SystemNode extends BaseModel{
 
 
 }

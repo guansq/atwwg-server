@@ -17,6 +17,7 @@ namespace app\admin\controller;
 use app\common\model\AuthNode;
 use service\DataService;
 use service\ToolsService;
+use service\NodeService;
 use think\Db;
 
 /**
@@ -99,7 +100,7 @@ class Menu extends BaseController {
                 }
             }
             // 读取系统功能节点
-            $nodes = AuthNode::get(APP_PATH);
+            $nodes = NodeService::getNodes(APP_PATH);
             foreach ($nodes as $key => $_vo) {
                 if (empty($_vo['is_menu'])) {
                     unset($nodes[$key]);

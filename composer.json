@@ -33,6 +33,7 @@
         "topthink/think-worker": "^1.0",
         "topthink/think-queue": "^1.0",
         "topthink/think-testing": "^1.0",
+        "qiniu/php-sdk": " ^7.0",
         "jpush/jpush": "v3.5.*"
     },
     "extra": {

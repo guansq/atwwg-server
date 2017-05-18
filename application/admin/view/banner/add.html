@@ -1,0 +1,32 @@
+<form class="layui-form layui-box" style='padding:25px 30px 20px 0' action='{:url("$classuri/add")}' data-auto="true" method="post">
+  <div class="layui-form-item">
+    <p class="h2 text-center"></p>
+  </div>
+
+
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">Banner名称 </label>
+    <div class="layui-input-block">
+      <input type="text" name="name" value='' required="required" title="请输入Banner名称" placeholder="请输入Banner名称" class="layui-input">
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">上传图片 </label>
+    <div class="layui-input-block">
+      <img data-tips-image style="height:auto;max-height:100px;min-width:100px" src=""/>
+      <input type="hidden" name="src" onchange="$(this).prev('img').attr('src', this.value)" value="" class="layui-input">
+      <a class="btn btn-link" data-file="one" data-type="ico,png" data-field="src">上传图片</a>
+    </div>
+  </div>
+
+
+
+  <div class="hr-line-dashed"></div>
+
+  <div class="layui-form-item text-center">
+    <button class="layui-btn" type='submit'>保存数据</button>
+  </div>
+
+</form>

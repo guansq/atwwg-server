@@ -15,9 +15,9 @@
 namespace service;
 
 use Exception;
-//use Qiniu\Auth;
-//use Qiniu\Storage\BucketManager;
-//use Qiniu\Storage\UploadManager;
+use Qiniu\Auth;
+use Qiniu\Storage\BucketManager;
+use Qiniu\Storage\UploadManager;
 use think\Config;
 use think\Log;
 

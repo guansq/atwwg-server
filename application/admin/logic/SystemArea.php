@@ -13,13 +13,32 @@
 // +----------------------------------------------------------------------
 
 namespace app\admin\logic;
-
-use think\Db;
-use think\Model;
-
+use \think\Db;
+use app\common\model\SystemArea as SystemAreaModel;
 /**
+ * 系统权限节点读取器
+ * Class Node
+ * @package app\admin\model
+ * @author Anyon <zoujingli@qq.com>
+ * @date 2017/03/14 18:12
  */
-class Base extends Model{
+class SystemArea extends BaseLogic{
 
+    /**
+     * 获取授权节点
+     * @staticvar array $nodes
+     * @return false|\PDOStatement|string|\think\Collection
+     */
+    public function getAddrList($pid='',$name='') {
+        //$this->title = '地区管理';
+        if(empty($name)){
+            $where = ['pid'=>$pid];
+        }else{
+            $where = ['name'=>['like','%'.$name.'%']];
+        }
+        //dump($where);
+        $addr = SystemAreaModel::getList($where);
+        return $addr;
+    }
 
 }

@@ -3,12 +3,12 @@
  * Created by PhpStorm.
  * User: Administrator
  * Date: 2017/5/12
- * Time: 14:23
+ * Time: 9:51
  */
-
 namespace app\api\controller;
 
-class Push extends BaseController{
-    public function index(){
-    }
+use think\Controller;
+
+class BaseController extends Controller{
+
 }

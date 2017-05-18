@@ -13,7 +13,7 @@ use service\DataService;
 use app\admin\model\AddrModel;
 use think\Db;
 
-class Chart extends Base{
+class Chart extends BaseController{
     protected $table = 'SystemArea';
     protected $title = '';
 

@@ -14,9 +14,8 @@
 
 namespace app\admin\controller;
 
-use app\admin\model\NodeModel as NodeModel;
-use controller\BasicAdmin;
 use service\DataService;
+use service\NodeService;
 use service\ToolsService;
 
 /**
@@ -26,7 +25,7 @@ use service\ToolsService;
  * @author Anyon <zoujingli@qq.com>
  * @date 2017/02/15 18:13
  */
-class Node extends Base {
+class Node extends BaseController {
 
     /**
      * 指定当前默认模型
@@ -46,7 +45,7 @@ class Node extends Base {
         $this->assign('alert', $alert);
         $this->assign('title', '系统节点管理');
         //dump(ToolsService::arr2table(NodeModel::get()));
-        $this->assign('nodes', ToolsService::arr2table(NodeModel::get(), 'node', 'pnode'));
+        $this->assign('nodes', ToolsService::arr2table(NodeService::getNodes(), 'node', 'pnode'));
         return view();
     }
 

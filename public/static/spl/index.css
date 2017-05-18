@@ -232,6 +232,7 @@
 }
 .atw-inquiry button{
     width:80px;
+    vertical-align: baseline;
 }
 .atw-qcent-btn {
     padding: 20px 0 0 0;

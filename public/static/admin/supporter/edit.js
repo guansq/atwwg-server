@@ -1,23 +1,27 @@
 /**
- *
- * Created by Administrator on 2017/5/10.
+ * Created by Administrator on 2017/5/15.
  */
-require(["jquery.dataTables","laydate"],function(){
+
+
+
+require(["cityselect","laydate","icheck"],function(){
+
   $(document).ready(function(){
     initPage();
-  })
+  });
+
 });
 
 function initPage(){
-  $('#example').DataTable({
-    //paging: false, 设置是否分页
-    "info": false,  //去除左下角的信息
-    "lengthChange": false, //是否允许用户改变表格每页显示的记录数
-    "ordering": false, //是否允许Datatables开启排序
-    "searching": false  //是否允许Datatables开启本地搜索
+  init_city_select($("#citySelect"));
+
+  // input 的样式
+  $('input').iCheck({
+    checkboxClass: 'icheckbox_minimal',
+    radioClass: 'iradio_minimal',
+    increaseArea: '20%' // optional
   });
 
-  //时间选择
   $(".date_time").focus(function(){
     /*
      laydate插件提供显示日期控件的方法
@@ -44,6 +48,3 @@ function initPage(){
     });
   });
 }
-
-
-

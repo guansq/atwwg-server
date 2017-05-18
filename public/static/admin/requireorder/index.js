@@ -4,15 +4,20 @@
  */
 
 require(["icheck"],function(){
-  //input
+
   $(document).ready(function(){
-    $('input').iCheck({
-      checkboxClass: 'icheckbox_minimal',
-      radioClass: 'iradio_minimal',
-      increaseArea: '20%' // optional
-    });
+    initPage();
   });
 });
+
+function initPage(){
+  //input
+  $('input').iCheck({
+    checkboxClass: 'icheckbox_minimal',
+    radioClass: 'iradio_minimal',
+    increaseArea: '20%' // optional
+  });
+}
 
 // 打开弹框
 $(".select_sell").click(function(e){

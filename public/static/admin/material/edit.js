@@ -1,13 +1,13 @@
 /**
  *
- * Created by Administrator on 2017/5/11.
+ * Created by Administrator on 2017/5/15.
  */
 
 require(["icheck"],function(){
-  $(document).ready(function(){
-    initPage();
-  });
-});
+
+  initPage();
+
+})
 
 function initPage(){
   $('input').iCheck({

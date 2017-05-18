@@ -10,10 +10,9 @@ namespace app\admin\controller;
 use controller\BasicAdmin;
 use service\LogService;
 use service\DataService;
-use app\admin\model\AddrModel;
 use think\Db;
 
-class Requireorder extends BasicAdmin{
+class Requireorder extends BaseController{
     protected $table = 'SystemArea';
     protected $title = '请购单管理';
 

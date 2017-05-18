@@ -12,8 +12,9 @@
 // | github开源项目：https://github.com/zoujingli/Think.Admin
 // +----------------------------------------------------------------------
 
-namespace app\admin\logic;
-use \think\Db;
+namespace app\common\model;
+
+use think\Db;
 
 /**
  * 系统权限节点读取器
@@ -22,23 +23,7 @@ use \think\Db;
  * @author Anyon <zoujingli@qq.com>
  * @date 2017/03/14 18:12
  */
-class Node extends Base{
+class SystemNode extends BaseModel{
 
-    /**
-     * 获取授权节点
-     * @staticvar array $nodes
-     * @return array
-     */
-    public static function getAuthNode() {
-        static $nodes = [];
-        if (empty($nodes)) {
-            $nodes = cache('need_access_node');
-            if (empty($nodes)) {
-                $nodes = Db::name('SystemNode')->where('is_auth', '1')->column('node');
-                cache('need_access_node', $nodes);
-            }
-        }
-        return $nodes;
-    }
 
 }

@@ -14,8 +14,7 @@
 
 namespace app\admin\controller;
 
-use app\admin\model\NodeModel;
-use controller\BasicAdmin;
+use app\common\model\AuthNode;
 use service\DataService;
 use service\ToolsService;
 use think\Db;
@@ -27,7 +26,7 @@ use think\Db;
  * @author Anyon <zoujingli@qq.com>
  * @date 2017/02/15
  */
-class Menu extends Base {
+class Menu extends BaseController {
 
     /**
      * 绑定操作模型
@@ -100,7 +99,7 @@ class Menu extends Base {
                 }
             }
             // 读取系统功能节点
-            $nodes = NodeModel::get(APP_PATH);
+            $nodes = AuthNode::get(APP_PATH);
             foreach ($nodes as $key => $_vo) {
                 if (empty($_vo['is_menu'])) {
                     unset($nodes[$key]);

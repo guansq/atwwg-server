@@ -14,8 +14,7 @@
 
 namespace app\admin\controller;
 
-use app\admin\model\NodeModel;
-use controller\BasicAdmin;
+use app\admin\logic\SystemNode;
 use service\DataService;
 use service\ToolsService;
 use think\Db;
@@ -28,14 +27,14 @@ use think\View;
  * @author Anyon <zoujingli@qq.com>
  * @date 2017/02/15 10:41
  */
-class Index extends Base {
+class Index extends BaseController {
 
     /**
      * 后台框架布局
      * @return View
      */
     public function index() {
-        NodeModel::applyAuthNode();
+        SystemNode::applyAuthNode();
         $list = Db::name('SystemMenu')->where('status', '1')->order('sort asc,id asc')->select();
         //dump(ToolsService::arr2tree($list));
         $menus = $this->_filterMenu(ToolsService::arr2tree($list));
@@ -59,7 +58,7 @@ class Index extends Base {
                 $menu['url'] = '#';
             } elseif (stripos($menu['url'], 'http') === 0) {
                 continue;
-            } elseif ($menu['url'] !== '#' && auth(join('/', array_slice(explode('/', $menu['url']), 0, 3)))) {
+            } elseif ($menu['url'] !== '#' &&  SystemNode::checkAuthNode(join('/', array_slice(explode('/', $menu['url']), 0, 3)))) {
                 $menu['url'] = url($menu['url']);
             } else {
                 unset($menus[$key]);
@@ -107,7 +106,7 @@ class Index extends Base {
             if ($data['password'] !== $data['repassword']) {
                 $this->error('两次输入的密码不一致，请重新输入！');
             }
-            $user = Db::name('SystemUser')->where('id', session('user.id'))->find();
+            $user = Db::name('SystemAdmin')->where('id', session('user.id'))->find();
             if (md5($data['oldpassword']) !== $user['password']) {
                 $this->error('旧密码验证失败，请重新输入！');
             }

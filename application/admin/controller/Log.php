@@ -14,7 +14,6 @@
 
 namespace app\admin\controller;
 
-use controller\BasicAdmin;
 use service\DataService;
 use think\Db;
 
@@ -25,7 +24,7 @@ use think\Db;
  * @author Anyon <zoujingli@qq.com>
  * @date 2017/02/15 18:12
  */
-class Log extends Base {
+class Log extends BaseController {
 
     /**
      * 指定当前数据表

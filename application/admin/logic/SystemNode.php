@@ -12,7 +12,7 @@
 // | github开源项目：https://github.com/zoujingli/Think.Admin
 // +----------------------------------------------------------------------
 
-namespace app\common\logic;
+namespace app\admin\logic;
 use \think\Db;
 
 /**
@@ -22,8 +22,25 @@ use \think\Db;
  * @author Anyon <zoujingli@qq.com>
  * @date 2017/03/14 18:12
  */
-class Node extends Base{
+class SystemNode extends BaseLogic{
 
+
+    /**
+     * 应用用户权限节点
+     * @return bool
+     */
+    public static function applyAuthNode() {
+        cache('need_access_node', null);
+        if (($authorize = session('user.authorize'))) {
+            $authorizeids = Db::name('SystemAuth')->where('id', 'in', explode(',', $authorize))->where('status', '1')->column('id');
+            if (empty($authorizeids)) {
+                return session('user.nodes', []);
+            }
+            $nodes = Db::name('SystemAuthNode')->where('auth', 'in', $authorizeids)->column('node');
+            return session('user.nodes', $nodes);
+        }
+        return false;
+    }
     /**
      * 获取授权节点
      * @staticvar array $nodes
@@ -39,6 +56,23 @@ class Node extends Base{
             }
         }
         return $nodes;
+    }
+
+
+    /**
+     * 检查用户节点权限
+     * @param string $node 节点
+     * @return bool
+     */
+    public static function checkAuthNode($node) {
+        $auth_node = strtolower($node);
+        if (session('user.username') === 'admin' || stripos($node, 'admin/index') === 0) {
+            return true;
+        }
+        if (!in_array($auth_node, self::getAuthNode())) {
+            return true;
+        }
+        return in_array($auth_node, (array) session('user.nodes'));
     }
 
 }

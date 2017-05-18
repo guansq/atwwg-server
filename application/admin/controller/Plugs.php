@@ -24,7 +24,7 @@ use service\FileService;
  * @author Anyon <zoujingli@qq.com>
  * @date 2017/02/21
  */
-class Plugs extends BasicAdmin {
+class Plugs extends BaseController {
 
     /**
      * 默认检查用户登录状态

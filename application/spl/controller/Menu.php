@@ -32,7 +32,7 @@ class Menu extends Base {
      * 绑定操作模型
      * @var string
      */
-    protected $table = 'SplMenu';
+    protected $table = 'SystemUserMenu';
 
     /**
      * 菜单列表

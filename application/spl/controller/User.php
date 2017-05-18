@@ -31,7 +31,7 @@ class User extends Base {
      * 指定当前数据表
      * @var string
      */
-    protected $table = 'SplUser';
+    protected $table = 'SystemUser';
 
     /**
      * 用户列表

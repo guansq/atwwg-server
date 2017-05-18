@@ -56,7 +56,7 @@ class Index extends Base{
         /*if (in_array('10000', explode(',', $this->request->post('id')))) {
             $this->error('系统超级账号禁止操作！');
         }*/
-        if (intval($this->request->request('id')) !== intval(session('user.id'))) {
+        if (intval($this->request->request('id')) !== intval(session('spl_user.id'))) {
             $this->error('访问异常！');
         }
         if ($this->request->isGet()) {
@@ -86,7 +86,8 @@ class Index extends Base{
         /*if (in_array('10000', explode(',', $this->request->post('id')))) {
             $this->error('系统超级账号禁止操作！');
         }*/
-        if (intval($this->request->request('id')) === intval(session('user.id'))) {
+
+        if (intval($this->request->request('id')) === intval(session('spl_user.id'))) {
             return $this->_form('SystemUser', 'user/form');
         }
         $this->error('访问异常！');

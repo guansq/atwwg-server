@@ -2,7 +2,7 @@
     <div class="console-topbar">
         <div class="topbar-wrap topbar-clearfix">
             <div class="topbar-head topbar-left">
-                <a href="{:url('@admin')}" class="topbar-logo topbar-left">
+                <a href="" class="topbar-logo topbar-left">
                     <span class="icon-logo">{:sysconf('app_name')} <sup>{:sysconf('app_version')}</sup></span>
                 </a>
             </div>
@@ -37,12 +37,12 @@
                 <div class="topbar-left topbar-user">
                     <div class="dropdown topbar-info-item">
                         <a href="#" class="dropdown-toggle topbar-btn text-center" data-toggle="dropdown">
-                            <span class='glyphicon glyphicon-user'></span> {:session('user.username')} </span>
+                            <span class='glyphicon glyphicon-user'></span> {:session('spl_user.user_name')} </span>
                             <span class="glyphicon glyphicon-menu-up transition" style="font-size:12px"></span>
                         </a>
                         <ul class="dropdown-menu">
                             <li class="topbar-info-btn">
-                                <a data-modal="{:url('spl/index/pass')}?id={:session('user.id')}">
+                                <a data-modal="{:url('spl/index/pass')}?id={:session('spl_user.id')}">
                                     <span><i class='glyphicon glyphicon-lock'></i> 修改密码</span>
                                 </a>
                             </li>

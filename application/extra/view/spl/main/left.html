@@ -11,6 +11,7 @@
                 <div class="sidebar-nav main-nav">
                     {empty name='menu.sub'}
                     <ul class="sidebar-trans">
+                        {if condition="$Think.session.spl_user['id'] eq 1"}
                         <li class="nav-item">
                             <a data-menu-node='m-{$pmenu.id}-{$menu.id}' data-open="{$menu.url}"
                                class="sidebar-trans">
@@ -20,6 +21,19 @@
                                 <span class="nav-title">{$menu.title}</span>
                             </a>
                         </li>
+                        {else /}
+                        {if condition="$menu['id'] neq 21"}
+                        <li class="nav-item">
+                            <a data-menu-node='m-{$pmenu.id}-{$menu.id}' data-open="{$menu.url}"
+                               class="sidebar-trans">
+                                <div class="nav-icon sidebar-trans">
+                                    <span class="{$menu.icon|default='fa fa-link'} transition"></span>
+                                </div>
+                                <span class="nav-title">{$menu.title}</span>
+                            </a>
+                        </li>
+                        {/if}
+                        {/if}
                     </ul>
                     {else}
                     <div class="sidebar-title">

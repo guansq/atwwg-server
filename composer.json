@@ -23,6 +23,8 @@
 	},
     "require": {
         "php": ">=5.4.0",
+        "ext-openssl": "*",
+        "phpunit/phpunit": "^4.8.26",
         "topthink/framework": "^5.0",
         "topthink/think-image": "^1.0",
         "topthink/think-captcha": "^1.0",
@@ -33,7 +35,7 @@
         "topthink/think-worker": "^1.0",
         "topthink/think-queue": "^1.0",
         "topthink/think-testing": "^1.0",
-        "jpush/jpush": "v3.5.*"
+        "lcobucci/jwt": "v3.2.*"
     },
     "extra": {
         "think-path": "thinkphp"

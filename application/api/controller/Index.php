@@ -7,6 +7,12 @@
  */
 
 namespace app\api\controller;
+
+use Lcobucci\JWT\Builder;
+use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Parsing\Encoder;
+use Lcobucci\JWT\Signer\Hmac\Sha256;
+use Lcobucci\JWT\ValidationData;
 use think\Request;
 
 class Index extends BaseController{
@@ -14,12 +20,39 @@ class Index extends BaseController{
     private $templateurl = 'http://api.sendcloud.net/apiv2/mail/sendtemplate';
 
     /**
+     * @api      {POST} /member/login 02.用户登录(todo)
+     * @apiName  login
+     * @apiGroup member
+     * @apiParam {String} account 账号/手机号/邮箱.
+     * @apiParam {String} password 密码.
+     * @apiParam {String} [wxOpenid]  微信openid.
+     * @apiParam {String} [pushToken]   消息推送token.
+     * @apiSuccess {String} accessToken 接口调用凭证.
+     * @apiSuccess {String} refreshToken 刷新凭证.
+     * @apiSuccess {Number} expireTime  有效期.
+     */
+    public function login(){
+        $encoder = new Encoder();
+        returnJson(2000, 'jwtTest', $encoder->jsonEncode(['test' => '1111']));
+    }
+
+    /**
      * 显示资源列表
      *
      * @return \think\Response
      */
     public function index(){
-        returnJson();
+
+        $builder = new Builder();
+        $signer = new Sha256();
+        $token = $builder
+            ->setExpiration(time()+10)
+            ->set('user', ['id'=>123232323])
+            ->sign($signer, 'ruitukeji')// Configures a new claim, called "uid"
+            ->getToken(); // Retrieves the generated token
+      //  sleep(2);
+        returnJson(2000,'',(string)$token);
+
     }
 
     /**
@@ -27,64 +60,65 @@ class Index extends BaseController{
      *
      * @return \think\Response
      */
-    public function create()
-    {
-        //
+    public function create(){
+        returnJson(2000, '显示创建资源表单页');
     }
 
     /**
      * 保存新建的资源
      *
-     * @param  \think\Request  $request
+     * @param  \think\Request $request
      * @return \think\Response
      */
-    public function save(Request $request)
-    {
-        //
+    public function save(Request $request){
+        $params = $request->header(['authorization-token']);
+        $tokenStr = $params["authorization-token"];
+        //从jwt获取信息
+        $token = (new Parser())->parse($tokenStr); // Parses from a string
+        if($token->isExpired()){
+            returnJson(4001,'token is expired.');
+        }
+        echo json_encode($token->getClaim('user')); // will print "1"
     }
 
     /**
      * 显示指定的资源
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \think\Response
      */
-    public function read($id)
-    {
+    public function read($id){
         returnJson($id);
     }
 
     /**
      * 显示编辑资源表单页.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \think\Response
      */
-    public function edit($id)
-    {
+    public function edit($id){
         //
     }
 
     /**
      * 保存更新的资源
      *
-     * @param  \think\Request  $request
-     * @param  int  $id
+     * @param  \think\Request $request
+     * @param  int            $id
      * @return \think\Response
      */
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id){
         //
     }
 
     /**
      * 删除指定资源
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \think\Response
      */
-    public function delete($id)
-    {
+    public function delete($id){
         //
     }
 
@@ -92,7 +126,7 @@ class Index extends BaseController{
     /**
      * 发送邮件
      */
-    function send_mail($istrigger = true,$to='tan3250204@sina.com',$subject='test',$html='来自管管的邮件，收到了吗') {
+    function send_mail($istrigger = true, $to = 'tan3250204@sina.com', $subject = 'test', $html = '来自管管的邮件，收到了吗'){
         input('to');
         input('subject');
         input('html');
@@ -125,21 +159,22 @@ class Index extends BaseController{
                 'method' => 'POST',
                 'header' => 'Content-Type: application/x-www-form-urlencoded',
                 'content' => $data
-            ));
-        $context  = stream_context_create($options);
+            )
+        );
+        $context = stream_context_create($options);
         $result = file_get_contents($url, FILE_TEXT, $context);
 
         return $result;
     }
 
-    function send_curl_mail($to='tan3250204@sina.com',$subject='test',$html='来自管管的邮件，收到了吗') {
+    function send_curl_mail($to = 'tan3250204@sina.com', $subject = 'test', $html = '来自管管的邮件，收到了吗'){
         $API_USER = 'atwwg_single_sender_dev';
         $API_KEY = 'ALArOxO9xe6KVlq6';
         $ch = curl_init();
 
 
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($ch, CURLOPT_URL, $url = $this->url);
@@ -151,24 +186,25 @@ class Index extends BaseController{
             'fromName' => '小管',
             'to' => '735969586@qq.com', # 收件人地址，用正确邮件地址替代，多个地址用';'分隔
             'subject' => '测试测试 TO 伍大美',
-            'html' => "测试测试 TO 伍大美 测试测试 TO 伍大美")); #附件名称
+            'html' => "测试测试 TO 伍大美 测试测试 TO 伍大美"
+        )); #附件名称
 
         $result = curl_exec($ch);
 
-        if($result === false) {
+        if($result === false){
             echo curl_error($ch);
         }
         curl_close($ch);
         return $result;
     }
 
-    function send_tmp_mail() {
+    function send_tmp_mail(){
         $url = $this->templateurl;
 
-        $vars = json_encode( array("to" => array('tan3250204@sina.com'),
-                "sub" => array("%code%" => Array('123456'))
-            )
-        );
+        $vars = json_encode(array(
+            "to" => array('tan3250204@sina.com'),
+            "sub" => array("%code%" => Array('123456'))
+        ));
 
         $API_USER = 'atwwg_single_sender_dev';
         $API_KEY = 'ALArOxO9xe6KVlq6';
@@ -191,14 +227,15 @@ class Index extends BaseController{
                 'method' => 'POST',
                 'header' => 'Content-Type: application/x-www-form-urlencoded',
                 'content' => $data
-            ));
-        $context  = stream_context_create($options);
+            )
+        );
+        $context = stream_context_create($options);
         $result = file_get_contents($url, FILE_TEXT, $context);
 
         return $result;
     }
 
-    function send_sms() {
+    function send_sms(){
         $url = 'http://www.sendcloud.net/smsapi/send';
 
         $param = array(
@@ -211,8 +248,8 @@ class Index extends BaseController{
 
         $sParamStr = "";
         ksort($param);
-        foreach ($param as $sKey => $sValue) {
-            $sParamStr .= $sKey . '=' . $sValue . '&';
+        foreach($param as $sKey => $sValue){
+            $sParamStr .= $sKey.'='.$sValue.'&';
         }
 
         $sParamStr = trim($sParamStr, '&');
@@ -238,8 +275,9 @@ class Index extends BaseController{
                 'header' => 'Content-Type:application/x-www-form-urlencoded',
                 'content' => $data
 
-            ));
-        $context  = stream_context_create($options);
+            )
+        );
+        $context = stream_context_create($options);
         $result = file_get_contents($url, FILE_TEXT, $context);
 
         return $result;

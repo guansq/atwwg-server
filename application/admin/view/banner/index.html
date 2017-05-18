@@ -1,0 +1,80 @@
+{extend name='extra@admin/content' /}
+
+{block name="button"}
+<div class="nowrap pull-right" style="margin-top:10px">
+	<button data-modal='{:url("$classuri/add")}' data-title="添加banner" class='layui-btn layui-btn-small'><i
+			class='fa fa-plus'></i> 添加Banner
+	</button>
+	<button data-update data-field='delete' data-action='{:url("$classuri/del")}'
+					class='layui-btn layui-btn-small layui-btn-danger'><i class='fa fa-remove'></i> 删除banner
+	</button>
+</div>
+{/block}
+
+{block name="content"}
+<!-- 表单搜索 开始 -->
+<form class="animated form-search" action='{:url("$classuri/index")}' onsubmit="return false" method="get">
+
+	<div class="row">
+		<div class="col-xs-3">
+			<div class="form-group">
+				<input type="text" name="name" value="{$Think.get.name|default=''}" placeholder="banner名称"
+							 class="input-sm form-control">
+			</div>
+		</div>
+
+
+		<div class="col-xs-1">
+			<div class="form-group">
+				<button type="submit" class="btn btn-sm btn-white"><i class="fa fa-search"></i> 搜索</button>
+			</div>
+		</div>
+	</div>
+</form>
+<!-- 表单搜索 结束 -->
+<form onsubmit="return false;" data-auto="" method="POST">
+<input type="hidden" value="resort" name="action"/>
+<table class="table table-hover">
+	<thead>
+	<tr>
+		<th class='list-table-check-td'>
+			<input data-none-auto="" data-check-target='.list-check-box' type='checkbox'/>
+		</th>
+		<th class='list-table-sort-td'>
+			<button type="submit" class="layui-btn layui-btn-normal layui-btn-mini">排 序</button>
+		</th>
+		<th class='text-center'>Banner名称</th>
+		<th class='text-center'>展示图</th>
+		<th class='text-center'>操作</th>
+	</tr>
+	</thead>
+	<tbody>
+	{foreach $list as $key=>$vo}
+	<tr>
+		<td class='list-table-check-td'>
+			<input class="list-check-box" value='{$vo.id}' type='checkbox'/>
+		</td>
+		<td class='list-table-sort-td'>
+			<input name="_{$vo.id}" value="{$vo.sort}" class="list-sort-input"/>
+		</td>
+		<td class='text-center'>{$vo.name}</td>
+		<td class='text-center'><img data-tips-image style="height:auto;max-height:100px;min-width:100px" src="{$vo.src}"/></td>
+		<td class='text-center'>
+			{if auth("$classuri/add")}
+			<!--<a class="layui-btn" data-modal='{:url("$classuri/edit")}?id={$vo.id}'>编辑</a>-->
+			{/if}
+			{if auth("$classuri/del")}
+			<a class="layui-btn" data-update="{$vo.id}" data-field="delete" data-action='{:url("$classuri/del")}'>删除</a>
+			{/if}
+		</td>
+	</tr>
+	{/foreach}
+	</tbody>
+</table>
+</form>
+{/block}
+
+{block name="script"}
+{/block}
+
+

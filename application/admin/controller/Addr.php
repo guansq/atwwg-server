@@ -10,7 +10,7 @@ namespace app\admin\controller;
 use controller\BasicAdmin;
 use service\LogService;
 use service\DataService;
-use app\admin\model\SystemArea;
+//use app\admin\model\SystemArea;
 use think\Db;
 
 class Addr extends BaseController{

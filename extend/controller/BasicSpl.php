@@ -50,7 +50,7 @@ class BasicSpl extends Controller {
      * 默认检查节点访问权限
      * @var bool
      */
-    protected $checkAuth = true;
+    protected $checkAuth = false;
 
 
     /**

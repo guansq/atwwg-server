@@ -1,7 +1,7 @@
 define({
   "name": "安特威物供接口文档",
   "version": "0.0.0",
-  "description": "返回数据格式说明：<br> <pre class=\"prettyprint language-json prettyprinted\" data-type=\"json\"><code class=\"sample-request-response-json\">{\n  \"status\": 2000,\t//状态码 \n  \"msg\": \"成功\", \t//返回信息\n  \"result\": {}\t\t//数据包 \n}</code></pre> \n 正式服地址：http://atwwg.api.ruitukeji.com \n测试服地址：http://atwwg.api.ruitukeji.com",
+  "description": "返回数据格式说明：<br> <pre class=\"prettyprint language-json prettyprinted\" data-type=\"json\"><code class=\"sample-request-response-json\">{\n  \"status\": 2000,\t//状态码 \n  \"msg\": \"成功\", \t//返回信息\n  \"result\": {}\t\t//数据包 \n}</code></pre> \n 正式服地址：http://xxx.com \n测试服地址：http://atwwg.api.ruitukeji.com",
   "title": "安特威物供-接口文档 ",
   "url": "http://atwwg.api.ruitukeji.com",
   "sampleUrl": "http://atwwg.api.ruitukeji.com",
@@ -27,7 +27,7 @@ define({
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2017-05-18T13:21:01.322Z",
+    "time": "2017-05-19T01:52:33.356Z",
     "url": "http://apidocjs.com",
     "version": "0.17.5"
   }

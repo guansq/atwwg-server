@@ -21,14 +21,14 @@ class Inquiry extends BaseController{
      * @apiGroup inquiry
      * @apiHeader {String} authorization-token           token.
      *
-     * @apiParam {Array} list            询价单号.
-     * @apiParam {Number} list.id                  询价单id.
-     * @apiParam {String} list.itemCode            料品编号.
-     * @apiParam {String} list.itemName            料品名称.
-     * @apiParam {String} list.priceUom            计价单位.
-     * @apiParam {String} list.tcUom               交易单位.
-     * @apiParam {Number} list.tcNum               交易数量.
-     * @apiParam {String} list.reqDate             需求日期.
+     * @apiSUCCESS {Array} list            询价单号.
+     * @apiSUCCESS {Number} list.id                  询价单id.
+     * @apiSUCCESS {String} list.itemCode            料品编号.
+     * @apiSUCCESS {String} list.itemName            料品名称.
+     * @apiSUCCESS {String} list.priceUom            计价单位.
+     * @apiSUCCESS {String} list.tcUom               交易单位.
+     * @apiSUCCESS {Number} list.tcNum               交易数量.
+     * @apiSUCCESS {String} list.reqDate             需求日期.
      */
     public function index(){
         returnJson();

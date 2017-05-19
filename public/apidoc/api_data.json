@@ -18,60 +18,60 @@
         ]
       }
     },
-    "parameter": {
+    "success": {
       "fields": {
-        "Parameter": [
+        "Success 200": [
           {
-            "group": "Parameter",
+            "group": "Success 200",
             "type": "Array",
             "optional": false,
             "field": "list",
             "description": "<p>询价单号.</p>"
           },
           {
-            "group": "Parameter",
+            "group": "Success 200",
             "type": "Number",
             "optional": false,
             "field": "list.id",
             "description": "<p>询价单id.</p>"
           },
           {
-            "group": "Parameter",
+            "group": "Success 200",
             "type": "String",
             "optional": false,
             "field": "list.itemCode",
             "description": "<p>料品编号.</p>"
           },
           {
-            "group": "Parameter",
+            "group": "Success 200",
             "type": "String",
             "optional": false,
             "field": "list.itemName",
             "description": "<p>料品名称.</p>"
           },
           {
-            "group": "Parameter",
+            "group": "Success 200",
             "type": "String",
             "optional": false,
             "field": "list.priceUom",
             "description": "<p>计价单位.</p>"
           },
           {
-            "group": "Parameter",
+            "group": "Success 200",
             "type": "String",
             "optional": false,
             "field": "list.tcUom",
             "description": "<p>交易单位.</p>"
           },
           {
-            "group": "Parameter",
+            "group": "Success 200",
             "type": "Number",
             "optional": false,
             "field": "list.tcNum",
             "description": "<p>交易数量.</p>"
           },
           {
-            "group": "Parameter",
+            "group": "Success 200",
             "type": "String",
             "optional": false,
             "field": "list.reqDate",

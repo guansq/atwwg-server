@@ -11,8 +11,8 @@
     "license": "Apache-2.0",
     "authors": [
         {
-            "name": "liu21st",
-            "email": "liu21st@gmail.com"
+            "name": "ruitukeji",
+            "email": "wxx@ruitukeji.com"
         }
     ],
      "repositories": {
@@ -33,8 +33,8 @@
         "topthink/think-worker": "^1.0",
         "topthink/think-queue": "^1.0",
         "topthink/think-testing": "^1.0",
-        "qiniu/php-sdk": " ^7.0",
-        "jpush/jpush": "v3.5.*"
+        "lcobucci/jwt": "v3.2.*",
+        "qiniu/php-sdk": " ^7.0"
     },
     "extra": {
         "think-path": "thinkphp"

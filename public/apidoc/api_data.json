@@ -58,6 +58,20 @@
           },
           {
             "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "list.priceNum",
+            "description": "<p>计价数量.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "list.subtotal",
+            "description": "<p>小计.</p>"
+          },
+          {
+            "group": "Success 200",
             "type": "String",
             "optional": false,
             "field": "list.tcUom",
@@ -65,17 +79,17 @@
           },
           {
             "group": "Success 200",
-            "type": "Number",
+            "type": "String",
             "optional": false,
-            "field": "list.tcNum",
-            "description": "<p>交易数量.</p>"
+            "field": "list.reqDate",
+            "description": "<p>需求日期.</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "list.reqDate",
-            "description": "<p>需求日期.</p>"
+            "field": "list.status",
+            "description": "<p>状态. init=未报价  quoted=已报价  winbid=中标 close=已关闭</p>"
           }
         ]
       }

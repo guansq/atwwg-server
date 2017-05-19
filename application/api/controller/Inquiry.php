@@ -26,9 +26,11 @@ class Inquiry extends BaseController{
      * @apiSUCCESS {String} list.itemCode            料品编号.
      * @apiSUCCESS {String} list.itemName            料品名称.
      * @apiSUCCESS {String} list.priceUom            计价单位.
+     * @apiSUCCESS {String} list.priceNum            计价数量.
+     * @apiSUCCESS {String} list.subtotal            小计.
      * @apiSUCCESS {String} list.tcUom               交易单位.
-     * @apiSUCCESS {Number} list.tcNum               交易数量.
      * @apiSUCCESS {String} list.reqDate             需求日期.
+     * @apiSUCCESS {String} list.status              状态. init=未报价  quoted=已报价  winbid=中标 close=已关闭
      */
     public function index(){
         returnJson();

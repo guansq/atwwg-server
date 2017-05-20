@@ -18,6 +18,19 @@ define({ "api": [
         ]
       }
     },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "status",
+            "description": "<p>状态值. init=未报价  quoted=已报价  winbid=中标 close=已关闭.</p>"
+          }
+        ]
+      }
+    },
     "success": {
       "fields": {
         "Success 200": [
@@ -58,14 +71,14 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "Number",
+            "type": "String",
             "optional": false,
             "field": "list.priceNum",
             "description": "<p>计价数量.</p>"
           },
           {
             "group": "Success 200",
-            "type": "Number",
+            "type": "String",
             "optional": false,
             "field": "list.subtotal",
             "description": "<p>小计.</p>"
@@ -88,8 +101,57 @@ define({ "api": [
             "group": "Success 200",
             "type": "String",
             "optional": false,
+            "field": "list.inqDate",
+            "description": "<p>询价日期.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "list.quoteEndDate",
+            "description": "<p>报价截止日期.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
             "field": "list.status",
-            "description": "<p>状态. init=未报价  quoted=已报价  winbid=中标 close=已关闭</p>"
+            "description": "<p>状态值. init=未报价  quoted=已报价  winbid=中标 close=已关闭</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "list.statusStr",
+            "description": "<p>状态显示值. init=未报价  quoted=已报价  winbid=中标 close=已关闭</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": true,
+            "field": "list.promiseDate",
+            "description": "<p>报价承诺交期.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": true,
+            "field": "list.price",
+            "description": "<p>报价单价.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": true,
+            "field": "list.subTotal",
+            "description": "<p>报价小计.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": true,
+            "field": "list.remark",
+            "description": "<p>报价备注.</p>"
           }
         ]
       }
@@ -127,37 +189,30 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "Array",
-            "optional": false,
-            "field": "list",
-            "description": "<p>报价列表.</p>"
-          },
-          {
-            "group": "Parameter",
             "type": "Number",
             "optional": false,
-            "field": "list.id",
+            "field": "id",
             "description": "<p>询价单id.</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "list.promiseDate",
+            "field": "promiseDate",
             "description": "<p>承诺交期.</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "list.price",
+            "field": "price",
             "description": "<p>询价单价.</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "list.remark",
+            "field": "remark",
             "description": "<p>备注.</p>"
           }
         ]

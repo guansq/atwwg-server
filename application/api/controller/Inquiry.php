@@ -20,6 +20,7 @@ class Inquiry extends BaseController{
      * @apiName  index
      * @apiGroup inquiry
      * @apiHeader {String} authorization-token           token.
+     * @apiParam {String} status            状态值. init=未报价  quoted=已报价  winbid=中标 close=已关闭.
      *
      * @apiSUCCESS {Array} list            询价单号.
      * @apiSUCCESS {Number} list.id                  询价单id.
@@ -30,7 +31,14 @@ class Inquiry extends BaseController{
      * @apiSUCCESS {String} list.subtotal            小计.
      * @apiSUCCESS {String} list.tcUom               交易单位.
      * @apiSUCCESS {String} list.reqDate             需求日期.
-     * @apiSUCCESS {String} list.status              状态. init=未报价  quoted=已报价  winbid=中标 close=已关闭
+     * @apiSUCCESS {String} list.inqDate             询价日期.
+     * @apiSUCCESS {String} list.quoteEndDate        报价截止日期.
+     * @apiSUCCESS {String} list.status              状态值. init=未报价  quoted=已报价  winbid=中标 close=已关闭
+     * @apiSUCCESS {String} list.statusStr           状态显示值. init=未报价  quoted=已报价  winbid=中标 close=已关闭
+     * @apiSUCCESS {String} [list.promiseDate]       报价承诺交期.
+     * @apiSUCCESS {String} [list.price]             报价单价.
+     * @apiSUCCESS {String} [list.subTotal]          报价小计.
+     * @apiSUCCESS {String} [list.remark]            报价备注.
      */
     public function index(){
         returnJson();
@@ -102,11 +110,10 @@ class Inquiry extends BaseController{
      * @apiGroup inquiry
      * @apiHeader {String} authorization-token           token.
      *
-     * @apiParam {Array} list            报价列表.
-     * @apiParam {Number} list.id                  询价单id.
-     * @apiParam {String} list.promiseDate         承诺交期.
-     * @apiParam {String} list.price               询价单价.
-     * @apiParam {String} list.remark              备注.
+     * @apiParam {Number} id                  询价单id.
+     * @apiParam {String} promiseDate         承诺交期.
+     * @apiParam {String} price               询价单价.
+     * @apiParam {String} remark              备注.
      */
     public function quote(){
         returnJson();

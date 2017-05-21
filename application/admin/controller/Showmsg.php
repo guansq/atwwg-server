@@ -10,7 +10,6 @@ namespace app\admin\controller;
 use controller\BasicAdmin;
 use service\LogService;
 use service\DataService;
-use app\admin\model\AddrModel;
 use think\Db;
 
 class Showmsg extends BaseController{

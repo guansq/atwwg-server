@@ -18,7 +18,7 @@ class Material extends BaseController{
     protected $title = '物料管理';
 
     public function index(){
-        //echo '111111111';die;
+
         $this->assign('title',$this->title);
         return view();
     }

@@ -16,7 +16,11 @@ namespace app\admin\controller;
 
 use controller\BasicAdmin;
 use service\FileService;
-
+use Qiniu\Auth as qinn;
+use Qiniu\Storage\BucketManager;
+use Qiniu\Storage\UploadManager;
+use think\File;
+use think\Log;
 /**
  * 插件助手控制器
  * Class Plugs
@@ -38,6 +42,9 @@ class Plugs extends BaseController {
      */
     protected $checkAuth = false;
 
+    protected $config;
+    protected $domain;
+    protected $bucket;
     /**
      * 文件上传
      * @param string $mode
@@ -120,6 +127,47 @@ class Plugs extends BaseController {
         $data = str_replace(['+', '/'], ['-', '_'], base64_encode(json_encode($params)));
         return $accessKey . ':' . str_replace(['+', '/'], ['-', '_'], base64_encode(hash_hmac('sha1', $data, $secretKey, true))) . ':' . $data;
     }
+
+    /**
+     * 生成七牛文件上传Token
+     * @param string $key
+     * @return string
+     */
+    public function getQiniuTokenByjs() {
+
+    }
+
+    /**
+     * 七牛重新上传
+     */
+    public function uploadbyjs(){
+        $domain = 'opmnz562z.bkt.clouddn.com';
+        $accessKey = sysconf('storage_qiniu_access_key');
+        $secretKey = sysconf('storage_qiniu_secret_key');
+        $bucket = sysconf('storage_qiniu_bucket');
+        // 初始化签权对象
+        $auth = new qinn($accessKey, $secretKey);
+        $token = $auth->uploadToken($bucket);
+        $file = request()->file('wangEditorH5File');
+        $info = $file->move(ROOT_PATH . 'public' . DS . 'upload');
+        $filePath = ROOT_PATH . 'public' . DS . 'upload'. DS .$info->getSaveName();
+        //echo $filePath.'<br>';
+        $key = $info->getFilename();
+
+        // 初始化 UploadManager 对象并进行文件的上传。
+        $uploadMgr = new UploadManager();
+
+        // 调用 UploadManager 的 putFile 方法进行文件的上传。
+        list($ret, $err) = $uploadMgr->putFile($token, $key, $filePath);
+        if ($err !== null) {
+            Log::error('七牛云文件上传失败, ' . var_export($err, true));
+            return null;
+        }
+
+        echo 'http://'.$domain .'/'. $key;
+    }
+
+
 
     /**
      * 字体图标

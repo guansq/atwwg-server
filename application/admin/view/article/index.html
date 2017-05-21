@@ -1,0 +1,67 @@
+{extend name='extra@admin/content' /}
+
+{block name="style"}
+<link href="//cdn.bootcss.com/wangeditor/2.1.20/css/wangEditor.css" rel="stylesheet">
+{/block}
+{block name="button"}
+<div class="nowrap pull-right" style="margin-top:10px">
+	<button data-modal='{:url("$classuri/add")}' data-title="添加文章" class='layui-btn layui-btn-small'><i
+			class='fa fa-plus'></i> 添加文章
+	</button>
+	<button data-update data-field='delete' data-action='{:url("$classuri/del")}'
+					class='layui-btn layui-btn-small layui-btn-danger'><i class='fa fa-remove'></i> 删除文章
+	</button>
+</div>
+{/block}
+
+{block name="content"}
+<!-- 表单搜索 开始 -->
+<form class="animated form-search" action='{:url("$classuri/index")}' onsubmit="return false" method="get">
+
+	<div class="row">
+		<div class="col-xs-3">
+			<div class="form-group">
+				<input type="text" name="name" value="{$Think.get.name|default=''}" placeholder="名称"
+							 class="input-sm form-control">
+			</div>
+		</div>
+
+
+		<div class="col-xs-1">
+			<div class="form-group">
+				<button type="submit" class="btn btn-sm btn-white"><i class="fa fa-search"></i> 搜索</button>
+			</div>
+		</div>
+	</div>
+</form>
+<!-- 表单搜索 结束 -->
+<form onsubmit="return false;" data-auto="" method="POST">
+<input type="hidden" value="resort" name="action"/>
+<table class="table table-hover">
+	<thead>
+	<tr>
+		<th class='list-table-check-td'>
+			<input data-none-auto="" data-check-target='.list-check-box' type='checkbox'/>
+		</th>
+		<th class='list-table-sort-td'>
+			<button type="submit" class="layui-btn layui-btn-normal layui-btn-mini">排 序</button>
+		</th>
+		<th class='text-center'>名称</th>
+		<th class='text-center'>标题</th>
+		<th class='text-center'>操作</th>
+	</tr>
+	</thead>
+	<tbody>
+
+	</tbody>
+</table>
+</form>
+{/block}
+
+{block name="script"}
+<script>
+	//console.log(111111111111);
+</script>
+{/block}
+
+

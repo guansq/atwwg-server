@@ -32,6 +32,7 @@ require.config({
         'template': ['../plugs/template/template'],
         'pcasunzips': ['../plugs/jquery/pcasunzips'],
         'laydate': ['../plugs/layui/laydate/laydate'],
+        'wangEditor': ['../plugs/wangedit/js/wangEditor'],
         // 开源插件（未修改源码）
         'pace': ['../plugs/jquery/pace.min'],
         'json': ['../plugs/jquery/json2.min'],

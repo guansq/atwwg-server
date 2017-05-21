@@ -34,38 +34,11 @@ class Index extends BaseController {
      * @return View
      */
     public function index() {
-        SystemNode::applyAuthNode();
-        $list = Db::name('SystemMenu')->where('status', '1')->order('sort asc,id asc')->select();
-        //dump(ToolsService::arr2tree($list));
-        $menus = $this->_filterMenu(ToolsService::arr2tree($list));
-        //dump(ToolsService::arr2tree($list));
         $this->assign('title', '系统管理');
-        $this->assign('menus', $menus);
         return view();
     }
 
-    /**
-     * 后台主菜单权限过滤
-     * @param array $menus
-     * @return array
-     */
-    private function _filterMenu($menus) {
-        foreach ($menus as $key => &$menu) {
-            if (!empty($menu['sub'])) {
-                $menu['sub'] = $this->_filterMenu($menu['sub']);
-            }
-            if (!empty($menu['sub'])) {
-                $menu['url'] = '#';
-            } elseif (stripos($menu['url'], 'http') === 0) {
-                continue;
-            } elseif ($menu['url'] !== '#' &&  SystemNode::checkAuthNode(join('/', array_slice(explode('/', $menu['url']), 0, 3)))) {
-                $menu['url'] = url($menu['url']);
-            } else {
-                unset($menus[$key]);
-            }
-        }
-        return $menus;
-    }
+
 
     /**
      * 主机信息显示

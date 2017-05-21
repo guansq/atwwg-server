@@ -11,6 +11,7 @@ use controller\BasicAdmin;
 use service\LogService;
 use service\DataService;
 //use app\admin\model\SystemArea;
+use app\common\model\SystemArea;
 use think\Db;
 
 class Addr extends BaseController{
@@ -69,7 +70,7 @@ class Addr extends BaseController{
             }
             return $result;
         }else{
-            $addr = AddrModel::getAddrInfo($where);
+            $addr = SystemArea::getList($where);
             if(empty($id)){
                 $uptitle = '添加顶级地区';
                 $merger_name = '';

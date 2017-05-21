@@ -1,3 +1,7 @@
+
+{block name="style"}
+<link href="//cdn.bootcss.com/wangeditor/2.1.20/css/wangEditor.css" rel="stylesheet">
+{/block}
 <style type="text/css">
   #editor-trigger {
     height: 400px;
@@ -19,16 +23,16 @@
   <div class="layui-form-item">
     <label class="layui-form-label">文章标题 </label>
     <div class="layui-input-block">
-      <input type="text" name="content" value='' required="required" title="请输入文章标题" placeholder="请输入文章标题" class="layui-input">
+      <input type="text" name="title" value='' required="required" title="请输入文章标题" placeholder="请输入文章标题" class="layui-input">
     </div>
   </div>
 
 
   <div id="editor-container" class="container">
-    <div id="editor-trigger"><p>请输入内容</p></div>
-    <!-- <textarea id="editor-trigger" style="display:none;">
+    <!--<div id="editor-trigger" name="content"><p>请输入内容</p></div>-->
+    <textarea id="editor-trigger" name="content" style="display:none;">
         <p>请输入内容...</p>
-    </textarea> -->
+    </textarea>
   </div>
 
 
@@ -39,103 +43,16 @@
   </div>
 
 </form>
-<script type="text/javascript" src="/static/plugs/wangedit/js/plupload/plupload.full.min.js"></script>
-<script type="text/javascript" src="/static/plugs/wangedit/js/plupload/i18n/zh_CN.js"></script>
-<script type="text/javascript" src="/static/plugs/wangedit/js/qiniu.js"></script>
+
 <script type="text/javascript">
 
   require(["wangEditor"],function(){
     var editor = new wangEditor('editor-trigger');
     // 配置上传图片的地址
     editor.config.uploadImgUrl = '/plugs/uploadbyjs';
-//    editor.create();
-    // 生成编辑器
-    //var editor = new wangEditor('editor-trigger');
-//    editor.config.customUpload = true;  // 设置自定义上传的开关
-//    editor.config.customUploadInit = uploadInit;  // 配置自定义上传初始化事件，uploadInit方法在上面定义了
     editor.create();
   });
 
-
-
-  // 初始化七牛上传
-  function uploadInit() {
-    // this 即 editor 对象
-    var editor = this;
-    // 触发选择文件的按钮的id
-    var btnId = editor.customUploadBtnId;
-    // 触发选择文件的按钮的父容器的id
-    var containerId = editor.customUploadContainerId;
-
-    // 创建上传对象
-    var uploader = Qiniu.uploader({
-      runtimes: 'html5,flash,html4',    //上传模式,依次退化
-      browse_button: btnId,       //上传选择的点选按钮，**必需**
-      uptoken_url: '/Plugs/getQiniuTokenByjs',
-      //uptoken_url: '/upload',
-      save_key: true,
-      // 默认 false。若在服务端生成uptoken的上传策略中指定了 `sava_key`，则开启，SDK在前端将不对key进行任何处理
-      domain: 'http://opmnz562z.bkt.clouddn.com/',
-      //bucket 域名，下载资源时用到，**必需**
-      container: containerId,           //上传区域DOM ID，默认是browser_button的父元素，
-      max_file_size: '100mb',           //最大文件体积限制
-      flash_swf_url: '/static/plugs/wangedit/js/plupload/Moxie.swf',  //引入flash,相对路径
-      filters: {
-        mime_types: [
-          //只允许上传图片文件 （注意，extensions中，逗号后面不要加空格）
-          { title: "图片文件", extensions: "jpg,gif,png,bmp" }
-        ]
-      },
-      max_retries: 3,                   //上传失败最大重试次数
-      dragdrop: true,                   //开启可拖曳上传
-      drop_element: 'editor-container',        //拖曳上传区域元素的ID，拖曳文件或文件夹后可触发上传
-      chunk_size: '4mb',                //分块上传时，每片的体积
-      auto_start: true,                 //选择文件后自动上传，若关闭需要自己绑定事件触发上传
-      init: {
-        'FilesAdded': function(up, files) {
-          console.log('test');return;
-        },
-        'BeforeUpload': function(up, file) {
-          // 每个文件上传前,处理相关的事情
-          printLog('on BeforeUpload');
-        },
-        'UploadProgress': function(up, file) {
-          // 显示进度条
-          editor.showUploadProgress(file.percent);
-        },
-        'FileUploaded': function(up, file, info) {
-
-          printLog(info);
-          // 参考http://developer.qiniu.com/docs/v6/api/overview/up/response/simple-response.html
-
-          var domain = up.getOption('domain');
-          var res = $.parseJSON(info);
-          var sourceLink = domain + res.key; //获取上传成功后的文件的Url
-
-          printLog(sourceLink);
-
-          // 插入图片到editor
-          editor.command(null, 'insertHtml', '<img src="' + sourceLink + '" style="max-width:100%;"/>')
-        },
-        'Error': function(up, err, errTip) {
-          //上传出错时,处理相关的事情
-          printLog('on Error');
-        },
-        'UploadComplete': function() {
-          //队列文件处理完毕后,处理相关的事情
-          printLog('on UploadComplete');
-          // 隐藏进度条
-          editor.hideUploadProgress();
-        }
-
-      }
-    });
-
-  }
-  // 封装 console.log 函数
-  function printLog(title, info) {
-    window.console && console.log(title, info);
-  }
 
 
 </script>

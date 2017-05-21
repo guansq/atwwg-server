@@ -11,7 +11,7 @@ use service\LogService;
 use service\DataService;
 
 class Article extends BaseController{
-    protected $table = 'SystemBanner';
+    protected $table = 'SystemArticle';
     protected $title = '文章管理';
 
     function index(){
@@ -21,7 +21,18 @@ class Article extends BaseController{
     }
 
     function add(){
-        return view();
+        if(request()->isPost()){
+            $data=input('param.');
+            $result = $this->validate($data,'Article');
+            if($result !== true){
+                $this->error($result);
+            }
+            $result = DataService::save($this->table, $data);//Db::name($this->table)->allowField(true)->insert($data);
+            LogService::write('Article管理', '上传Article成功');
+            $result !== false ? $this->success('恭喜，保存成功哦！', '') : $this->error('保存失败，请稍候再试！');
+        }else{
+            return view();
+        }
     }
 
     function del(){

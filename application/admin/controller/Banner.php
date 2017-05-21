@@ -46,7 +46,7 @@ class Banner extends BaseController{
             }
             $result = DataService::save($this->table, $data);//Db::name($this->table)->allowField(true)->insert($data);
             LogService::write('Banner管理', '上传Banner成功');
-            $result !== false ? $this->success('恭喜，保存成功哦！', '') : $this->error('保存失败，请稍候再试！');
+            //$result !== false ? $this->success('恭喜，保存成功哦！', '') : $this->error('保存失败，请稍候再试！');
         }else{
             return view();
         }

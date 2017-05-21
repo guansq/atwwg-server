@@ -2,8 +2,6 @@
 
 use think\Route;
 
-
-
 return [
     //-------------------
     //  __domain__  域名部署

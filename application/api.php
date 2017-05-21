@@ -2,6 +2,9 @@
 /**
  *  api 模块的路由配置
  */
+
+use think\Route;
+
 return [
     // 定义资源路由
 //    '__domain__' => [
@@ -11,5 +14,4 @@ return [
         'index' => 'index',             // 路径 =》 控制器
         'supporter' => 'supporter',
     ],
-
 ];

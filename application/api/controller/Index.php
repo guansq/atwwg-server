@@ -19,6 +19,7 @@ class Index extends BaseController{
     private $url = 'http://api.sendcloud.net/apiv2/mail/send';//普通发送
     private $templateurl = 'http://api.sendcloud.net/apiv2/mail/sendtemplate';
 
+
     /**
      * @api      {POST} /member/login 02.用户登录(todo)
      * @apiName  login

@@ -17,8 +17,8 @@ class Supporter extends BaseController{
     protected $title = '供应商管理';
 
     public function index(){
-        //echo '111111111';die;
         $this->assign('title',$this->title);
+
         return view();
     }
 
@@ -33,5 +33,7 @@ class Supporter extends BaseController{
     public function edit(){
         return view();
     }
+
+
 
 }

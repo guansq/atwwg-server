@@ -20,7 +20,7 @@ use Qiniu\Auth as qinn;
 use Qiniu\Storage\BucketManager;
 use Qiniu\Storage\UploadManager;
 use think\File;
-use think\Log;
+//use think\Log;
 /**
  * 插件助手控制器
  * Class Plugs
@@ -160,7 +160,7 @@ class Plugs extends BaseController {
         // 调用 UploadManager 的 putFile 方法进行文件的上传。
         list($ret, $err) = $uploadMgr->putFile($token, $key, $filePath);
         if ($err !== null) {
-            Log::error('七牛云文件上传失败, ' . var_export($err, true));
+            //Log::error('七牛云文件上传失败, ' . var_export($err, true));
             return null;
         }
 

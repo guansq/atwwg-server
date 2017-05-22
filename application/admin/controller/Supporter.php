@@ -55,6 +55,7 @@ class Supporter extends BaseController{
         if(!empty($tempArr)){
             $logicSupInfo->saveAllData($tempArr);
         }
+        return json(['code'=>200,'msg'=>'更新成功！']);
     }
 
     public function read(){

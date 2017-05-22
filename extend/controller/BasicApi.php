@@ -6,7 +6,6 @@ use service\ToolsService;
 use think\Cache;
 use think\Request;
 use think\Response;
-use Wechat\Lib\Tools;
 
 /**
  * 数据接口通用控制器

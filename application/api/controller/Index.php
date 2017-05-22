@@ -8,11 +8,6 @@
 
 namespace app\api\controller;
 
-use Lcobucci\JWT\Builder;
-use Lcobucci\JWT\Parser;
-use Lcobucci\JWT\Parsing\Encoder;
-use Lcobucci\JWT\Signer\Hmac\Sha256;
-use Lcobucci\JWT\ValidationData;
 use think\Request;
 
 class Index extends BaseController{
@@ -33,8 +28,7 @@ class Index extends BaseController{
      * @apiSuccess {Number} expireTime  有效期.
      */
     public function login(){
-        $encoder = new Encoder();
-        returnJson(2000, 'jwtTest', $encoder->jsonEncode(['test' => '1111']));
+
     }
 
     /**
@@ -44,15 +38,7 @@ class Index extends BaseController{
      */
     public function index(){
 
-        $builder = new Builder();
-        $signer = new Sha256();
-        $token = $builder
-            ->setExpiration(time()+10)
-            ->set('user', ['id'=>123232323])
-            ->sign($signer, 'ruitukeji')// Configures a new claim, called "uid"
-            ->getToken(); // Retrieves the generated token
-      //  sleep(2);
-        returnJson(2000,'',(string)$token);
+        returnJson(2000,'',getCodeMsg());
 
     }
 

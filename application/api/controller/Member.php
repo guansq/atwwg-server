@@ -26,6 +26,8 @@ class Member extends BaseController{
      * @apiSuccess {Number} expireTime      有效期.
      */
     public function login(){
+        //todo 校验参数
+        assureNotEmpty();
         returnJson();
     }
 

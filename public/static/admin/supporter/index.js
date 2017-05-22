@@ -67,7 +67,10 @@ function initPage(){
   } );
   // 立即同步ERP 点击事件
   $('#synchronization_btn').click( function () {
-    alert( table.rows('.selected').data().length +' row(s) selected' );
+    var url = "{:url('Supporter/updataU9info')}";
+    alert(url);
+    //console.log(URL('Supporter/updataU9info'));
+    //$.post("atwwg.oms.ruitukeji.com/Supporter/updataU9info")
   });
   //审核供应商
   $('#lookThrough').click( function () {

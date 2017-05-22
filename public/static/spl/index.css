@@ -244,9 +244,7 @@
     margin: 15px 0;
 }
 .table-responsive table{
-
     text-align: center;
-
 }
 .table-responsive table tr td{
     height: 35px;
@@ -531,6 +529,9 @@
 
 .atw-head>p a{
     color: #666;
+}
+#example tbody tr.selected td{
+    background-color:#B0BED9 !important;
 }
 
 

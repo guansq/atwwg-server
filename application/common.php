@@ -120,13 +120,47 @@ if(!function_exists("array_column")){
 }
 
 
+
+// 接口返回json 数据
+if(!function_exists('getCodeMsg')){
+    function getCodeMsg($code = 0){
+        $CODE_MSG = [
+            0 => '未知错误',
+            2000 => 'SUCCESS',
+            // 客户端异常
+            4000 => '非法请求',
+            4001 => '请求缺少参数',
+            4002 => '请求参数格式错误',
+            4003 => '请求参数格式错误',
+            4004 => '请求的数据为空',
+            // 客户端异常-用户鉴权
+            4010 => '无权访问',
+            4011 => 'token丢失',
+            4012 => 'token无效',
+            4013 => 'token过期',
+            // 服务端端异常
+            5000 => '服务端异常',
+            5010 => '代码异常',
+            5020 => '数据库操作异常',
+            5030 => '文件操作异常',
+
+        ];
+
+        if(empty($code)){
+            return $CODE_MSG;
+        }
+        return $CODE_MSG[$code];
+    }
+}
+
+// 接口返回json 数据
 if(!function_exists('returnJson')){
-    function returnJson($status = 0, $msg = '', $data = ''){
+    function returnJson($code = 0, $msg = '', $data = []){
         if(empty($data)){
             $data = new stdClass();
         }
-        $info['status'] = $status;
-        $info['msg'] = $msg;
+        $info['code'] = $code;
+        $info['msg'] = empty($msg) ? getCodeMsg($code) : $msg;
         $info['result'] = $data;
         header('Content-type:application/json; charset=utf-8');
         header("Access-Control-Allow-Origin: *");

@@ -1,7 +1,7 @@
 {extend name='extra@admin/content' /}
 
 {block name="style"}
-<link rel="stylesheet" href="//cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="//cdn.datatables.net/plug-ins/28e7751dbec/integration/bootstrap/3/dataTables.bootstrap.css">
 {/block}
 {block name="button"}
 {/block}
@@ -43,7 +43,7 @@
         <input type="text" class="date_time form-control" style="min-width: 200px;">
         <button type="button" class="btn btn-primary">查询</button>
       </form>
-      <table id="example" class="cell-border" width="100%" cellspacing="0" style="margin-bottom: 20px;">
+      <table id="example" class="cell-border table table-bordered" width="100%" cellspacing="0" style="margin-bottom: 20px;">
         <thead>
         <tr>
           <th>日期</th>

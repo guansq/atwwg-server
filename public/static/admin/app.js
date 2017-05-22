@@ -49,6 +49,7 @@ require.config({
         'cityselect':['../plugs/cityselect/cityselect'],
         'icheck': ['http://cdn.bootcss.com/iCheck/1.0.2/icheck.min'],
         'echarts':['http://cdn.bootcss.com/echarts/3.5.4/echarts.min'],
+        'dataTables.bootstrap': ['//cdn.datatables.net/plug-ins/28e7751dbec/integration/bootstrap/3/dataTables.bootstrap']
     },
     shim: {
         'layui': {deps: ['jquery']},

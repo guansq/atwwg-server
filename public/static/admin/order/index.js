@@ -4,10 +4,12 @@
  */
 
 require(["jquery.dataTables","icheck"],function(){
-  $(document).ready(function(){
-    initPage();
-    initEvent();
-  });
+  require(["dataTables.bootstrap"],function(){
+    $(document).ready(function(){
+      initPage();
+      initEvent();
+    });
+  })
 
   function initPage(){
     //icheck
@@ -23,7 +25,15 @@ require(["jquery.dataTables","icheck"],function(){
       "info": false,  //去除左下角的信息
       "lengthChange": false, //是否允许用户改变表格每页显示的记录数
       "ordering": false, //是否允许Datatables开启排序
-      "searching": false  //是否允许Datatables开启本地搜索
+      "searching": false,  //是否允许Datatables开启本地搜索
+      language: {
+        "oPaginate": {
+          "sFirst": "首页",
+          "sPrevious": "上页",
+          "sNext": "下页",
+          "sLast": "末页"
+        }
+      }
     });
 
     // tr点击选中事件

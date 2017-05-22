@@ -22,6 +22,15 @@ class Supporter extends BaseController{
         return view();
     }
 
+    public function showSupporter(){
+        echo 'test';die;
+        $logic = Model('Supporter','logic');
+        dump($logic);
+    }
+
+    public function read(){
+        echo 'a11';
+    }
     public function del(){
 
     }

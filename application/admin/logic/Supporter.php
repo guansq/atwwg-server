@@ -7,7 +7,7 @@
  */
 namespace app\admin\logic;
 
-use app\Common\model\SupplierInfo as supModel;
+use app\common\model\SupplierInfo as supModel;
 
 class Supporter extends BaseLogic{
 
@@ -15,10 +15,15 @@ class Supporter extends BaseLogic{
      * 得到U9供应商数据
      */
     public function getListInfo(){
-        $list = supModel::all();
+        $join = [
+            [],
+        ];
+        $list = supModel::alias('a')->field('a.id,a.code,a.type_code,a.type_name,a.status,t.arv_rate,t.pp_rate')->join('supplier_tendency t','a.code=t.sup_code','LEFT')->select();
+        //echo $this->getLastSql();
         if($list) {
             $list = collection($list)->toJson();
         }
+        //dump($list);die;
         return $list;
     }
 

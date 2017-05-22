@@ -36,7 +36,6 @@ define(['jquery', 'admin.plugs'], function () {
         if ((this.method || 'get').toLowerCase() === 'get') {
             window.location.href = '#' + parseUri(url + split + $(this).serialize());
         } else {
-            console.log(11111111111);
             $.form.load(url, this, 'post');
         }
     });

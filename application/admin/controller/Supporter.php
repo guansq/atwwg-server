@@ -61,8 +61,14 @@ class Supporter extends BaseController{
         return json(['code'=>200,'msg'=>'更新成功！']);
     }
 
-    public function read(){
-        echo 'a11';
+    /**
+     * 得到供应商信息
+     */
+
+    public function getSupList(){
+        $logicSupInfo = Model('Supporter','logic');
+        $list = $logicSupInfo->getListInfo();
+        return $list;
     }
     public function del(){
 

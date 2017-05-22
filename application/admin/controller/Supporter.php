@@ -28,6 +28,9 @@ class Supporter extends BaseController{
         return $list;
     }
 
+    /**
+     * 更新ERP供应商信息到数据库
+     */
     public function updataU9info(){
         $logicSupInfo = Model('Supporter','logic');
         $logicU9SupInfo = Model('U9Supporter','logic');

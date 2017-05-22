@@ -7,7 +7,7 @@
  */
 namespace app\admin\logic;
 
-use app\Common\model\U9Supplier as U9supModel;
+use app\common\model\U9Supplier as U9supModel;
 
 class U9Supporter extends BaseLogic{
 

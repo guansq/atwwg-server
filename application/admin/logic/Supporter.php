@@ -7,7 +7,7 @@
  */
 namespace app\admin\logic;
 
-use app\Common\model\SupplierInfo as supModel;
+use app\common\model\SupplierInfo as supModel;
 
 class Supporter extends BaseLogic{
 

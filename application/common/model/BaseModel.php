@@ -9,12 +9,12 @@ namespace app\common\model;
 use think\Model;
 class BaseModel extends Model{
 
-    public function save($data = [], $where = [], $sequence = null){
+    /*public function save($data = [], $where = [], $sequence = null){
         if(empty($data)){
             $data['create_at']=time();
         }
         $data['update_at']=time();
         return parent::save($data, $where, $sequence);
-    }
+    }*/
 
 }

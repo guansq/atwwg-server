@@ -87,7 +87,38 @@ class Supporter extends BaseController{
         }
         $info = ['data'=>$returnArr];
         $info = json_encode($info);
-        return $info;
+        echo
+        '{
+            "data": [
+                {
+                    "code": "MAT-001",
+                    "name": "上海中洲特种合金材料股份有限公司",
+                    "type_name": "原材料",
+                    "tech_score": "80分",
+                    "arv_rate": "33333",
+                    "pp_rate": "4444",
+                    "quali_score": "70分",
+                    "status": "555555",
+                    "pay_type_status": "555555",
+                    "quali": "555555",
+                    "action": "1111"
+                },
+                {
+                    "code": "MAT-002",
+                    "name": "苏州匠心",
+                    "type_name": "原材料",
+                    "tech_score": "80分",
+                    "arv_rate": "33333",
+                    "pp_rate": "4444",
+                    "quali_score": "70分",
+                    "status": "555555",
+                    "pay_type_status": "555555",
+                    "quali": "555555",
+                    "action": "1111"
+                }
+            ]
+        }';
+        //return $info;
     }
     public function del(){
 

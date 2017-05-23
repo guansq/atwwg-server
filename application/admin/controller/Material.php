@@ -67,4 +67,8 @@ class Material extends BaseController{
         }
         return json(['code'=>200,'msg'=>'更新成功！']);
     }
+
+    public function exportExcel(){
+
+    }
 }

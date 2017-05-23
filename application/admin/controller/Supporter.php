@@ -86,8 +86,7 @@ class Supporter extends BaseController{
 
         }
         $info = ['data'=>$returnArr];
-        $info = json_encode($info);
-        echo
+        /*echo
         '{
             "data": [
                 {
@@ -118,7 +117,9 @@ class Supporter extends BaseController{
                 }
             ]
         }';
-        //return $info;
+        echo '<br><br>';*/
+        return json($info);
+        //echo $info.'<br><br><br>';
     }
     public function del(){
 

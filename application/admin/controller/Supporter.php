@@ -73,21 +73,20 @@ class Supporter extends BaseController{
             $returnArr[] = [
                 'code' => $v['code'],
                 'name' => $v['name'],
-                'type_name' => '1111111',
-                'tech_score' => '22222',
+                'type_name' => $v['type_name'],
+                'tech_score' => $this->getTechScore(),
                 'arv_rate' => '33333',
                 'pp_rate' => '4444',
-                'quali_score' => '555555',
+                'quali_score' => $this->getQualiScore(),
                 'status' => '555555',
                 'pay_type_status' => '555555',
                 'quali' => '555555',
-                'action' => '555555',
+                'action' => '1111',
             ];
 
         }
         $info = ['data'=>$returnArr];
         $info = json_encode($info);
-        //var_dump($info);die;
         return $info;
     }
     public function del(){
@@ -114,14 +113,14 @@ class Supporter extends BaseController{
     /*
      * 得到技术评分
      */
-    public function getTechScore($code){
+    public function getTechScore(){
         return '80分';
     }
 
     /*
      * 供应商资质评分
      */
-    public function getQualiScore($code){
+    public function getQualiScore(){
         return '70分';
     }
 }

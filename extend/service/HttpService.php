@@ -33,6 +33,34 @@ class HttpService {
      * @param array $header 请求Header信息
      * @return bool|string
      */
+    public static function curl($url, $data = array(), $second = 30, $header = []) {
+        if (!empty($data)) {
+            $url .= (stripos($url, '?') === FALSE ? '?' : '&');
+            $url .= (is_array($data) ? http_build_query($data) : $data);
+        }
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_TIMEOUT, $second);
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        if (!empty($header)) {
+            curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+        }
+        self::_setSsl($curl, $url);
+        $content = curl_exec($curl);
+        $status = curl_getinfo($curl);
+        curl_close($curl);
+        return $content;
+    }
+
+
+    /**
+     * HTTP GET 请求
+     * @param string $url 请求的URL地址
+     * @param array $data GET参数
+     * @param int $second 设置超时时间（默认30秒）
+     * @param array $header 请求Header信息
+     * @return bool|string
+     */
     public static function get($url, $data = array(), $second = 30, $header = []) {
         if (!empty($data)) {
             $url .= (stripos($url, '?') === FALSE ? '?' : '&');

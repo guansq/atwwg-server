@@ -10,6 +10,7 @@ namespace app\admin\controller;
 use controller\BasicAdmin;
 use service\LogService;
 use service\DataService;
+use service\HttpService;
 use think\Db;
 
 class Supporter extends BaseController{
@@ -32,7 +33,7 @@ class Supporter extends BaseController{
      * 更新ERP供应商信息到数据库
      */
     public function updataU9Info(){
-        return HttpService::get(getenv('APP_API_HOME').'/u9api/syncSupplier');
+        return HttpService::curl(getenv('APP_API_HOME').'/u9api/syncSupplier');
     }
 
     /**

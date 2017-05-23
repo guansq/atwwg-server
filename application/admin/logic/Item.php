@@ -30,11 +30,11 @@ class Item extends Baselogic{
      * 得到U9供应商数据
      */
     public function getListInfo(){
-        //echo $this->getLastSql();
-        /*if($list) {
-            $list = collection($list)->toJson();
+        $list = ItemModel::all();
+        if($list) {
+            $list = collection($list)->toArray();
         }
         //dump($list);die;
-        return $list;*/
+        return $list;
     }
 }

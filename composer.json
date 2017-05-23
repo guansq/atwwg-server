@@ -34,7 +34,8 @@
         "topthink/think-queue": "^1.0",
         "topthink/think-testing": "^1.0",
         "firebase/php-jwt": "v4.*.*",
-        "qiniu/php-sdk": " ^7.0"
+        "qiniu/php-sdk": " ^7.0",
+        "phpoffice/phpexcel": "^1.8"
     },
     "extra": {
         "think-path": "thinkphp"

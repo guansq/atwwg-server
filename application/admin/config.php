@@ -6,8 +6,5 @@
  * Time: 10:04
  */
 return [
-    'apilist'=>[
-        'supporterList' => '11111111111',
-
-    ],
+    'upload_path'=>'/upload',//上传附件
 ];

@@ -8,4 +8,10 @@
 namespace app\common\model;
 class Item extends BaseModel{
 
+    /**
+     * 保存全部数据
+     */
+    public function saveAllData($data){
+        return $this->allowField(true)->saveAll($data);
+    }
 }

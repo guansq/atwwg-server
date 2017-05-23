@@ -209,6 +209,10 @@ html,body{
 .aptitude{
   padding: 20px 0;
 }
+.aptitude h4{
+  font-size: 16px;
+  padding-bottom: 10px;
+}
 .tr_tit{
   background: #F2F2F2;
 }
@@ -234,11 +238,12 @@ html,body{
   margin: 0;
 }
 .credentials_box li{
-  display: inline-block;
-  text-align: center;
-  margin-right: 15px;
+  /*display: inline-block;*/
+  /*text-align: center;*/
+  margin: 0px 0 15px 0;
 }
 .credentials_box li img{
+  margin-top: 10px;
   width: 114px;
 }
 .btn_box button{

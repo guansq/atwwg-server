@@ -49,15 +49,15 @@
           <div class="col-sm-10">
             <select class="form-control">
               <option {if condition="$sup_info['type_name'] eq '原材料'"} selected {/if} >原材料</option>
-              <option>气控件</option>
-              <option>电磁阀</option>
+              <option {if condition="$sup_info['type_name'] eq '气控件'"} selected {/if} >气控件</option>
+              <option {if condition="$sup_info['type_name'] eq '电磁阀'"} selected {/if} >电磁阀</option>
             </select>
           </div>
         </div>
         <div class="form-group col-sm-6">
           <label class="col-sm-2 control-label">税号</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" value="" placeholder="税号">
+            <input type="text" class="form-control" value="{$sup_info['state_tax_code']}" placeholder="税号">
           </div>
         </div>
         <div class="form-group col-sm-6">
@@ -81,7 +81,7 @@
         <div class="form-group col-sm-6">
           <label class="col-sm-2 control-label">传真</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" placeholder="传真">
+            <input type="text" class="form-control" value="{$sup_info['fax']}" placeholder="传真">
           </div>
         </div>
         <div class="form-group col-sm-6">
@@ -93,8 +93,8 @@
         <div class="form-group col-sm-6">
           <label class="col-sm-2 control-label">地址</label>
           <div class="col-sm-10">
-            <input id="citySelect"  type="text"  class="city_input form-control w30b" readonly="readonly">
-            <input type="text" value="{$sup_info['address']}" class="form-control w60b" placeholder="详细地址">
+            <!--<input id="citySelect"  type="text"  class="city_input form-control" readonly="readonly">-->
+            <input type="text" value="{$sup_info['address']}" class="form-control" placeholder="详细地址">
           </div>
         </div>
         <div class="form-group col-sm-6">
@@ -173,7 +173,7 @@
         <div class="form-group col-sm-6">
           <label class="col-sm-2 control-label">抽检比例</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" placeholder="抽检比例">
+            <input type="text" class="form-control" value="{$sup_info['check_rate']}" placeholder="抽检比例">
             <span class="scale_span">%</span>
           </div>
         </div>
@@ -183,9 +183,9 @@
       <table class="table table-bordered">
         <tr>
           <td class="col-sm-1 tex_r">供应商交货及时率</td>
-          <td class="col-sm-3">98</td>
+          <td class="col-sm-3">{$sup_info['arv_rate']}</td>
           <td class="col-sm-1 tex_r">供应商质量合格率</td>
-          <td class="col-sm-3">60</td>
+          <td class="col-sm-3">{$sup_info['pp_rate']}</td>
         </tr>
         <tr>
           <td class="col-sm-1 tex_r">供应商资质评分</td>
@@ -199,46 +199,62 @@
       <h4>企业资质</h4>
       <table class="table table-bordered">
         <tr class="tr_tit">
-          <td>经营信息</td>
-          <td>操作</td>
+          <td>营业执照</td>
+          <td></td>
         </tr>
         <tr class="tr_con">
           <td>
-            <div>
-              <section class="col-sm-4">
-                <label class="w20b">公司名称</label>
-                <input type="text" class="form-control w75b" placeholder="公司名称">
-              </section>
-              <section class="col-sm-8">
-                <label class="w10b">证件有效期</label>
-                <input type="text" class="date_time form-control w30b">
-                到
-                <input type="text" class="date_time form-control w30b">
-              </section>
-            </div>
-            <div style="line-height: 25px;">
-              <section class="col-sm-4">
-                <label class="w20b">资质照片</label>
-              </section>
-            </div>
-            <div class="credentials_box">
-              <ul>
-                <li>
-                  <p>营业执照</p>
-                  <img src="/static/admin/img/entering_pic.png" alt="">
-                </li>
-                <li>
-                  <p>税务登记证</p>
-                  <img src="/static/admin/img/entering_pic.png" alt="">
-                </li>
-                <li>
-                  <p>组织代码证</p>
-                  <img src="/static/admin/img/entering_pic.png" alt="">
-                </li>
-              </ul>
-            </div>
+            <img class="" src="/static/admin/img/entering_pic.png" alt="">
+            <section class="dis_inb ml_20 w75b">
+              <label class="mr_15">证件有效期</label>
+              <input type="text" class="date_time form-control w30b">
+              到
+              <input type="text" class="date_time form-control w30b">
+            </section>
           </td>
-          <td style="vertical-align: middle;">
+          <td>
+            <section class="btn_box">
+              <button type="button" class="btn btn-success">通过</button>
+              <button type="button" class="btn btn-warning">拒绝</button>
+            </section>
+          </td>
+        </tr>
+        <tr class="tr_tit">
+          <td>税务登记证</td>
+          <td></td>
+        </tr>
+        <tr class="tr_con">
+          <td>
+            <img class="" src="/static/admin/img/entering_pic.png" alt="">
+            <section class="dis_inb ml_20 w75b">
+              <label class="mr_15">证件有效期</label>
+              <input type="text" class="date_time form-control w30b">
+              到
+              <input type="text" class="date_time form-control w30b">
+            </section>
+          </td>
+          <td>
+            <section class="btn_box">
+              <button type="button" class="btn btn-success">通过</button>
+              <button type="button" class="btn btn-warning">拒绝</button>
+            </section>
+          </td>
+        </tr>
+        <tr class="tr_tit">
+          <td>组织代码证</td>
+          <td></td>
+        </tr>
+        <tr class="tr_con">
+          <td>
+            <img class="" src="/static/admin/img/entering_pic.png" alt="">
+            <section class="dis_inb ml_20 w75b">
+              <label class="mr_15">证件有效期</label>
+              <input type="text" class="date_time form-control w30b">
+              到
+              <input type="text" class="date_time form-control w30b">
+            </section>
+          </td>
+          <td>
             <section class="btn_box">
               <button type="button" class="btn btn-success">通过</button>
               <button type="button" class="btn btn-warning">拒绝</button>

@@ -15,9 +15,6 @@ class Supporter extends BaseLogic{
      * 得到U9供应商数据
      */
     public function getListInfo(){
-        $join = [
-            [],
-        ];
         $list = supModel::alias('a')->field('a.id,a.code,a.type_code,a.type_name,a.status,t.arv_rate,t.pp_rate')->join('supplier_tendency t','a.code=t.sup_code','LEFT')->select();
         //echo $this->getLastSql();
         if($list) {
@@ -47,5 +44,27 @@ class Supporter extends BaseLogic{
      */
     public function saveAllData($data){
         return model('SupplierInfo')->saveAllData($data);
+    }
+
+    /**
+     * 得到单个供应商信息
+     */
+    public function getOneSupInfo($sup_id){
+        //缺少建立日期,技术分,责任采购,信用等级,供应风险
+        $supinfo = supModel::alias('a')
+            ->field('a.id,a.name,a.code,u.user_name,a.type_code,a.type_name,a.tax_code,a.found_date,a.ctc_name,a.mobile,a.fax,a.email,a.address,a.status,a.purch_type,a.check_type,a.check_rate,t.arv_rate,t.pp_rate')
+            ->join('supplier_tendency t','a.code=t.sup_code','LEFT')
+            ->join('system_user u','a.sup_id=u.id','LEFT')
+            ->where('a.id',$sup_id)->find();
+        $supinfo = $supinfo->toArray();
+        //echo $this->getLastSql();
+        return $supinfo;
+    }
+
+    /**
+     * 得到供应商图片信息
+     */
+    public function getSupQuali($sup_code){
+        return $supQuali = supModel::select();
     }
 }

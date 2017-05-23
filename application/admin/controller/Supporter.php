@@ -85,7 +85,7 @@ class Supporter extends BaseController{
                 'status' => '555555',
                 'pay_type_status' => '555555',
                 'quali' => '555555',
-                'action' => '<a class="edit" href="javascript:void(0);" data-open="'.url('Supporter/edit').'" >编辑</a>',
+                'action' => '<a class="edit" href="javascript:void(0);" data-open="'.url('Supporter/edit',['id'=>$v['id']]).'" >编辑</a>',
             ];
 
         }

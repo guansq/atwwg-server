@@ -68,7 +68,28 @@ class Supporter extends BaseController{
     public function getSupList(){
         $logicSupInfo = Model('Supporter','logic');
         $list = $logicSupInfo->getListInfo();
-        return $list;
+        $returnArr = [];
+        foreach($list as $k => $v){
+            $returnArr[] = [
+                $v['code'],
+                $v['name'],
+                '1111111',
+                '22222',
+                '33333',
+                '4444',
+                '555555',
+                '555555',
+                '555555',
+                '555555',
+                '555555',
+                '555555',
+            ];
+
+        }
+        $info = ['data'=>$returnArr];
+        $info = json_encode($info);
+        //var_dump($info);die;
+        return $info;
     }
     public function del(){
 
@@ -91,4 +112,17 @@ class Supporter extends BaseController{
         return view();
     }
 
+    /*
+     * 得到技术评分
+     */
+    public function getTechScore($code){
+        return '80分';
+    }
+
+    /*
+     * 供应商资质评分
+     */
+    public function getQualiScore($code){
+        return '70分';
+    }
 }

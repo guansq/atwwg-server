@@ -15,10 +15,10 @@ class Supporter extends BaseLogic{
      * 得到U9供应商数据
      */
     public function getListInfo(){
-        $list = supModel::alias('a')->field('a.id,a.code,a.type_code,a.type_name,a.status,t.arv_rate,t.pp_rate')->join('supplier_tendency t','a.code=t.sup_code','LEFT')->select();
-        //echo $this->getLastSql();
+        $list = supModel::alias('a')->field('a.id,a.code,a.name,a.type_code,a.type_name,a.status,t.arv_rate,t.pp_rate')->join('supplier_tendency t','a.code=t.sup_code','LEFT')->select();
+
         if($list) {
-            $list = collection($list)->toJson();
+            $list = collection($list)->toArray();
         }
         //dump($list);die;
         return $list;

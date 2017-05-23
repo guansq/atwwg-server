@@ -31,34 +31,8 @@ class Supporter extends BaseController{
     /**
      * 更新ERP供应商信息到数据库
      */
-    public function updataU9info(){
-        $logicSupInfo = Model('Supporter','logic');
-        $logicU9SupInfo = Model('U9Supporter','logic');
-        $u9List = $logicU9SupInfo->getListInfo();
-        $tempArr = [];
-        if($u9List){
-            foreach($u9List as $k => $v){
-                //是否存在
-                if($logicSupInfo->exist($v)){
-                    $tempArr[$k]['code'] = $v['code'];
-                    $tempArr[$k]['name'] = $v['name'];
-                    $tempArr[$k]['tax_code'] = $v['tax_code'];
-                    $tempArr[$k]['mobile'] = $v['mobile'];
-                    $tempArr[$k]['email'] = $v['email'];
-                    $tempArr[$k]['ctc_name'] = $v['ctc_name'];
-                    $tempArr[$k]['address'] = $v['address'];
-                    $tempArr[$k]['pay_way'] = $v['pay_way'];
-                    $tempArr[$k]['com_name'] = $v['com_name'];
-                    $tempArr[$k]['type_code'] = $v['type_code'];
-                    $tempArr[$k]['type_name'] = $v['type_name'];
-                    //$logicSupInfo->saveData($v);
-                }
-            }
-        }
-        if(!empty($tempArr)){
-            $logicSupInfo->saveAllData($tempArr);
-        }
-        return json(['code'=>200,'msg'=>'更新成功！']);
+    public function updataU9Info(){
+        return HttpService::get(getenv('APP_API_HOME').'/u9api/syncSupplier');
     }
 
     /**
@@ -82,18 +56,16 @@ class Supporter extends BaseController{
                 'arv_rate' => $v['arv_rate'],
                 'pp_rate' => $v['pp_rate'],
                 'quali_score' => $this->getQualiScore(),
-                'status' => '555555',
-                'pay_type_status' => '555555',
-                'quali' => '555555',
+                'status' => '正常',
+                'pay_type_status' => '正常',
+                'quali' => '<a class="edit" href="javascript:void(0);" data-open="'.url('Supporter/edit',['id'=>$v['id']]).'" >查看</a>',
                 'action' => '<a class="edit" href="javascript:void(0);" data-open="'.url('Supporter/edit',['id'=>$v['id']]).'" >编辑</a>',
             ];
 
         }
         $info = ['draw'=>time(),'recordsTotal'=>$logicSupInfo->getListNum(),'recordsFiltered'=>$logicSupInfo->getListNum(),'data'=>$returnArr];
-        /**/
-        /*echo '<br><br>';*/
+
         return json($info);
-        //echo $info.'<br><br><br>';
     }
     public function del(){
 

@@ -8,6 +8,7 @@
 namespace app\admin\controller;
 
 use controller\BasicAdmin;
+use service\HttpService;
 use service\LogService;
 use service\DataService;
 use think\Db;
@@ -46,26 +47,7 @@ class Material extends BaseController{
     }
 
     public function updataU9Info(){
-        $logicItem = Model('Item','logic');
-        $logicU9Item = Model('U9Item','logic');
-        $u9List = $logicU9Item->getListInfo();
-        $tempArr = [];
-        if($u9List){
-            foreach($u9List as $k => $v){
-                //是否存在
-                if($logicItem->exist($v)){
-                    $tempArr[$k]['code'] = $v['code'];
-                    $tempArr[$k]['name'] = $v['name'];
-                    $tempArr[$k]['main_code'] = $v['main_code'];
-                    $tempArr[$k]['main_name'] = $v['main_name'];
-                    //$logicSupInfo->saveData($v);
-                }
-            }
-        }
-        if(!empty($tempArr)){
-            $logicItem->saveAllData($tempArr);
-        }
-        return json(['code'=>200,'msg'=>'更新成功！']);
+     return HttpService::get(getenv('APP_API_HOME').'/u9api/syncSupplier');
     }
 
     public function exportExcel(){

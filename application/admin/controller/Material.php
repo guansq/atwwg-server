@@ -17,7 +17,7 @@ use PHPExcel_IOFactory;
 use PHPExcel;
 
 class Material extends BaseController{
-    protected $table = 'SystemArea';
+    protected $table = 'SystemItem';
     protected $title = '物料管理';
 
     public function index(){
@@ -66,9 +66,9 @@ class Material extends BaseController{
         $PHPSheet->setCellValue('E1','物料描述')->setCellValue('F1','创建时间');
         $PHPSheet->setCellValue('E1','更新时间');
         //dump($list);die;
+        $num = 1;
         foreach($list as $k => $v){
-            $num=$k+1;
-
+            $num += $num+1;
             $PHPSheet->setCellValue('A'.$num,'ID')->setCellValue('B'.$num,'物料编码')
                     ->setCellValue('C'.$num,'物料名称')->setCellValue('D'.$num,'主分类名称')
                     ->setCellValue('E'.$num,'物料描述')->setCellValue('F'.$num,'创建时间')
@@ -80,10 +80,10 @@ class Material extends BaseController{
         $file_name = "itemList.xlsx";
         $contents = file_get_contents($path.'/itemList.xlsx');
         $file_size = filesize($path.'/itemList.xlsx');
-//        header("Content-type: application/octet-stream;charset=utf-8");
-//        header("Accept-Ranges: bytes");
-//        header("Accept-Length: $file_size");
-//        header("Content-Disposition: attachment; filename=".$file_name);
-//        exit($contents);
+        header("Content-type: application/octet-stream;charset=utf-8");
+        header("Accept-Ranges: bytes");
+        header("Accept-Length: $file_size");
+        header("Content-Disposition: attachment; filename=".$file_name);
+        exit($contents);
     }
 }

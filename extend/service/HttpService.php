@@ -33,7 +33,7 @@ class HttpService {
      * @param array $header 请求Header信息
      * @return bool|string
      */
-    public static function curl($url, $data = array(), $second = 30, $header = []) {
+    public static function curl($url, $data = array(), $second = 600, $header = []) {
         if (!empty($data)) {
             $url .= (stripos($url, '?') === FALSE ? '?' : '&');
             $url .= (is_array($data) ? http_build_query($data) : $data);
@@ -46,10 +46,14 @@ class HttpService {
             curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
         }
         self::_setSsl($curl, $url);
+        //echo $url;die;
         $content = curl_exec($curl);
-        $status = curl_getinfo($curl);
-        curl_close($curl);
+        //$status = curl_getinfo($curl);
+        //var_dump(curl_error($curl));
+        //dump($content);die;
+        //curl_close($curl);
         return $content;
+        //echo 'test';die;
     }
 
 

@@ -67,57 +67,31 @@ class Supporter extends BaseController{
 
     public function getSupList(){
         $logicSupInfo = Model('Supporter','logic');
-        $list = $logicSupInfo->getListInfo();
+        $start = input('start');
+        $length = input('length');
+        $list = $logicSupInfo->getListInfo($start,$length);//分页
         $returnArr = [];
         foreach($list as $k => $v){
+            $v['arv_rate'] = $v['arv_rate'] == '' ? '暂无数据' : $v['arv_rate'];
+            $v['pp_rate'] = $v['pp_rate'] == '' ? '暂无数据' : $v['pp_rate'];
             $returnArr[] = [
                 'code' => $v['code'],
                 'name' => $v['name'],
                 'type_name' => $v['type_name'],
                 'tech_score' => $this->getTechScore(),
-                'arv_rate' => '33333',
-                'pp_rate' => '4444',
+                'arv_rate' => $v['arv_rate'],
+                'pp_rate' => $v['pp_rate'],
                 'quali_score' => $this->getQualiScore(),
                 'status' => '555555',
                 'pay_type_status' => '555555',
                 'quali' => '555555',
-                'action' => '1111',
+                'action' => '<a class="edit" href="javascript:void(0);" data-open="'.url('Supporter/edit',['id'=>$v['id']]).'" >编辑</a>',
             ];
 
         }
-        $info = ['data'=>$returnArr];
-        /*echo
-        '{
-            "data": [
-                {
-                    "code": "MAT-001",
-                    "name": "上海中洲特种合金材料股份有限公司",
-                    "type_name": "原材料",
-                    "tech_score": "80分",
-                    "arv_rate": "33333",
-                    "pp_rate": "4444",
-                    "quali_score": "70分",
-                    "status": "555555",
-                    "pay_type_status": "555555",
-                    "quali": "555555",
-                    "action": "1111"
-                },
-                {
-                    "code": "MAT-002",
-                    "name": "苏州匠心",
-                    "type_name": "原材料",
-                    "tech_score": "80分",
-                    "arv_rate": "33333",
-                    "pp_rate": "4444",
-                    "quali_score": "70分",
-                    "status": "555555",
-                    "pay_type_status": "555555",
-                    "quali": "555555",
-                    "action": "1111"
-                }
-            ]
-        }';
-        echo '<br><br>';*/
+        $info = ['draw'=>time(),'recordsTotal'=>$logicSupInfo->getListNum(),'recordsFiltered'=>$logicSupInfo->getListNum(),'data'=>$returnArr];
+        /**/
+        /*echo '<br><br>';*/
         return json($info);
         //echo $info.'<br><br><br>';
     }

@@ -71,18 +71,17 @@ class Supporter extends BaseController{
         $returnArr = [];
         foreach($list as $k => $v){
             $returnArr[] = [
-                $v['code'],
-                $v['name'],
-                '1111111',
-                '22222',
-                '33333',
-                '4444',
-                '555555',
-                '555555',
-                '555555',
-                '555555',
-                '555555',
-                '555555',
+                'code' => $v['code'],
+                'name' => $v['name'],
+                'type_name' => '1111111',
+                'tech_score' => '22222',
+                'arv_rate' => '33333',
+                'pp_rate' => '4444',
+                'quali_score' => '555555',
+                'status' => '555555',
+                'pay_type_status' => '555555',
+                'quali' => '555555',
+                'action' => '555555',
             ];
 
         }

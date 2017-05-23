@@ -47,7 +47,7 @@ class Material extends BaseController{
     }
 
     public function updataU9Info(){
-     return HttpService::get(getenv('APP_API_HOME').'/u9api/syncSupplier');
+     return HttpService::get(getenv('APP_API_HOME').'/u9api/syncItem');
     }
 
     public function exportExcel(){

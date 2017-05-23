@@ -14,8 +14,8 @@ class Supporter extends BaseLogic{
     /*
      * 得到U9供应商数据
      */
-    public function getListInfo(){
-        $list = supModel::alias('a')->field('a.id,a.code,a.name,a.type_code,a.type_name,a.status,t.arv_rate,t.pp_rate')->join('supplier_tendency t','a.code=t.sup_code','LEFT')->select();
+    public function getListInfo($start,$length){
+        $list = supModel::alias('a')->field('a.id,a.code,a.name,a.type_code,a.type_name,a.status,t.arv_rate,t.pp_rate')->join('supplier_tendency t','a.code=t.sup_code','LEFT')->limit("$start,$length")->select();
 
         if($list) {
             $list = collection($list)->toArray();
@@ -23,7 +23,14 @@ class Supporter extends BaseLogic{
         //dump($list);die;
         return $list;
     }
-
+    /*
+     * 得到U9供应商数据总数
+     */
+    public function getListNum(){
+        $num = supModel::alias('a')->join('supplier_tendency t','a.code=t.sup_code','LEFT')->count();
+        //dump($list);die;
+        return $num;
+    }
     /**
      * 判断U9的数据是否存在
      */

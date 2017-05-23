@@ -56,8 +56,9 @@ class Supporter extends BaseLogic{
             ->join('supplier_tendency t','a.code=t.sup_code','LEFT')
             ->join('system_user u','a.sup_id=u.id','LEFT')
             ->where('a.id',$sup_id)->find();
-        $supinfo = $supinfo->toArray();
-        //echo $this->getLastSql();
+        if($supinfo){
+            $supinfo = $supinfo->toArray();
+        }
         return $supinfo;
     }
 

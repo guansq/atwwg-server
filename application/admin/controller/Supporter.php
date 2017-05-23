@@ -82,9 +82,12 @@ class Supporter extends BaseController{
         $sup_id = intval(input('param.id'));
         $logicSupInfo = Model('Supporter','logic');
         $sup_info = $logicSupInfo->getOneSupInfo($sup_id);//联合查询得到相关信息
-        $this->assign('sup_info',$sup_info);
-        $supQuali = $logicSupInfo->getSupQuali($sup_info['code']);
         dump($sup_info);
+        if($sup_info){
+            $this->assign('sup_info',$sup_info);
+            $supQuali = $logicSupInfo->getSupQuali($sup_info['code']);
+            //dump($supQuali);
+        }
         return view();
     }
 

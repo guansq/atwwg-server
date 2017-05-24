@@ -38,8 +38,8 @@ class Material extends BaseController{
         $list = $logicItemInfo->getListInfo($start,$length);
         $returnArr = [];
         foreach($list as $k => $v){
-            $v['arv_rate'] = $v['arv_rate'] == '' ? '暂无数据' : $v['arv_rate'];
-            $v['pp_rate'] = $v['pp_rate'] == '' ? '暂无数据' : $v['pp_rate'];
+            //$v['arv_rate'] = $v['arv_rate'] == '' ? '暂无数据' : $v['arv_rate'];
+            //$v['pp_rate'] = $v['pp_rate'] == '' ? '暂无数据' : $v['pp_rate'];
             $returnArr[] = [
                 'main_name' => $v['main_name'],//主分类
                 'code' => $v['code'],//料号

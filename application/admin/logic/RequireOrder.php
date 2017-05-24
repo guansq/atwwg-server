@@ -48,6 +48,6 @@ class RequireOrder extends BaseLogic{
       * 保存唯一指定供应商到表
       */
      function saveSupInPr($pr_code,$where){
-         $list = model('U9Pr')->where($where)->update();
+         //$list = model('U9Pr')->where($where)->update('',);
      }
 }

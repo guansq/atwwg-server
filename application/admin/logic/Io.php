@@ -25,4 +25,9 @@ class Io extends BaseLogic{
          $count = IoModel::alias('a')->field('a.*,b.desc')->join('item b','a.item_code=b.code','LEFT')->group('pr_code,item_code')->count();
          return $count;
      }
+
+     function getIoCountByWhere($where){
+         $count = IoModel::where($where)->count();
+         return $count;
+     }
 }

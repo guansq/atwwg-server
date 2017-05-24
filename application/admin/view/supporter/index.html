@@ -122,7 +122,7 @@ function initPage(){
   var table = $('#example').DataTable({
 
     "processing": true,
-    "serverSide": true,
+    "serverSide": false,
     "ajax": {
       "url": '{:URL("Supporter/getSupList")}',
       "type": "POST"
@@ -187,11 +187,6 @@ function initPage(){
   $('#remove_btn').click( function () {
     table.rows('.danger').remove().draw( false );
   } );
-
-//  $.post("{:URL('Supporter/getSupList')}",function(res){
-//    console.log(res);
-//  })
-
 
 
 }

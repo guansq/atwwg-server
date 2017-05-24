@@ -42,162 +42,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>技术型</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><a class="barcode" href="#">条形码</a></td>
-            <td><a class="edit" href="javascript:void(0);" data-open="{:url('admin/material/edit')}">编辑</a></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>技术型</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><a class="barcode" href="#">条形码</a></td>
-            <td><a class="edit" href="javascript:void(0);" data-open="{:url('admin/material/edit')}">编辑</a></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>技术型</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><a class="barcode" href="#">条形码</a></td>
-            <td><a class="edit" href="javascript:void(0);" data-open="{:url('admin/material/edit')}">编辑</a></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>技术型</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><a class="barcode" href="#">条形码</a></td>
-            <td><a class="edit" href="javascript:void(0);" data-open="{:url('admin/material/edit')}">编辑</a></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>技术型</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><a class="barcode" href="#">条形码</a></td>
-            <td><a class="edit" href="javascript:void(0);" data-open="{:url('admin/material/edit')}">编辑</a></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>技术型</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><a class="barcode" href="#">条形码</a></td>
-            <td><a class="edit" href="javascript:void(0);" data-open="{:url('admin/material/edit')}">编辑</a></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>技术型</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><a class="barcode" href="#">条形码</a></td>
-            <td><a class="edit" href="javascript:void(0);" data-open="{:url('admin/material/edit')}">编辑</a></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>技术型</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><a class="barcode" href="#">条形码</a></td>
-            <td><a class="edit" href="javascript:void(0);" data-open="{:url('admin/material/edit')}">编辑</a></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>技术型</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><a class="barcode" href="#">条形码</a></td>
-            <td><a class="edit" href="javascript:void(0);" data-open="{:url('admin/material/edit')}">编辑</a></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>技术型</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><a class="barcode" href="#">条形码</a></td>
-            <td><a class="edit" href="javascript:void(0);" data-open="{:url('admin/material/edit')}">编辑</a></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>技术型</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><a class="barcode" href="#">条形码</a></td>
-            <td><a class="edit" href="javascript:void(0);" data-open="{:url('admin/material/edit')}">编辑</a></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>技术型</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><a class="barcode" href="#">条形码</a></td>
-            <td><a class="edit" href="javascript:void(0);" data-open="{:url('admin/material/edit')}">编辑</a></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>技术型</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><a class="barcode" href="#">条形码</a></td>
-            <td><a class="edit" href="javascript:void(0);" data-open="{:url('admin/material/edit')}">编辑</a></td>
-          </tr>
+
           </tbody>
         </table>
       </div>
@@ -246,7 +91,26 @@
           "sNext": "下页",
           "sLast": "末页"
         }
-      }
+      },
+      "processing": true,
+      "serverSide": true,
+      "ajax": {
+        "url": '{:url("Material/getSupList")}',
+        "type": "POST"
+      },
+      "pageLength": 10,
+      "columns": [
+        { "data": "main_name" },
+        { "data": "code" },
+        { "data": "desc" },
+        { "data": "pur_attr" },
+        { "data": "future_scale" },
+        { "data": "price_weight" },
+        { "data": "tech_weight" },
+        { "data": "business_weight" },
+        { "data": "pay_type_status" },
+        { "data": "action" }
+      ],
     });
 
     // tr点击选中事件
@@ -272,6 +136,10 @@
         })
       });
     });
+
+
+
+
   }
 
 

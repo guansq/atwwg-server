@@ -35,24 +35,9 @@ class Enquiryorder extends BaseController{
             'inquiry' => '询价中',
             'close' => '关闭',
         ];
+        dump($list);
+        die;
         foreach($list as $k => $v){
-            if($v['inquiry_way'] == 'assign' && $v['status'] == 'hang'){//订单挂起状态 且询价方式为指定
-                $v['is_appoint_sup'] = '<input style="margin-right: 15px;" type="checkbox" class="ver_top checked" value="">指定';
-                //选择供应商
-                $v['inquiry_way'] = '<a class="select_sell" href="#" data-url="'.url('requireorder/selectSup',array('pr_code'=>$v['pr_code'],'item_code'=>$v['item_code'])).'">选择供应商</a>';
-            }else{
-                $v['is_appoint_sup'] = '未指定';
-                if(in_array($v['inquiry_way'],$inquiry_way)){
-                    $v['inquiry_way'] = $inquiry_way[$v['inquiry_way']];
-                }else{
-                    $v['inquiry_way'] = '其他';
-                }
-            }
-            if(in_array($v['check_status'],$checkStatus)){
-                $v['check_status'] = $checkStatus[$v['check_status']];
-            }else{
-                $v['check_status'] = '未审批';
-            }
             $returnArr[] = [
                 'pr_code' => $v['pr_code'],//请购单号
                 'pr_date' => $v['pr_date'],//请购日期

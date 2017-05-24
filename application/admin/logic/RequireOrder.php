@@ -20,4 +20,9 @@ class RequireOrder extends BaseLogic{
         //dump($list);
         return $list;
      }
+
+     function getListNum(){
+         $count = prModel::alias('a')->field('a.*,b.desc,b.pur_attr')->join('item b','a.item_code=b.code','LEFT')->count();
+         return $count;
+     }
 }

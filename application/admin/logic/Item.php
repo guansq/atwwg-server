@@ -41,7 +41,7 @@ class Item extends Baselogic{
      * 得到U9供应商数据总数
      */
     public function getListNum(){
-        $num = ItemModel::select()->count();
+        $num = model('Item')->count();
         //dump($list);die;
         return $num;
     }

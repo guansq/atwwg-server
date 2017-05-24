@@ -35,12 +35,24 @@ class Enquiryorder extends BaseController{
             'inquiry' => '询价中',
             'close' => '关闭',
         ];
-        dump($list);
-        die;
+
         foreach($list as $k => $v){
+            //得到全部的询价单 by pr_code item_code
+            $where = [
+                '' => '',
+                '' => '',
+                '' => ''
+            ];
+
+            //得到已报价的询价单by pr_code item_code status
+            $where = [
+                '' => '',
+                '' => '',
+                '' => ''
+            ];
             $returnArr[] = [
-                'pr_code' => $v['pr_code'],//请购单号
-                'pr_date' => $v['pr_date'],//请购日期
+                'pr_code' => $v['pr_code'],//询价单号
+                'pr_date' => $v['pr_date'],//请购单号
                 'item_code' => $v['item_code'],//料号
                 'desc' => $v['desc'],//物料描述
                 'pro_no' => $v['pro_no'],//项目号
@@ -49,11 +61,11 @@ class Enquiryorder extends BaseController{
                 'price_uom' => $v['price_uom'],//计价单位
                 'price_num' => $v['price_num'],//计价数量
                 'req_date' => $v['req_date'],//交期
+                'quote_date' => $v['quote_date'],//询价日期
+                'quote_endtime' => $v['quote_endtime'],//报价截止日期
+                //报价状态
                 'status' => $status[$v['status']],//状态 init=初始 hang=挂起 inquiry=询价中 close = 关闭
-                'pur_attr' => $v['pur_attr'],//物料采购属性
-                'is_appoint_sup' => $v['is_appoint_sup'],//是否指定供应商
-                'inquiry_way' => $v['inquiry_way'],//询价方式
-                'check_status' => $v['check_status'],//主管审批
+                'pur_attr' => $v['pur_attr'],//详情
             ];
 
         }

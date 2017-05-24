@@ -32,9 +32,33 @@ class Material extends BaseController{
      */
 
     public function getSupList(){
-        $logicSupInfo = Model('Item','logic');
-        $list = $logicSupInfo->getListInfo();
-        return $list;
+        $start = input('start') == '' ? 0 : input('start');
+        $length = input('length') == '' ? 10 : input('length');
+        $logicItemInfo = Model('Item','logic');
+        $list = $logicItemInfo->getListInfo($start,$length);
+        $returnArr = [];
+        foreach($list as $k => $v){
+            $v['arv_rate'] = $v['arv_rate'] == '' ? '暂无数据' : $v['arv_rate'];
+            $v['pp_rate'] = $v['pp_rate'] == '' ? '暂无数据' : $v['pp_rate'];
+            $returnArr[] = [
+                'main_name' => $v['main_name'],//主分类
+                'code' => $v['code'],//料号
+                'desc' => $v['desc'],//物料描述
+                'pur_attr' => $v['pur_attr'],//物料采购属性
+                'future_scale' => $v['future_scale'],//货期让步比例
+                'price_weight' => $v['price_weight'],//价格权重
+                'tech_weight' => $v['tech_weight'],//技术权重
+                'business_weight' => $v['business_weight'],//商务权重
+                'pay_type_status' => '<a class="barcode" href="#">条形码</a>',//查看\打印条形码
+                'action' => '<a class="edit" href="javascript:void(0);" data-open="'.url('Material/edit',['id'=>$v['id']]).'" >编辑</a>',
+            ];
+
+        }
+        $info = ['draw'=>time(),'recordsTotal'=>$logicItemInfo->getListNum(),'recordsFiltered'=>$logicItemInfo->getListNum(),'data'=>$returnArr];
+
+        return json($info);
+        //dump($list);
+        //return $list;
     }
 
     public function del(){
@@ -45,9 +69,20 @@ class Material extends BaseController{
 
     }
 
+    /*
+     * 得到单个物料信息
+     */
     public function edit(){
+        $code = input('code');
+        $logicItemInfo = Model('Item','logic');
+        $info = $logicItemInfo->getItemInfo($code);
+        $this->assign('itemInfo',$info);
+        //关联供应商
+        $logicItemInfo->getRelationSup();
+        $this->assign('itemInfo',$info);//
         return view();
     }
+
 
     public function updataU9Info(){
      return HttpService::curl(getenv('APP_API_HOME').'/u9api/syncItem');
@@ -64,17 +99,15 @@ class Material extends BaseController{
         $PHPSheet->setCellValue('A1','ID')->setCellValue('B1','物料编码');
         $PHPSheet->setCellValue('C1','物料名称')->setCellValue('D1','主分类名称');
         $PHPSheet->setCellValue('E1','物料描述')->setCellValue('F1','创建时间');
-        $PHPSheet->setCellValue('E1','更新时间');
-        //dump($list);die;
+        $PHPSheet->setCellValue('G1','更新时间');
         $num = 1;
         foreach($list as $k => $v){
-            $num += $num+1;
-            $PHPSheet->setCellValue('A'.$num,'ID')->setCellValue('B'.$num,'物料编码')
-                    ->setCellValue('C'.$num,'物料名称')->setCellValue('D'.$num,'主分类名称')
-                    ->setCellValue('E'.$num,'物料描述')->setCellValue('F'.$num,'创建时间')
-                    ->setCellValue('E'.$num,'更新时间');
+            $num = $num+1;
+            $PHPSheet->setCellValue('A'.$num,$v['id'])->setCellValue('B'.$num,$v['code'])
+                    ->setCellValue('C'.$num,$v['name'])->setCellValue('D'.$num,$v['main_name'])
+                    ->setCellValue('E'.$num,$v['desc'])->setCellValue('F'.$num,date('Y-m-d H:i:s',$v['create_at']))
+                    ->setCellValue('G'.$num,date('Y-m-d H:i:s',$v['update_at']));
         }
-        //dump($list);die;
         $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel,'Excel2007');//按照指定格式生成Excel文件，'Excel2007’表示生成2007版本的xlsx，
         $PHPWriter->save($path.'/itemList.xlsx'); //表示在$path路径下面生成itemList.xlsx文件
         $file_name = "itemList.xlsx";
@@ -86,4 +119,5 @@ class Material extends BaseController{
         header("Content-Disposition: attachment; filename=".$file_name);
         exit($contents);
     }
+
 }

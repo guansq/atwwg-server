@@ -29,12 +29,38 @@ class Item extends Baselogic{
     /*
      * 得到U9供应商数据
      */
-    public function getListInfo(){
-        $list = ItemModel::all();
+    public function getListInfo($start,$length){
+        $list = ItemModel::limit("$start,$length")->select();
         if($list) {
             $list = collection($list)->toArray();
         }
         //dump($list);die;
+        return $list;
+    }
+    /*
+     * 得到U9供应商数据总数
+     */
+    public function getListNum(){
+        $num = ItemModel::select()->count();
+        //dump($list);die;
+        return $num;
+    }
+
+    /**
+     * 得到物料关联的供应商
+     */
+    public function getRelationSup(){
+
+    }
+
+    /**
+     *料号信息
+     */
+    public function getItemInfo($code){
+        $list = ItemModel::where("code","$code")->find();
+        if($list) {
+            $list = collection($list)->toArray();
+        }
         return $list;
     }
 }

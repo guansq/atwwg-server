@@ -29,6 +29,16 @@ class Requireorder extends BaseController{
         $list = $logicPrInfo->getPrList($start,$length);
         $returnArr = [];
         //dump($list);die;
+        $status = [
+            'init' => '初始',
+            'hang' => '挂起',
+            'inquiry' => 'inquiry',
+            'close' => '关闭',
+        ];
+        $checkStatus = [
+            'agree' => '同意',
+            'refuse' => '拒绝',
+        ];
         foreach($list as $k => $v){
             $returnArr[] = [
                 'pr_code' => $v['pr_code'],//请购单号
@@ -41,14 +51,15 @@ class Requireorder extends BaseController{
                 'price_uom' => $v['price_uom'],//计价单位
                 'price_num' => $v['price_num'],//计价数量
                 'req_date' => $v['req_date'],//交期
-                'status' => $v['status'],//状态 init=初始 hang=挂起 inquiry=询价中 close = 关闭
+                'status' => $status[$v['status']],//状态 init=初始 hang=挂起 inquiry=询价中 close = 关闭
                 'pur_attr' => $v['pur_attr'],//物料采购属性
-                'pur_attr' => $v['pur_attr'],//是否指定供应商
-                'pur_attr' => $v['pur_attr'],//询价方式
-                'pur_attr' => $v['pur_attr'],//主管审批
+                'is_appoint_sup' => $v['is_appoint_sup'],//是否指定供应商
+                'inquiry_way' => $v['inquiry_way'],//询价方式
+                'check_status' => $checkStatus[$v['check_status']],//主管审批
             ];
 
         }
+
         $info = ['draw'=>time(),'recordsTotal'=>$logicItemInfo->getListNum(),'recordsFiltered'=>$logicItemInfo->getListNum(),'data'=>$returnArr];
 
         return json($info);

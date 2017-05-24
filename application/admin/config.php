@@ -6,5 +6,5 @@
  * Time: 10:04
  */
 return [
-    'upload_path'=>'/upload',//上传附件
+    'upload_path'=>'/upload',//上传附件__STATIC__
 ];

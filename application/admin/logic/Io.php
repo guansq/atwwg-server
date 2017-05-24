@@ -12,9 +12,8 @@ use app\common\model\Io as IoModel;
 class Io extends BaseLogic{
 
      function getIoList($start,$length){
-
-        $list = IoModel::alias('a')->field('a.*,b.desc,c.pro_no')->join('item b','a.item_code=b.code','LEFT')->join('u9_pr c','a.pr_code=c.pr_code','LEFT')->limit("$start,$length")->select();
-        echo $this->getLastSql();
+        //->join('u9_pr c','a.pr_code=c.pr_code','LEFT'),c.pro_no
+        $list = IoModel::alias('a')->field('a.*,b.desc')->join('item b','a.item_code=b.code','LEFT')->limit("$start,$length")->group('pr_code,item_code')->select();
         if($list){
             $list = collection($list)->toArray();
         }
@@ -23,7 +22,7 @@ class Io extends BaseLogic{
      }
 
      function getListNum(){
-         $count = IoModel::alias('a')->field('a.*,b.desc,c.pro_no')->join('item b','a.item_code=b.code','LEFT')->join('u9_pr c','a.pr_code = c.pr_code','LEFT')->count();
+         $count = IoModel::alias('a')->field('a.*,b.desc')->join('item b','a.item_code=b.code','LEFT')->group('pr_code,item_code')->count();
          return $count;
      }
 }

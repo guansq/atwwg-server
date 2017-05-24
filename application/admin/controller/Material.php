@@ -95,7 +95,7 @@ class Material extends BaseController{
         $PHPSheet = $PHPExcel->getActiveSheet(); //获得当前活动sheet的操作对象
         $PHPSheet->setTitle('demo'); //给当前活动sheet设置名称
         $logicSupInfo = Model('Item','logic');
-        $list = $logicSupInfo->getListInfo();
+        $list = $logicSupInfo->getAllListInfo();
         $PHPSheet->setCellValue('A1','ID')->setCellValue('B1','物料编码');
         $PHPSheet->setCellValue('C1','物料名称')->setCellValue('D1','主分类名称');
         $PHPSheet->setCellValue('E1','物料描述')->setCellValue('F1','创建时间');

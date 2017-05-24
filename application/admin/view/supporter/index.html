@@ -41,7 +41,7 @@
       <div class="pb_15">
         <button type="button" id="synchronization_btn" class="btn btn-info mr_15">立即同步ERP数据</button>
         <button type="button" id="lookThrough" class="btn btn-warning mr_15">审核供应商</button>
-        <button type="button" id="remove_btn" class="btn btn-danger mr_15">删除物料</button>
+        <button type="button" id="remove_btn" class="btn btn-danger mr_15">删除</button>
       </div>
       <div>
         <table id="example" class="display table table-bordered" cellspacing="0" width="100%">
@@ -80,7 +80,7 @@
  * Created by Administrator on 2017/5/11.
  */
 
-require(["jquery.dataTables","cityselect","laydate","layui"],function(){
+require(["jquery.dataTables","laydate","layui"],function(){
   require(["dataTables.bootstrap"],function(){
     $(document).ready(function(){
       initPage();
@@ -90,9 +90,6 @@ require(["jquery.dataTables","cityselect","laydate","layui"],function(){
 });
 
 function initPage(){
-  //选择城市
-  init_city_select($("#citySelect"));
-
   //时间日期选择器
   $(".date_time").focus(function(){
     /*
@@ -172,14 +169,13 @@ function initPage(){
     },function(index,layero){
       layer.close(index);
       $.post(url,function(resdata){
-        if(resdata.code == 200){
+        var obj = JSON.parse(resdata);
+        if(obj.code == 2000){
           $.form.reload();
         }else{
           alert("更新失败");
         }
       })
-    },function(index){
-
     });
 
   });

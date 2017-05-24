@@ -1,7 +1,7 @@
 {extend name='extra@admin/content' /}
 
 {block name="style"}
-<link href="https://cdn.bootcss.com/iCheck/1.0.2/skins/minimal/minimal.css" rel="stylesheet">
+<link rel="stylesheet" href="//cdn.datatables.net/plug-ins/28e7751dbec/integration/bootstrap/3/dataTables.bootstrap.css">
 {/block}
 
 {block name="button"}
@@ -44,121 +44,29 @@
     </div>
     <div class="mt_table">
       <div>
-        <table class="table table-bordered">
+        <table id="example" class="display table table-bordered" cellspacing="0" width="100%">
           <thead>
-          <tr>
-            <th>请购单号</th>
-            <th>请购日期</th>
-            <th>料号</th>
-            <th>物料描述</th>
-            <th>项目号</th>
-            <th>交易单位</th>
-            <th>交易单位数量</th>
-            <th>计价单位</th>
-            <th>计价单位数量</th>
-            <th>交期</th>
-            <th>状态</th>
-            <th>物料采购属性</th>
-            <th>是否指定供应商</th>
-            <th>询价方式</th>
-            <th>主管审批</th>
-          </tr>
+            <tr>
+              <th>请购单号</th>
+              <th>请购日期</th>
+              <th>料号</th>
+              <th>物料描述</th>
+              <th>项目号</th>
+              <th>交易单位</th>
+              <th>交易单位数量</th>
+              <th>计价单位</th>
+              <th>计价单位数量</th>
+              <th>交期</th>
+              <th>状态</th>
+              <th>物料采购属性</th>
+              <th>是否指定供应商</th>
+              <th>询价方式</th>
+              <th>主管审批</th>
+            </tr>
           </thead>
-          <tr>
-            <td></td>
-            <td></td>
-            <td>1503010168</td>
-            <td>限位开关-WESTLOCK-2649ABYN00022AAA-AR2</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>412.24500</td>
-            <td>2017-02-28</td>
-            <td>询价中</td>
-            <td>单一资源型</td>
-            <td>
-              <input style="margin-right: 15px;" type="checkbox" class="ver_top" value="">指定
-            </td>
-            <td><a class="select_sell" href="#">选择供应商</a></td>
-            <td>通过</td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td>1503010168</td>
-            <td>限位开关-WESTLOCK-2649ABYN00022AAA-AR2</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>412.24500</td>
-            <td>2017-02-28</td>
-            <td>询价中</td>
-            <td>单一资源型</td>
-            <td>
-              <input style="margin-right: 15px;" type="checkbox" class="ver_top" value="">指定
-            </td>
-            <td>自动询价</td>
-            <td>通过</td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td>1503010168</td>
-            <td>限位开关-WESTLOCK-2649ABYN00022AAA-AR2</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>412.24500</td>
-            <td>2017-02-28</td>
-            <td>询价中</td>
-            <td>充分竞争型</td>
-            <td>
-              <input style="margin-right: 15px;" type="checkbox" class="ver_top" value="">指定
-            </td>
-            <td>自动询价</td>
-            <td>通过</td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td>1503010168</td>
-            <td>限位开关-WESTLOCK-2649ABYN00022AAA-AR2</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>412.24500</td>
-            <td>2017-02-28</td>
-            <td>询价中</td>
-            <td>单一资源型</td>
-            <td>
-              <input style="margin-right: 15px;" type="checkbox" class="ver_top" value="">指定
-            </td>
-            <td>自动询价</td>
-            <td>通过</td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td>1503010168</td>
-            <td>限位开关-WESTLOCK-2649ABYN00022AAA-AR2</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>412.24500</td>
-            <td>2017-02-28</td>
-            <td>询价中</td>
-            <td>单一资源型</td>
-            <td>
-              <input style="margin-right: 15px;" type="checkbox" class="ver_top" value="">指定
-            </td>
-            <td>自动询价</td>
-            <td>通过</td>
-          </tr>
+          <tbody>
+
+          </tbody>
         </table>
       </div>
     </div>
@@ -245,5 +153,75 @@
 {/block}
 
 {block name="script"}
-<script src="/static/admin/requireorder/index.js"/>
+<!--<script src="/static/admin/requireorder/index.js"/>-->
+<script>
+  /**
+   * 请购单管理
+   * Created by Administrator on 2017/5/11.
+   */
+
+  require(["jquery.dataTables"],function(){
+    require(["dataTables.bootstrap"],function(){
+      $(document).ready(function(){
+        initPage();
+      });
+    })
+  });
+
+  function initPage(){
+
+    var table = $('#example').DataTable({
+      //paging: false, //设置是否分页
+      "info": false,  //去除左下角的信息
+      "lengthChange": false, //是否允许用户改变表格每页显示的记录数
+      "ordering": false, //是否允许Datatables开启排序
+      "searching": false,  //是否允许Datatables开启本地搜索
+      language: {
+        "oPaginate": {
+          "sFirst": "首页",
+          "sPrevious": "上页",
+          "sNext": "下页",
+          "sLast": "末页"
+        }
+      },
+      "processing": true,
+      "serverSide": true,
+      "ajax": {
+        "url": '{:url("Requireorder/getPrList")}',
+        "type": "POST"
+      },
+      "pageLength": 10,
+      "columns": [
+        { "data": "pr_code" },
+        { "data": "pr_date" },
+        { "data": "item_code" },
+        { "data": "desc" },
+        { "data": "pro_no" },
+        { "data": "tc_uom" },
+        { "data": "tc_num" },
+        { "data": "price_uom" },
+        { "data": "price_num" },
+        { "data": "req_date" },
+        { "data": "status" },
+        { "data": "pur_attr" },
+        { "data": "is_appoint_sup" },
+        { "data": "inquiry_way" },
+        { "data": "check_status" },
+      ],
+    });
+
+  }
+
+  // 打开弹框
+  $(".select_sell").click(function(e){
+    e.preventDefault();
+    $(".barcode_box").css("display","block");
+  });
+  // 关闭条形码的弹出框
+  $(".close_box").click(function(){
+    $(".barcode_box").css("display","none");
+  });
+
+
+</script>
 {/block}

@@ -17,6 +17,8 @@ function initPage(){
     radioClass: 'iradio_minimal',
     increaseArea: '20%' // optional
   });
+
+  $("input.checks").iCheck('check');
 }
 
 // 打开弹框

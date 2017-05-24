@@ -138,6 +138,29 @@
     });
 
 
+    //导入Excel
+    $("#excel_in").click(function(){
+      layer.confirm('<a style="color: #333;">导入前请点击下载最新的导入模版</a>', {
+        btn: ['确定导入','取消导入']
+      }, function(index){
+        layer.close(index);
+      });
+    })
+
+
+    //导出
+    $("#excel_out").click(function(){
+      console.log(1);
+      layer.confirm('是否进行导出', {
+        btn: ['确定导出','取消导出']
+      }, function(index){
+        layer.close(index);
+        window.open("{:url('Material/exportExcel')}");
+      });
+    })
+
+
+
 
 
   }
@@ -164,6 +187,8 @@
   $("#stamp").click(function(){
     window.print();
   })
+
+
 
 
 

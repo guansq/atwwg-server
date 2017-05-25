@@ -216,13 +216,10 @@
         $("#example input").click(function(){
           var _this =$(this);
           var is_appoint_sup;
-          var sendObj ={
-            'pr_code' :  $(this).attr("data-pr_code"),
-            'is_appoint_sup' : is_appoint_sup
-          };
+
           Global.item_code = $(this).attr("data-item_code");
           Global.pr_code = $(this).attr("data-pr_code");
-          var newhtml ="<a onclick='bomb_box(event);' class='select_sell' data-url='{:url(\"Requireorder/showSelectSup\")}/pr_code/"+sendObj.pr_code+"/item_code/"+Global.item_code+"'>选择供应商</a>";
+          var newhtml ="<a onclick='bomb_box(event);' class='select_sell' data-url='{:url(\"Requireorder/showSelectSup\")}/pr_code/"+Global.pr_code+"/item_code/"+Global.item_code+"'>选择供应商</a>";
 
           if($(this).is(':checked')){
             _this.parent().next().html(newhtml);
@@ -231,7 +228,10 @@
             is_appoint_sup =0;
             _this.parent().next().html("指定");
           }
-
+          var sendObj ={
+            'pr_code' :  $(this).attr("data-pr_code"),
+            'is_appoint_sup' : is_appoint_sup
+          };
           $.post("{:url('Requireorder/changeInquiType')}",sendObj,function(res){
             if(res.code == 2000){
             }else{
@@ -246,8 +246,11 @@
   function bomb_box(event){
     event.preventDefault();
     $.post("{:url('Requireorder/showSelectSup')}",Global,function(resDate){
-//      $(".barcode_box").css("display","block");
+     $(".barcode_box").css("display","block");
       console.log(resDate);
+      if(resDate.length >0){
+
+      }
 //      if(resDate.length >0)
     })
   }
@@ -256,6 +259,7 @@
   $(".close_box").click(function(){
     $(".barcode_box").css("display","none");
   });
+
 
 
 </script>

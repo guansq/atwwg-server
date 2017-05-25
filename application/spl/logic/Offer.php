@@ -25,5 +25,8 @@ class Offer extends BaseLogic{
         return $result;
     }
 
-    function getOneBy
+    function getOneById($Id){
+        $result = IoModel::where('id',$Id)->find($Id);
+        return $result;
+    }
 }

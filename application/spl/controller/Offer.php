@@ -45,9 +45,12 @@ class Offer extends Base{
             'status' => 'quoted',//改变已报价
         ];
         $list = $offerLogic->updateData($key,$dataArr);
-        dump($list);die;
+        //dump($list);die;
         if($list !== false){
-            return json(['code'=>2000,'msg'=>'成功','data'=>[]]);
+            $info = $offerLogic->getOneById($key);
+            $total_price = $info['price_num']*$info['quote_price'];
+            //dump($offerLogic->toArray());die;
+            return json(['code'=>2000,'msg'=>'成功','data'=>['total_price'=>$total_price]]);
         }else{
             return json(['code'=>4000,'msg'=>'更新失败','data'=>[]]);
         }

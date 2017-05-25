@@ -52,7 +52,7 @@
         <td>{$vo.req_date|date="Y-m-d H:i:s",###}</td>
         <td><input type="text" name="req_date" lay-verify="required" value="{$vo.req_date|date='Y-m-d H:i:s',###}" {$vo.showinfo}></td>
         <td><input type="text" name="quote_price" lay-verify="required|float" value="{$vo.quote_price}" {$vo.showinfo} placeholder="请输入单价"></td>
-        <td class="active">{$vo.total_price}</td>
+        <td class="active" id="total_price_{$vo.id}">{$vo.total_price}</td>
         <td><input type="text" value="{$vo.remark}" name="remark" {$vo.showinfo}></td>
         <td><button data-io-id="{$vo.id}" class="btn btn-primary" {if condition="$vo['showinfo'] eq ''"} {/if} {$vo.showinfo} lay-submit="" lay-filter="sub">提交报价</button></td>
       </tr>
@@ -87,6 +87,8 @@
             $("tr[id^=io-"+data.field.id+"]").find($('input[name="quote_price"]')).attr("disabled",true);
             $("tr[id^=io-"+data.field.id+"]").find($('input[name="remark"]')).attr("disabled",true);
             $("tr[id^=io-"+data.field.id+"]").find($('input[name="req_date"]')).attr("disabled",true);
+            str = 'total_price_'+data.field.id;
+            $("#"+str).text(obj.data.total_price);
             $(data.elem).attr("disabled",true);
           }else{
             layer.alert(obj.msg);

@@ -36,8 +36,12 @@ class Login extends Base{
             (empty($password) || strlen($password) < 4) && $this->error('登录密码长度不能少于4位有效字符!');
             $user = Db::name('SystemUser')->where('user_name', $username)->find();
             empty($user) && $this->error('登录账号不存在，请重新输入!');
-            ($user['user_password'] !== md5($password)) && $this->error('登录密码与账号不匹配，请重新输入!');
-            Db::name('SystemUser')->where('id', $user['id'])->update(['login_at' => ['exp', 'now()'], 'login_count' => ['exp', 'login_count+1']]);
+            $useLogic = model('BaseLogic','logic');
+            $password = $useLogic->generatePwd($password,$user['salt']);
+            //echo $password;die;
+            ($user['password'] !== $password) && $this->error('登录密码与账号不匹配，请重新输入!');
+            Db::name('SystemUser')->where('id', $user['id'])->update(['last_login_time' => ['exp', 'now()'], 'login_count' => ['exp', 'login_count+1']]);
+            $user['sup_code'] = model('SupplierInfo')->getSupCodeBySupId($user['id']);//get sup_code
             session('spl_user', $user);
             $this->success('登录成功，正在进入系统...', '@spl');
         }

@@ -45,7 +45,7 @@ class Requireorder extends BaseController{
             'exclusive' => '独家采购',
             'compete' => '充分竞争',
         ];
-        //
+        //dump($list);die;
         foreach($list as $k => $v){
             if($v['inquiry_way'] == 'assign' && $v['status'] == 'hang'){//订单挂起状态 且询价方式为指定
                 $v['is_appoint_sup'] = '<input style="margin-right: 15px;" type="checkbox" data-pr_code="'.$v['pr_code'].'" data-item_code="'.$v['item_code'].'" class="ver_top" checked value="1">指定';
@@ -53,7 +53,7 @@ class Requireorder extends BaseController{
                     $v['inquiry_way'] = $v['appoint_sup_name'];
                 }else{
                     //选择供应商
-                    $v['inquiry_way'] = '<a class="select_sell" href="#" onclick="bomb_box(event);" data-url="'.url('requireorder/selectSup',array('pr_code'=>$v['pr_code'],'item_code'=>$v['item_code'])).'">选择供应商</a>';
+                    $v['inquiry_way'] = '<a class="select_sell" href="#" onclick="bomb_box('.$v['pr_code'].','.$v['item_code'].');" data-url="'.url('requireorder/selectSup',array('pr_code'=>$v['pr_code'],'item_code'=>$v['item_code'])).'">选择供应商</a>';
                 }
             }else{
                 $v['is_appoint_sup'] = '<input style="margin-right: 15px;" type="checkbox" data-pr_code="'.$v['pr_code'].'" data-item_code="'.$v['item_code'].'" class="ver_top" value="1">指定';
@@ -104,6 +104,9 @@ class Requireorder extends BaseController{
         }
         $logicPrInfo = Model('RequireOrder','logic');
         $list = $logicPrInfo->getSupList($data['item_code']);
+        foreach($list as $k=>$v){
+            $list[$k]['pr_code'] = $data['pr_code'];
+        }
         return json($list);
     }
 
@@ -119,6 +122,8 @@ class Requireorder extends BaseController{
                 'status' => '',
                 'inquiry_way' => 'init',
                 'is_appoint_sup' => 0,
+                'appoint_sup_code' => '',
+                'appoint_sup_name' => '',
             ];
 
         }else if($data['is_appoint_sup'] == 1){

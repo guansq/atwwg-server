@@ -38,189 +38,31 @@
         <td>单价</td>
         <td>总价</td>
         <td>备注</td>
+        <td>提交报价</td>
       </tr>
+
+      {volist name='list' id='vo'}
+      <form class="layui-form layui-box" action='{:url("$classuri/test")}' data-auto="true" method="post">
+      <table>
       <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><input type="text"></td>
-        <td><input type="text"></td>
-        <td class="active"></td>
-        <td><input type="text"></td>
+
+        <td>{$vo.item_name}<input type="hidden" name="id" value="{$vo.id}"></td>
+        <td>{$vo.price_num}</td>
+        <td>{$vo.price_uom}</td>
+        <td>{$vo.tc_uom}</td>
+        <td>{$vo.quote_date|date="Y-m-d H:i:s",###}</td>
+        <td>{$vo.quote_endtime|date="Y-m-d H:i:s",###}</td>
+        <td>{$vo.req_date|date="Y-m-d H:i:s",###}</td>
+        <td><input type="text" name="req_date" lay-verify="required|date" value="{$vo.req_date|date='Y-m-d H:i:s',###}" {$vo.showinfo}></td>
+        <td><input type="text" name="quote_price" lay-verify="required|num" value="{$vo.quote_price}" {$vo.showinfo}></td>
+        <td class="active">{$vo.total_price}</td>
+        <td><input type="text" value="{$vo.remark}" {$vo.showinfo}></td>
+        <td><button class="btn btn-primary" {$vo.showinfo} type="submit">提交报价</button></td>
+
       </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><input type="text"></td>
-        <td><input type="text"></td>
-        <td class="active"></td>
-        <td><input type="text"></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><input type="text"></td>
-        <td><input type="text"></td>
-        <td class="active"></td>
-        <td><input type="text"></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><input type="text"></td>
-        <td><input type="text"></td>
-        <td class="active"></td>
-        <td><input type="text"></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><input type="text"></td>
-        <td><input type="text"></td>
-        <td class="active"></td>
-        <td><input type="text"></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><input type="text"></td>
-        <td><input type="text"></td>
-        <td class="active"></td>
-        <td><input type="text"></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><input type="text"></td>
-        <td><input type="text"></td>
-        <td class="active"></td>
-        <td><input type="text"></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><input type="text"></td>
-        <td><input type="text"></td>
-        <td class="active"></td>
-        <td><input type="text"></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><input type="text"></td>
-        <td><input type="text"></td>
-        <td class="active"></td>
-        <td><input type="text"></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><input type="text"></td>
-        <td><input type="text"></td>
-        <td class="active"></td>
-        <td><input type="text"></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><input type="text"></td>
-        <td><input type="text"></td>
-        <td class="active"></td>
-        <td><input type="text"></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><input type="text"></td>
-        <td><input type="text"></td>
-        <td class="active"></td>
-        <td><input type="text"></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><input type="text"></td>
-        <td><input type="text"></td>
-        <td class="active"></td>
-        <td><input type="text"></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><input type="text"></td>
-        <td><input type="text"></td>
-        <td class="active"></td>
-        <td><input type="text"></td>
-      </tr>
+      </table>
+      </form>
+      {/volist}
     </table>
   </div>
 </main>

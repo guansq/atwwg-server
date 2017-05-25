@@ -24,4 +24,11 @@ class SupplierInfo extends BaseModel{
     public function saveAllData($data){
         return $this->allowField(true)->saveAll($data);
     }
+
+    /*
+     * 得到supCode
+     */
+    public function getSupCodeBySupId($supId){
+        return $this->where('sup_id',"$supId")->value('code');
+    }
 }

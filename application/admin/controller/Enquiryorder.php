@@ -30,32 +30,33 @@ class Enquiryorder extends BaseController{
         $returnArr = [];
         //状态init=未报价  quoted=已报价  winbid=中标 giveupbid=弃标  close=已关闭
         $status = [
-            'init' => '初始',
-            'hang' => '挂起',
-            'inquiry' => '询价中',
-            'close' => '关闭',
+            'init' => '未报价',
+            'quoted' => '已报价',
+            'winbid' => '中标',
+            'giveupbid' => '弃标',
+            'close' => '已关闭',
         ];
 
         foreach($list as $k => $v){
             //得到全部的询价单 by pr_code item_code
             $where = [
-                '' => '',
-                '' => '',
-                '' => ''
+                'pr_code' => $v['pr_code'],
+                'item_code' => $v['item_code'],
             ];
-
+            $allIo = $logicIoInfo->getIoCountByWhere($where);
             //得到已报价的询价单by pr_code item_code status
             $where = [
-                '' => '',
-                '' => '',
-                '' => ''
+                'pr_code' => $v['pr_code'],
+                'item_code' => $v['item_code'],
+                'status' => 'quoted',//已报价
             ];
+            $quotedIo = $logicIoInfo->getIoCountByWhere($where);
             $returnArr[] = [
-                'pr_code' => $v['pr_code'],//询价单号
-                'pr_date' => $v['pr_date'],//请购单号
+                'io_code' => $v['io_code'],//询价单号
+                'pr_code' => $v['pr_code'],//请购单号
                 'item_code' => $v['item_code'],//料号
                 'desc' => $v['desc'],//物料描述
-                'pro_no' => $v['pro_no'],//项目号
+                //'pro_no' => $v['pro_no'],//项目号
                 'tc_uom' => $v['tc_uom'],//交易单位
                 'tc_num' => $v['tc_num'],//交易数量
                 'price_uom' => $v['price_uom'],//计价单位
@@ -63,13 +64,14 @@ class Enquiryorder extends BaseController{
                 'req_date' => $v['req_date'],//交期
                 'quote_date' => $v['quote_date'],//询价日期
                 'quote_endtime' => $v['quote_endtime'],//报价截止日期
-                //报价状态
+                'price_status' => $quotedIo.'/'.$allIo,//报价状态
                 'status' => $status[$v['status']],//状态 init=初始 hang=挂起 inquiry=询价中 close = 关闭
-                'pur_attr' => $v['pur_attr'],//详情
+                'pur_attr' => '<a class="" href="javascript:void(0);" data-open="{:url(\'admin/enquiryorder/particulars/io_code/'.$v['io_code'].'\',)}">详情</a>',//详情
             ];
 
         }
-        $info = ['draw'=>time(),'recordsTotal'=>$logicPrInfo->getListNum(),'recordsFiltered'=>$logicPrInfo->getListNum(),'data'=>$returnArr];
+
+        $info = ['draw'=>time(),'recordsTotal'=>$logicIoInfo->getListNum(),'recordsFiltered'=>$logicIoInfo->getListNum(),'data'=>$returnArr];
 
         return json($info);
     }

@@ -77,14 +77,32 @@ class Material extends BaseController{
         $logicItemInfo = Model('Item','logic');
         $info = $logicItemInfo->getItemInfo($code);
         $this->assign('itemInfo',$info);
-        dump($info);
+       // var_dump($info);
         //关联供应商
         $supInfo = $logicItemInfo->getRelationSup($code);
-        dump($supInfo);
         $this->assign('supInfo',$supInfo);//
+        //var_dump($supInfo);
         return view();
     }
-
+    /*
+        * 得到单个物料信息
+        */
+    public function update(){
+        $data=input('param.');
+        $logicItemInfo = Model('Item','logic');
+        $code = $data['code'];
+        $where = array(
+           'pur_attr'=> $data['purattr'],
+            'future_scale'=> $data['futurescale'],
+            'price_weight'=> $data['priceweight'],
+            'tech_weight'=> $data['techweight'],
+            'business_weight'=> $data['businessweight'],
+            'standard_date'=> $data['standarddate'],
+            'is_stop'=>$data['inlineRadioOptions'],
+        );
+        $info = $logicItemInfo->updateByCode($code,$where);
+        return $info;
+    }
 
     public function updataU9Info(){
      return HttpService::curl(getenv('APP_API_HOME').'/u9api/syncItem');

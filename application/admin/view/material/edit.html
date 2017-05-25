@@ -18,93 +18,131 @@
       <a><i class="glyphicon glyphicon-menu-right"></i>编辑物料详情</a>
     </div>
     <div id="item" class="edit_form">
-      <form class="form-horizontal">
+      <form onsubmit="return false;"  data-auto="true" method="post" class="form-horizontal" >
+        <!--action='{:url("Material/update")}'-->
+        <input type="hidden" value="{$itemInfo.code}" name="code" >
+
         <fieldset disabled>
           <div class="form-group">
             <label class="col-sm-1 control-label">料号</label>
             <div class="col-sm-5">
-              <input type="text" class="form-control" placeholder="主料">
+              <input type="text" class="form-control" placeholder="主料" value="{$itemInfo.code}" name="code">
             </div>
           </div>
         </fieldset>
+        <fieldset disabled>
         <div class="form-group">
           <label class="col-sm-1 control-label">主分类</label>
           <div class="col-sm-5">
-            <select class="form-control">
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-            </select>
+            <input type="text" class="form-control" placeholder="1" value="{$itemInfo.main_name}">
+            <!--<select class="form-control">-->
+              <!--<option>1</option>-->
+              <!--<option>2</option>-->
+              <!--<option>3</option>-->
+            <!--</select>-->
           </div>
         </div>
+        </fieldset>
+        <fieldset disabled>
         <div class="form-group">
           <label class="col-sm-1 control-label">品牌</label>
           <div class="col-sm-5">
-            <select class="form-control">
-              <option>SMC</option>
-              <option>BETTIS</option>
-              <option>ASCO</option>
-              <option>NORGREN</option>
-            </select>
+            <input type="text" class="form-control" placeholder="" value="">
+            <!--<select class="form-control">-->
+              <!--<option>SMC</option>-->
+              <!--<option>BETTIS</option>-->
+              <!--<option>ASCO</option>-->
+              <!--<option>NORGREN</option>-->
+            <!--</select>-->
           </div>
         </div>
+        </fieldset>
+        <fieldset disabled>
         <div class="form-group">
           <label class="col-sm-1 control-label">品名</label>
           <div class="col-sm-5">
-            <input type="text" class="form-control" placeholder="物料描述">
+            <input type="text" class="form-control" placeholder="物料描述" value="{$itemInfo.name}" >
           </div>
         </div>
+        </fieldset>
         <div class="form-group">
           <label class="col-sm-1 control-label">物料属性可选</label>
           <div class="col-sm-5">
-            <select class="form-control">
-              <option>技术型</option>
-              <option>单一资源型</option>
-              <option>充分竞争型</option>
+            <select class="form-control" name="purattr">
+              {if $itemInfo.pur_attr eq '技术型'}
+              <option   selected = "selected">技术型</option>
+              {else}
+              <option   >技术型</option>
+
+              {/if}
+              {if $itemInfo.pur_attr eq '单一资源型'}
+              <option   selected = "selected">单一资源型</option>
+              {else}
+              <option   >单一资源型</option>
+
+              {/if}
+              {if $itemInfo.pur_attr eq '充分竞争型'}
+              <option   selected = "selected">充分竞争型</option>
+              {else}
+              <option   >充分竞争型</option>
+
+              {/if}
             </select>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-1 control-label">是否需要停顿</label>
           <div class="col-sm-5">
-            <input type="radio" name="inlineRadioOptions" id="yes" class="ml_12" value="yes">
+            {if $itemInfo.is_stop eq '1'}
+            <input type="radio" name="inlineRadioOptions" id="yes" class="ml_12" value="1" checked="true">
+            {else}
+            <input type="radio" name="inlineRadioOptions" id="yes" class="ml_12" value="1" >
+
+            {/if}
+
             <span class="ver_sub mr_15">是</span>
-            <input type="radio" name="inlineRadioOptions" id="no" class="ml_50" value="no">
+            {if $itemInfo.is_stop eq '0'}
+            <input type="radio" name="inlineRadioOptions" id="no" class="ml_12" value="0" checked="true">
+            {else}
+            <input type="radio" name="inlineRadioOptions" id="no" class="ml_12" value="0" >
+
+            {/if}
+
             <span class="ver_sub">否</span>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-1 control-label">货期让步比例</label>
           <div class="col-sm-5">
-            <input type="text" class="form-control w90" placeholder="货期让步比例">
+            <input type="text" class="form-control w90" placeholder="货期让步比例"  name="futurescale" value="{$itemInfo.future_scale}">
             <span class="scale_span">%</span>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-1 control-label">价格采购权重</label>
           <div class="col-sm-5">
-            <input type="text" class="form-control" placeholder="价格采购权重">
+            <input type="text" class="form-control" placeholder="价格采购权重"   name="priceweight"  value="{$itemInfo.price_weight}">
             <span class="scale_span">%</span>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-1 control-label">技术采购权重</label>
           <div class="col-sm-5">
-            <input type="text" class="form-control" placeholder="技术采购权重">
+            <input type="text" class="form-control" placeholder="技术采购权重"  name="techweight"  value="{$itemInfo.tech_weight}">
             <span class="scale_span">%</span>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-1 control-label">商务权重</label>
           <div class="col-sm-5">
-            <input type="text" class="form-control" placeholder="商务权重">
+            <input type="text" class="form-control" placeholder="商务权重" name="businessweight"  value="{$itemInfo.business_weight}">
             <span class="scale_span">%</span>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-1 control-label">标准货期</label>
           <div class="col-sm-5">
-            <input type="text" class="form-control" placeholder="标准货期">
+            <input type="text" class="form-control" placeholder="标准货期" name="standarddate"  value="{$itemInfo.standard_date}">
             <span class="scale_span">D</span>
           </div>
         </div>
@@ -129,46 +167,17 @@
           <th>状态</th>
         </tr>
         </thead>
+        {foreach $supInfo as $supInfo_name}
         <tr>
+          <td>{$supInfo_name['sup_code']}</td>
+          <td>{$supInfo_name['sup_name']}</td>
           <td></td>
           <td></td>
           <td></td>
           <td></td>
-          <td></td>
-          <td>生效</td>
         </tr>
-        <tr>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td>生效</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td>生效</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td>生效</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td>生效</td>
-        </tr>
+        {/foreach}
+
       </table>
     </div>
   </div>

@@ -212,7 +212,7 @@
         { "data": "check_status" },
       ],
       "drawCallback": function( settings ) {
-
+        is_appoint_sup =1;
         $("#example input").click(function(){
           var _this =$(this);
           var is_appoint_sup;
@@ -247,6 +247,7 @@
     event.preventDefault();
     $.post("{:url('Requireorder/showSelectSup')}",Global,function(resDate){
       if(resDate.length >0){
+
         $(".barcode_box").css("display","block");
         var tmphtml='';
         for (var i=0; i<resDate.length; i++){
@@ -260,13 +261,15 @@
 //            status = '禁用';
 //            diabled = 'disabled="true"';
 //          }
-          tmphtml +=  '<tr><td><input class="listcheck" name="listcheck" type="checkbox" '+diabled+' value="'+resDate[i]["item_code"]+'" data-sup_code="'+resDate[i]["sup_code"]+'"></td><td>'+resDate[i]["item_code"]+'</td><td>'+resDate[i]["sup_name"]+'</td><td>'+status+'</td></tr>';
+          tmphtml +=  '<tr><td><input class="listcheck" name="listcheck" type="checkbox" '+diabled+' value="'+resDate[i]["item_code"]+'" data-pr_code="'+resDate[i]["pr_code"]+'"data-sup_code="'+resDate[i]["sup_code"]+'"></td><td>'+resDate[i]["item_code"]+'</td><td>'+resDate[i]["sup_name"]+'</td><td>'+status+'</td></tr>';
         }
         $(".listcheck").click(function () {
           $("[name='listcheck']").removeAttr("checked");//取消全选
           $(this).attr("checked",'true');
         });
         $(".barcode_box table").html( "<thead><tr><th>选择</th><th>供应商编码</th><th>供应商名称</th><th>状态</th></tr></thead>"+tmphtml);
+      }else{
+        alert('暂无供应商可以选择');
       }
     })
   }
@@ -280,8 +283,9 @@
     $('input[name="listcheck"]:checked').each(function(){
       flag = 1;
       appoint_sup_code = $(this).attr('data-sup_code');
+      pr_code   = $(this).attr('data-pr_code');
       appoint_sup_name=  $(this).parent().next().next().html();
-      pr_code=  $(this).val();
+
     });
 
     if(flag != 1) {
@@ -290,13 +294,15 @@
     }
     var sendObj ={
       'is_appoint_sup' :   1,
-      'appoint_sup_code' : appoint_sup_code,
+      'appoint_sup_code ' : appoint_sup_code ,
       'appoint_sup_name':appoint_sup_name,
       'pr_code':pr_code
     };
     $.post("{:url('Requireorder/savePr')}",sendObj,function(res){
       if(res.code == 2000){
         $(".barcode_box").css("display","none");
+        $("input[data-pr_code^=pr_code]") .parent().next().html(res.data.sup_name)
+
       }else{
         alert("请求失败");
       }

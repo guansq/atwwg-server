@@ -243,15 +243,11 @@
     });
   }
   // 打开弹框
-  function bomb_box(pr_code,item_code){
-    var  tmp = {
-      'item_code' : item_code,
-      'pr_code' : pr_code
-    };
-    event.preventDefault();
-    $.post("{:url('Requireorder/showSelectSup')}", tmp,function(resDate){
-      if(resDate.length >0){
 
+  function bomb_box(event,pr_code,item_code){
+    event.preventDefault();
+    $.post("{:url('Requireorder/showSelectSup')}",{pr_code:pr_code,item_code:item_code},function(resDate){
+      if(resDate.length >0){
         $(".barcode_box").css("display","block");
         var tmphtml='';
         for (var i=0; i<resDate.length; i++){

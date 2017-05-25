@@ -53,7 +53,7 @@ class Requireorder extends BaseController{
                     $v['inquiry_way'] = $v['appoint_sup_name'];
                 }else{
                     //选择供应商
-                    $v['inquiry_way'] = '<a class="select_sell" href="#" onclick="bomb_box(event);" data-url="'.url('requireorder/selectSup',array('pr_code'=>$v['pr_code'],'item_code'=>$v['item_code'])).'">选择供应商</a>';
+                    $v['inquiry_way'] = '<a class="select_sell" href="#" onclick="bomb_box('.$v['pr_code'].','.$v['item_code'].');" data-url="'.url('requireorder/selectSup',array('pr_code'=>$v['pr_code'],'item_code'=>$v['item_code'])).'">选择供应商</a>';
                 }
             }else{
                 $v['is_appoint_sup'] = '<input style="margin-right: 15px;" type="checkbox" data-pr_code="'.$v['pr_code'].'" data-item_code="'.$v['item_code'].'" class="ver_top" value="1">指定';
@@ -127,7 +127,7 @@ class Requireorder extends BaseController{
             ];
 
         }else if($data['is_appoint_sup'] == 1){
-            $where = [
+            $dataArr = [
                 'status' => 'hang',
                 'inquiry_way' => 'assign',
                 'is_appoint_sup' => 1,
@@ -135,7 +135,7 @@ class Requireorder extends BaseController{
         }else{
             return json(['code'=>4000,'msg'=>'请传入合法的is_appoint_sup参数值','data'=>[]]);
         }
-        $result = $logicPrInfo->updateByPrCode($data['pr_code'],$where);
+        $result = $logicPrInfo->updateByPrCode($data['pr_code'],$dataArr);
         if (false === $result) {
             return json(['code'=>4000,'msg'=>'更改指定供应商状态失败','data'=>[]]);
         }
@@ -148,15 +148,17 @@ class Requireorder extends BaseController{
     public function savePr(){
         $data=input('param.');
         $logicPrInfo = Model('RequireOrder','logic');
-        $where = [
+        $dataArr = [
             'is_appoint_sup' => $data['is_appoint_sup'],
             'appoint_sup_code' => $data['appoint_sup_code'],
             'appoint_sup_name' => $data['appoint_sup_name'],
         ];
-        $result = $logicPrInfo->updateByPrCode($data['pr_code'],$where);
+        $result = $logicPrInfo->updateByPrCode($data['pr_code'],$dataArr);
         if (false === $result) {
             return json(['code'=>4000,'msg'=>'指定供应商状态失败','data'=>[]]);
         }
+        //重新计算价格
+
         return json(['code'=>2000,'msg'=>'成功','data'=>['sup_name' => $data['appoint_sup_name']]]);
         //is_appoint_sup 1 //appoint_sup_code //appoint_sup_name
     }

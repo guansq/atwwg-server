@@ -1,5 +1,7 @@
 {extend name='extra@admin/content' /}
-
+{block name="style"}
+  <link rel="stylesheet" href="//cdn.datatables.net/plug-ins/28e7751dbec/integration/bootstrap/3/dataTables.bootstrap.css">
+{/block}
 
 {block name="button"}
 
@@ -26,14 +28,16 @@
     </div>
     <div class="mt_table">
       <div>
-        <table class="table table-bordered">
+
+
+        <table id="example" class="display table table-bordered" cellspacing="0" width="100%">
           <thead>
           <tr>
             <th>询价单号</th>
             <th>请购单号</th>
             <th>料号</th>
-            <th>物料描述</th>
-            <th>项目号</th>
+            <!--<th>物料描述</th>-->
+            <!--<th>项目号</th>-->
             <th>交易单位</th>
             <th>计价单位</th>
             <th>数量</th>
@@ -45,135 +49,12 @@
             <th>详情</th>
           </tr>
           </thead>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>2017-02-28</td>
-            <td>2017-02-28</td>
-            <td>2017-02-28</td>
-            <td>1/3</td>
-            <td><a href="#">询价中</a></td>
-            <td><a class="" href="javascript:void(0);" data-open="{:url('admin/enquiryorder/particulars')}">详情</a></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>2017-02-28</td>
-            <td>2017-02-28</td>
-            <td>2017-02-28</td>
-            <td>1/3</td>
-            <td><a href="#">询价中</a></td>
-            <td><a class="" href="javascript:void(0);" data-open="{:url('admin/enquiryorder/particulars')}">详情</a></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>2017-02-28</td>
-            <td>2017-02-28</td>
-            <td>2017-02-28</td>
-            <td>1/3</td>
-            <td><a href="#">询价中</a></td>
-            <td><a class="" href="javascript:void(0);" data-open="{:url('admin/enquiryorder/particulars')}">详情</a></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>2017-02-28</td>
-            <td>2017-02-28</td>
-            <td>2017-02-28</td>
-            <td>1/3</td>
-            <td><a href="#">询价中</a></td>
-            <td><a class="" href="javascript:void(0);" data-open="{:url('admin/enquiryorder/particulars')}">详情</a></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>2017-02-28</td>
-            <td>2017-02-28</td>
-            <td>2017-02-28</td>
-            <td>1/3</td>
-            <td><a href="#">询价中</a></td>
-            <td><a class="" href="javascript:void(0);" data-open="{:url('admin/enquiryorder/particulars')}">详情</a></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>2017-02-28</td>
-            <td>2017-02-28</td>
-            <td>2017-02-28</td>
-            <td>1/3</td>
-            <td><a href="#">询价中</a></td>
-            <td><a class="" href="javascript:void(0);" data-open="{:url('admin/enquiryorder/particulars')}">详情</a></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>2017-02-28</td>
-            <td>2017-02-28</td>
-            <td>2017-02-28</td>
-            <td>1/3</td>
-            <td><a href="#">询价中</a></td>
-            <td><a class="" href="javascript:void(0);" data-open="{:url('admin/enquiryorder/particulars')}">详情</a></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>2017-02-28</td>
-            <td>2017-02-28</td>
-            <td>2017-02-28</td>
-            <td>1/3</td>
-            <td><a href="#" class="approve">合理性待审批</a></td>
-            <td><a class="" href="javascript:void(0);" data-open="{:url('admin/enquiryorder/particulars')}">详情</a></td>
-          </tr>
+          <tbody>
+
+          </tbody>
         </table>
+
+
       </div>
     </div>
   </div>

@@ -42,22 +42,20 @@
       </tr>
 
       {volist name='list' id='vo'}
-      <form action="">
-      <tr>
-        <td>{$vo.item_name}</td>
+      <tr id="io-{$vo.id}" class="layui-form">
+        <td>{$vo.item_name}<input type="hidden" name="id" value="{$vo.id}"></td>
         <td>{$vo.price_num}</td>
         <td>{$vo.price_uom}</td>
         <td>{$vo.tc_uom}</td>
         <td>{$vo.quote_date|date="Y-m-d H:i:s",###}</td>
         <td>{$vo.quote_endtime|date="Y-m-d H:i:s",###}</td>
         <td>{$vo.req_date|date="Y-m-d H:i:s",###}</td>
-        <td><input type="text" value="{$vo.req_date|date='Y-m-d H:i:s',###}" {$vo.showinfo}></td>
-        <td><input type="text" value="{$vo.quote_price}" {$vo.showinfo}></td>
-        <td class="active">{$vo.total_price}</td>
-        <td><input type="text" value="{$vo.remark}" {$vo.showinfo}></td>
-        <td><button class="btn btn-primary" {$vo.showinfo}>提交报价</button></td>
+        <td><input type="text" name="req_date" lay-verify="required" value="{$vo.req_date|date='Y-m-d H:i:s',###}" {$vo.showinfo}></td>
+        <td><input type="text" name="quote_price" lay-verify="required|float" value="{$vo.quote_price}" {$vo.showinfo} placeholder="请输入单价"></td>
+        <td class="active" id="total_price_{$vo.id}">{$vo.total_price}</td>
+        <td><input type="text" value="{$vo.remark}" name="remark" {$vo.showinfo}></td>
+        <td><button data-io-id="{$vo.id}" class="btn btn-primary" {if condition="$vo['showinfo'] eq ''"} {/if} {$vo.showinfo} lay-submit="" lay-filter="sub">提交报价</button></td>
       </tr>
-      </form>
       {/volist}
     </table>
   </div>
@@ -67,4 +65,57 @@
 
 {block name="script"}
 <script src="/static/spl/offer/index.js"></script>
+<script>
+  layui.use('form', function(){
+    form = layui.form();
+    //console.log(form);
+    form.on('submit(sub)', function(data){
+      layer.confirm('确认提交报价吗？', {
+        btn: ['提交','取消'], //按钮
+        shade: false //不显示遮罩
+      }, function(index){
+            //console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
+            //console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+            layer.load();
+            $.ajax({
+              'url' : '{:url("$classuri/savePrice")}',
+              'type' : 'POST',
+              //'dataType' : 'html',
+              'data' : data.field,
+              'complete' : function(){
+                //layer.closeAll();
+              },
+              'success' : function(obj){
+                layer.closeAll();
+                if(obj.code == 2000){
+                  $("tr[id^=io-"+data.field.id+"]").find($('input[name="quote_price"]')).attr("disabled",true);
+                  $("tr[id^=io-"+data.field.id+"]").find($('input[name="remark"]')).attr("disabled",true);
+                  $("tr[id^=io-"+data.field.id+"]").find($('input[name="req_date"]')).attr("disabled",true);
+                  str = 'total_price_'+data.field.id;
+                  $("#"+str).text(obj.data.total_price);
+                  $(data.elem).attr("disabled",true);
+                }else{
+                  layer.alert(obj.msg);
+                }
+                //console.log(obj);
+              },
+              'error' : function(){
+                layer.closeAll();
+                layer.alert('请求失败');
+              }
+          });
+        });
+
+      return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+    });
+    //各种基于事件的操作，下面会有进一步介绍
+  });
+  function subQuote(id){
+
+    console.log(id);
+  }
+
+  //$('tr[id^=io-]')
+  //$('tr[id^=io-2]').find($('input[name="quote_price"]')).val(11111111111)
+</script>
 {/block}

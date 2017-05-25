@@ -18,7 +18,11 @@ class Enquiryorder extends BaseController{
     protected $title = '询价单管理';
 
     public function index(){
+        $statusArr=[
+
+        ];
         $this->assign('title',$this->title);
+        $this->assign('statusArr',$statusArr);
         return view();
     }
 
@@ -27,6 +31,7 @@ class Enquiryorder extends BaseController{
         $length = input('length') == '' ? 10 : input('length');
         $logicIoInfo = Model('Io','logic');
         $list = $logicIoInfo->getIoList($start,$length);
+
         $returnArr = [];
         //状态init=未报价  quoted=已报价  winbid=中标 giveupbid=弃标  close=已关闭
         $status = [
@@ -56,17 +61,17 @@ class Enquiryorder extends BaseController{
                 'pr_code' => $v['pr_code'],//请购单号
                 'item_code' => $v['item_code'],//料号
                 'desc' => $v['desc'],//物料描述
-                //'pro_no' => $v['pro_no'],//项目号
+                'pro_no' => $v['pro_no'],//项目号
                 'tc_uom' => $v['tc_uom'],//交易单位
                 'tc_num' => $v['tc_num'],//交易数量
                 'price_uom' => $v['price_uom'],//计价单位
                 'price_num' => $v['price_num'],//计价数量
-                'req_date' => $v['req_date'],//交期
-                'quote_date' => $v['quote_date'],//询价日期
-                'quote_endtime' => $v['quote_endtime'],//报价截止日期
+                'req_date' => date('Y-m-d',$v['req_date']),//交期
+                'quote_date' =>  date('Y-m-d',$v['create_at']),//询价日期
+                'quote_endtime' =>  date('Y-m-d',$v['quote_endtime']),//报价截止日期
                 'price_status' => $quotedIo.'/'.$allIo,//报价状态
                 'status' => $status[$v['status']],//状态 init=初始 hang=挂起 inquiry=询价中 close = 关闭
-                'pur_attr' => '<a class="" href="javascript:void(0);" data-open="{:url(\'admin/enquiryorder/particulars/io_code/'.$v['io_code'].'\',)}">详情</a>',//详情
+                'pur_attr' => '<a class="" href="javascript:void(0);" data-open="/enquiryorder/particulars/io_code/'.$v['io_code'].'">详情</a>',//详情
             ];
 
         }
@@ -75,6 +80,8 @@ class Enquiryorder extends BaseController{
 
         return json($info);
     }
+
+
     public function del(){
 
     }

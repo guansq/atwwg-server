@@ -126,10 +126,14 @@
         bth: ['确定','取消']
       },function(index,layero){
         layer.close(index);
+        layer.load(1,{
+          shade: [0.1,"#fff"]
+        });
         $.post(url,function(resdata){
           var obj = JSON.parse(resdata);
           if(obj.code == 2000){
             $.form.reload();
+            layer.closeAll();
           }else{
             alert("更新失败");
           }

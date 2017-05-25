@@ -41,6 +41,7 @@ class Login extends Base{
             //echo $password;die;
             ($user['password'] !== $password) && $this->error('登录密码与账号不匹配，请重新输入!');
             Db::name('SystemUser')->where('id', $user['id'])->update(['last_login_time' => ['exp', 'now()'], 'login_count' => ['exp', 'login_count+1']]);
+            $user['sup_code'] = model('SupplierInfo')->getSupCodeBySupId($user['id']);//get sup_code
             session('spl_user', $user);
             $this->success('登录成功，正在进入系统...', '@spl');
         }

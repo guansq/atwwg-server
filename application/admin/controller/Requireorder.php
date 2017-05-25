@@ -119,6 +119,8 @@ class Requireorder extends BaseController{
                 'status' => '',
                 'inquiry_way' => 'init',
                 'is_appoint_sup' => 0,
+                'appoint_sup_code' => '',
+                'appoint_sup_name' => '',
             ];
 
         }else if($data['is_appoint_sup'] == 1){

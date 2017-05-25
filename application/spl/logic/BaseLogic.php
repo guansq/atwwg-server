@@ -9,7 +9,7 @@ namespace app\spl\logic;
 
 use think\Model;
 
-class Baselogic extends Model{
+class BaseLogic extends Model{
     protected $table = 'atw_system_user';
 
     /**

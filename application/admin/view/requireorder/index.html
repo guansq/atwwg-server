@@ -144,8 +144,8 @@
     </table>
     <section>
       <span class="col_red mr_15 fs_13">选择指定供应商后提交申请，等待采购主管审核通过，审核信息可以在消息中心看到</span>
-      <button type="button" class="btn btn-primary fr">重置</button>
-      <button type="button" class="btn btn-primary fr mr_15">提交</button>
+      <button type="button" class="btn btn-primary fr resetbt">重置</button>
+      <button type="button" class="btn btn-primary fr mr_15 submitbt">提交</button>
     </section>
   </div>
 </div>
@@ -246,21 +246,65 @@
   function bomb_box(event){
     event.preventDefault();
     $.post("{:url('Requireorder/showSelectSup')}",Global,function(resDate){
-     $(".barcode_box").css("display","block");
-      console.log(resDate);
       if(resDate.length >0){
-
+        $(".barcode_box").css("display","block");
+        var tmphtml='';
+        for (var i=0; i<resDate.length; i++){
+          console.log(resDate[i]);
+          var status = 0;
+          var diabled = '';
+          status = '正常';
+//          if(resDate[i]['status']==1){
+//            status = '正常';
+//          }else{
+//            status = '禁用';
+//            diabled = 'disabled="true"';
+//          }
+          tmphtml +=  '<tr><td><input class="listcheck" name="listcheck" type="checkbox" '+diabled+' value="'+resDate[i]["item_code"]+'" data-sup_code="'+resDate[i]["sup_code"]+'"></td><td>'+resDate[i]["item_code"]+'</td><td>'+resDate[i]["sup_name"]+'</td><td>'+status+'</td></tr>';
+        }
+        $(".listcheck").click(function () {
+          $("[name='listcheck']").removeAttr("checked");//取消全选
+          $(this).attr("checked",'true');
+        });
+        $(".barcode_box table").html( "<thead><tr><th>选择</th><th>供应商编码</th><th>供应商名称</th><th>状态</th></tr></thead>"+tmphtml);
       }
-//      if(resDate.length >0)
     })
   }
-  
+
+  $(".resetbt").click(function () {
+    $("[name='listcheck']").removeAttr("checked");//取消全选
+  })
+  var flag=0;
+  $(".submitbt").click(function () {
+
+    $('input[name="listcheck"]:checked').each(function(){
+      flag = 1;
+      appoint_sup_code = $(this).attr('data-sup_code');
+      appoint_sup_name=  $(this).parent().next().next().html();
+      pr_code=  $(this).val();
+    });
+
+    if(flag != 1) {
+      alert('选中一个才能提交');
+      return;
+    }
+    var sendObj ={
+      'is_appoint_sup' :   1,
+      'appoint_sup_code' : appoint_sup_code,
+      'appoint_sup_name':appoint_sup_name,
+      'pr_code':pr_code
+    };
+    $.post("{:url('Requireorder/savePr')}",sendObj,function(res){
+      if(res.code == 2000){
+        $(".barcode_box").css("display","none");
+      }else{
+        alert("请求失败");
+      }
+    });
+  })
   // 关闭条形码的弹出框
   $(".close_box").click(function(){
     $(".barcode_box").css("display","none");
   });
-
-
-
 </script>
 {/block}

@@ -53,7 +53,8 @@ class Requireorder extends BaseController{
                     $v['inquiry_way'] = $v['appoint_sup_name'];
                 }else{
                     //选择供应商
-                    $v['inquiry_way'] = '<a class="select_sell" href="#" onclick="bomb_box('.$v['pr_code'].','.$v['item_code'].');" data-url="'.url('requireorder/selectSup',array('pr_code'=>$v['pr_code'],'item_code'=>$v['item_code'])).'">选择供应商</a>';
+
+                    $v['inquiry_way'] = '<a class="select_sell" href="javascript:void(0);" onclick="bomb_box(event,\''.$v['pr_code'].'\',\''.$v['item_code'].'\');" data-url="'.url('requireorder/selectSup',array('pr_code'=>$v['pr_code'],'item_code'=>$v['item_code'])).'">选择供应商</a>';
                 }
             }else{
                 $v['is_appoint_sup'] = '<input style="margin-right: 15px;" type="checkbox" data-pr_code="'.$v['pr_code'].'" data-item_code="'.$v['item_code'].'" class="ver_top" value="1">指定';

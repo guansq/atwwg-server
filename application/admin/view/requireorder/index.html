@@ -243,9 +243,9 @@
     });
   }
   // 打开弹框
-  function bomb_box(event){
+  function bomb_box(event,pr_code,item_code){
     event.preventDefault();
-    $.post("{:url('Requireorder/showSelectSup')}",Global,function(resDate){
+    $.post("{:url('Requireorder/showSelectSup')}",{pr_code:pr_code,item_code:item_code},function(resDate){
       if(resDate.length >0){
 
         $(".barcode_box").css("display","block");
@@ -294,7 +294,7 @@
     }
     var sendObj ={
       'is_appoint_sup' :   1,
-      'appoint_sup_code ' : appoint_sup_code ,
+      'appoint_sup_code' : appoint_sup_code ,
       'appoint_sup_name':appoint_sup_name,
       'pr_code':pr_code
     };

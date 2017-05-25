@@ -104,7 +104,9 @@ class Requireorder extends BaseController{
         }
         $logicPrInfo = Model('RequireOrder','logic');
         $list = $logicPrInfo->getSupList($data['item_code']);
-        $list['pr_code'] = $data['pr_code'];
+        foreach($list as $k=>$v){
+            $list[$k]['pr_code'] = $data['pr_code'];
+        }
         return json($list);
     }
 

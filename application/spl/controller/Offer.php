@@ -31,6 +31,13 @@ class Offer extends Base{
     }
 
     public function savePrice(){
+        $data=input('param.');
+        $result = $this->validate($data,'Offer');
+        echo $result;
+        if($result !== true){
+            return json(['code'=>4000,'msg'=>'$result','data'=>[]]);
+        }
 
+        //return json(['code'=>2000,'msg'=>'成功','data'=>[]]);
     }
 }

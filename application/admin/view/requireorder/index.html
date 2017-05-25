@@ -219,7 +219,7 @@
 
           Global.item_code = $(this).attr("data-item_code");
           Global.pr_code = $(this).attr("data-pr_code");
-          var newhtml ="<a onclick='bomb_box(event);' class='select_sell' data-url='{:url(\"Requireorder/showSelectSup\")}/pr_code/"+Global.pr_code+"/item_code/"+Global.item_code+"'>选择供应商</a>";
+          var newhtml ="<a onclick=\"bomb_box('"+$(this).attr("data-pr_code")+"','"+ $(this).attr("data-item_code")+"');\" class='select_sell' data-url='{:url(\"Requireorder/showSelectSup\")}/pr_code/"+Global.pr_code+"/item_code/"+Global.item_code+"'>选择供应商</a>";
 
           if($(this).is(':checked')){
             _this.parent().next().html(newhtml);
@@ -243,9 +243,13 @@
     });
   }
   // 打开弹框
-  function bomb_box(event){
+  function bomb_box(pr_code,item_code){
+    var  tmp = {
+      'item_code' : item_code,
+      'pr_code' : pr_code
+    };
     event.preventDefault();
-    $.post("{:url('Requireorder/showSelectSup')}",Global,function(resDate){
+    $.post("{:url('Requireorder/showSelectSup')}", tmp,function(resDate){
       if(resDate.length >0){
 
         $(".barcode_box").css("display","block");
@@ -294,14 +298,14 @@
     }
     var sendObj ={
       'is_appoint_sup' :   1,
-      'appoint_sup_code ' : appoint_sup_code ,
+      'appoint_sup_code' : appoint_sup_code ,
       'appoint_sup_name':appoint_sup_name,
       'pr_code':pr_code
     };
     $.post("{:url('Requireorder/savePr')}",sendObj,function(res){
       if(res.code == 2000){
         $(".barcode_box").css("display","none");
-        $("input[data-pr_code^=pr_code]") .parent().next().html(res.data.sup_name)
+        $("input[data-pr_code^="+pr_code+"]") .parent().next().html(res.data.sup_name)
 
       }else{
         alert("请求失败");

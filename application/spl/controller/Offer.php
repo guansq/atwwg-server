@@ -17,8 +17,16 @@ class Offer extends Base{
         $sup_code = session('spl_user')['sup_code'];
         $offerLogic = model('Offer','logic');
         $list = $offerLogic->getOfferInfo($sup_code);
+        //状态init=未报价  quoted=已报价  winbid=中标 giveupbid=弃标  close=已关闭
+        foreach($list as $k => $v){
+            if(in_array($v['status'],['quoted','winbid','giveupbid','close'])){
+                $list[$k]['showinfo'] = 'disabled';
+            }else{
+                $list[$k]['showinfo'] = '';
+            }
+            $list[$k]['total_price'] = $v['']*$v[''];
+        }
         $this->assign('list',$list);
-        dump($list);
         return view();
     }
 }

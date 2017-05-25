@@ -49,7 +49,7 @@ class Material extends BaseController{
                 'price_weight' => $v['price_weight'],//价格权重
                 'tech_weight' => $v['tech_weight'],//技术权重
                 'business_weight' => $v['business_weight'],//商务权重
-                'pay_type_status' => '<a class="barcode" href="#">条形码</a>',//查看\打印条形码
+                'pay_type_status' => '',//查看\打印条形码<a class="barcode" href="#">条形码</a>
                 'action' => '<a class="edit" href="javascript:void(0);" data-open="'.url('Material/edit',['code'=>$v['code']]).'" >编辑</a>',
             ];
 

@@ -40,6 +40,7 @@
         <td>备注</td>
         <td>提交报价</td>
       </tr>
+
       {volist name='list' id='vo'}
       <tr>
         <td>{$vo.item_name}</td>
@@ -48,12 +49,12 @@
         <td>{$vo.tc_uom}</td>
         <td>{$vo.quote_date|date="Y-m-d H:i:s",###}</td>
         <td>{$vo.quote_endtime|date="Y-m-d H:i:s",###}</td>
-        <td>{$vo.promise_date|date="Y-m-d H:i:s",###}</td>
-        <td><input type="text" value=""></td>
-        <td><input type="text" value=""></td>
+        <td>{$vo.req_date|date="Y-m-d H:i:s",###}</td>
+        <td><input type="text" value="{$vo.req_date|date='Y-m-d H:i:s',###}" {$vo.showinfo}></td>
+        <td><input type="text" value="{$vo.quote_price}" {$vo.showinfo}></td>
         <td class="active"></td>
-        <td><input type="text"></td>
-        <td><button class="btn btn-primary">提交报价</button></td>
+        <td><input type="text" value="{$vo.remark}" {$vo.showinfo}></td>
+        <td><button class="btn btn-primary" {$vo.showinfo}>提交报价</button></td>
       </tr>
       {/volist}
     </table>

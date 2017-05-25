@@ -18,4 +18,12 @@ class Offer extends BaseLogic{
         }
         return $list;
     }
+
+    function updateData($key,$dataArr){
+        $result = model('Io')->where('id',$key)->update($dataArr);
+        //echo $this->getLastSql();die;
+        return $result;
+    }
+
+    function getOneBy
 }

@@ -9,7 +9,7 @@ namespace app\common\validate;
 use think\Validate;
 
 class Enquiry extends Validate{
-    protected $rules = [
+    protected $rule = [
         'pr_code' => 'require',
         'item_code' => 'require',
     ];

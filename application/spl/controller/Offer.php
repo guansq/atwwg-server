@@ -33,11 +33,23 @@ class Offer extends Base{
     public function savePrice(){
         $data=input('param.');
         $result = $this->validate($data,'Offer');
-        echo $result;
         if($result !== true){
-            return json(['code'=>4000,'msg'=>'$result','data'=>[]]);
+            return json(['code'=>4000,'msg'=>"$result",'data'=>[]]);
         }
-
-        //return json(['code'=>2000,'msg'=>'成功','data'=>[]]);
+        $offerLogic = model('Offer','logic');
+        $key = $data['id'];
+        $dataArr = [
+            'req_date' => strtotime($data['req_date']),
+            'quote_price' => $data['quote_price'],
+            'remark' => $data['remark'],
+            'status' => 'quoted',//改变已报价
+        ];
+        $list = $offerLogic->updateData($key,$dataArr);
+        dump($list);die;
+        if($list !== false){
+            return json(['code'=>2000,'msg'=>'成功','data'=>[]]);
+        }else{
+            return json(['code'=>4000,'msg'=>'更新失败','data'=>[]]);
+        }
     }
 }

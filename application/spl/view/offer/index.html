@@ -51,9 +51,9 @@
         <td>{$vo.quote_endtime|date="Y-m-d H:i:s",###}</td>
         <td>{$vo.req_date|date="Y-m-d H:i:s",###}</td>
         <td><input type="text" name="req_date" lay-verify="required" value="{$vo.req_date|date='Y-m-d H:i:s',###}" {$vo.showinfo}></td>
-        <td><input type="text" name="quote_price" lay-verify="required|num" value="{$vo.quote_price}" {$vo.showinfo} placeholder="请输入单价"></td>
+        <td><input type="text" name="quote_price" lay-verify="required|float" value="{$vo.quote_price}" {$vo.showinfo} placeholder="请输入单价"></td>
         <td class="active">{$vo.total_price}</td>
-        <td><input type="text" value="{$vo.remark}" {$vo.showinfo}></td>
+        <td><input type="text" value="{$vo.remark}" name="remark" {$vo.showinfo}></td>
         <td><button data-io-id="{$vo.id}" class="btn btn-primary" {if condition="$vo['showinfo'] eq ''"} {/if} {$vo.showinfo} lay-submit="" lay-filter="sub">提交报价</button></td>
       </tr>
       {/volist}
@@ -71,20 +71,30 @@
     //console.log(form);
     form.on('submit(sub)', function(data){
       //console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
-      console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+      //console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
       layer.load();
       $.ajax({
         'url' : '{:url("$classuri/savePrice")}',
         'type' : 'POST',
-        'dataType' : 'json',
+        //'dataType' : 'html',
         'data' : data.field,
         'complete' : function(){
-          layer.closeAll();
+          //layer.closeAll();
         },
         'success' : function(obj){
+          layer.closeAll();
+          if(obj.code == 2000){
+            $("tr[id^=io-"+data.field.id+"]").find($('input[name="quote_price"]')).attr("disabled",true);
+            $("tr[id^=io-"+data.field.id+"]").find($('input[name="remark"]')).attr("disabled",true);
+            $("tr[id^=io-"+data.field.id+"]").find($('input[name="req_date"]')).attr("disabled",true);
+            $(data.elem).attr("disabled",true);
+          }else{
+            layer.alert(obj.msg);
+          }
           console.log(obj);
         },
         'error' : function(){
+          layer.closeAll();
           layer.alert('请求失败');
         }
       });

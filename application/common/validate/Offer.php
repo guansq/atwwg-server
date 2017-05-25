@@ -10,17 +10,17 @@ namespace app\common\validate;
 use think\Validate;
 
 class Offer extends Validate{
-    protected $rules = [
+    protected $rule = [
         'id' => 'require',
-        //'req_date' => 'require',
-        //'quote_price' => 'require|num',
+        'req_date' => 'require',
+        'quote_price' => 'require|number',
     ];
 
     protected $message = [
         'id.require' => '请传入id',
-        //'req_date.require' => '可供货日期不能为空',
-        //'quote_price.require' => '单价不能为空',
-        //'quote_price.num' => '单价只能为数字',
+        'req_date.require' => '可供货日期不能为空',
+        'quote_price.require' => '单价不能为空',
+        'quote_price.number' => '单价只能为数字',
     ];
 
 }

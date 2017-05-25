@@ -61,8 +61,14 @@ class Item extends Baselogic{
     /**
      * 得到物料关联的供应商
      */
-    public function getRelationSup(){
-
+    public function getRelationSup($item_code){
+        $list = model('U9SupItem')->where("item_code","$item_code")->select();
+        //echo $this->getLastSql();
+        if($list){
+            //echo '111111';
+            $list = collection($list)->toArray();
+        }
+        return $list;
     }
 
     /**
@@ -71,7 +77,7 @@ class Item extends Baselogic{
     public function getItemInfo($code){
         $list = ItemModel::where("code","$code")->find();
         if($list) {
-            $list = collection($list)->toArray();
+            $list = $list->toArray();
         }
         return $list;
     }

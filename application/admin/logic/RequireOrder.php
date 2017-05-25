@@ -36,7 +36,7 @@ class RequireOrder extends BaseLogic{
       *根据itemcode得到供应商物料交叉表信息
       */
      function getSupList($item_code){
-        $list = model('U9SupItem')->where('item_code',$item_code)->select();
+        $list = model('U9SupItem')->alias('a')->field('a.*,b.status')->join('supplier_info b','a.sup_code=b.code','LEFT')->where('item_code',$item_code)->select();
          if($list){
              $list = collection($list)->toArray();
          }

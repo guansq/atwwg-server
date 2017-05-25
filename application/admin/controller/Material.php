@@ -50,7 +50,7 @@ class Material extends BaseController{
                 'tech_weight' => $v['tech_weight'],//技术权重
                 'business_weight' => $v['business_weight'],//商务权重
                 'pay_type_status' => '<a class="barcode" href="#">条形码</a>',//查看\打印条形码
-                'action' => '<a class="edit" href="javascript:void(0);" data-open="'.url('Material/edit',['id'=>$v['id']]).'" >编辑</a>',
+                'action' => '<a class="edit" href="javascript:void(0);" data-open="'.url('Material/edit',['code'=>$v['code']]).'" >编辑</a>',
             ];
 
         }
@@ -77,9 +77,11 @@ class Material extends BaseController{
         $logicItemInfo = Model('Item','logic');
         $info = $logicItemInfo->getItemInfo($code);
         $this->assign('itemInfo',$info);
+        dump($info);
         //关联供应商
-        $logicItemInfo->getRelationSup();
-        $this->assign('itemInfo',$info);//
+        $supInfo = $logicItemInfo->getRelationSup($code);
+        dump($supInfo);
+        $this->assign('supInfo',$supInfo);//
         return view();
     }
 

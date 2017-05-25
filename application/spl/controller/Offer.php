@@ -24,9 +24,13 @@ class Offer extends Base{
             }else{
                 $list[$k]['showinfo'] = '';
             }
-            $list[$k]['total_price'] = $v['']*$v[''];
+            $list[$k]['total_price'] = $v['price_num']*$v['quote_price'];
         }
         $this->assign('list',$list);
         return view();
+    }
+
+    public function savePrice(){
+
     }
 }

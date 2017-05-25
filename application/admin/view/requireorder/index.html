@@ -246,8 +246,9 @@
   function bomb_box(event){
     event.preventDefault();
     $.post("{:url('Requireorder/showSelectSup')}",Global,function(resDate){
-      $(".barcode_box").css("display","block");
+//      $(".barcode_box").css("display","block");
       console.log(resDate);
+//      if(resDate.length >0)
     })
   }
   

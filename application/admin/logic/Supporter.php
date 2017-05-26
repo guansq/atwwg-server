@@ -23,6 +23,17 @@ class Supporter extends BaseLogic{
         //dump($list);die;
         return $list;
     }
+
+    /*
+     * 得到U9供应商supcode supname
+     */
+    public function getExcelFiledInfo(){
+        $list = supModel::field('id,code,name')->select();
+        if($list) {
+            $list = collection($list)->toArray();
+        }
+        return $list;
+    }
     /*
      * 得到U9供应商数据总数
      */
@@ -74,5 +85,19 @@ class Supporter extends BaseLogic{
      */
     public function getSupQuali($sup_code){
         return $supQuali = model('SupplierQualification')->where("sup_code",$sup_code)->select();
+    }
+
+    /*
+     * 检查sup_id是否存在
+     */
+    public function getSupId($id){
+        return supModel::where('id',$id)->value('sup_id');
+    }
+
+    /*
+     * 插入sup_id
+     */
+    public function saveSupId($id,$data){
+        return supModel::where('id',$id)->update($data);
     }
 }

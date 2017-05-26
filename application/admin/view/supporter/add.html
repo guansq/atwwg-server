@@ -1,0 +1,21 @@
+<form class="layui-form layui-box" name="test" style='padding:25px 30px 20px 0' action='{:url("$classuri/uploadexcel")}' enctype="multipart/form-data" method="post">
+  <div class="layui-form-item">
+    <p class="h2 text-center"></p>
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">请上传excel </label>
+    <div class="layui-input-block">
+      <input type="file" name="excel" required="required" title="请上传excel文件">
+      <input type="file" name="image" />
+    </div>
+  </div>
+
+
+  <div class="hr-line-dashed"></div>
+
+  <div class="layui-form-item text-center">
+    <button class="layui-btn" type='submit'>上传并保存数据</button>
+  </div>
+
+</form>

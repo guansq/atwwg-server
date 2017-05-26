@@ -176,3 +176,87 @@ if(!function_exists("dd")){
     }
 
 }
+
+/**
+ * 生成訂單號
+ */
+if(!function_exists("generatOrderCode")){
+    function generatOrderCode($prefix = ''){
+        /* 选择一个随机的方案 */
+        $randStr = date('YmdHis').str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT);
+        return $prefix.$randStr;
+    }
+
+}
+
+
+/**
+ * 随机生成 $len 位字符
+ */
+function randomStr($len = 4){
+    $chars_array = [
+        "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+        "a", "b", "c", "d", "e", "f", "g", "h", "i", "j",
+        "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
+        "u", "v", "w", "x", "y", "z", "A", "B", "C", "D",
+        "E", "F", "G", "H", "I", "J", "K", "L", "M", "N",
+        "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X",
+        "Y", "Z"
+    ];
+    $charsLen = count($chars_array) - 1;
+
+    $outputstr = "";
+    for($i = 0; $i < $len; $i++){
+        $outputstr .= $chars_array[mt_rand(0, $charsLen)];
+    }
+    return $outputstr;
+}
+
+/**
+ * 随机生成四位字符
+ */
+function randomNum($len = 4){
+    $chars_array = [
+        "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"
+    ];
+    $charsLen = count($chars_array) - 1;
+
+    $outputstr = "";
+    for($i = 0; $i < $len; $i++){
+        $outputstr .= $chars_array[mt_rand(0, $charsLen)];
+    }
+    return $outputstr;
+}
+
+/*
+ * PHPexcel读取并返回数组
+ */
+function format_excel2array11($excelObj,$filePath='',$sheet=0){
+    if(empty($filePath) or !file_exists($filePath)){die('file not exists');}
+    //$PHPReader = new PHPExcel_Reader_Excel2007();        //建立reader对象
+    $PHPReader = $excelObj;
+    /*dump($PHPReader);
+    if(!$PHPReader->canRead($filePath)){
+        $PHPReader = new PHPExcel_Reader_Excel5();
+        if(!$PHPReader->canRead($filePath)){
+            echo 'no Excel';
+            return ;
+        }
+    }*/
+    $PHPExcel = $PHPReader->load($filePath);        //建立excel对象
+    $currentSheet = $PHPExcel->getSheet($sheet);        //**读取excel文件中的指定工作表*/
+    $allColumn = $currentSheet->getHighestColumn();        //**取得最大的列号*/
+    $allRow = $currentSheet->getHighestRow();        //**取得一共有多少行*/
+    $data = array();
+    for($rowIndex=1;$rowIndex<=$allRow;$rowIndex++){        //循环读取每个单元格的内容。注意行从1开始，列从A开始
+        for($colIndex='A';$colIndex<=$allColumn;$colIndex++){
+            $addr = $colIndex.$rowIndex;
+            $cell = $currentSheet->getCell($addr)->getValue();
+            if($cell instanceof PHPExcel_RichText){ //富文本转换字符串
+                $cell = $cell->__toString();
+            }
+            $data[$rowIndex][$colIndex] = $cell;
+        }
+    }
+    return $data;
+}

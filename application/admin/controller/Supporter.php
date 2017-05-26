@@ -12,7 +12,9 @@ use service\LogService;
 use service\DataService;
 use service\HttpService;
 use think\Db;
-
+use PHPExcel_IOFactory;
+use PHPExcel;
+use think\File;
 class Supporter extends BaseController{
     protected $table = 'SystemArea';
     protected $title = '供应商管理';
@@ -73,7 +75,90 @@ class Supporter extends BaseController{
     }
 
     public function add(){
+        return view();
+    }
+    public function exportExcel(){
+        //$path = config('upload_path'); //找到当前脚本所在路径
+        //echo $path = dirname(__FILE__);
+        //echo die;
+        $path = ROOT_PATH.'public'.DS.'upload'.DS;
+        $PHPExcel = new PHPExcel(); //实例化PHPExcel类，类似于在桌面上新建一个Excel表格
+        $PHPSheet = $PHPExcel->getActiveSheet(); //获得当前活动sheet的操作对象
+        $PHPSheet->setTitle('供应商列表'); //给当前活动sheet设置名称
+        $logicSupInfo = Model('Supporter','logic');
+        $list = $logicSupInfo->getExcelFiledInfo();
+       // dump($list);die;
+//        $PHPSheet->getActiveSheet()->getColumnDimension('A')->setWidth(12);
+//        $PHPSheet->getActiveSheet()->getColumnDimension('B')->setWidth(20);
+//        $PHPSheet->getActiveSheet()->getColumnDimension('C')->setWidth(40);
+//        $PHPSheet->getActiveSheet()->getColumnDimension('D')->setWidth(25);
+//        $PHPSheet->getActiveSheet()->getColumnDimension('E')->setWidth(25);
 
+        $PHPSheet->setCellValue('A1','供应商ID')->setCellValue('B1','供应商CODE');
+        $PHPSheet->setCellValue('C1','供应商名称')->setCellValue('D1','供应商登录名');
+        $PHPSheet->setCellValue('E1','供应商密码');
+        $num = 1;
+        foreach($list as $k => $v){
+            $num = $num+1;
+            $PHPSheet->setCellValue('A'.$num,$v['id'])->setCellValue('B'.$num,$v['code'])
+                ->setCellValue('C'.$num,$v['name'])->setCellValue('D'.$num,'')
+                ->setCellValue('E'.$num,'');
+        }
+        $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel,'Excel2007');//按照指定格式生成Excel文件，'Excel2007’表示生成2007版本的xlsx，
+        $PHPWriter->save($path.'/supList.xlsx'); //表示在$path路径下面生成supList.xlsx文件
+        $file_name = "supList.xlsx";
+        $contents = file_get_contents($path.'/supList.xlsx');
+        $file_size = filesize($path.'/supList.xlsx');
+        header("Content-type: application/octet-stream;charset=utf-8");
+        header("Accept-Ranges: bytes");
+        header("Accept-Length: $file_size");
+        header("Content-Disposition: attachment; filename=".$file_name);
+        exit($contents);
+    }
+
+    public function uploadexcel(){
+        $file = request()->file('excel');
+        $info = $file->validate(['size'=>102400,'ext'=>'xlsx,xls,csv'])->move(ROOT_PATH . 'public' . DS . 'upload','');
+        if($info){
+            $path = ROOT_PATH.'public'.DS.'upload'.DS.$info->getFilename();
+            $logicSupInfo = Model('Supporter','logic');
+            $logicUserInfo = Model('SystemUser','logic');
+            $fileType=PHPExcel_IOFactory::identify($path);//自动获取文件的类型提供给phpexcel用
+            $objReader=PHPExcel_IOFactory::createReader($fileType);//获取文件读取操作对象
+            $objReader->setLoadSheetsOnly('供应商列表');//只加载指定的sheet
+            $objPHPExcel=$objReader->load($path);//加载文件
+            $currentSheet= $objPHPExcel->getSheet(0);
+            $allColumn= $currentSheet->getHighestColumn();
+            $allRow= $currentSheet->getHighestRow();
+            for($currentRow =2;$currentRow <= $allRow;$currentRow++)
+            {
+                $data = [];
+                $data['id'] = intval($objPHPExcel->getActiveSheet()->getCell("A".$currentRow)->getValue());//获取A列的值
+                $data['sup_code'] = $objPHPExcel->getActiveSheet()->getCell("B".$currentRow)->getValue();//获取B列的值
+                $data['sup_name'] = $objPHPExcel->getActiveSheet()->getCell("C".$currentRow)->getValue();//获取C列的值
+                $data['user_name'] = $objPHPExcel->getActiveSheet()->getCell("D".$currentRow)->getValue();//获取D列的值
+                $data['password'] = $objPHPExcel->getActiveSheet()->getCell("E".$currentRow)->getValue();//获取E列的值
+                //检查sup_id是否存在
+                if($logicSupInfo->getSupId($data['id']) == ''){//不存在
+                    if(!empty($data['user_name']) && !empty($data['password'])){
+                        //salt值
+                        $info = [];
+                        $info['salt'] = randomStr();
+                        $info['user_name'] = $data['user_name'];
+                        $info['password'] = $logicUserInfo->generatePwd($data['password'],$info['salt']);
+                        $sup_id = $logicUserInfo->saveUserInfo($info);
+                        if($sup_id){
+
+                        }
+                        var_dump($sup_id);
+                    }
+                }
+
+            }
+            //echo $path;
+        }else{
+            $this->success("上传失败！", '');
+        }
     }
 
     public function edit(){
@@ -102,4 +187,5 @@ class Supporter extends BaseController{
     public function getQualiScore(){
         return '70分';
     }
+
 }

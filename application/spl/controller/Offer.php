@@ -124,4 +124,49 @@ class Offer extends Base{
         exit($contents);
     }
 
+    public function add(){
+        return view();
+    }
+
+    public function uploadexcel(){
+        $file = request()->file('excel');
+        $info = $file->validate(['size'=>102400,'ext'=>'xlsx,xls,csv'])->move(ROOT_PATH . 'public' . DS . 'upload','');
+        if($info){
+            $path = ROOT_PATH.'public'.DS.'upload'.DS.$info->getFilename();
+            $logicSupInfo = Model('Offer','logic');
+            $fileType=PHPExcel_IOFactory::identify($path);//自动获取文件的类型提供给phpexcel用
+            $objReader=PHPExcel_IOFactory::createReader($fileType);//获取文件读取操作对象
+            $objReader->setLoadSheetsOnly('询价单导出');//只加载指定的sheet
+            $objPHPExcel=$objReader->load($path);//加载文件
+            $currentSheet= $objPHPExcel->getSheet(0);
+            $allColumn= $currentSheet->getHighestColumn();
+            $allRow= $currentSheet->getHighestRow();
+            for($currentRow =2;$currentRow <= $allRow;$currentRow++)
+            {
+                $data = [];
+                $data['id'] = intval($objPHPExcel->getActiveSheet()->getCell("A".$currentRow)->getValue());//获取A列的值
+                $data['req_date'] = $objPHPExcel->getActiveSheet()->getCell("H".$currentRow)->getValue();//获取H列的值
+                $data['quote_price'] = $objPHPExcel->getActiveSheet()->getCell("J".$currentRow)->getValue();//获取J列的值
+                $data['remark'] = $objPHPExcel->getActiveSheet()->getCell("L".$currentRow)->getValue();//获取L列的值
+
+                 $offerLogic = model('Offer','logic');
+                 $info = $offerLogic->getOneById($data['id']);
+                //检查id是否存在
+                if(!empty($info) && isset($info['status']) && $info['status']=='init' ){//不存在
+                    $key = $data['id'];
+                    $dataArr = [
+                        'req_date' => strtotime($data['req_date']),
+                        'quote_price' => $data['quote_price'],
+                        'remark' => $data['remark'],
+                    ];
+                    $list = $offerLogic->updateData($key,$dataArr);
+                }
+            }
+            $this->success("更新成功！", '');
+            //echo $path;
+        }else{
+            $this->success("上传失败！", '');
+        }
+    }
+
 }

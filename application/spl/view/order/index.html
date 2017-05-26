@@ -29,104 +29,16 @@
         <td>合同签订日期</td>
         <td>操作</td>
       </tr>
+      {volist name='list' id='plist'}
       <tr>
-        <td></td>
-        <td></td>
-        <td>已签订</td>
-        <td></td>
+        <td>{$plist.po_code}</td>
+        <td>{$plist.content}</td>
+        <td>{$plist.statusinfo}</td>
+        <td>{$plist.contract_time}</td>
         <td><a href="javascript:void(0);" data-open="{:url('spl/order/detail')}">详情</a></td>
       </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td>已签订</td>
-        <td></td>
-        <td><a href="javascript:void(0);" data-open="{:url('spl/order/detail')}">详情</a></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td>已签订</td>
-        <td></td>
-        <td><a href="javascript:void(0);" data-open="{:url('spl/order/detail')}">详情</a></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td class="status">待签订</td>
-        <td></td>
-        <td><a href="javascript:void(0);" data-open="{:url('spl/order/detail')}">详情</a></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td>已签订</td>
-        <td></td>
-        <td><a href="javascript:void(0);" data-open="{:url('spl/order/detail')}">详情</a></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td>已签订</td>
-        <td></td>
-        <td><a href="javascript:void(0);" data-open="{:url('spl/order/detail')}">详情</a></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td class="status">待签订</td>
-        <td></td>
-        <td><a href="javascript:void(0);" data-open="{:url('spl/order/detail')}">详情</a></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td class="status">待签订</td>
-        <td></td>
-        <td><a href="javascript:void(0);" data-open="{:url('spl/order/detail')}">详情</a></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td class="status">待签订</td>
-        <td></td>
-        <td><a href="javascript:void(0);" data-open="{:url('spl/order/detail')}">详情</a></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td class="status">待签订</td>
-        <td></td>
-        <td><a href="javascript:void(0);" data-open="{:url('spl/order/detail')}">详情</a></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td>已签订</td>
-        <td></td>
-        <td><a href="javascript:void(0);" data-open="{:url('spl/order/detail')}">详情</a></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td>已签订</td>
-        <td></td>
-        <td><a href="javascript:void(0);" data-open="{:url('spl/order/detail')}">详情</a></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td>已签订</td>
-        <td></td>
-        <td><a href="javascript:void(0);" data-open="{:url('spl/order/detail')}">详情</a></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td>已签订</td>
-        <td></td>
-        <td><a href="javascript:void(0);" data-open="{:url('spl/order/detail')}">详情</a></td>
-      </tr>
+      {/volist}
+
     </table>
   </div>
 </main>

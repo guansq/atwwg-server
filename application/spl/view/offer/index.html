@@ -16,13 +16,19 @@
     </p>
   </div>
   <div class="atw-inquiry">
-    <span>状态: <select name="" id=""><option value="">全部</option></select></span>
-    <span>询价时间：<input class="laydate-icon" type="text">到<input class="laydate-icon" type="text"></span>
-    <button class="btn btn-primary">查询</button>
+    <form onsubmit="return false;"  data-auto="true" method="post" class="form-horizontal" action='{:url("Offer/index")}' >
+      <!--action='{:url("Material/update")}'-->
+
+    <span>状态: <select name="status" id=""><option value="all">全部</option></select></span>
+    <span>询价时间： <input id="quote_begintime" name="quote_begintime" value="{$quote_begintime}"><span class="laydate-icon" onclick="laydate({elem: '#quote_begintime', format:'YYYY-MM-DD hh:mm:ss',istime: true,});"></span>   到  <input   value="{$quote_endtime}" id="quote_endtime"name="quote_endtime"><span class="laydate-icon" onclick="laydate({elem: '#quote_endtime', format:'YYYY-MM-DD hh:mm:ss',istime: true,});"></span>
+
+    <button class="btn btn-primary" type="submit">查询</button>
+    </form>
   </div>
   <div class="atw-qcent-btn">
-    <button class="btn btn-warning">导出询价单</button>
-    <button class="btn btn-warning">导入报价单</button>
+    <button class="btn btn-warning" id="excel_out">导出询价单</button>
+
+    <button class="btn btn-warning" id="excel_in">导入报价单</button>
   </div>
   <div class="table-responsive">
     <table class="table table-bordered">
@@ -66,6 +72,24 @@
 {block name="script"}
 <script src="/static/spl/offer/index.js"></script>
 <script>
+  //导入Excel
+  $("#excel_in").click(function(){
+    layer.confirm('<a style="color: #333;">导入前请点击下载最新报价信息</a>', {
+      btn: ['确定导入','取消导入']
+    }, function(index){
+      layer.close(index);
+    });
+  })
+  //导出
+  $("#excel_out").click(function(){
+    console.log(1);
+    layer.confirm('是否进行导出', {
+      btn: ['确定导出','取消导出']
+    }, function(index){
+      layer.close(index);
+      window.open("{:url('Offer/exportExcel')}");
+    });
+  })
   layui.use('form', function(){
     form = layui.form();
     //console.log(form);

@@ -32,6 +32,7 @@ class Material extends BaseController{
      */
 
     public function getSupList(){
+
         $start = input('start') == '' ? 0 : input('start');
         $length = input('length') == '' ? 10 : input('length');
         $logicItemInfo = Model('Item','logic');

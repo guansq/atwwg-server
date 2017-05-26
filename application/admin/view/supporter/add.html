@@ -1,15 +1,23 @@
-<form class="layui-form layui-box" name="test" style='padding:25px 30px 20px 0' action='{:url("$classuri/uploadexcel")}' enctype="multipart/form-data" method="post">
+<form class="layui-form layui-box" name="test" style='padding:25px 30px 20px 0' action='{:url("$classuri/uploadexcel")}' data-auto="true"  enctype="multipart/form-data" method="post">
   <div class="layui-form-item">
     <p class="h2 text-center"></p>
   </div>
 
+  <!--<div class="layui-form-item">-->
+    <!--<label class="layui-form-label">请上传excel </label>-->
+    <!--<div class="layui-input-block">-->
+      <!--<input type="file" name="excel" required="required" title="请上传excel文件">-->
+    <!--</div>-->
+  <!--</div>-->
+
   <div class="layui-form-item">
     <label class="layui-form-label">请上传excel </label>
     <div class="layui-input-block">
-      <input type="file" name="excel" required="required" title="请上传excel文件">
+      <p></p>
+      <input type="hidden" name="src" onchange="$(this).prev('p').text('上传成功')" value="" class="layui-input">
+      <a class="btn btn-link" data-type="xlsx|xls|csv" data-file="excel" data-uptype="local" data-field="src">上传EXCEL</a>
     </div>
   </div>
-
 
   <div class="hr-line-dashed"></div>
 

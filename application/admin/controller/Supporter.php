@@ -117,10 +117,19 @@ class Supporter extends BaseController{
     }
 
     public function uploadexcel(){
-        $file = request()->file('excel');
-        $info = $file->validate(['size'=>102400,'ext'=>'xlsx,xls,csv'])->move(ROOT_PATH . 'public' . DS . 'upload','');
-        if($info){
-            $path = ROOT_PATH.'public'.DS.'upload'.DS.$info->getFilename();
+        //$file = request()->file('excel');
+        //$info = $file->validate(['size'=>102400,'ext'=>'xlsx,xls,csv'])->move(ROOT_PATH . 'public' . DS . 'upload','');
+        $path = input('src');
+        //$path = 'http://atwwg.oms.atw.com/static/upload/0386c27f2884e94f/b4ab58206b190d3b.xlsx';
+        //dump(parse_url($path));die;
+        //$path = ROOT_PATH.'public'.DS.'static'.DS.'upload'.DS.'0863affda05d2d00'.DS.'149660d0799f13c5.xlsx';
+        //$path = ROOT_PATH.'public'.DS.'static'.DS.'upload'.DS.'0863affda05d2d00'.DS.'0527123222.xlsx';
+        if($path){
+            $urlInfo = parse_url($path);
+            $pathArr = explode('/',$urlInfo['path']);
+            //dump($pathArr);die;
+            //$path = ROOT_PATH.'public'.DS.'upload'.DS.$info->getFilename();
+            $path = ROOT_PATH.'public'.DS.'static'.DS.'upload'.DS.$pathArr[3].DS.$pathArr[4];
             $logicSupInfo = Model('Supporter','logic');
             $logicUserInfo = Model('SystemUser','logic');
             $fileType=PHPExcel_IOFactory::identify($path);//自动获取文件的类型提供给phpexcel用

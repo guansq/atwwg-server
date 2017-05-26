@@ -98,9 +98,21 @@ define(['jquery', 'admin.plugs'], function () {
     this.$body.on('click', '[data-file]', function () {
         var type = $(this).attr('data-type') || 'jpg,png';
         var field = $(this).attr('data-field') || 'file';
-        var method = $(this).attr('data-file') === 'one' ? 'one' : 'mtl';
+        //var method = $(this).attr('data-file') === 'one' ? 'one' : 'mtl';
+        var method = 'one';
+        if($(this).attr('data-file') === 'one'){
+            method = 'one';
+        }else if($(this).attr('data-file') === 'excel'){
+            method = 'excel';//本地上传
+        }else{
+            method = 'mtl';
+        }
+        console.log(method);
         var title = $(this).attr('data-title') || '文件上传';
         var uptype = $(this).attr('data-uptype') || '';
+        if(method = 'excel'){
+
+        }
         var url = window.ROOT_URL + '/index.php/plugs/upfile/mode/' + method + '.html?uptype=' + uptype + '&type=' + type + '&field=' + field;
         $.form.iframe(url, title || '文件管理');
     });

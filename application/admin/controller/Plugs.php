@@ -82,6 +82,21 @@ class Plugs extends BaseController {
         }
         return json(['code' => 'ERROR']);
     }
+    /**
+     * 上传excel
+     * @return string
+     */
+    public function excel() {
+        if ($this->request->isPost()) {
+            if (($info = $this->request->validate(['size'=>102400,'ext'=>'xlsx,xls,csv'])->file('file')->move(ROOT_PATH . 'public' . DS . 'upload',''))) {
+                $site_url = $path = ROOT_PATH.'public'.DS.'upload'.DS.$info->getFilename();
+                if ($site_url) {
+                    return json(['data' => ['site_url' => $site_url], 'code' => 'SUCCESS']);
+                }
+            }
+        }
+        return json(['code' => 'ERROR']);
+    }
 
     /**
      * 文件状态检查

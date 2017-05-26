@@ -146,15 +146,15 @@ class Supporter extends BaseController{
                         $info['salt'] = randomStr();
                         $info['user_name'] = $data['user_name'];
                         $info['password'] = $logicUserInfo->generatePwd($data['password'],$info['salt']);
+                        $info['create_at'] = time();
                         $sup_id = $logicUserInfo->saveUserInfo($info);
                         if($sup_id){
-
+                            $logicSupInfo->saveSupId($data['id'],['sup_id'=>$sup_id]);
                         }
-                        var_dump($sup_id);
                     }
                 }
-
             }
+            $this->success("更新成功！", '');
             //echo $path;
         }else{
             $this->success("上传失败！", '');

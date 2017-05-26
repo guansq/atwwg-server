@@ -11,8 +11,14 @@ use app\common\model\Io as IoModel;
 
 class Offer extends BaseLogic{
 
-    function getOfferInfo($sup_code){
-        $list = IoModel::where('sup_code',"$sup_code")->select();
+    function getOfferInfo($sup_code,$where=''){
+        if(!empty($where)){
+            $list = IoModel::where('sup_code',"$sup_code")->where($where)->select();
+        }else{
+            $list = IoModel::where('sup_code',"$sup_code")->select();
+        }
+
+      //  echo $this->getLastSql();//die;
         if($list){
             $list = collection($list)->toArray();
         }

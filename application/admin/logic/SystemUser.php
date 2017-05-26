@@ -8,10 +8,11 @@
 namespace app\admin\logic;
 
 use app\common\model\SystemUser as userModel;
+use think\Db;
 
 class SystemUser extends BaseLogic{
     function saveUserInfo($data){
-        model('SystemUser')->save($data);
-        return model('SystemUser')->id;
+        Db::name('SystemUser')->insert($data);
+        return Db::name('SystemUser')->getLastInsID();
     }
 }

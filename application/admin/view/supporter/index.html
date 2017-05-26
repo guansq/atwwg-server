@@ -40,6 +40,8 @@
     <div class="mt_table">
       <div class="pb_15">
         <button type="button" id="synchronization_btn" class="btn btn-info mr_15">立即同步ERP数据</button>
+        <button type="button" data-modal='{:url("$classuri/add")}' class="btn btn-info" style="margin-right: 15px;">导入Excel</button>
+        <button type="button" id="excel_out"  class="btn btn-info" style="margin-right: 15px;">导出Excel</button>
         <!--<button type="button" id="lookThrough" class="btn btn-warning mr_15">审核供应商</button>-->
         <!--<button type="button" id="remove_btn" class="btn btn-danger mr_15">删除</button>-->
       </div>
@@ -198,6 +200,49 @@ function initEvent(){
     //
   })
 }
+
+//导入Excel
+$("#excel_in").click(function(){
+  layer.confirm('确定导入吗', {
+    btn: ['确定导入','取消导入']
+  }, function(index){
+    layer.close(index);
+
+    //在这里面输入任何合法的js语句
+    /*layer.open({
+      type: 1 //Page层类型
+      ,area: ['500px', '300px']
+      //,title: '你好，layer。'
+      ,shade: 0.6 //遮罩透明度
+      //,maxmin: true //允许全屏最小化
+      ,anim: 1 //0-6的动画形式，-1不开启
+      ,content: '<div style="margin-left: 180px;margin-top: 50px;">' +
+      '<form action="{:url(\'Supporter/uploadExcel\')}" class="layui-form" enctype="multipart/form-data" method="post">' +
+      '<input type="file" lay-title="请上传excel" align="center" name="excel" lay-ext="xlsx|xls" > ' +
+      ' <br> <button type="submit" class="layui-btn">上传并导入数据</button></form></div>'
+    });*/
+  });
+})
+
+
+//导出
+$("#excel_out").click(function(){
+  console.log(1);
+  layer.confirm('是否进行导出', {
+    btn: ['确定导出','取消导出']
+  }, function(index){
+    layer.close(index);
+    window.open("{:url('Supporter/exportExcel')}");
+  });
+})
+layui.use('upload', function(){
+  layui.upload({
+    url: ''
+    ,success: function(res, input){
+      console.log(res); //如：{"code":0 ,"msg":"","url":"http://cdn.abc.com/123.jpg"'}
+    }
+  });
+});
 
 </script>
 {/block}

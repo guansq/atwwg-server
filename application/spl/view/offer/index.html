@@ -18,17 +18,17 @@
   <div class="atw-inquiry">
     <form onsubmit="return false;"  data-auto="true" method="post" class="form-horizontal" action='{:url("Offer/index")}' >
       <!--action='{:url("Material/update")}'-->
-
     <span>状态: <select name="status" id=""><option value="all">全部</option></select></span>
-    <span>询价时间： <input id="quote_begintime" name="quote_begintime" value="{$quote_begintime}"><span class="laydate-icon" onclick="laydate({elem: '#quote_begintime', format:'YYYY-MM-DD hh:mm:ss',istime: true,});"></span>   到  <input   value="{$quote_endtime}" id="quote_endtime"name="quote_endtime"><span class="laydate-icon" onclick="laydate({elem: '#quote_endtime', format:'YYYY-MM-DD hh:mm:ss',istime: true,});"></span>
-
+    <span>询价时间： <input id="quote_begintime" name="quote_begintime"  class="laydate-icon"  value="{$quote_begintime}">  到
+      <input   value="{$quote_endtime}" id="quote_endtime"name="quote_endtime"  class="laydate-icon">
+    </span>
     <button class="btn btn-primary" type="submit">查询</button>
     </form>
   </div>
   <div class="atw-qcent-btn">
     <button class="btn btn-warning" id="excel_out">导出询价单</button>
 
-    <button class="btn btn-warning" id="excel_in">导入报价单</button>
+    <button class="btn btn-warning" id="excel_in"  data-modal='{:url("$classuri/add")}'>导入报价单</button>
   </div>
   <div class="table-responsive">
     <table class="table table-bordered">

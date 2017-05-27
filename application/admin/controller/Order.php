@@ -11,6 +11,8 @@ use controller\BasicAdmin;
 use service\LogService;
 use service\DataService;
 use think\Db;
+use Qiniu\Auth;
+use Qiniu\Processing\PersistentFop;
 
 class Order extends BaseController{
     protected $table = 'SystemPo';
@@ -71,6 +73,17 @@ class Order extends BaseController{
 
     }
 
+    public function mkzip(){
+        echo '11111111';
+        $accessKey = sysconf('storage_qiniu_access_key');
+        $secretKey = sysconf('storage_qiniu_secret_key');
+        $bucket = sysconf('storage_qiniu_bucket');
+        $host = sysconf('storage_qiniu_domain');
+        $key = '1.png';
+
+        $auth = new Auth($accessKey, $secretKey);
+
+    }
     public function detailed(){
         return view();
     }

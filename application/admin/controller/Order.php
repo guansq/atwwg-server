@@ -50,7 +50,7 @@ class Order extends BaseController{
             $returnInfo[$k]['status'] = $status[$v['status']];
             $returnInfo[$k]['detail'] = $v['id'];
         }
-        $info = ['draw'=>time(),'data'=>$returnInfo];
+        $info = ['draw'=>time(),'data'=>$returnInfo,'extData'=>[],];
 
         return json($info);
     }

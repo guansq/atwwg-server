@@ -31,9 +31,9 @@
         <table id="example" class="display table table-bordered" cellspacing="0" width="100%">
           <thead>
           <tr>
-            <!--<th>-->
-              <!--<input type="checkbox" class="all">-->
-            <!--</th>-->
+            <th>
+              <input type="checkbox" class="all">
+            </th>
             <th>订单编号</th>
             <th>请购单编号</th>
             <th>请购日期</th>
@@ -45,7 +45,7 @@
           </thead>
           <tbody>
             <tr>
-              <!--<td class="plr_18"></td>-->
+              <td class="plr_18"></td>
               <td></td>
               <td></td>
               <td></td>
@@ -105,6 +105,23 @@
             //parameter.order_code = $("#order_code").val();
           }
         },
+        "columnDefs": [
+          {
+            "targets": 0,
+            "data": null,
+            "render": function (data) {
+              return '<input type="checkbox" class="check" value="' + data + '">';
+            }
+          },
+          {
+            "targets": 7,
+            "render": function (data) {
+              var url = '{:url(\'order/detailed\')}?id='+data;//data
+              return '<a class="detail" data-open="' + url + '">详情</a>';
+              //return url;
+            }
+          }
+        ],
         "pageLength": 10,
         language: {
           "oPaginate": {
@@ -115,6 +132,7 @@
           },
         },
         "columns": [
+          { "data": "checked" },
           { "data": "order_code" },
           { "data": "pr_code" },
           { "data": "pr_date" },

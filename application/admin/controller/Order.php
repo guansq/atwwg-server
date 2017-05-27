@@ -50,7 +50,7 @@ class Order extends BaseController{
         ];
 
         foreach($list as $k => $v){
-            $returnInfo[$k]['checked'] = '<input type="checkbox" class="check">';
+            $returnInfo[$k]['checked'] = $v['id'];
             $returnInfo[$k]['order_code'] = $v['order_code'];
             $returnInfo[$k]['pr_code'] = $v['pr_code'];
             $returnInfo[$k]['pr_date'] = $poLogic->getPrDate($v['pr_code']);

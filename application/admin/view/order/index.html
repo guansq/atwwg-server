@@ -15,12 +15,12 @@
   <div class="mt_box">
     <div class="inquiry_box">
       <form class="form-inline">
-        <input type="text" class="form-control" placeholder="订单编号">
+        <input type="text" id="order_code" class="form-control" placeholder="订单编号">
         <input type="text" class="form-control" placeholder="采购单编号">
         <input type="text" class="form-control" placeholder="需求部门">
         <input type="text" class="form-control" placeholder="需求人员">
         <input type="text" class="form-control" placeholder="交期">
-        <button type="button" class="btn btn-info">查询</button>
+        <button type="button" id="searchVal" class="btn btn-info">查询</button>
       </form>
     </div>
     <div class="order_table">
@@ -31,9 +31,9 @@
         <table id="example" class="display table table-bordered" cellspacing="0" width="100%">
           <thead>
           <tr>
-            <th>
-              <input type="checkbox" class="all">
-            </th>
+            <!--<th>-->
+              <!--<input type="checkbox" class="all">-->
+            <!--</th>-->
             <th>订单编号</th>
             <th>请购单编号</th>
             <th>请购日期</th>
@@ -45,18 +45,7 @@
           </thead>
           <tbody>
             <tr>
-              <td class="plr_18"><input type="checkbox" class="check"></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td><a class="detail" data-open="{:url('admin/order/detailed')}">详情</a></td>
-            </tr>
-            <tr>
-              <td class="plr_18"><input type="checkbox" class="check"></td>
-              <td></td>
+              <!--<td class="plr_18"></td>-->
               <td></td>
               <td></td>
               <td></td>
@@ -64,56 +53,7 @@
               <td></td>
               <td><a class="detail" data-open="{:url('admin/order/detailed')}">详情</a></td>
             </tr>
-            <tr>
-              <td class="plr_18"><input type="checkbox" class="check"></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td><a class="detail" data-open="{:url('admin/order/detailed')}">详情</a></td>
-            </tr>
-            <tr>
-              <td class="plr_18"><input type="checkbox" class="check"></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td><a class="detail" data-open="{:url('admin/order/detailed')}">详情</a></td>
-            </tr>
-            <tr>
-              <td class="plr_18"><input type="checkbox" class="check"></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td><a class="detail" data-open="{:url('admin/order/detailed')}">详情</a></td>
-            </tr>
-            <tr>
-              <td class="plr_18"><input type="checkbox" class="check"></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td><a class="detail" data-open="{:url('admin/order/detailed')}">详情</a></td>
-            </tr>
-            <tr>
-              <td class="plr_18"><input type="checkbox" class="check"></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td><a class="detail" data-open="{:url('admin/order/detailed')}">详情</a></td>
-            </tr>
+
           </tbody>
         </table>
       </div>
@@ -127,6 +67,113 @@
 
 <script src="/static/admin/order/index.js"></script>
 
+<script>
+  var orderTables;
+  require(["jquery.dataTables","icheck"],function(){
+    require(["dataTables.bootstrap"],function(){
+      $(document).ready(function(){
+        initPage();
+        initEvent();
+      });
+    })
+
+    function initPage(){
+      //icheck
+      $('input').iCheck({
+        checkboxClass: 'icheckbox_minimal',
+        radioClass: 'iradio_minimal',
+        increaseArea: '20%' // optional
+      });
+
+      // datatable
+      orderTables = $('#example').DataTable({
+        //"paging": false, //设置是否分页
+        "info": false,  //去除左下角的信息
+        "lengthChange": false, //是否允许用户改变表格每页显示的记录数
+        "ordering": false, //是否允许Datatables开启排序
+        "searching": false,  //是否允许Datatables开启本地搜索
+        "processing": true,
+        //"serverSide": true,
+        "ajax": {
+          "url": '{:url("Order/getOrderList")}',
+          "type": "POST",
+          "data": function (parameter) {
+            //添加额外的参数传给服务器
+            parameter.order_code = $("#order_code").val();
+          }
+        },
+        "pageLength": 10,
+        language: {
+          "oPaginate": {
+            "sFirst": "首页",
+            "sPrevious": "上页",
+            "sNext": "下页",
+            "sLast": "末页"
+          },
+        },
+        "columns": [
+          { "data": "order_code" },
+          { "data": "pr_code" },
+          { "data": "pr_date" },
+          { "data": "create_at" },
+          { "data": "sup_name" },
+          { "data": "status" },
+          { "data": "detail" },
+        ],
+        "drawCallback": function( settings ) {
+
+        }
+      });
+
+      // tr点击选中事件
+      $('#example tbody').on( 'click', 'tr', function () {
+        $(this).toggleClass('selected');
+      } );
+      // 立即同步ERP 点击事件
+      $('#synchronization_btn').click( function () {
+        alert( orderTables.rows('.selected').data().length +' row(s) selected' );
+      });
+      //删除物料
+      $('#remove_btn').click( function () {
+        orderTables.rows('.selected').remove().draw( false );
+      } );
+    }
+
+    function initEvent(){
+      // 点击详情
+      $(".detail").click(function(e){
+        // e.stopPropagation();
+      });
+
+      var checkAll =$('input.all');
+      var checkboxs =$('input.check');
+
+      checkAll.on('ifChecked ifUnchecked',function(event){
+        if(event.type == 'ifChecked'){
+          checkboxs.iCheck('check');
+        }else{
+          checkboxs.iCheck('uncheck');
+        }
+      });
+
+      checkboxs.on('ifChanged',function(event){
+        if(checkboxs.filter(':checked').length == checkboxs.length){
+          checkAll.prop('checked',true);
+        }else{
+          checkAll.prop('checked',false);
+        }
+        checkAll.iCheck('update');
+      })
+    }
+    $("#searchVal").on('click', function () {
+      //console.log(orderTables);
+      orderTables.ajax.reload();
+    })
+
+  })
+
+
+</script>
 
 
 {/block}

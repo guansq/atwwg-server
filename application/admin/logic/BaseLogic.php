@@ -66,5 +66,17 @@ class BaseLogic extends Model{
         $encryptPwd = self::generatePwd($encryptPwd, $loginUser->salt);
         return $userPwd === $encryptPwd;
     }
+    /*
+     * 通过pr_code得到pr_date
+     */
+    function getPrDate($pr_code){
+        return model('U9Pr')->where('pr_code',$pr_code)->value('pr_date');
+    }
 
+    /*
+     * 通过sup_code得到sup_name
+     */
+    function getSupName($sup_code){
+        return model('supplier_info')->where('code',$sup_code)->value('name');
+    }
 }

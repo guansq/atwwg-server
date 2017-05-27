@@ -186,8 +186,8 @@
                             deferred.reject();
                         }).then(function (md5) {
                             file.md5 = md5;
-                            var data = {id: file.id, md5: md5, uptype: '{$uptype}', filename: file.name};
-                            $.ajax("{:url('admin/plugs/upstate')}", {dataType: 'json', method: 'post', data: data, success: function (ret) {
+                            var data = {id: file.id, md5: md5, uptype: '{$uptype}', filename: file.name,'domain':'spl'};
+                            $.ajax("{:url('spl/plugs/upstate')}", {dataType: 'json', method: 'post', data: data, success: function (ret) {
                                     if (ret.code !== 'NOT_FOUND') {
                                         owner.skipFile(file);
                                         uploaded.call(uploader, ret.data, file);
@@ -234,7 +234,7 @@
                     swf: '__PUBLIC__/static/plugs/uploader/Uploader.swf',
                     chunked: false,
                     chunkSize: 512 * 1024,
-                    server: '{:url("admin/plugs/upload")}',
+                    server: '{:url("spl/plugs/upload")}',
                     disableGlobalDnd: true,
                     fileSizeLimit: 200 * 1024 * 1024, // 200 M
                     fileSingleSizeLimit: 200 * 1024 * 1024    // 200 M

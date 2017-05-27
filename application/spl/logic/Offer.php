@@ -8,6 +8,8 @@
 namespace app\spl\logic;
 use think\Model;
 use app\common\model\Io as IoModel;
+use app\common\model\Po;
+use app\common\model\PoItem;
 
 class Offer extends BaseLogic{
 
@@ -24,6 +26,7 @@ class Offer extends BaseLogic{
         }
         return $list;
     }
+
 
     function updateData($key,$dataArr){
         $result = model('Io')->where('id',$key)->update($dataArr);

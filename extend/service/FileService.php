@@ -72,7 +72,10 @@ class FileService {
      * 根据配置获取到七牛云文件上传目标地址
      * @return string
      */
-    public static function getUploadLocalUrl() {
+    public static function getUploadLocalUrl($domain='admin') {
+        if($domain == 'spl'){
+            return url('@spl/plugs/upload');
+        }
         return url('@admin/plugs/upload');
     }
 

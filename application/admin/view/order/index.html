@@ -16,7 +16,7 @@
     <div class="inquiry_box">
       <form class="form-inline">
         <input type="text" id="order_code" class="form-control" placeholder="订单编号">
-        <input type="text" class="form-control" placeholder="采购单编号">
+        <input type="text" id="pr_code" class="form-control" placeholder="采购单编号">
         <input type="text" class="form-control" placeholder="需求部门">
         <input type="text" class="form-control" placeholder="需求人员">
         <input type="text" class="form-control" placeholder="交期">
@@ -100,6 +100,9 @@
           "data": function (parameter) {
             //添加额外的参数传给服务器
             parameter.order_code = $("#order_code").val();
+            parameter.pr_code = $("#pr_code").val();
+            //parameter.order_code = $("#order_code").val();
+            //parameter.order_code = $("#order_code").val();
           }
         },
         "pageLength": 10,
@@ -166,7 +169,6 @@
       })
     }
     $("#searchVal").on('click', function () {
-
       //console.log(orderTables);
       orderTables.ajax.reload();
     })

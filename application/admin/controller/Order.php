@@ -24,7 +24,16 @@ class Order extends BaseController{
 
     public function getOrderList(){
         $poLogic = model('Po','logic');
-        $list = $poLogic->getPolist();
+        $get = input('param.');
+        //dump($requestInfo);die;
+        $where = [];
+        // 应用搜索条件
+        foreach (['order_code', 'pr_code'] as $key) {
+            if (isset($get[$key]) && $get[$key] !== '') {
+                $where[$key] = ['like',"%{$get[$key]}%"];
+            }
+        }
+        $list = $poLogic->getPolist($where);
         $returnInfo = [];
         $status = [
             '' => '',

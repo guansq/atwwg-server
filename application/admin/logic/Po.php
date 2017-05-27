@@ -12,15 +12,12 @@ class Po extends BaseLogic{
     /*
      * 得到订单列表
      */
-    function getPolist(){
-
-        /*$join = [
-            ['supplier_info b','a.sup_code=b.code','LEFT'],
-            //['think_card c','a.card_id=c.id','LEFT'],
-        ];*/
-
-        //$list = poModel::alias('a')->field('a.*,b.pr_date')->join($join)->select();
-        $list = poModel::select();
+    function getPolist($where){
+        if(empty($where)){
+            $list = poModel::select();
+        }else{
+            $list = poModel::where($where)->select();
+        }
         if($list){
             $list = collection($list)->toArray();
         }

@@ -16,7 +16,8 @@ class Order extends Base{
     public function index(){
         // atw_po_item
         $offerLogic = model('Order','logic');
-        $list = $offerLogic->getOrderListInfo();
+        $sup_code = session('spl_user')['sup_code'];
+        $list = $offerLogic->getOrderListInfo($sup_code);
         $listInfo = [];
         if(!empty($list)){
             foreach($list  as $key => $item){

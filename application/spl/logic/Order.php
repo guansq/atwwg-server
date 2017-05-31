@@ -12,8 +12,8 @@ use app\common\model\PoRecord;
 use app\common\model\Po;
 class Order extends BaseLogic{
     //获取订单中心列表
-    function getOrderListInfo(){
-        $list = Po::alias('a')->field('b.po_code,a.order_code,a.status,b.arv_goods_num,b.pro_goods_num,a.contract_time')->join('po_item b','a.order_code= b.po_code')->select();
+    function getOrderListInfo($sup_code=''){
+        $list = Po::alias('a')->field('b.po_code,a.order_code,a.status,b.arv_goods_num,b.pro_goods_num,a.contract_time')->join('po_item b','a.order_code= b.po_code')->where(['sup_code'=>$sup_code])->select();
        // echo $this->getLastSql();//die;
         if($list){
             $list = collection($list)->toArray();

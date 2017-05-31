@@ -46,13 +46,14 @@ class Offer extends Base{
         }
         //状态init=未报价  quoted=已报价  winbid=中标 giveupbid=弃标  close=已关闭
         foreach($list as $k => $v){
-            if(in_array($v['status'],['quoted','winbid','giveupbid','close'])){
-                $list[$k]['showinfo'] = 'disabled';
-            }else{
+            if(in_array($v['status'],['init'])){
                 $list[$k]['showinfo'] = '';
+            }else{
+                $list[$k]['showinfo'] = 'disabled';
             }
             $list[$k]['total_price'] = ($v['price_num']*$v['quote_price'])*(1+$v['tax_rate']);
         }
+        //var_dump($list);
         $this->assign('quote_begintime',$quote_begintime);
         $this->assign('quote_endtime',$quote_endtime);
         $this->assign('list',$list);
@@ -68,6 +69,7 @@ class Offer extends Base{
         $offerLogic = model('Offer','logic');
         $key = $data['id'];
         $dataArr = [
+            'quote_date'=>time(),
             'promise_date' => strtotime($data['req_date']),
             'quote_price' => $data['quote_price'],
             'remark' => $data['remark'],
@@ -77,7 +79,7 @@ class Offer extends Base{
         //dump($list);die;
         if($list !== false){
             $info = $offerLogic->getOneById($key);
-            $total_price = $info['price_num']*$info['quote_price'];
+            $total_price = ($info['price_num']*$info['quote_price'])*(1+$info['tax_rate']);
             //dump($offerLogic->toArray());die;
             return json(['code'=>2000,'msg'=>'成功','data'=>['total_price'=>$total_price]]);
         }else{

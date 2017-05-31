@@ -71,9 +71,10 @@ class Order extends BaseController{
             $returnInfo[$k]['create_at'] = date('Y-m-d',$v['create_at']);
             $returnInfo[$k]['sup_name'] = $poLogic->getSupName($v['sup_code']);
             $returnInfo[$k]['status'] = $status[$v['status']];
-           /*switch($v['status']){
+           switch($v['status']){
                case 'init'://初始
                    $action = [];
+                   $returnInfo[$k]['status'] = '待签订';
                    break;
                case 'sup_cancel'://供应商取消
                    $action = [];
@@ -96,7 +97,7 @@ class Order extends BaseController{
                case 'contract_refuse'://合同审核拒绝
                    $action = [];
                    break;
-           }*/
+           }
             $returnInfo[$k]['detail'] = $v['id'];
         }
         //dump($returnInfo);

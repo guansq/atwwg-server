@@ -16,6 +16,7 @@ class Offer extends BaseLogic{
     function getOfferInfo($sup_code,$where=''){
         if(!empty($where)){
             $list = IoModel::where('sup_code',"$sup_code")->where($where)->select();
+          //  echo $this->getLastSql();//die;
         }else{
             $list = IoModel::where('sup_code',"$sup_code")->select();
         }

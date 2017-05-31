@@ -89,4 +89,11 @@ class Item extends Baselogic{
     function updateByCode($code,$data){
         return ItemModel::where(['code'=>$code])->update($data);
     }
+
+    /*
+     * 更新item
+     */
+    public function saveItem($where,$data){
+        return ItemModel::where($where)->update($data);
+    }
 }

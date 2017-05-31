@@ -66,8 +66,11 @@ class Material extends BaseController{
 
     }
 
+    /*
+     * 显示导入层
+     */
     public function add(){
-
+        return view();
     }
 
     /*
@@ -125,6 +128,9 @@ class Material extends BaseController{
         ]);
     }
 
+    /*
+     * 导出
+     */
     public function exportExcel(){
         //$path = config('upload_path'); //找到当前脚本所在路径
         //echo $path = dirname(__FILE__);
@@ -157,6 +163,50 @@ class Material extends BaseController{
         header("Accept-Length: $file_size");
         header("Content-Disposition: attachment; filename=".$file_name);
         exit($contents);
+    }
+
+    /*
+     * 导入
+     */
+    public function uploadexcel(){
+        //$file = request()->file('excel');
+        //$info = $file->validate(['size'=>102400,'ext'=>'xlsx,xls,csv'])->move(ROOT_PATH . 'public' . DS . 'upload','');
+        $path = input('src');
+
+        if($path){
+            $urlInfo = parse_url($path);
+            $pathArr = explode('/',$urlInfo['path']);
+            //dump($pathArr);die;
+            //$path = ROOT_PATH.'public'.DS.'upload'.DS.$info->getFilename();
+            $path = ROOT_PATH.'public'.DS.'static'.DS.'upload'.DS.$pathArr[3].DS.$pathArr[4];
+            $logicItemInfo = Model('Item','logic');
+            $fileType=PHPExcel_IOFactory::identify($path);//自动获取文件的类型提供给phpexcel用
+            $objReader=PHPExcel_IOFactory::createReader($fileType);//获取文件读取操作对象
+            $objReader->setLoadSheetsOnly('物料列表');//只加载指定的sheet
+            $objPHPExcel=$objReader->load($path);//加载文件
+            $currentSheet= $objPHPExcel->getSheet(0);
+            $allColumn= $currentSheet->getHighestColumn();
+            $allRow= $currentSheet->getHighestRow();
+            for($currentRow =2;$currentRow <= $allRow;$currentRow++)
+            {
+                $data = [];
+                $data['id'] = intval($objPHPExcel->getActiveSheet()->getCell("A".$currentRow)->getValue());//获取A列的值
+                $data['code'] = $objPHPExcel->getActiveSheet()->getCell("B".$currentRow)->getValue();//获取B列的值
+                $dataInfo = [];
+                $dataInfo['name'] = intval($objPHPExcel->getActiveSheet()->getCell("C".$currentRow)->getValue());//获取C列的值
+                $dataInfo['main_name'] = $objPHPExcel->getActiveSheet()->getCell("D".$currentRow)->getValue();//获取D列的值
+                $dataInfo['desc'] = $objPHPExcel->getActiveSheet()->getCell("E".$currentRow)->getValue();//获取E列的值
+                $dataInfo['update_at'] = time();//获取G列的值
+                //检查code是否存在
+                if($logicItemInfo->exist($data)){//不存在
+                    $logicItemInfo->saveItem($data,$dataInfo);
+                }
+            }
+            $this->success("更新成功！", '');
+            //echo $path;
+        }else{
+            $this->error("上传失败！", '');
+        }
     }
 
 }

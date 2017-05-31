@@ -62,7 +62,7 @@ function initTable(){
       }
     },
     "processing": true,
-    "serverSide": true,
+    "serverSide": false,
     "ajax": {
       "url": '/Enquiryorder/getInquiryList',
       "type": "GET"

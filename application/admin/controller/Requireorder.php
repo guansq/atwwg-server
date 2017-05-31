@@ -80,7 +80,7 @@ class Requireorder extends BaseController{
                 'price_uom' => $v['price_uom'],//计价单位
                 'price_num' => $v['price_num'],//计价数量
                 'req_date' => $v['req_date'],//交期
-                'status' => in_array($v['status'],$status) ? $status[$v['status']] : $v['status'],//状态 init=初始 hang=挂起 inquiry=询价中 close = 关闭
+                'status' => key_exists($v['status'],$status) ? $status[$v['status']] : $v['status'],//状态 init=初始 hang=挂起 inquiry=询价中 close = 关闭
                 'pur_attr' => $v['pur_attr'],//物料采购属性
                 'is_appoint_sup' => $v['is_appoint_sup'],//是否指定供应商
                 'inquiry_way' => $v['inquiry_way'],//询价方式

@@ -133,7 +133,7 @@
           //console.log(resdata);return;
           layer.closeAll();
           var obj = JSON.parse(resdata);
-          if(obj.itemInfo.code == 2000 || obj.supItemInfo.code == 2000){
+          if(obj.prToIo.code == 2000){
             $.form.reload();
           }else{
             alert("更新失败");

@@ -101,20 +101,21 @@
           <label class="col-sm-2 control-label">付款方式</label>
           <div class="col-sm-10">
             <select class="form-control">
-              <option>货到验收合格，票到120天付款</option>
-              <option>货到验收合格，票到90天付款</option>
-              <option>货到验收合格，票到30天付款</option>
-              <option>预付30%，发货前付70%</option>
-              <option>预付30%，货到现场30%，安装调试合格30%，一年质保金10%</option>
+              <option {if $sup_info.pay_way eq '货到验收合格，票到120天付款'}selected{/if} >货到验收合格，票到120天付款</option>
+              <option {if $sup_info.pay_way eq '货到验收合格，票到90天付款'}selected{/if} >货到验收合格，票到90天付款</option>
+              <option {if $sup_info.pay_way eq '货到验收合格，票到30天付款'}selected{/if} >货到验收合格，票到30天付款</option>
+              <option {if $sup_info.pay_way eq '预付30%，发货前付70%'}selected{/if} >预付30%，发货前付70%</option>
+              <option {if $sup_info.pay_way eq '预付30%，货到现场30%，安装调试合格30%，一年质保金10%'}selected{/if} >预付30%，货到现场30%，安装调试合格30%，一年质保金10%</option>
             </select>
           </div>
         </div>
         <div class="form-group col-sm-6">
-          <label class="col-sm-2 control-label">地址</label>
+          <label class="col-sm-2 control-label">供应商采购属性</label>
           <div class="col-sm-10">
             <select class="form-control">
               <option>独家采购</option>
               <option>充分竞争</option>
+
             </select>
           </div>
         </div>

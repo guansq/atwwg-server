@@ -13,7 +13,7 @@ use app\common\model\Po;
 class Order extends BaseLogic{
     //获取订单中心列表
     function getOrderListInfo($sup_code=''){
-        $list = Po::alias('a')->field('b.po_code,a.order_code,a.status,b.arv_goods_num,b.pro_goods_num,a.contract_time')->join('po_item b','a.order_code= b.po_code')->where(['sup_code'=>$sup_code])->order('a.create_at desc')->select();
+        $list = Po::alias('a')->field('b.po_code,a.order_code,a.status,b.arv_goods_num,b.pro_goods_num,a.contract_time,item_code')->join('po_item b','a.order_code= b.po_code')->where(['sup_code'=>$sup_code])->order('a.create_at desc')->select();
        // echo $this->getLastSql();//die;
         if($list){
             $list = collection($list)->toArray();
@@ -29,9 +29,9 @@ class Order extends BaseLogic{
         }
         return $list;
     }
-    //取消订单
-    function updateStatus($pr_code){
-        $list = Po::where(['order_code'=>$pr_code])->update(['status'=>'sup_cancel']);
+    //修改订单状态
+    function updateStatus($pr_code,$status='sup_cancel'){
+        $list = Po::where(['order_code'=>$pr_code])->update(['status'=>$status]);
 
         return $list;
     }

@@ -33,7 +33,7 @@
       {volist name='list' id='plist'}
       <tr>
         <td>{$key}</td>
-        <td>到货数量:{$plist.arv_goods_num_total}--未到货数量:{$plist.pro_goods_num_total}</td>
+        <td>{$plist.content}</td>
         <td>{$plist.statusinfo}</td>
         <td>{$plist.contract_time}</td>
         <td><a href="javascript:void(0);"  data-open='{:url("Order/detail")}?pr_code={$key}' >详情</a></td>

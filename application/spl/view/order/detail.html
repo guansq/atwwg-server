@@ -17,7 +17,13 @@
   </div>
   <div class="atw-orderdet-title">订单基本信息 <span class="glyphicon glyphicon-circle-arrow-left"></span></div>
   <div class="atw-orderdet-list">
-    <div class="top"><p>订单编号：{$codeInfo.order_code}</p><p>订单合同签订日期：{$codeInfo.contract_time|date="Y-m-d",###}</p></div>
+    <div class="top"><p>订单编号：{$codeInfo.order_code}</p>
+      {if $codeInfo.contract_time eq null || $codeInfo.contract_time eq ''}
+      <p>订单合同签订日期：--</p>
+      {else}
+      <p>订单合同签订日期：{$codeInfo.contract_time|date="Y-m-d",###}</p>
+      {/if}
+    </div>
     <div class="center">
       合同影像：<a href="">下载合同模板</a>
       {if $imgInfos|@count neq 0 }
@@ -32,7 +38,8 @@
       {/if}
         <span>*下载合同模版后请 打印 盖公章后 扫描或者拍照上传由平台运营人员审核通过后会通过绑定邮箱和手机通知到您。</span>
     </div>
-    <div class="bottom">订单采购内容 <button class="btn btn-primary">打印送货单</button><button class="btn btn-primary" id="order_cancel" {if $statusButton.cancelable eq 1}disabled="true"{/if}>取消订单</button></div>
+    <div class="bottom">订单采购内容 <button class="btn btn-primary">打印送货单</button>
+      <button class="btn btn-primary" id="order_cancel" {if $statusButton.cancelable eq 1 || $statusButton.confirmorderable eq 1 }disabled="true"{/if}>取消订单</button><button class="btn btn-primary" id="order_confirm" {if $statusButton.confirmorderable eq 1 || $statusButton.cancelable eq 1}disabled="true"{/if} >确认订单</button></div>
   </div>
   <div class="table-responsive">
     <table class="table table-bordered atw-orddet-tab">
@@ -59,14 +66,14 @@
         <!--<td> <i></i></td>-->
         <td>{$plist.item_code}</td>
         <td>{$plist.item_name}</td>
-        <td>{$plist.req_qty}</td>
-        <td>{$plist.trade_uom}</td>
+        <td>{$plist.price_num}</td>
+        <td>{$plist.price_uom}</td>
         <td name="showdate">{$plist.sup_confirm_date|date="Y-m-d",###}</td>
         <td  > <input type="text" class="laydate-icon" name="confirmdate" ><button name="confirmdatesubmit" class="btn btn-primary confirmdatesubmit" value="{$plist.item_code}" {if $statusButton.confirmable eq 0 || $plist.times egt 3}disabled="true"{/if}>提交</button></td>
         <td>{$plist.tax_price}</td>
         <td>{$plist.amount}</td>
         <td><a href="">打印</a></td>
-        <td>{$plist.arr_goods_num}</td>
+        <td>{$plist.arv_goods_num}</td>
         <td>{$plist.pro_goods_num}</td>
       </tr>
       {/volist}
@@ -90,6 +97,42 @@
 <script src="/static/spl/order/detail.js"></script>
 
 <script>
+  $("#order_confirm").click(function () {
+
+    layer.confirm('是否确认订单', {
+      btn: ['确定','取消']
+    }, function(index){
+      layer.close(index);
+      layer.load();
+      $.ajax({
+        'url' : '{:url("Order/orderconfirm")}',
+        'type' : 'POST',
+        //'dataType' : 'html',
+        'data' : {
+          'pr_code':'{$codeInfo.order_code}'
+        },
+        'complete' : function(){
+          //layer.closeAll();
+        },
+        'success' : function(obj){
+          layer.closeAll();
+          if(obj.code == 2000){
+            $("#order_confirm").attr("disabled",true);
+            location.reload();
+          }else{
+            layer.alert(obj.msg);
+          }
+         //console.log(obj);
+        },
+        'error' : function(){
+          layer.closeAll();
+          layer.alert('请求失败');
+        }
+      });
+    });
+  })
+
+
   $("#order_cancel").click(function () {
 
       layer.confirm('是否取消订单', {
@@ -108,11 +151,14 @@
           },
           'success' : function(obj){
             layer.closeAll();
+            layer.load();
             if(obj.code == 2000){
              $("#order_cancel").attr("disabled",true);
+              location.reload();
             }else{
               layer.alert(obj.msg);
             }
+
             //console.log(obj);
           },
           'error' : function(){

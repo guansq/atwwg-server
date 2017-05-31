@@ -21,11 +21,12 @@ class Order extends Base{
         $listInfo = [];
         if(!empty($list)){
             foreach($list  as $key => $item){
-                $listInfo[$item['po_code']]['contract_time'] =  date('Y-m-d',$item['contract_time']);
-                $listInfo[$item['po_code']]['arv_goods_num_total']  = empty( $listInfo[$item['po_code']]['arv_goods_num_total'] )?'0': $listInfo[$item['po_code']]['arv_goods_num_total'] ;
-                $listInfo[$item['po_code']]['pro_goods_num_total']  = empty( $listInfo[$item['po_code']]['pro_goods_num_total'] )?'0': $listInfo[$item['po_code']]['pro_goods_num_total'] ;
-                $listInfo[$item['po_code']]['arv_goods_num_total'] += $item['arv_goods_num'];
-                $listInfo[$item['po_code']]['pro_goods_num_total'] += $item['pro_goods_num'];
+             //   var_dump($item);
+                $listInfo[$item['po_code']]['contract_time'] = empty($item['contract_time']) ?'--':date('Y-m-d',$item['contract_time']);
+//                $listInfo[$item['po_code']]['arv_goods_num_total']  = empty( $listInfo[$item['po_code']]['arv_goods_num_total'] )?'0': $listInfo[$item['po_code']]['arv_goods_num_total'] ;
+//                $listInfo[$item['po_code']]['pro_goods_num_total']  = empty( $listInfo[$item['po_code']]['pro_goods_num_total'] )?'0': $listInfo[$item['po_code']]['pro_goods_num_total'] ;
+//                $listInfo[$item['po_code']]['arv_goods_num_total'] += $item['arv_goods_num'];
+//                $listInfo[$item['po_code']]['pro_goods_num_total'] += $item['pro_goods_num'];
 //                $list[$key]['contract_time'] = date('Y-m-d',$item['contract_time']);
 //                $list[$key]['content']='到货数量:'.$item['arv_goods_num'].'---未到货数量:'.$item['pro_goods_num'];
                 $statusinfo = '';
@@ -35,6 +36,9 @@ class Order extends Base{
                     'contract_pass'=>'合同审核通过','contract_refuse'=>'合同审核拒绝',
                     'executing'=>'执行中','finish'=> '结束'
                 );
+                $listInfo[$item['po_code']]['content'] = empty($listInfo[$item['po_code']]['content'])?'':$listInfo[$item['po_code']]['content'];
+                $listInfo[$item['po_code']]['content'] .=$item['item_code'].'到货数量:'.(empty($item['arv_goods_num'])?0:$item['arv_goods_num']).'---未到货数量:'.(empty($item['pro_goods_num'])?0:$item['pro_goods_num']).'<br>';
+
                 $statusinfo = $orderStatus[$item['status']];
                 $listInfo[$item['po_code']]['statusinfo'] = $statusinfo;
             }
@@ -56,8 +60,10 @@ class Order extends Base{
 
         $contractable = in_array($codeInfo[0]['status'],array('atw_sure','sup_sure','upload_contract'))?'1':'0';
         $cancelable = in_array($codeInfo[0]['status'],array('sup_cancel'))?'1':'0';
+        $confirmorderable = in_array($codeInfo[0]['status'],array('sup_sure'))?'1':'0';
         $confirmable = in_array($codeInfo[0]['status'],array('init','sup_edit'))?'1':'0';
-        $statusButton = array('contractable'=>$contractable,'cancelable'=>$cancelable,'confirmable'=>$confirmable);
+        $statusButton = array('contractable'=>$contractable,'cancelable'=>$cancelable,
+            'confirmable'=>$confirmable,'confirmorderable'=>$confirmorderable);
 
         $imgInfos = explode(',',$codeInfo[0]['contract']);
         $imgInfos=array_filter($imgInfos);
@@ -71,13 +77,24 @@ class Order extends Base{
     public function cancel(){
         $pr_code = input('pr_code');
         $offerLogic = model('Order','logic');
-        $detail = $offerLogic->updateStatus($pr_code);
+        $detail = $offerLogic->updateStatus($pr_code,'sup_cancel');
         if($detail){
             return json(['code'=>2000,'msg'=>'成功','data'=>[]]);
         }else{
             return json(['code'=>4000,'msg'=>'更新失败','data'=>[]]);
         }
     }
+    public function orderconfirm(){
+        $pr_code = input('pr_code');
+        $offerLogic = model('Order','logic');
+        $detail = $offerLogic->updateStatus($pr_code,'sup_sure');
+        if($detail){
+            return json(['code'=>2000,'msg'=>'成功','data'=>[]]);
+        }else{
+            return json(['code'=>4000,'msg'=>'更新失败','data'=>[]]);
+        }
+    }
+
 
     public function updateSupconfirmdate(){
         $pr_code = input('pr_code');
@@ -89,6 +106,7 @@ class Order extends Base{
         if(!empty($detailInfo)){
             if (DataService::save('po_record', [ 'po_code' =>$pr_code,'item_code'=>$item_code,'create_at'=>time(),'update_at'=>time(),'po_ln'=>$detailInfo[0]['po_ln'],'promise_date'=>$detailInfo[0]['sup_confirm_date']])) {
                 $detail = $offerLogic->updateSupconfirmdate($pr_code,$item_code,$supconfirmdate);
+                $detailPo = $offerLogic->updateStatus($pr_code,'sup_edit');
                 if($detail){
                     return json(['code'=>2000,'msg'=>'成功','data'=>[]]);
                 }else{

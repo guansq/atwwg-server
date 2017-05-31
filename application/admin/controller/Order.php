@@ -53,11 +53,12 @@ class Order extends BaseController{
 
         foreach($list as $k => $v){
             $returnInfo[$k]['checked'] = $v['id'];
+            $exec_desc = '';
             if(!empty($itemInfo = $poLogic->getPoItemInfo($v['id']))){
                 foreach($itemInfo as $vv){
                     $vv['arv_goods_num'] = $vv['arv_goods_num'] == '' ? 0 : $vv['arv_goods_num'];
                     $vv['pro_goods_num'] = $vv['pro_goods_num'] == '' ? 0 : $vv['pro_goods_num'];
-                    $exec_desc = '物料名称：'.$vv['item_name'].''.'到货数量：'.$vv['arv_goods_num'].'未到货数量：'.$vv['pro_goods_num'];
+                    $exec_desc .= '物料名称：'.$vv['item_name'].'; '.'到货数量：'.$vv['arv_goods_num'].'; 未到货数量：'.$vv['pro_goods_num'].'<br>';
                 }
                 $returnInfo[$k]['exec_desc'] = $exec_desc;
             }else{

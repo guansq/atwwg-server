@@ -152,8 +152,8 @@ class Supporter extends BaseController{
                 $data['id'] = intval($objPHPExcel->getActiveSheet()->getCell("A".$currentRow)->getValue());//获取A列的值
                 $data['sup_code'] = $objPHPExcel->getActiveSheet()->getCell("B".$currentRow)->getValue();//获取B列的值
                 $data['sup_name'] = $objPHPExcel->getActiveSheet()->getCell("C".$currentRow)->getValue();//获取C列的值
-                $data['user_name'] = $objPHPExcel->getActiveSheet()->getCell("D".$currentRow)->getValue();//获取D列的值
-                $data['password'] = $objPHPExcel->getActiveSheet()->getCell("E".$currentRow)->getValue();//获取E列的值
+                $data['user_name'] = $objPHPExcel->getActiveSheet()->getCell("D".$currentRow)->getCalculatedValue();//获取D列的值
+                $data['password'] = $objPHPExcel->getActiveSheet()->getCell("E".$currentRow)->getCalculatedValue();//获取E列的值
                 //检查sup_id是否存在
                 if($logicSupInfo->getSupId($data['id']) == ''){//不存在
                     if(!empty($data['user_name']) && !empty($data['password'])){

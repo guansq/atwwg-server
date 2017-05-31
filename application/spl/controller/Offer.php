@@ -97,7 +97,7 @@ class Offer extends Base{
         $PHPSheet = $PHPExcel->getActiveSheet(); //获得当前活动sheet的操作对象
         $PHPSheet->setTitle('询价单导出'); //给当前活动sheet设置名称
         $logicSupInfo = Model('Offer','logic');
-        $list = $logicSupInfo->getOfferInfo($sup_code);
+        $list = $logicSupInfo->getOfferInfo($sup_code,['status'=>'init']);
         $PHPSheet->setCellValue('A1','ID')->setCellValue('B1','物料名称');
         $PHPSheet->setCellValue('C1','采购数量')->setCellValue('D1','交易单位');
         $PHPSheet->setCellValue('E1','计价单位')->setCellValue('F1','询价时间');

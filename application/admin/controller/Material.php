@@ -163,8 +163,8 @@ class Material extends BaseController{
                     ->setCellValue('H'.$num,$v['future_scale'])
                     ->setCellValue('I'.$num,$v['price_weight'])
                     ->setCellValue('J'.$num,$v['tech_weight'])
-                    ->setCellValue('K'.$num,$v['create_at'])
-                    ->setCellValue('L'.$num,$v['create_at']);
+                    ->setCellValue('K'.$num,$v['business_weight'])
+                    ->setCellValue('L'.$num,$v['standard_date']);
         }
         $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel,'Excel2007');//按照指定格式生成Excel文件，'Excel2007’表示生成2007版本的xlsx，
         $PHPWriter->save($path.'/itemList.xlsx'); //表示在$path路径下面生成itemList.xlsx文件

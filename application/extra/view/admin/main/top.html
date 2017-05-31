@@ -1,7 +1,11 @@
 <div class="framework-topbar">
     <div class="console-topbar">
         <div class="topbar-wrap topbar-clearfix">
-
+            <div class="topbar-head topbar-left">
+                <a href="javascript:;" class="topbar-logo topbar-left">
+                    <span class="icon-logo">{:sysconf('app_name')} </span>
+                </a>
+            </div>
             {volist name='menus' id='pmenu'}
             {empty name='pmenu.sub'}
             <a data-menu-node='m-{$pmenu.id}' data-open="{$pmenu.url}"

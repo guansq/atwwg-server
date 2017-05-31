@@ -78,7 +78,6 @@ class Order extends BaseController{
     }
 
     public function mkzip(){
-        echo '11111111';
         $accessKey = sysconf('storage_qiniu_access_key');
         $secretKey = sysconf('storage_qiniu_secret_key');
         $bucket = sysconf('storage_qiniu_bucket');

@@ -18,7 +18,7 @@
       <a><i class="glyphicon glyphicon-menu-right"></i>编辑物料详情</a>
     </div>
     <div id="item" class="edit_form">
-      <form onsubmit="return false;"  data-auto="true" method="post" class="form-horizontal" >
+      <form onsubmit="return false;"  data-auto="true" method="post" action='{:url("Material/update")}' class="form-horizontal" >
         <!--action='{:url("Material/update")}'-->
         <input type="hidden" value="{$itemInfo.code}" name="code" >
 
@@ -70,21 +70,21 @@
           <div class="col-sm-5">
             <select class="form-control" name="purattr">
               {if $itemInfo.pur_attr eq '技术型'}
-              <option   selected = "selected">技术型</option>
+              <option value="技术型"  selected = "selected">技术型</option>
               {else}
-              <option   >技术型</option>
+              <option value="技术型"  >技术型</option>
 
               {/if}
               {if $itemInfo.pur_attr eq '单一资源型'}
-              <option   selected = "selected">单一资源型</option>
+              <option value="单一资源型"  selected = "selected">单一资源型</option>
               {else}
-              <option   >单一资源型</option>
+              <option value="单一资源型"  >单一资源型</option>
 
               {/if}
               {if $itemInfo.pur_attr eq '充分竞争型'}
-              <option   selected = "selected">充分竞争型</option>
+              <option value="充分竞争型"  selected = "selected">充分竞争型</option>
               {else}
-              <option   >充分竞争型</option>
+              <option  value="充分竞争型" >充分竞争型</option>
 
               {/if}
             </select>
@@ -187,4 +187,10 @@
 
 {block name="script"}
 <script src="/static/admin/material/edit.js"></script>
+<script>
+  layui.use('form', function(){
+    form = layui.form();
+
+  });
+</script>
 {/block}

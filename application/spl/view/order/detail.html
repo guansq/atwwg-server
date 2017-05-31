@@ -20,24 +20,25 @@
     <div class="top"><p>订单编号：{$codeInfo.order_code}</p><p>订单合同签订日期：{$codeInfo.contract_time|date="Y-m-d",###}</p></div>
     <div class="center">
       合同影像：<a href="">下载合同模板</a>
-        {if $imgInfos|@count neq 0 }
-        {volist name='imgInfos' id='pimgInfos'}
-
-        <img src="{$pimgInfos}" alt=""  >
-
-        {/volist}
-        {/if}
-
-        <img src="/static/spl/img/add.png" alt="" class="uploadImg" data-modal='{:url("$classuri/add")}?pr_code={$codeInfo.order_code}' >
-      <span>*下载合同模版后请 打印 盖公章后 扫描或者拍照上传由平台运营人员审核通过后会通过绑定邮箱和手机通知到您。</span>
+      {if $imgInfos|@count neq 0 }
+      {volist name='imgInfos' id='pimgInfos'}
+      <img src="{$pimgInfos}" alt=""  >
+      {/volist}
+      {/if}
+      {if $statusButton.contractable eq 1}
+      <img src="/static/spl/img/add.png" alt="" class="uploadImg" data-modal='{:url("$classuri/add")}?pr_code={$codeInfo.order_code}' >
+     {else}
+      <img src="/static/spl/img/add.png" alt=""  >
+      {/if}
+        <span>*下载合同模版后请 打印 盖公章后 扫描或者拍照上传由平台运营人员审核通过后会通过绑定邮箱和手机通知到您。</span>
     </div>
-    <div class="bottom">订单采购内容 <button class="btn btn-primary">打印送货单</button><button class="btn btn-primary" id="order_cancel">取消订单</button></div>
+    <div class="bottom">订单采购内容 <button class="btn btn-primary">打印送货单</button><button class="btn btn-primary" id="order_cancel" {if $statusButton.cancelable eq 1}disabled="true"{/if}>取消订单</button></div>
   </div>
   <div class="table-responsive">
     <table class="table table-bordered atw-orddet-tab">
       <thead>
       <tr class="active">
-        <td>全选 <i></i></td>
+        <!--<td>全选 <i></i></td>-->
         <td>料号</td>
         <td>物料名称</td>
         <td>采购数量</td>
@@ -52,16 +53,16 @@
       </tr>
       </thead>
       <tbody>
-
+      {if $list|@count neq 0 }
       {volist name='list' id='plist'}
       <tr id="po-{$plist.item_code}">
-        <td> <i></i></td>
+        <!--<td> <i></i></td>-->
         <td>{$plist.item_code}</td>
         <td>{$plist.item_name}</td>
         <td>{$plist.req_qty}</td>
         <td>{$plist.trade_uom}</td>
         <td name="showdate">{$plist.sup_confirm_date|date="Y-m-d",###}</td>
-        <td> <input type="text" class="laydate-icon" name="confirmdate" ><button name="confirmdatesubmit" class="btn btn-primary confirmdatesubmit" value="{$plist.item_code}">提交</button></td>
+        <td  > <input type="text" class="laydate-icon" name="confirmdate" ><button name="confirmdatesubmit" class="btn btn-primary confirmdatesubmit" value="{$plist.item_code}" {if $statusButton.confirmable eq 0 || $plist.times egt 3}disabled="true"{/if}>提交</button></td>
         <td>{$plist.tax_price}</td>
         <td>{$plist.amount}</td>
         <td><a href="">打印</a></td>
@@ -69,9 +70,8 @@
         <td>{$plist.pro_goods_num}</td>
       </tr>
       {/volist}
-
+      {/if}
       </tbody>
-
     </table>
   </div>
   <div class="atw-orddet-text1">

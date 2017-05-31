@@ -22,6 +22,9 @@ class Offer extends Base{
         if (!$this->request->isGet()) {
             $tmparray = [];
             $data=input('param.');
+//            if(!empty()){
+//
+//            }
             if(!empty($data['quote_begintime']) && !empty($data['quote_endtime'])){
                 session('spl_user.quote_begintime',$data['quote_begintime']);
                 $quote_begintime = $data['quote_begintime'];
@@ -48,7 +51,7 @@ class Offer extends Base{
             }else{
                 $list[$k]['showinfo'] = '';
             }
-            $list[$k]['total_price'] = $v['price_num']*$v['quote_price'];
+            $list[$k]['total_price'] = ($v['price_num']*$v['quote_price'])*(1+$v['tax_rate']);
         }
         $this->assign('quote_begintime',$quote_begintime);
         $this->assign('quote_endtime',$quote_endtime);
@@ -65,7 +68,7 @@ class Offer extends Base{
         $offerLogic = model('Offer','logic');
         $key = $data['id'];
         $dataArr = [
-            'req_date' => strtotime($data['req_date']),
+            'promise_date' => strtotime($data['req_date']),
             'quote_price' => $data['quote_price'],
             'remark' => $data['remark'],
             'status' => 'quoted',//改变已报价
@@ -102,13 +105,14 @@ class Offer extends Base{
 
         $num = 1;
         foreach($list as $k => $v){
+           // var_dump($v);
             $num = $num+1;
             $PHPSheet->setCellValue('A'.$num,$v['id'])->setCellValue('B'.$num,$v['item_name'])
                 ->setCellValue('C'.$num,$v['price_num'])->setCellValue('D'.$num,$v['price_uom'])
                 ->setCellValue('E'.$num,$v['tc_uom'])->setCellValue('F'.$num,date('Y-m-d H:i:s',$v['quote_date']))
                 ->setCellValue('G'.$num,date('Y-m-d H:i:s',$v['quote_endtime']))
-                ->setCellValue('H'.$num,date('Y-m-d H:i:s',$v['req_date']))->setCellValue('I'.$num,date('Y-m-d H:i:s',$v['req_date']))
-                ->setCellValue('J'.$num,$v['quote_price'])->setCellValue('K'.$num,$v['total_price'])
+                ->setCellValue('H'.$num,date('Y-m-d H:i:s',$v['req_date']))->setCellValue('I'.$num,date('Y-m-d',$v['req_date']))
+                ->setCellValue('J'.$num,$v['quote_price'])->setCellValue('K'.$num,($v['price_num']*$v['quote_price'])*(1+$v['tax_rate']))
                 ->setCellValue('L'.$num,$v['remark']);
 
         }

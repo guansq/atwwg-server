@@ -56,11 +56,11 @@
         <td>{$vo.quote_date|date="Y-m-d H:i:s",###}</td>
         <td>{$vo.quote_endtime|date="Y-m-d H:i:s",###}</td>
         <td>{$vo.req_date|date="Y-m-d H:i:s",###}</td>
-        <td><input type="text" name="req_date" lay-verify="required" value="{$vo.req_date|date='Y-m-d H:i:s',###}" {$vo.showinfo}></td>
+        <td><input  class="laydate-icon" type="text" name="req_date" lay-verify="required" value="{$vo.req_date|date='Y-m-d',###}" {$vo.showinfo}></td>
         <td><input type="text" name="quote_price" lay-verify="required|float" value="{$vo.quote_price}" {$vo.showinfo} placeholder="请输入单价"></td>
         <td class="active" id="total_price_{$vo.id}">{$vo.total_price}</td>
         <td><input type="text" value="{$vo.remark}" name="remark" {$vo.showinfo}></td>
-        <td><button data-io-id="{$vo.id}" class="btn btn-primary" {if condition="$vo['showinfo'] eq ''"} {/if} {$vo.showinfo} lay-submit="" lay-filter="sub">提交报价</button></td>
+        <td><button data-io-id="{$vo.id}" class="btn btn-primary" {if condition="$vo['showinfo'] eq ''"} {else} disabled="true"{/if} {$vo.showinfo} lay-submit="" lay-filter="sub">提交报价</button></td>
       </tr>
       {/volist}
     </table>

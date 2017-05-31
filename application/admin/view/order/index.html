@@ -40,6 +40,7 @@
             <th>下单日期</th>
             <th>供应商名称</th>
             <th>执行情况</th>
+            <th>状态</th>
             <th>操作</th>
           </tr>
           </thead>
@@ -114,7 +115,7 @@
             }
           },
           {
-            "targets": 7,
+            "targets": 8,
             "render": function (data) {
               var url = '{:url(\'order/detailed\')}?id='+data;//data
               return '<a class="detail" data-open="' + url + '">详情</a>';
@@ -138,6 +139,7 @@
           { "data": "pr_date" },
           { "data": "create_at" },
           { "data": "sup_name" },
+          { "data": "exec_desc" },
           { "data": "status" },
           { "data": "detail" },
         ],

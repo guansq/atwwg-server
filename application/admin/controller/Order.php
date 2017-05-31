@@ -53,18 +53,29 @@ class Order extends BaseController{
 
         foreach($list as $k => $v){
             $returnInfo[$k]['checked'] = $v['id'];
+            if(!empty($itemInfo = $poLogic->getPoItemInfo($v['id']))){
+                foreach($itemInfo as $vv){
+                    $vv['arv_goods_num'] = $vv['arv_goods_num'] == '' ? 0 : $vv['arv_goods_num'];
+                    $vv['pro_goods_num'] = $vv['pro_goods_num'] == '' ? 0 : $vv['pro_goods_num'];
+                    $exec_desc = '物料名称：'.$vv['item_name'].''.'到货数量：'.$vv['arv_goods_num'].'未到货数量：'.$vv['pro_goods_num'];
+                }
+                $returnInfo[$k]['exec_desc'] = $exec_desc;
+            }else{
+                $returnInfo[$k]['exec_desc'] = '';
+            }
+
             $returnInfo[$k]['order_code'] = $v['order_code'];
             $returnInfo[$k]['pr_code'] = $v['pr_code'];
             $returnInfo[$k]['pr_date'] = date('Y-m-d',$poLogic->getPrDate($v['pr_code']));
             $returnInfo[$k]['create_at'] = date('Y-m-d',$v['create_at']);
             $returnInfo[$k]['sup_name'] = $poLogic->getSupName($v['sup_code']);
             $returnInfo[$k]['status'] = $status[$v['status']];
-            if($status[$v['status']] == 'sup_edit'){//供应商修改-->action
-
+            /*if($status[$v['status']] == 'sup_edit'){//供应商修改-->action
                 next($status);
-            }
+            }*/
             $returnInfo[$k]['detail'] = $v['id'];
         }
+        //dump($returnInfo);
         $info = ['draw'=>time(),'data'=>$returnInfo,'extData'=>[],];
 
         return json($info);

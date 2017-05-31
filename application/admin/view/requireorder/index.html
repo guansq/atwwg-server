@@ -219,7 +219,7 @@
 
           Global.item_code = $(this).attr("data-item_code");
           Global.pr_code = $(this).attr("data-pr_code");
-          var newhtml ="<a onclick=\"bomb_box('"+$(this).attr("data-pr_code")+"','"+ $(this).attr("data-item_code")+"');\" class='select_sell' data-url='{:url(\"Requireorder/showSelectSup\")}/pr_code/"+Global.pr_code+"/item_code/"+Global.item_code+"'>选择供应商</a>";
+          var newhtml ="<a onclick=\"bomb_box(event,'"+$(this).attr("data-pr_code")+"','"+ $(this).attr("data-item_code")+"');\" class='select_sell' data-url='{:url(\"Requireorder/showSelectSup\")}/pr_code/"+Global.pr_code+"/item_code/"+Global.item_code+"'>选择供应商</a>";
 
           if($(this).is(':checked')){
             _this.parent().next().html(newhtml);

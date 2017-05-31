@@ -15,7 +15,7 @@ class RequireOrder extends BaseLogic{
      * 得到请购单信息
      */
      function getPrList($start,$length){
-        $list = prModel::alias('a')->field('a.*,b.desc,b.pur_attr')->join('item b','a.item_code=b.code','LEFT')->limit("$start,$length")->select();
+        $list = prModel::alias('a')->field('a.*,b.desc,b.pur_attr')->join('item b','a.item_code=b.code','LEFT')->where('a.status','<>','close')->limit("$start,$length")->select();
 //        echo $this->getLastSql();
         if($list){
             $list = collection($list)->toArray();

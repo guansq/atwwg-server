@@ -118,7 +118,7 @@ class Requireorder extends BaseController{
         $logicPrInfo = Model('RequireOrder','logic');
 
         if($data['is_appoint_sup'] == 0){
-            $where = [
+            $dataArr = [
                 'status' => '',
                 'inquiry_way' => 'init',
                 'is_appoint_sup' => 0,

@@ -39,8 +39,12 @@ class Po extends BaseLogic{
     /*
      * 得到订单下的item列表
      */
-    function getPoItemInfo(){
-
+    function getPoItemInfo($po_id){
+        $list = poItemModel::where('po_id',$po_id)->select();
+        if($list){
+            $list = collection($list)->toArray();
+        }
+        return $list;
     }
 
 }

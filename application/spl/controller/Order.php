@@ -24,7 +24,7 @@ class Order extends Base{
                 $listInfo[$item['po_code']]['contract_time'] =  date('Y-m-d',$item['contract_time']);
                 $listInfo[$item['po_code']]['arr_goods_num_total']  = empty( $listInfo[$item['po_code']]['arr_goods_num_total'] )?'0': $listInfo[$item['po_code']]['arr_goods_num_total'] ;
                 $listInfo[$item['po_code']]['pro_goods_num_total']  = empty( $listInfo[$item['po_code']]['pro_goods_num_total'] )?'0': $listInfo[$item['po_code']]['pro_goods_num_total'] ;
-                $listInfo[$item['po_code']]['arr_goods_num_total'] += $item['arr_goods_num'];
+                $listInfo[$item['po_code']]['arr_goods_num_total'] += $item['arv_goods_num'];
                 $listInfo[$item['po_code']]['pro_goods_num_total'] += $item['pro_goods_num'];
 //                $list[$key]['contract_time'] = date('Y-m-d',$item['contract_time']);
 //                $list[$key]['content']='到货数量:'.$item['arr_goods_num'].'---未到货数量:'.$item['pro_goods_num'];

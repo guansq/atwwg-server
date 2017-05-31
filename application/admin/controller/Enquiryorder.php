@@ -37,6 +37,8 @@ class Enquiryorder extends BaseController{
         $status = [
             'init' => '未报价',
             'quoted' => '已报价',
+            'winbid_uncheck' => '中标但是需要审核  单一资源要进行人工审批',
+            'winbid_checked' => '中标已经审核',
             'winbid' => '中标',
             'giveupbid' => '弃标',
             'close' => '已关闭',

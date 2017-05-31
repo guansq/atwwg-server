@@ -35,7 +35,14 @@ class Supporter extends BaseController{
      * 更新ERP供应商信息到数据库
      */
     public function updataU9Info(){
-        return HttpService::curl(getenv('APP_API_HOME').'/u9api/syncSupplier');
+        $supInfo = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/syncSupplier'));//同步供应商
+        $prInfo = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/syncPr'));//请购单pr
+        $prToIo = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/prToInquiry'));//PR生成IO询价单
+        return json([
+            'supInfo' => $supInfo,
+            'prInfo' => $prInfo,
+            'prToIo' => $prToIo,
+        ]);
     }
 
     /**

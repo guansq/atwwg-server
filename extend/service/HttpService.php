@@ -34,6 +34,7 @@ class HttpService {
      * @return bool|string
      */
     public static function curl($url, $data = array(), $second = 600, $header = []) {
+        set_time_limit ($second);
         if (!empty($data)) {
             $url .= (stripos($url, '?') === FALSE ? '?' : '&');
             $url .= (is_array($data) ? http_build_query($data) : $data);

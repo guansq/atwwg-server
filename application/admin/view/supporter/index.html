@@ -172,7 +172,7 @@ function initPage(){
       });
       $.post(url,function(resdata){
         var obj = JSON.parse(resdata);
-        if(obj.code == 2000){
+        if(obj.supInfo.code == 2000 || obj.prInfo.code == 2000 || obj.prToIo.code == 2000){
           $.form.reload();
           layer.closeAll();
         }else{

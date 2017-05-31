@@ -130,10 +130,11 @@
           shade: [0.1,"#fff"]
         });
         $.post(url,function(resdata){
+          //console.log(resdata);return;
+          layer.closeAll();
           var obj = JSON.parse(resdata);
-          if(obj.code == 2000){
+          if(obj.itemInfo.code == 2000 || obj.supItemInfo.code == 2000){
             $.form.reload();
-            layer.closeAll();
           }else{
             alert("更新失败");
           }

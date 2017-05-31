@@ -105,8 +105,13 @@ class Material extends BaseController{
         return $info;
     }
 
-    public function updataU9Info(){
-     return HttpService::curl(getenv('APP_API_HOME').'/u9api/syncItem');
+    public function updataU9Info(){//同步
+        $itemInfo = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/syncItem'));//同步物料
+        $supItemInfo = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/syncSupItem'));//物料-供应商交叉表
+        return json([
+            'itemInfo' => $itemInfo,
+            'supItemInfo' => $supItemInfo,
+        ]);
     }
 
     public function exportExcel(){

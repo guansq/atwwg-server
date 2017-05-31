@@ -42,7 +42,7 @@ class Order extends BaseController{
             'init' => '初始',
             'sup_cancel' => '供应商取消',
             'sup_edit' => '供应商修改',
-            'atw_sure' => '供应商修改',
+            'atw_sure' => '安特威确定',
             'sup_sure' => '供应商确定/待上传合同',
             'upload_contract' => '供应商已经上传合同',
             'contract_pass' => '合同审核通过',
@@ -59,6 +59,10 @@ class Order extends BaseController{
             $returnInfo[$k]['create_at'] = date('Y-m-d',$v['create_at']);
             $returnInfo[$k]['sup_name'] = $poLogic->getSupName($v['sup_code']);
             $returnInfo[$k]['status'] = $status[$v['status']];
+            if($status[$v['status']] == 'sup_edit'){//供应商修改-->action
+
+                next($status);
+            }
             $returnInfo[$k]['detail'] = $v['id'];
         }
         $info = ['draw'=>time(),'data'=>$returnInfo,'extData'=>[],];

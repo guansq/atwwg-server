@@ -55,8 +55,8 @@ class Order extends BaseController{
             $returnInfo[$k]['checked'] = $v['id'];
             $returnInfo[$k]['order_code'] = $v['order_code'];
             $returnInfo[$k]['pr_code'] = $v['pr_code'];
-            $returnInfo[$k]['pr_date'] = $poLogic->getPrDate($v['pr_code']);
-            $returnInfo[$k]['create_at'] = $v['create_at'];
+            $returnInfo[$k]['pr_date'] = date('Y-m-d',$poLogic->getPrDate($v['pr_code']));
+            $returnInfo[$k]['create_at'] = date('Y-m-d',$v['create_at']);
             $returnInfo[$k]['sup_name'] = $poLogic->getSupName($v['sup_code']);
             $returnInfo[$k]['status'] = $status[$v['status']];
             $returnInfo[$k]['detail'] = $v['id'];
@@ -85,6 +85,11 @@ class Order extends BaseController{
 
     }
     public function detailed(){
+        $id = input('get.id');
+        //echo $id;
+        $poLogic = model('Po','logic');
+        $poInfo = $poLogic->getPoInfo($id);
+        $poItemInfo = $poLogic->getPoInfo($id);
         return view();
     }
 }

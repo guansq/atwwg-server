@@ -7,6 +7,7 @@
  */
 namespace app\admin\logic;
 use app\common\model\Po as poModel;
+use app\common\model\PoItem as poItemModel;
 
 class Po extends BaseLogic{
     /*
@@ -24,5 +25,22 @@ class Po extends BaseLogic{
         return $list;
     }
 
+    /*
+     * 得到单个列表信息
+     */
+    function getPoInfo($id){
+        $info = poModel::where('id',$id)->find();
+        if($info){
+            $info = $info->toArray();
+        }
+        return $info;
+    }
+
+    /*
+     * 得到订单下的item列表
+     */
+    function getPoItemInfo(){
+
+    }
 
 }

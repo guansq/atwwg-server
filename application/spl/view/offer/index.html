@@ -53,7 +53,11 @@
         <td>{$vo.price_num}</td>
         <td>{$vo.price_uom}</td>
         <td>{$vo.tc_uom}</td>
+        {if $vo.quote_date eq null || $vo.quote_date eq '' }
+        <td>--</td>
+        {else}
         <td>{$vo.quote_date|date="Y-m-d H:i:s",###}</td>
+        {/if}
         <td>{$vo.quote_endtime|date="Y-m-d H:i:s",###}</td>
         <td>{$vo.req_date|date="Y-m-d H:i:s",###}</td>
         <td><input  class="laydate-icon" type="text" name="req_date" lay-verify="required" value="{$vo.req_date|date='Y-m-d',###}" {$vo.showinfo}></td>

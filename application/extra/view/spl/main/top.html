@@ -9,11 +9,11 @@
             {volist name='menus' id='pmenu'}
             {empty name='pmenu.sub'}
             <a data-menu-node='m-{$pmenu.id}' data-open="{$pmenu.url}"
-               class="topbar-home-link topbar-btn topbar-left">
+               class="topbar-home-link topbar-btn topbar-left hidden">
                 <span>{notempty name='$pmenu.icon'}<i class="{$pmenu.icon}"></i>{/notempty} {$pmenu.title}</span>
             </a>
             {else/}
-            <a data-menu-target='m-{$pmenu.id}' class="topbar-home-link topbar-btn topbar-left">
+            <a data-menu-target='m-{$pmenu.id}' class="topbar-home-link topbar-btn topbar-left hidden">
                 <span>{notempty name='$pmenu.icon'}<i class="{$pmenu.icon}"></i>{/notempty} {$pmenu.title}</span>
             </a>
             {/empty}

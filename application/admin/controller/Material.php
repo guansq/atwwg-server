@@ -82,7 +82,7 @@ class Material extends BaseController{
         //关联供应商
         $supInfo = $logicItemInfo->getRelationSup($code);
         $this->assign('supInfo',$supInfo);//
-        //var_dump($supInfo);
+        //var_dump($info);
         return view();
     }
     /*
@@ -92,7 +92,7 @@ class Material extends BaseController{
         $data=input('param.');
         $logicItemInfo = Model('Item','logic');
         $code = $data['code'];
-        $where = array(
+        $data = array(
            'pur_attr'=> $data['purattr'],
             'future_scale'=> $data['futurescale'],
             'price_weight'=> $data['priceweight'],
@@ -101,16 +101,27 @@ class Material extends BaseController{
             'standard_date'=> $data['standarddate'],
             'is_stop'=>$data['inlineRadioOptions'],
         );
-        $info = $logicItemInfo->updateByCode($code,$where);
-        return $info;
+        //dump($data);die;
+        $info = $logicItemInfo->updateByCode($code,$data);
+        if($info !== false){
+            $this->success('恭喜，保存成功哦！', '');
+        }else{
+            $this->error('保存失败，请稍候再试！');
+        }
     }
 
     public function updataU9Info(){//同步
         $itemInfo = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/syncItem'));//同步物料
         $supItemInfo = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/syncSupItem'));//物料-供应商交叉表
+        $supInfo = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/syncSupplier'));//同步供应商
+        $prInfo = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/syncPr'));//请购单pr
+        $prToIo = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/prToInquiry'));//PR生成IO询价单
         return json([
             'itemInfo' => $itemInfo,
             'supItemInfo' => $supItemInfo,
+            'supInfo' => $supInfo,
+            'prInfo' => $prInfo,
+            'prToIo' => $prToIo,
         ]);
     }
 

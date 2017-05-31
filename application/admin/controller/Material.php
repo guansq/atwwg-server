@@ -141,9 +141,12 @@ class Material extends BaseController{
         $PHPSheet->setTitle('物料列表'); //给当前活动sheet设置名称
         $logicItemInfo = Model('Item','logic');
         $list = $logicItemInfo->getAllListInfo();
-        $PHPSheet->setCellValue('A1','ID')->setCellValue('B1','物料编码');
-        $PHPSheet->setCellValue('C1','物料名称')->setCellValue('D1','主分类名称');
-        $PHPSheet->setCellValue('E1','物料描述')->setCellValue('F1','创建时间');
+        $PHPSheet->setCellValue('A1','ID');
+        $PHPSheet->setCellValue('B1','物料编码');
+        $PHPSheet->setCellValue('C1','物料名称');
+        $PHPSheet->setCellValue('D1','主分类名称');
+        $PHPSheet->setCellValue('E1','物料描述');
+        $PHPSheet->setCellValue('F1','创建时间');
         $PHPSheet->setCellValue('G1','更新时间');
         $num = 1;
         foreach($list as $k => $v){

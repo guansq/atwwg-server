@@ -34,7 +34,7 @@ class Enquiryorder extends BaseController{
 
         $returnArr = [];
         //状态init=未报价  quoted=已报价  winbid=中标 giveupbid=弃标  close=已关闭
-        $status = [
+        /*$status = [
             'init' => '未报价',
             'quoted' => '已报价',
             'winbid_uncheck' => '中标但是需要审核  单一资源要进行人工审批',
@@ -42,7 +42,7 @@ class Enquiryorder extends BaseController{
             'winbid' => '中标',
             'giveupbid' => '弃标',
             'close' => '已关闭',
-        ];
+        ];*/
 
         foreach($list as $k => $v){
             //得到全部的询价单 by pr_code item_code
@@ -58,6 +58,13 @@ class Enquiryorder extends BaseController{
                 'status' => 'quoted',//已报价
             ];
             $quotedIo = $logicIoInfo->getIoCountByWhere($where);
+
+            if($quotedIo < $allIo){
+                $status_desc = '询价中';
+            }else{
+                $status_desc = '已报价';
+            }
+
             $returnArr[] = [
                 'io_code' => $v['io_code'],//询价单号
                 'pr_code' => $v['pr_code'],//请购单号
@@ -72,7 +79,7 @@ class Enquiryorder extends BaseController{
                 'quote_date' =>  date('Y-m-d',$v['create_at']),//询价日期
                 'quote_endtime' =>  date('Y-m-d',$v['quote_endtime']),//报价截止日期
                 'price_status' => $quotedIo.'/'.$allIo,//报价状态
-                'status' => $status[$v['status']],//状态 init=初始 hang=挂起 inquiry=询价中 close = 关闭
+                'status' => $status_desc,//状态 init=初始 hang=挂起 inquiry=询价中 close = 关闭
                 'pur_attr' => '<a class="" href="javascript:void(0);" data-open="/enquiryorder/particulars/io_code/'.$v['io_code'].'">详情</a>',//详情
             ];
 

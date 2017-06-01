@@ -3,7 +3,9 @@
 {block name="button"}
 
 {/block}
-
+{block name="style"}
+<link rel="stylesheet" href="//cdn.datatables.net/plug-ins/28e7751dbec/integration/bootstrap/3/dataTables.bootstrap.css">
+{/block}
 {block name="content"}
 
 <main class="main">
@@ -12,16 +14,22 @@
       <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
       <a>物供平台</a>
       <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
-      <a>订单中心</a>
+      <a>采购订单</a>
     </p>
   </div>
   <div class="atw-inquiry">
-    <span>合同状态: <select name="" id=""><option value="">全部</option></select></span>
-    <span>询价时间：<input class="laydate-icon" type="text">到<input class="laydate-icon" type="text"></span>
-    <button class="btn btn-primary">查询</button>
+    <form class="form-inline">
+    <span>合同状态: <select name="status" id="status"> <option value="all">全部</option>
+        {volist name='orderstatus' id='pstatus'}
+          <option value="{$key}">{$pstatus}</option>
+        {/volist}</select></span>
+    <span>询价时间：<input class="laydate-icon" type="text"  id="quote_begintime">到<input class="laydate-icon"  id="quote_endtime" type="text"></span>
+    <button class="btn btn-primary" id="searchVal"  type="button">查询</button>
+    </form>
   </div>
   <div class="table-responsive">
-    <table class="table table-bordered  atw-order-tab">
+    <table class="table table-bordered  atw-order-tab" id="example">
+      <thead>
       <tr class="active">
         <td>订单编号</td>
         <td>物料交付情况</td>
@@ -29,18 +37,16 @@
         <td>合同签订日期</td>
         <td>操作</td>
       </tr>
-      {if $list|@count neq 0 }
-      {volist name='list' id='plist'}
+      </thead>
+      <tbody>
       <tr>
-        <td>{$key}</td>
-        <td>{$plist.content}</td>
-        <td>{$plist.statusinfo}</td>
-        <td>{$plist.contract_time}</td>
-        <td><a href="javascript:void(0);"  data-open='{:url("Order/detail")}?pr_code={$key}' >详情</a></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
       </tr>
-      {/volist}
-      {/if}
-
+      </tbody>
     </table>
   </div>
 </main>
@@ -49,4 +55,68 @@
 
 {block name="script"}
 <script src="/static/spl/order/index.js"></script>
+<script>
+  var orderTables;
+  require(["jquery.dataTables","icheck"],function(){
+    require(["dataTables.bootstrap"],function(){
+      $(document).ready(function(){
+        initPage();
+      });
+    })
+
+    function initPage(){
+      // datatable
+      orderTables = $('#example').DataTable({
+        //"paging": false, //设置是否分页
+        "info": false,  //去除左下角的信息
+        "lengthChange": false, //是否允许用户改变表格每页显示的记录数
+        "ordering": false, //是否允许Datatables开启排序
+        "searching": false,  //是否允许Datatables开启本地搜索
+        "processing": true,
+        //"serverSide": true,
+        "ajax": {
+          "url": '{:url("Order/getOrderList")}',
+          "type": "POST",
+          "data": function (parameter) {
+            parameter.status = $("#status").val();
+            parameter.quote_begintime = $("#quote_begintime").val();
+            parameter.quote_endtime = $("#quote_endtime").val();
+          }
+        },
+        "pageLength": 10,
+        language: {
+          "oPaginate": {
+            "sFirst": "首页",
+            "sPrevious": "上页",
+            "sNext": "下页",
+            "sLast": "末页"
+          },
+        },
+        "columns": [
+          { "data": "order_code" },
+          { "data": "exec_desc" },
+          { "data": "status" },
+          { "data": "contract_time" },
+          { "data": "order_code" },
+        ],
+        "drawCallback": function( settings ) {
+        },
+        "columnDefs": [
+          {
+            "targets": 4,
+            "data": null,
+            "render": function (data) {
+              var url = '{:url(\'Order/detail\')}?pr_code='+data;
+              return '<a href="javascript:void(0);"  data-open="'+url+'" >详情</a>';
+            }
+          }
+        ],
+      });
+    }
+  })
+  $("#searchVal").on('click', function () {
+    //console.log(orderTables);
+    orderTables.ajax.reload();
+  })
+</script>
 {/block}

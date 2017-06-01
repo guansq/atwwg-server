@@ -23,7 +23,7 @@ require(["laydate"],function(){
      */
     laydate({
       format : "YYYY-MM-DD",
-      istime : true,
+      //istime : true,
       isclear : true,
       istoday : true,
       issure : true

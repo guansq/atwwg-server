@@ -13,37 +13,39 @@ use controller\BasicSpl;
 use PHPExcel_IOFactory;
 use PHPExcel;
 class Offer extends Base{
-
     public function index(){
+        //获取报价中心状态
+        $status = ['init'=>'未报价','quoted'=>'已报价','winbid_uncheck'=>'中标但是需要审核','winbid_checked'=>'中标已经审核',
+            'winbid'=>'中标','giveupbid'=>'弃标','close'=>'已关闭'];
+        $this->assign('status',$status);
+        return view();
+    }
+
+    public function getOrderList(){
         $sup_code = session('spl_user')['sup_code'];
         $offerLogic = model('Offer','logic');
-        $quote_begintime = '';
-        $quote_endtime ='';
-        if (!$this->request->isGet()) {
-            $tmparray = [];
-            $data=input('param.');
-//            if(!empty()){
-//
-//            }
-            if(!empty($data['quote_begintime']) && !empty($data['quote_endtime'])){
-                session('spl_user.quote_begintime',$data['quote_begintime']);
-                $quote_begintime = $data['quote_begintime'];
-                session('spl_user.quote_endtime',$data['quote_endtime'])  ;
-                $quote_endtime = $data['quote_endtime'];
-                $tmparray['quote_date'] = array('between',array(strtotime($data['quote_begintime']),strtotime($data['quote_endtime'])));
-            }elseif(!empty($data['quote_begintime'])){
-                session('spl_user.quote_begintime',$data['quote_begintime'])  ;
-                $quote_begintime = $data['quote_begintime'];
-                $tmparray['quote_date'] = array('egt',strtotime($data['quote_begintime']));
-            }elseif(!empty($data['quote_endtime'])){
-                session('spl_user.quote_endtime',$data['quote_endtime'])  ;
-                $quote_endtime = $data['quote_endtime'];
-                $tmparray['quote_date'] = array('elt',strtotime($data['quote_endtime']));
+        $where = [];
+        $data = input('param.');
+//        var_dump( $data);
+        // 应用搜索条件
+        if (!empty($data)){
+            foreach (['status'] as $key) {
+                if (isset($data[$key]) && $data[$key] !== '' ) {
+                    if($key == 'status' && $data[$key] == 'all') {
+                           continue;
+                    }
+                    $where[$key] =  $data[$key];
+                }
             }
-            $list = $offerLogic->getOfferInfo($sup_code,$tmparray);
-        }else{
-            $list = $offerLogic->getOfferInfo($sup_code);
+            if(!empty($data['quote_begintime']) && !empty($data['quote_endtime'])){
+                $where['quote_date'] = array('between',array(strtotime($data['quote_begintime']),strtotime($data['quote_endtime'])));
+            }elseif(!empty($data['quote_begintime'])){
+                $where['quote_date'] = array('egt',strtotime($data['quote_begintime']));
+            }elseif(!empty($data['quote_endtime'])){
+                $where['quote_date'] = array('elt',strtotime($data['quote_endtime']));
+            }
         }
+        $list = $offerLogic->getOfferInfo($sup_code,$where);
         //状态init=未报价  quoted=已报价  winbid=中标 giveupbid=弃标  close=已关闭
         foreach($list as $k => $v){
             if(in_array($v['status'],['init'])){
@@ -51,15 +53,17 @@ class Offer extends Base{
             }else{
                 $list[$k]['showinfo'] = 'disabled';
             }
-            $list[$k]['total_price'] = ($v['price_num']*$v['quote_price'])*(1+$v['tax_rate']);
+            $list[$k]['promise_date']  =  empty($v['promise_date'])?'':date('Y-m-d',$v['promise_date']);
+            $list[$k]['quote_date']  =  empty($v['quote_date'])?'--':date('Y-m-d H:i:s',$v['quote_date']);
+            $list[$k]['quote_endtime']  =  empty($v['quote_endtime'])?'--':date('Y-m-d H:i:s',$v['quote_endtime']);
+            $list[$k]['req_date']  =  empty($v['req_date'])?'--':date('Y-m-d H:i:s',$v['req_date']);
+            $list[$k]['total_price'] = ($v['price_num']*$v['quote_price']);
         }
-        //var_dump($list);
-        $this->assign('quote_begintime',$quote_begintime);
-        $this->assign('quote_endtime',$quote_endtime);
-        $this->assign('list',$list);
-        return view();
+        //dump($returnInfo);
+        $info = ['draw'=>time(),'data'=>$list,'extData'=>[],];
+        return json($info);
     }
-
+    //修改包价
     public function savePrice(){
         $data=input('param.');
         $result = $this->validate($data,'Offer');
@@ -79,7 +83,7 @@ class Offer extends Base{
         //dump($list);die;
         if($list !== false){
             $info = $offerLogic->getOneById($key);
-            $total_price = ($info['price_num']*$info['quote_price'])*(1+$info['tax_rate']);
+            $total_price = ($info['price_num']*$info['quote_price']);
             //dump($offerLogic->toArray());die;
             return json(['code'=>2000,'msg'=>'成功','data'=>['total_price'=>$total_price]]);
         }else{
@@ -114,9 +118,8 @@ class Offer extends Base{
                 ->setCellValue('E'.$num,$v['tc_uom'])->setCellValue('F'.$num,date('Y-m-d H:i:s',$v['quote_date']))
                 ->setCellValue('G'.$num,date('Y-m-d H:i:s',$v['quote_endtime']))
                 ->setCellValue('H'.$num,date('Y-m-d H:i:s',$v['req_date']))->setCellValue('I'.$num,date('Y-m-d',$v['req_date']))
-                ->setCellValue('J'.$num,$v['quote_price'])->setCellValue('K'.$num,($v['price_num']*$v['quote_price'])*(1+$v['tax_rate']))
+                ->setCellValue('J'.$num,$v['quote_price'])->setCellValue('K'.$num,($v['price_num']*$v['quote_price']))
                 ->setCellValue('L'.$num,$v['remark']);
-
         }
         $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel,'Excel2007');//按照指定格式生成Excel文件，'Excel2007’表示生成2007版本的xlsx，
         $PHPWriter->save($path.'/queryList.xlsx'); //表示在$path路径下面生成itemList.xlsx文件
@@ -135,7 +138,6 @@ class Offer extends Base{
     }
 
     public function uploadexcel(){
-
         //$file = request()->file('excel');
         //$info = $file->validate(['size'=>102400,'ext'=>'xlsx,xls,csv'])->move(ROOT_PATH . 'public' . DS . 'upload','');
         $path = input('src');
@@ -171,7 +173,8 @@ class Offer extends Base{
                 if(!empty($info) && isset($info['status']) && $info['status']=='init' ){//不存在
                     $key = $data['id'];
                     $dataArr = [
-                        'req_date' => strtotime($data['req_date']),
+                        'quote_date'=>time(),
+                        'promise_date' => strtotime($data['req_date']),
                         'quote_price' => $data['quote_price'],
                         'remark' => $data['remark'],
                     ];

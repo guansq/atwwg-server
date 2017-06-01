@@ -12,39 +12,79 @@ use think\Db;
 use controller\BasicSpl;
 
 class Order extends Base{
-
-    public function index(){
-        // atw_po_item
+    public function getOrderList(){
         $offerLogic = model('Order','logic');
         $sup_code = session('spl_user')['sup_code'];
-        $list = $offerLogic->getOrderListInfo($sup_code);
-        $listInfo = [];
-        if(!empty($list)){
-            foreach($list  as $key => $item){
-             //   var_dump($item);
-                $listInfo[$item['po_code']]['contract_time'] = empty($item['contract_time']) ?'--':date('Y-m-d',$item['contract_time']);
-//                $listInfo[$item['po_code']]['arv_goods_num_total']  = empty( $listInfo[$item['po_code']]['arv_goods_num_total'] )?'0': $listInfo[$item['po_code']]['arv_goods_num_total'] ;
-//                $listInfo[$item['po_code']]['pro_goods_num_total']  = empty( $listInfo[$item['po_code']]['pro_goods_num_total'] )?'0': $listInfo[$item['po_code']]['pro_goods_num_total'] ;
-//                $listInfo[$item['po_code']]['arv_goods_num_total'] += $item['arv_goods_num'];
-//                $listInfo[$item['po_code']]['pro_goods_num_total'] += $item['pro_goods_num'];
-//                $list[$key]['contract_time'] = date('Y-m-d',$item['contract_time']);
-//                $list[$key]['content']='到货数量:'.$item['arv_goods_num'].'---未到货数量:'.$item['pro_goods_num'];
-                $statusinfo = '';
-                $orderStatus = array('init'=>'初始','sup_cancel'=>'供应商取消',
-                    'sup_edit'=>'供应商修改','atw_sure'=>'安特威确定',
-                    'sup_sure'=>'供应商确定/待上传合同','upload_contract'=>'供应商已经上传合同',
-                    'contract_pass'=>'合同审核通过','contract_refuse'=>'合同审核拒绝',
-                    'executing'=>'执行中','finish'=> '结束'
-                );
-                $listInfo[$item['po_code']]['content'] = empty($listInfo[$item['po_code']]['content'])?'':$listInfo[$item['po_code']]['content'];
-                $listInfo[$item['po_code']]['content'] .=$item['item_code'].'到货数量:'.(empty($item['arv_goods_num'])?0:$item['arv_goods_num']).'---未到货数量:'.(empty($item['pro_goods_num'])?0:$item['pro_goods_num']).'<br>';
-
-                $statusinfo = $orderStatus[$item['status']];
-                $listInfo[$item['po_code']]['statusinfo'] = $statusinfo;
+        $where = ['sup_code'=>$sup_code];
+        $data = input('param.');
+//        var_dump( $data);
+        // 应用搜索条件
+        if (!empty($data)){
+            foreach (['status'] as $key) {
+                if (isset($data[$key]) && $data[$key] !== '' ) {
+                    if($key == 'status' && $data[$key] == 'all') {
+                        continue;
+                    }
+                    $where[$key] =  $data[$key];
+                }
+            }
+            if(!empty($data['quote_begintime']) && !empty($data['quote_endtime'])){
+                $where['create_at'] = array('between',array(strtotime($data['quote_begintime']),strtotime($data['quote_endtime'])));
+            }elseif(!empty($data['quote_begintime'])){
+                $where['create_at'] = array('egt',strtotime($data['quote_begintime']));
+            }elseif(!empty($data['quote_endtime'])){
+                $where['create_at'] = array('elt',strtotime($data['quote_endtime']));
             }
         }
-      //  var_dump($listInfo);
-        $this->assign('list',$listInfo);
+        $list = $offerLogic->getPolist($where);
+        $returnInfo = [];
+        $status = [
+            '' => '',
+            'init' => '待签订',
+            'sup_cancel' => '供应商取消',
+            'sup_edit' => '供应商修改',
+            'atw_sure' => '安特威确定',
+            'sup_sure' => '供应商确定/待上传合同',
+            'upload_contract' => '供应商已经上传合同',
+            'contract_pass' => '合同审核通过',
+            'contract_refuse' => '合同审核拒绝',
+            'executing' => '执行中',
+            'finish' => '结束',
+        ];
+       // var_dump($list);
+        foreach($list as $k => $v){
+            $returnInfo[$k]['checked'] = $v['id'];
+            $exec_desc = '';
+            if(!empty($itemInfo = $offerLogic->getPoItemInfo($v['id']))){
+                foreach($itemInfo as $vv){
+                    $vv['arv_goods_num'] = $vv['arv_goods_num'] == '' ? 0 : $vv['arv_goods_num'];
+                    $vv['pro_goods_num'] = $vv['pro_goods_num'] == '' ? 0 : $vv['pro_goods_num'];
+                    $exec_desc .= '物料名称：'.$vv['item_name'].'; '.'到货数量：'.$vv['arv_goods_num'].'; 未到货数量：'.$vv['pro_goods_num'].'<br>';
+                }
+                $returnInfo[$k]['exec_desc'] = $exec_desc;
+            }else{
+                $returnInfo[$k]['exec_desc'] = '';
+            }
+            $returnInfo[$k]['order_code'] = $v['order_code'];
+            $returnInfo[$k]['pr_code'] = $v['pr_code'];
+          //  $returnInfo[$k]['pr_date'] = date('Y-m-d',$offerLogic->getPrDate($v['pr_code']));
+            $returnInfo[$k]['create_at'] = date('Y-m-d',$v['create_at']);
+            $returnInfo[$k]['status'] = $status[$v['status']];
+            $returnInfo[$k]['contract_time'] = empty($v['contract_time']) ?'--':date('Y-m-d',$v['contract_time']);
+            $returnInfo[$k]['detail'] = $v['id'];
+        }
+        //dump($returnInfo);
+        $info = ['draw'=>time(),'data'=>$returnInfo,'extData'=>[],];
+        return json($info);
+    }
+    public function index(){
+        $orderStatus = array('init'=>'待签订','sup_cancel'=>'供应商取消',
+            'sup_edit'=>'供应商修改','atw_sure'=>'安特威确定',
+            'sup_sure'=>'供应商确定/待上传合同','upload_contract'=>'供应商已经上传合同',
+            'contract_pass'=>'合同审核通过','contract_refuse'=>'合同审核拒绝',
+            'executing'=>'执行中','finish'=> '结束'
+        );
+        $this->assign('orderstatus',$orderStatus);
         return view();
     }
     public function detail(){
@@ -57,14 +97,12 @@ class Order extends Base{
             $detail[$key]['times'] = (!empty($result)?count($result):0);
         }
         $codeInfo = $offerLogic->getOrderListOneInfo($pr_code);
-
-        $contractable = in_array($codeInfo[0]['status'],array('atw_sure','sup_sure','upload_contract'))?'1':'0';
-        $cancelable = in_array($codeInfo[0]['status'],array('sup_cancel'))?'1':'0';
-        $confirmorderable = in_array($codeInfo[0]['status'],array('sup_sure'))?'1':'0';
-        $confirmable = in_array($codeInfo[0]['status'],array('init','sup_edit'))?'1':'0';
+        $contractable = in_array($codeInfo[0]['status'],array('sup_sure','upload_contract'))?'1':'0';
+        $cancelable = in_array($codeInfo[0]['status'],array('init','atw_sure'))?'1':'0';
+        $confirmorderable = in_array($codeInfo[0]['status'],array('init','atw_sure'))?'1':'0';
+        $confirmable = in_array($codeInfo[0]['status'],array('init','sup_edit','atw_sure'))?'1':'0';
         $statusButton = array('contractable'=>$contractable,'cancelable'=>$cancelable,
             'confirmable'=>$confirmable,'confirmorderable'=>$confirmorderable);
-
         $imgInfos = explode(',',$codeInfo[0]['contract']);
         $imgInfos=array_filter($imgInfos);
         $this->assign('statusButton',$statusButton);
@@ -94,7 +132,6 @@ class Order extends Base{
             return json(['code'=>4000,'msg'=>'更新失败','data'=>[]]);
         }
     }
-
 
     public function updateSupconfirmdate(){
         $pr_code = input('pr_code');

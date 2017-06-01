@@ -12,7 +12,7 @@ use app\common\model\Po;
 use app\common\model\PoItem;
 
 class Offer extends BaseLogic{
-
+    //获得报价中心列表
     function getOfferInfo($sup_code,$where=''){
         if(!empty($where)){
             $list = IoModel::where('sup_code',"$sup_code")->where($where)->order('create_at desc')->select();
@@ -25,14 +25,13 @@ class Offer extends BaseLogic{
         }
         return $list;
     }
-
-
+    //更改交期
     function updateData($key,$dataArr){
         $result = model('Io')->where('id',$key)->update($dataArr);
         //echo $this->getLastSql();die;
         return $result;
     }
-
+    //获取报价单条信息
     function getOneById($Id){
         $result = IoModel::where('id',$Id)->find($Id);
         return $result;

@@ -33,10 +33,20 @@ class Material extends BaseController{
 
     public function getSupList(){
 
+        $get = input('param.');
+        //dump($requestInfo);die;
+        $where = [];
+        // 应用搜索条件
+        foreach (['main_name', 'desc', 'code', 'pur_attr'] as $key) {
+            if (isset($get[$key]) && $get[$key] !== '') {
+                $where[$key] = ['like',"%{$get[$key]}%"];
+            }
+        }
+        //dump($data);
         $start = input('start') == '' ? 0 : input('start');
         $length = input('length') == '' ? 10 : input('length');
         $logicItemInfo = Model('Item','logic');
-        $list = $logicItemInfo->getListInfo($start,$length);
+        $list = $logicItemInfo->getListInfo($start,$length,$where);
         $returnArr = [];
         foreach($list as $k => $v){
             //$v['arv_rate'] = $v['arv_rate'] == '' ? '暂无数据' : $v['arv_rate'];
@@ -55,7 +65,7 @@ class Material extends BaseController{
             ];
 
         }
-        $info = ['draw'=>time(),'recordsTotal'=>$logicItemInfo->getListNum(),'recordsFiltered'=>$logicItemInfo->getListNum(),'data'=>$returnArr];
+        $info = ['draw'=>time(),'recordsTotal'=>$logicItemInfo->getListNum($where),'recordsFiltered'=>$logicItemInfo->getListNum($where),'data'=>$returnArr,'extdata'=>$where];
 
         return json($info);
         //dump($list);

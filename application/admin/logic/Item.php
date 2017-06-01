@@ -29,8 +29,12 @@ class Item extends Baselogic{
     /*
      * 得到U9供应商数据分页
      */
-    public function getListInfo($start,$length){
-        $list = ItemModel::limit("$start,$length")->select();
+    public function getListInfo($start,$length,$where = []){
+        if(empty($where)){
+            $list = ItemModel::limit("$start,$length")->select();
+        }else{
+            $list = ItemModel::where($where)->limit("$start,$length")->select();
+        }
         if($list) {
             $list = collection($list)->toArray();
         }
@@ -52,8 +56,12 @@ class Item extends Baselogic{
     /*
      * 得到U9供应商数据总数
      */
-    public function getListNum(){
-        $num = model('Item')->count();
+    public function getListNum($where = []){
+        if(empty($where)){
+            $num = model('Item')->count();
+        }else{
+            $num = model('Item')->where($where)->count();
+        }
         //dump($list);die;
         return $num;
     }

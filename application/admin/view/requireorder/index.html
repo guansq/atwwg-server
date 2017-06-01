@@ -219,7 +219,7 @@
 
           Global.item_code = $(this).attr("data-item_code");
           Global.pr_code = $(this).attr("data-pr_code");
-          var newhtml ="<a onclick=\"bomb_box(event,'"+$(this).attr("data-pr_code")+"','"+ $(this).attr("data-item_code")+"');\" class='select_sell' data-url='{:url(\"Requireorder/showSelectSup\")}/pr_code/"+Global.pr_code+"/item_code/"+Global.item_code+"'>选择供应商</a>";
+          var newhtml ="<a onclick=\"bomb_box(event,'"+$(this).attr("data-pr_code")+"','"+ $(this).attr("data-item_code")+"','"+ $(this).attr("data-pr_id")+"');\" class='select_sell' data-url='{:url(\"Requireorder/showSelectSup\")}/pr_code/"+Global.pr_code+"/item_code/"+Global.item_code+"'>选择供应商</a>";
 
           if($(this).is(':checked')){
             _this.parent().next().html(newhtml);
@@ -235,7 +235,7 @@
           };
           $.post("{:url('Requireorder/changeInquiType')}",sendObj,function(res){
             if(res.code == 2000){
-              $.form.reload();
+              //$.form.reload();
             }else{
               alert("请求失败");
             }
@@ -246,7 +246,7 @@
   }
   // 打开弹框
 
-  function bomb_box(event,pr_code,item_code){
+  function bomb_box(event,pr_code,item_code,item_id){
     //event.preventDefault();
     $.post("{:url('Requireorder/showSelectSup')}",{pr_code:pr_code,item_code:item_code},function(resDate){
       if(resDate.length >0){
@@ -263,7 +263,7 @@
 //            status = '禁用';
 //            diabled = 'disabled="true"';
 //          }
-          tmphtml +=  '<tr><td><input class="listcheck" name="listcheck" type="checkbox" '+diabled+' value="'+resDate[i]["item_code"]+'" data-pr_code="'+resDate[i]["pr_code"]+'"data-sup_code="'+resDate[i]["sup_code"]+'"></td><td>'+resDate[i]["item_code"]+'</td><td>'+resDate[i]["sup_name"]+'</td><td>'+status+'</td></tr>';
+          tmphtml +=  '<tr><td><input class="listcheck" name="listcheck" type="checkbox" '+diabled+' data-pr_id="'+item_id+'" value="'+resDate[i]["item_code"]+'" data-pr_code="'+resDate[i]["pr_code"]+'"data-sup_code="'+resDate[i]["sup_code"]+'"></td><td>'+resDate[i]["item_code"]+'</td><td>'+resDate[i]["sup_name"]+'</td><td>'+status+'</td></tr>';
         }
         $(".listcheck").click(function () {
           $("[name='listcheck']").removeAttr("checked");//取消全选
@@ -286,7 +286,8 @@
       flag = 1;
       appoint_sup_code = $(this).attr('data-sup_code');
       pr_code   = $(this).attr('data-pr_code');
-      item_code = $(this).attr('data-item_code');
+      pr_id   = $(this).attr('data-pr_id');
+      item_code = $(this).val();
       appoint_sup_name=  $(this).parent().next().next().html();
 
     });
@@ -295,7 +296,7 @@
       alert('选中一个才能提交');
       return;
     }
-    console.log(item_code);return;
+    //console.log(item_code);return;
     var sendObj ={
       'is_appoint_sup' :   1,
       'appoint_sup_code' : appoint_sup_code ,
@@ -306,7 +307,7 @@
     $.post("{:url('Requireorder/savePr')}",sendObj,function(res){
       if(res.code == 2000){
         $(".barcode_box").css("display","none");
-        $("input[data-pr_code^="+pr_code+"]") .parent().next().html(res.data.sup_name)
+        $("input[data-pr_id^="+pr_id+"]") .parent().next().html(res.data.sup_name)
 
       }else{
         alert("请求失败");

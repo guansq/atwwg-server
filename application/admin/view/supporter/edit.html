@@ -200,8 +200,9 @@
     <div class="aptitude">
       <h4>企业资质</h4>
       <table class="table table-bordered">
+        {volist name="supQuali" id="vo"}
         <tr class="tr_tit">
-          <td>营业执照</td>
+          <td>{$vo['name']}</td>
           <td></td>
         </tr>
         <tr class="tr_con">
@@ -209,228 +210,25 @@
             <img class="" src="/static/admin/img/entering_pic.png" alt="">
             <section class="dis_inb ml_20 w75b">
               <label class="mr_15">证件有效期</label>
-              <input type="text" class="date_time form-control w30b">
+              <input type="text" class="date_time form-control w30b" disabled value="{$vo['term_start']|date='Y-m-d',###}">
               到
-              <input type="text" class="date_time form-control w30b">
+              <input type="text" class="date_time form-control w30b" disabled value="{$vo['term_end']|date='Y-m-d',###}">
             </section>
           </td>
           <td>
             <section class="btn_box">
-              <button type="button" class="btn btn-success">通过</button>
-              <button type="button" class="btn btn-warning">拒绝</button>
+              {if $vo.status eq ''}
+              <button type="button" class="btn btn-success" onclick="changeStauts('{$vo.id}','agree');">通过</button>
+              <button type="button" class="btn btn-warning" onclick="changeStauts('{$vo.id}','refuse');">拒绝</button>
+              {elseif $vo.status eq 'agree' /}
+              <button type="button" class="btn btn-success" disabled>已通过</button>
+              {elseif $vo.status eq 'refuse' /}
+              <button type="button" class="btn btn-warning" disabled>已拒绝</button>
+              {/if}
             </section>
           </td>
         </tr>
-        <tr class="tr_tit">
-          <td>税务登记证</td>
-          <td></td>
-        </tr>
-        <tr class="tr_con">
-          <td>
-            <img class="" src="/static/admin/img/entering_pic.png" alt="">
-            <section class="dis_inb ml_20 w75b">
-              <label class="mr_15">证件有效期</label>
-              <input type="text" class="date_time form-control w30b">
-              到
-              <input type="text" class="date_time form-control w30b">
-            </section>
-          </td>
-          <td>
-            <section class="btn_box">
-              <button type="button" class="btn btn-success">通过</button>
-              <button type="button" class="btn btn-warning">拒绝</button>
-            </section>
-          </td>
-        </tr>
-        <tr class="tr_tit">
-          <td>组织代码证</td>
-          <td></td>
-        </tr>
-        <tr class="tr_con">
-          <td>
-            <img class="" src="/static/admin/img/entering_pic.png" alt="">
-            <section class="dis_inb ml_20 w75b">
-              <label class="mr_15">证件有效期</label>
-              <input type="text" class="date_time form-control w30b">
-              到
-              <input type="text" class="date_time form-control w30b">
-            </section>
-          </td>
-          <td>
-            <section class="btn_box">
-              <button type="button" class="btn btn-success">通过</button>
-              <button type="button" class="btn btn-warning">拒绝</button>
-            </section>
-          </td>
-        </tr>
-        <tr class="tr_tit">
-          <td>ISO90001</td>
-          <td></td>
-        </tr>
-        <tr class="tr_con">
-          <td>
-            <img class="" src="/static/admin/img/entering_pic.png" alt="">
-            <section class="dis_inb ml_20 w75b">
-              <label class="mr_15">证件有效期</label>
-              <input type="text" class="date_time form-control w30b">
-              到
-              <input type="text" class="date_time form-control w30b">
-            </section>
-          </td>
-          <td>
-            <section class="btn_box">
-              <button type="button" class="btn btn-success">通过</button>
-              <button type="button" class="btn btn-warning">拒绝</button>
-            </section>
-          </td>
-        </tr>
-        <tr class="tr_tit">
-          <td>TS认证</td>
-          <td></td>
-        </tr>
-        <tr class="tr_con">
-          <td>
-            <img class="" src="/static/admin/img/entering_pic.png" alt="">
-            <section class="dis_inb ml_20 w75b">
-              <label class="mr_15">证件有效期</label>
-              <input type="text" class="date_time form-control w30b">
-              到
-              <input type="text" class="date_time form-control w30b">
-            </section>
-          </td>
-          <td>
-            <section class="btn_box">
-              <button type="button" class="btn btn-success">通过</button>
-              <button type="button" class="btn btn-warning">拒绝</button>
-            </section>
-          </td>
-        </tr>
-        <tr class="tr_tit">
-          <td>PED</td>
-          <td></td>
-        </tr>
-        <tr class="tr_con">
-          <td>
-            <img class="" src="/static/admin/img/entering_pic.png" alt="">
-            <section class="dis_inb ml_20 w75b">
-              <label class="mr_15">证件有效期</label>
-              <input type="text" class="date_time form-control w30b">
-              到
-              <input type="text" class="date_time form-control w30b">
-            </section>
-          </td>
-          <td>
-            <section class="btn_box">
-              <button type="button" class="btn btn-success">通过</button>
-              <button type="button" class="btn btn-warning">拒绝</button>
-            </section>
-          </td>
-        </tr>
-        <tr class="tr_tit">
-          <td>API</td>
-          <td></td>
-        </tr>
-        <tr class="tr_con">
-          <td>
-            <img class="" src="/static/admin/img/entering_pic.png" alt="">
-            <section class="dis_inb ml_20 w75b">
-              <label class="mr_15">证件有效期</label>
-              <input type="text" class="date_time form-control w30b">
-              到
-              <input type="text" class="date_time form-control w30b">
-            </section>
-          </td>
-          <td>
-            <section class="btn_box">
-              <button type="button" class="btn btn-success">通过</button>
-              <button type="button" class="btn btn-warning">拒绝</button>
-            </section>
-          </td>
-        </tr>
-        <tr class="tr_tit">
-          <td>CE</td>
-          <td></td>
-        </tr>
-        <tr class="tr_con">
-          <td>
-            <img class="" src="/static/admin/img/entering_pic.png" alt="">
-            <section class="dis_inb ml_20 w75b">
-              <label class="mr_15">证件有效期</label>
-              <input type="text" class="date_time form-control w30b">
-              到
-              <input type="text" class="date_time form-control w30b">
-            </section>
-          </td>
-          <td>
-            <section class="btn_box">
-              <button type="button" class="btn btn-success">通过</button>
-              <button type="button" class="btn btn-warning">拒绝</button>
-            </section>
-          </td>
-        </tr>
-        <tr class="tr_tit">
-          <td>SIL</td>
-          <td></td>
-        </tr>
-        <tr class="tr_con">
-          <td>
-            <img class="" src="/static/admin/img/entering_pic.png" alt="">
-            <section class="dis_inb ml_20 w75b">
-              <label class="mr_15">证件有效期</label>
-              <input type="text" class="date_time form-control w30b">
-              到
-              <input type="text" class="date_time form-control w30b">
-            </section>
-          </td>
-          <td>
-            <section class="btn_box">
-              <button type="button" class="btn btn-success">通过</button>
-              <button type="button" class="btn btn-warning">拒绝</button>
-            </section>
-          </td>
-        </tr>
-        <tr class="tr_tit">
-          <td>SIL</td>
-          <td></td>
-        </tr>
-        <tr class="tr_con">
-          <td>
-            <img class="" src="/static/admin/img/entering_pic.png" alt="">
-            <section class="dis_inb ml_20 w75b">
-              <label class="mr_15">证件有效期</label>
-              <input type="text" class="date_time form-control w30b">
-              到
-              <input type="text" class="date_time form-control w30b">
-            </section>
-          </td>
-          <td>
-            <section class="btn_box">
-              <button type="button" class="btn btn-success">通过</button>
-              <button type="button" class="btn btn-warning">拒绝</button>
-            </section>
-          </td>
-        </tr>
-        <tr class="tr_tit">
-          <td>其他</td>
-          <td></td>
-        </tr>
-        <tr class="tr_con">
-          <td>
-            <img class="" src="/static/admin/img/entering_pic.png" alt="">
-            <section class="dis_inb ml_20 w75b">
-              <label class="mr_15">证件有效期</label>
-              <input type="text" class="date_time form-control w30b">
-              到
-              <input type="text" class="date_time form-control w30b">
-            </section>
-          </td>
-          <td>
-            <section class="btn_box">
-              <button type="button" class="btn btn-success">通过</button>
-              <button type="button" class="btn btn-warning">拒绝</button>
-            </section>
-          </td>
-        </tr>
+        {/volist}
       </table>
     </div>
   </div>
@@ -440,4 +238,22 @@
 
 {block name="script"}
 <script src="/static/admin/supporter/edit.js"/>
+<script>
+  function changeStauts(){
+    layer.confirm('确认该操作吗？', {
+      btn: ['提交','取消'], //按钮
+      shade: false //不显示遮罩
+    }, function(index){
+      url = '{:url("Supporter/changeQualiStatus")}';
+      console.log
+      $.post(url,data,function(){
+
+      });
+      console.log(123456);
+      //$("#form 的 id").submit();
+      //layer.close(index);
+    });
+
+  }
+</script>
 {/block}

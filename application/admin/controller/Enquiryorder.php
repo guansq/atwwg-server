@@ -100,6 +100,13 @@ class Enquiryorder extends BaseController{
     }
 
     public function particulars(){
+        //列出所有的询价单
+        //echo input('param.io_code');
+        $ioCode = input('param.io_code');
+        $logicIoInfo = Model('Io','logic');
+        $info = $logicIoInfo->getIoInfo($ioCode);
+        $this->assign('ioInfo',$info);
+        //dump($info);
         return view();
     }
 

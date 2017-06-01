@@ -35,4 +35,12 @@ class Io extends BaseLogic{
          $count = IoModel::where($where)->count();
          return $count;
      }
+
+     function getIoInfo($io_code){
+         $list = IoModel::alias('a')->field('a.id,a.sup_name,a.quote_price,a.quote_date,b.ctc_name,b.mobile,b.email')->join('supplier_info b','a.sup_code=b.code')->where('io_code',"$io_code")->select();
+         if($list){
+             $list = collection($list)->toArray();
+         }
+         return $list;
+     }
 }

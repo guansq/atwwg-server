@@ -74,66 +74,20 @@
           <th>操作</th>
         </tr>
         </thead>
+        {volist name='ioInfo' id='vo'}
         <tr>
           <td>
-            <input type="checkbox">
+            <input type="checkbox" value="{$vo.id}">
           </td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>{$vo.sup_name}</td>
+          <td>{$vo.quote_price}</td>
+          <td>{$vo.quote_date|date='y-m-d',###}</td>
+          <td>{$vo.ctc_name}</td>
+          <td>{$vo.mobile}</td>
+          <td>{$vo.email}</td>
           <td><button type="button" class="btn btn-info">发消息</button></td>
         </tr>
-        <tr>
-          <td>
-            <input type="checkbox">
-          </td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td><button type="button" class="btn btn-info">发消息</button></td>
-        </tr>
-        <tr>
-          <td>
-            <input type="checkbox">
-          </td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td><button type="button" class="btn btn-info">发消息</button></td>
-        </tr>
-        <tr>
-          <td>
-            <input type="checkbox">
-          </td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td><button type="button" class="btn btn-info">发消息</button></td>
-        </tr>
-        <tr>
-          <td>
-            <input type="checkbox">
-          </td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td><button type="button" class="btn btn-info">发消息</button></td>
-        </tr>
+        {/volist}
       </table>
     </div>
   </div>

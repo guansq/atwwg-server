@@ -17,6 +17,7 @@ class Order extends Base{
         // atw_po_item
         $offerLogic = model('Order','logic');
         $sup_code = session('spl_user')['sup_code'];
+
         $list = $offerLogic->getOrderListInfo($sup_code);
         $listInfo = [];
         if(!empty($list)){
@@ -30,7 +31,7 @@ class Order extends Base{
 //                $list[$key]['contract_time'] = date('Y-m-d',$item['contract_time']);
 //                $list[$key]['content']='到货数量:'.$item['arv_goods_num'].'---未到货数量:'.$item['pro_goods_num'];
                 $statusinfo = '';
-                $orderStatus = array('init'=>'初始','sup_cancel'=>'供应商取消',
+                $orderStatus = array('init'=>'未签订','sup_cancel'=>'供应商取消',
                     'sup_edit'=>'供应商修改','atw_sure'=>'安特威确定',
                     'sup_sure'=>'供应商确定/待上传合同','upload_contract'=>'供应商已经上传合同',
                     'contract_pass'=>'合同审核通过','contract_refuse'=>'合同审核拒绝',

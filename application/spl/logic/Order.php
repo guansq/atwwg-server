@@ -7,14 +7,13 @@
  */
 namespace app\spl\logic;
 use app\common\model\PoItem;
-use think\Model;
 use app\common\model\PoRecord;
 use app\common\model\Po;
 class Order extends BaseLogic{
     //获取订单中心列表
     function getOrderListInfo($sup_code=''){
-        $list = Po::alias('a')->field('b.po_code,a.order_code,a.status,b.arv_goods_num,b.pro_goods_num,a.contract_time,item_code')->join('po_item b','a.order_code= b.po_code')->where(['sup_code'=>$sup_code])->order('a.create_at desc')->select();
-       // echo $this->getLastSql();//die;
+        $list = Po::alias('po')->field('pi.po_code,po.order_code,po.status,pi.arv_goods_num,pi.pro_goods_num,po.contract_time,pi.item_code')->join('po_item pi','po.id = pi.po_id')->where(['sup_code'=>$sup_code])->order('po.create_at desc')->select();
+        //echo $this->getLastSql();//die;
         if($list){
             $list = collection($list)->toArray();
         }
@@ -29,10 +28,10 @@ class Order extends BaseLogic{
         }
         return $list;
     }
+
     //修改订单状态
     function updateStatus($pr_code,$status='sup_cancel'){
         $list = Po::where(['order_code'=>$pr_code])->update(['status'=>$status]);
-
         return $list;
     }
     //更新交期时间

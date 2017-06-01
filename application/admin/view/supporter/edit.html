@@ -138,13 +138,13 @@
         <div class="form-group col-sm-6">
           <label class="col-sm-2 control-label">技术分</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" value="88" disabled>
+            <input type="text" class="form-control" value="{$sup_info['tech_score']}" disabled>
           </div>
         </div>
         <div class="form-group col-sm-6">
           <label class="col-sm-2 control-label">责任采购</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" placeholder="责任采购" disabled>
+            <input type="text" class="form-control" value="{$sup_info['purch_code']}-{$sup_info['purch_name']}" placeholder="责任采购" disabled>
             <!--<select class="form-control">-->
               <!--<option>8080-wyh</option>-->
               <!--<option>8081-why</option>-->
@@ -154,21 +154,21 @@
         <div class="form-group col-sm-6">
           <label class="col-sm-2 control-label">信用等级</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" value="优秀" disabled>
+            <input type="text" class="form-control" value="{$sup_info['quali_level']}" disabled>
           </div>
         </div>
         <div class="form-group col-sm-6">
           <label class="col-sm-2 control-label">供应风险</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" value="极大" disabled>
+            <input type="text" class="form-control" value="{$sup_info['supply_risk']}" disabled>
           </div>
         </div>
         <div class="form-group col-sm-6">
           <label class="col-sm-2 control-label">质检方式</label>
           <div class="col-sm-10">
             <select class="form-control">
-              <option>抽检</option>
-              <option>全检</option>
+              <option {if $sup_info.check_type eq '抽检'}selected{/if} >抽检</option>
+              <option {if $sup_info.check_type eq '全检'}selected{/if} >全检</option>
             </select>
           </div>
         </div>
@@ -177,6 +177,17 @@
           <div class="col-sm-10">
             <input type="text" class="form-control" value="{$sup_info['check_rate']}" placeholder="抽检比例">
             <span class="scale_span">%</span>
+          </div>
+        </div>
+        <div class="form-group col-sm-6">
+          <label class="col-sm-2 control-label">付款方式状态</label>
+          <div class="col-sm-10">
+            <select class="form-control">
+              <option {if $sup_info.pay_way_status eq '正常'}selected{/if} >正常</option>
+              <option {if $sup_info.pay_way_status eq '禁用'}selected{/if} >禁用</option>
+              <option {if $sup_info.pay_way_status eq '待审核'}selected{/if} >待审核</option>
+            </select>
+            <button type="button" class="btn btn-success" onclick="">付款方式审核状态更改</button>
           </div>
         </div>
       </form>
@@ -191,7 +202,7 @@
         </tr>
         <tr>
           <td class="col-sm-1 tex_r">供应商资质评分</td>
-          <td class="col-sm-3">50</td>
+          <td class="col-sm-3">{$sup_info['quali_score']}</td>
           <td class="col-sm-1 tex_r"></td>
           <td class="col-sm-3"></td>
         </tr>
@@ -245,7 +256,6 @@
       shade: false //不显示遮罩
     }, function(index){
       url = '{:url("Supporter/changeQualiStatus")}';
-      console.log
       $.post(url,data,function(){
 
       });

@@ -21,7 +21,8 @@ class Supporter extends BaseController{
 
     public function index(){
         $this->assign('title',$this->title);
-
+        //得到供应商分类
+        $logicSupInfo = Model('Supporter','logic');
         return view();
     }
 
@@ -55,6 +56,16 @@ class Supporter extends BaseController{
         $length = input('length');
         $list = $logicSupInfo->getListInfo($start,$length);//分页
         $returnArr = [];
+        $status = [
+            '' => '待审核',
+            '正常' => '正常',
+            '禁用' => '禁用',
+        ];
+        $pay_way_status = [
+            '' => '待审核',
+            '正常' => '不需要审核',
+            '禁用' => '禁用',
+        ];
         foreach($list as $k => $v){
             $v['arv_rate'] = $v['arv_rate'] == '' ? '暂无数据' : $v['arv_rate'];
             $v['pp_rate'] = $v['pp_rate'] == '' ? '暂无数据' : $v['pp_rate'];
@@ -62,12 +73,12 @@ class Supporter extends BaseController{
                 'code' => $v['code'],
                 'name' => $v['name'],
                 'type_name' => $v['type_name'],
-                'tech_score' => $this->getTechScore(),
+                'tech_score' => getTechScore($v['code']),//技术分
                 'arv_rate' => $v['arv_rate'],
                 'pp_rate' => $v['pp_rate'],
-                'quali_score' => $this->getQualiScore(),
-                'status' => '正常',
-                'pay_type_status' => '正常',
+                'quali_score' => getQualiScore($v['code']),//质量分
+                'status' => $status[$v['status']],
+                'pay_type_status' => $pay_way_status[$v['pay_way_status']],
                 'quali' => '<a class="edit" href="javascript:void(0);" data-open="'.url('Supporter/edit',['id'=>$v['id']]).'" >查看</a>',
                 'action' => '<a class="edit" href="javascript:void(0);" data-open="'.url('Supporter/edit',['id'=>$v['id']]).'" >编辑</a>',
             ];
@@ -184,6 +195,10 @@ class Supporter extends BaseController{
         $sup_id = intval(input('param.id'));
         $logicSupInfo = Model('Supporter','logic');
         $sup_info = $logicSupInfo->getOneSupInfo($sup_id);//联合查询得到相关信息
+        $sup_info['tech_score'] = getTechScore($sup_info['code']);//技术分
+        $sup_info['supply_risk'] = getSupplyRisk($sup_info['code']);//供应风险
+        $sup_info['quali_level'] = getQualiLevel($sup_info['code']);//信用等级
+        $sup_info['quali_score'] = getQualiScore($sup_info['code']);//资质评分
         //dump($sup_info);
         //echo $busnessArr = ['营业执照','税务登记证','组织代码证','ISO90001','TS认证','PED0','API','CE','SIL','其他'];
         if($sup_info){
@@ -198,21 +213,9 @@ class Supporter extends BaseController{
     /*
      * 更改供应商资质status
      */
-    public function changeQualiStatus(){
+    public function changeQualiStatus($code){
 
     }
-    /*
-     * 得到技术评分
-     */
-    public function getTechScore(){
-        return '80分';
-    }
 
-    /*
-     * 供应商资质评分
-     */
-    public function getQualiScore(){
-        return '70分';
-    }
 
 }

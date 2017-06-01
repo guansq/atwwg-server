@@ -14,27 +14,28 @@
   <div class="mt_box">
     <div class="inquiry_box">
       <form class="form-inline">
-        <input type="text" class="form-control" placeholder="供应商编码">
-        <input type="text" class="form-control" placeholder="供应商名称">
+        <input type="text" class="form-control" id="code" placeholder="供应商编码">
+        <input type="text" class="form-control" id="name" placeholder="供应商名称">
         <select class="form-control">
           <option>供应商分类</option>
         </select>
-        <select class="form-control">
+        <select class="form-control" id="status">
           <option>状态</option>
+          <option>待审核</option>
           <option>正常</option>
           <option>禁用</option>
         </select>
-        <select class="form-control">
+        <select class="form-control" id="pay_way_status">
           <option>付款方式审核</option>
           <option>待审核</option>
           <option>不需要审核</option>
         </select>
-        <select class="form-control">
+        <!--<select class="form-control">
           <option>供应商资质审核</option>
           <option>待审核</option>
           <option>不需要审核</option>
-        </select>
-        <button type="button" class="btn btn-info">查询</button>
+        </select>-->
+        <button type="button" id="searchVal" class="btn btn-info">查询</button>
       </form>
     </div>
     <div class="mt_table">
@@ -78,7 +79,7 @@
  * 供应商管理页面
  * Created by Administrator on 2017/5/11.
  */
-
+var supporterTable;
 require(["jquery.dataTables","laydate","layui"],function(){
   require(["dataTables.bootstrap"],function(){
     $(document).ready(function(){
@@ -118,13 +119,16 @@ function initPage(){
   });
 
   //datatable
-  var table = $('#example').DataTable({
+  supporterTable = $('#example').DataTable({
 
     "processing": true,
     "serverSide": false,
     "ajax": {
       "url": '{:URL("Supporter/getSupList")}',
-      "type": "POST"
+      "type": "POST",
+      "data": function(parameter){
+
+      }
     },
     "pageLength": 10,
     "columns": [
@@ -188,7 +192,7 @@ function initPage(){
   });
   //删除物料
   $('#remove_btn').click( function () {
-    table.rows('.danger').remove().draw( false );
+    supporterTable.rows('.danger').remove().draw( false );
   } );
 
 
@@ -235,14 +239,10 @@ $("#excel_out").click(function(){
     window.open("{:url('Supporter/exportExcel')}");
   });
 })
-layui.use('upload', function(){
-  layui.upload({
-    url: ''
-    ,success: function(res, input){
-      console.log(res); //如：{"code":0 ,"msg":"","url":"http://cdn.abc.com/123.jpg"'}
-    }
-  });
-});
+$("#searchVal").on('click', function () {
+  //console.log(orderTables);
+  supporterTable.ajax.reload();
+})
 
 </script>
 {/block}

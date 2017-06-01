@@ -37,7 +37,7 @@ class Material extends BaseController{
         //dump($requestInfo);die;
         $where = [];
         // 应用搜索条件
-        foreach (['main_name', 'desc', 'code', 'pur_attr'] as $key) {
+        foreach (['main_name', 'name', 'code', 'pur_attr'] as $key) {
             if (isset($get[$key]) && $get[$key] !== '') {
                 $where[$key] = ['like',"%{$get[$key]}%"];
             }
@@ -54,7 +54,7 @@ class Material extends BaseController{
             $returnArr[] = [
                 'main_name' => $v['main_name'],//主分类
                 'code' => $v['code'],//料号
-                'desc' => $v['desc'],//物料描述
+                'name' => $v['name'],//物料描述
                 'pur_attr' => $v['pur_attr'],//物料采购属性
                 'future_scale' => $v['future_scale'],//货期让步比例
                 'price_weight' => $v['price_weight'],//价格权重

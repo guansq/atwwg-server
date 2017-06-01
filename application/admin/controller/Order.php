@@ -11,7 +11,7 @@ use controller\BasicAdmin;
 use service\LogService;
 use service\DataService;
 use think\Db;
-use Qiniu\Auth;
+//use Qiniu\Auth;
 use Qiniu\Processing\PersistentFop;
 
 class Order extends BaseController{

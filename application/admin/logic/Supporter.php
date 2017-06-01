@@ -85,7 +85,11 @@ class Supporter extends BaseLogic{
      * 得到供应商图片信息
      */
     public function getSupQuali($sup_code){
-        return $supQuali = model('SupplierQualification')->where("sup_code",$sup_code)->select();
+        $list = $supQuali = model('SupplierQualification')->where("sup_code",$sup_code)->select();
+        if($list){
+            $list = collection($list)->toArray();
+        }
+        return $list;
     }
 
     /*

@@ -177,19 +177,30 @@ class Supporter extends BaseController{
         }
     }
 
+    /*
+     * 供应商编辑页面展示
+     */
     public function edit(){
         $sup_id = intval(input('param.id'));
         $logicSupInfo = Model('Supporter','logic');
         $sup_info = $logicSupInfo->getOneSupInfo($sup_id);//联合查询得到相关信息
         //dump($sup_info);
+        //echo $busnessArr = ['营业执照','税务登记证','组织代码证','ISO90001','TS认证','PED0','API','CE','SIL','其他'];
         if($sup_info){
             $this->assign('sup_info',$sup_info);
             $supQuali = $logicSupInfo->getSupQuali($sup_info['code']);
+            $this->assign('supQuali',$supQuali);
             //dump($supQuali);
         }
         return view();
     }
 
+    /*
+     * 更改供应商资质status
+     */
+    public function changeQualiStatus(){
+
+    }
     /*
      * 得到技术评分
      */

@@ -33,10 +33,20 @@ class Material extends BaseController{
 
     public function getSupList(){
 
+        $get = input('param.');
+        //dump($requestInfo);die;
+        $where = [];
+        // 应用搜索条件
+        foreach (['main_name', 'name', 'code', 'pur_attr'] as $key) {
+            if (isset($get[$key]) && $get[$key] !== '') {
+                $where[$key] = ['like',"%{$get[$key]}%"];
+            }
+        }
+        //dump($data);
         $start = input('start') == '' ? 0 : input('start');
         $length = input('length') == '' ? 10 : input('length');
         $logicItemInfo = Model('Item','logic');
-        $list = $logicItemInfo->getListInfo($start,$length);
+        $list = $logicItemInfo->getListInfo($start,$length,$where);
         $returnArr = [];
         foreach($list as $k => $v){
             //$v['arv_rate'] = $v['arv_rate'] == '' ? '暂无数据' : $v['arv_rate'];
@@ -44,7 +54,7 @@ class Material extends BaseController{
             $returnArr[] = [
                 'main_name' => $v['main_name'],//主分类
                 'code' => $v['code'],//料号
-                'desc' => $v['desc'],//物料描述
+                'name' => $v['name'],//物料描述
                 'pur_attr' => $v['pur_attr'],//物料采购属性
                 'future_scale' => $v['future_scale'],//货期让步比例
                 'price_weight' => $v['price_weight'],//价格权重
@@ -55,7 +65,7 @@ class Material extends BaseController{
             ];
 
         }
-        $info = ['draw'=>time(),'recordsTotal'=>$logicItemInfo->getListNum(),'recordsFiltered'=>$logicItemInfo->getListNum(),'data'=>$returnArr];
+        $info = ['draw'=>time(),'recordsTotal'=>$logicItemInfo->getListNum($where),'recordsFiltered'=>$logicItemInfo->getListNum($where),'data'=>$returnArr,'extdata'=>$where];
 
         return json($info);
         //dump($list);
@@ -210,6 +220,11 @@ class Material extends BaseController{
                 $dataInfo['main_name'] = $objPHPExcel->getActiveSheet()->getCell("D".$currentRow)->getValue();//获取D列的值
                 $dataInfo['desc'] = $objPHPExcel->getActiveSheet()->getCell("E".$currentRow)->getValue();//获取E列的值
                 $dataInfo['update_at'] = time();//获取G列的值
+                $dataInfo['future_scale'] = $objPHPExcel->getActiveSheet()->getCell("H".$currentRow)->getValue();
+                $dataInfo['price_weight'] = $objPHPExcel->getActiveSheet()->getCell("I".$currentRow)->getValue();
+                $dataInfo['tech_weight'] = $objPHPExcel->getActiveSheet()->getCell("J".$currentRow)->getValue();
+                $dataInfo['business_weight'] = $objPHPExcel->getActiveSheet()->getCell("K".$currentRow)->getValue();
+                $dataInfo['standard_date'] = $objPHPExcel->getActiveSheet()->getCell("L".$currentRow)->getValue();
                 //检查code是否存在
                 if($logicItemInfo->exist($data)){//不存在
                     $logicItemInfo->saveItem($data,$dataInfo);

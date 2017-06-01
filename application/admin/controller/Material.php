@@ -210,6 +210,11 @@ class Material extends BaseController{
                 $dataInfo['main_name'] = $objPHPExcel->getActiveSheet()->getCell("D".$currentRow)->getValue();//获取D列的值
                 $dataInfo['desc'] = $objPHPExcel->getActiveSheet()->getCell("E".$currentRow)->getValue();//获取E列的值
                 $dataInfo['update_at'] = time();//获取G列的值
+                $dataInfo['future_scale'] = $objPHPExcel->getActiveSheet()->getCell("H".$currentRow)->getValue();
+                $dataInfo['price_weight'] = $objPHPExcel->getActiveSheet()->getCell("I".$currentRow)->getValue();
+                $dataInfo['tech_weight'] = $objPHPExcel->getActiveSheet()->getCell("J".$currentRow)->getValue();
+                $dataInfo['business_weight'] = $objPHPExcel->getActiveSheet()->getCell("K".$currentRow)->getValue();
+                $dataInfo['standard_date'] = $objPHPExcel->getActiveSheet()->getCell("L".$currentRow)->getValue();
                 //检查code是否存在
                 if($logicItemInfo->exist($data)){//不存在
                     $logicItemInfo->saveItem($data,$dataInfo);

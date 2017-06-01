@@ -65,6 +65,7 @@
         <thead>
         <tr>
           <th>选择</th>
+          <th>供应商编码</th>
           <th>供应商名称</th>
           <th>供应商报价</th>
           <th>可供货交期</th>
@@ -80,6 +81,7 @@
             <input type="checkbox" value="{$vo.id}">
           </td>
           <td>{$vo.sup_name}</td>
+          <th>{$vo.sup_code}</th>
           <td>{$vo.quote_price}</td>
           <td>{$vo.quote_date|date='y-m-d',###}</td>
           <td>{$vo.ctc_name}</td>

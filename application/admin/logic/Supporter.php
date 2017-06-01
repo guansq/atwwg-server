@@ -8,7 +8,7 @@
 namespace app\admin\logic;
 
 use app\common\model\SupplierInfo as supModel;
-
+use app\common\model\SupplierQualification as qualiModel;
 class Supporter extends BaseLogic{
 
     /*
@@ -106,4 +106,17 @@ class Supporter extends BaseLogic{
         return supModel::where('id',$id)->update($data);
     }
 
+    /*
+     * 更改supporterQuali
+     */
+    public function changeQualiStatus($where,$data){
+        return qualiModel::where($where)->update($data);
+    }
+
+    /*
+     * 更改suppoter
+     */
+    public function changeSupplierInfo($where,$data){
+        return supModel::where($where)->update($data);
+    }
 }

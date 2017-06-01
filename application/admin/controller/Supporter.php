@@ -213,9 +213,39 @@ class Supporter extends BaseController{
     /*
      * 更改供应商资质status
      */
-    public function changeQualiStatus($code){
-
+    public function changeQualiStatus(){
+        $logicSupInfo = Model('Supporter','logic');
+        $where = [
+            'sup_code' => input('param.sup_code'),
+        ];
+        $data = [
+            'status' => input('param.status'),
+        ];
+        $result = $logicSupInfo->changeQualiStatus($where,$data);
+        if($result !== false){
+            return json(['code'=>2000,'data'=>[],'msg'=>'成功']);
+        }else{
+            return json(['code'=>4000,'data'=>[],'msg'=>'失败']);
+        }
     }
 
+    /*
+     * 更改供应商付款审核状态
+     */
+    public function changePayWayStatus(){
+        $logicSupInfo = Model('Supporter','logic');
+        $where = [
+            'code' => input('param.code'),
+        ];
+        $data = [
+            'pay_way_status' => input('param.pay_way_status'),
+        ];
+        $result = $logicSupInfo->changeSupplierInfo($where,$data);
+        if($result !== false){
+            return json(['code'=>2000,'data'=>[],'msg'=>'成功']);
+        }else{
+            return json(['code'=>4000,'data'=>[],'msg'=>'失败']);
+        }
+    }
 
 }

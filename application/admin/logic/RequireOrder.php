@@ -47,7 +47,7 @@ class RequireOrder extends BaseLogic{
      /*
       * 保存唯一指定供应商到表
       */
-     function updateByPrCode($pr_code,$data){
-         return model('U9Pr')->where("pr_code",$pr_code)->update($data);
+     function updateByPrCode($where,$data){
+         return model('U9Pr')->where($where)->update($data);
      }
 }

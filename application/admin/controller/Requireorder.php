@@ -37,37 +37,44 @@ class Requireorder extends BaseController{
         ];
 
         $checkStatus = [
+            '' => '未审批',
             'agree' => '同意',
             'refuse' => '拒绝',
         ];
 
         $inquiry_way = [
+            '' => '自动询价',
             'assign' => '指定供应商',
             'exclusive' => '独家采购',
-            'compete' => '充分竞争',
+            'compete' => '充分竞争'
         ];
         //dump($list);die;
         foreach($list as $k => $v){
             if($v['inquiry_way'] == 'assign' && $v['status'] == 'hang'){//订单挂起状态 且询价方式为指定
                 $v['is_appoint_sup'] = '<input style="margin-right: 15px;" type="checkbox" data-pr_code="'.$v['pr_code'].'" data-item_code="'.$v['item_code'].'" class="ver_top" checked value="1">指定';
                 if(!empty($v['appoint_sup_code'])){
-                    $v['inquiry_way'] = $v['appoint_sup_name'];
+                    $inquiry = $v['appoint_sup_name'];
                 }else{
                     //选择供应商
-                    $v['inquiry_way'] = '<a class="select_sell" href="javascript:void(0);" onclick="bomb_box(event,\''.$v['pr_code'].'\',\''.$v['item_code'].'\');" data-url="'.url('requireorder/selectSup',array('pr_code'=>$v['pr_code'],'item_code'=>$v['item_code'])).'">选择供应商</a>';
+                    $inquiry = '<a class="select_sell" href="javascript:void(0);" onclick="bomb_box(event,\''.$v['pr_code'].'\',\''.$v['item_code'].'\');" data-url="'.url('requireorder/selectSup',array('pr_code'=>$v['pr_code'],'item_code'=>$v['item_code'])).'">选择供应商</a>';
                 }
             }else{
                 $v['is_appoint_sup'] = '<input style="margin-right: 15px;" type="checkbox" data-pr_code="'.$v['pr_code'].'" data-item_code="'.$v['item_code'].'" class="ver_top" value="1">指定';
-                if(in_array($v['inquiry_way'],$inquiry_way)){
-                    $v['inquiry_way'] = $inquiry_way[$v['inquiry_way']];
+                if(key_exists($v['inquiry_way'],$inquiry_way)){
+                    $inquiry = $inquiry_way[$v['inquiry_way']];
                 }else{
-                    $v['inquiry_way'] = '其他';
+                    //$v['inquiry_way'] = $inquiry_way[$v['inquiry_way']];
+                    //$v['inquiry_way'] = '其他';
+                    $inquiry = $v['inquiry_way'];
                 }
             }
-            if(in_array($v['check_status'],$checkStatus)){
+            if(key_exists($v['check_status'],$checkStatus)){
                 $v['check_status'] = $checkStatus[$v['check_status']];
+            }
+            if($v['inquiry_way'] == 'assign'){
+
             }else{
-                $v['check_status'] = '未审批';
+                $v['check_status'] = '';
             }
             $returnArr[] = [
                 'pr_code' => $v['pr_code'],//请购单号
@@ -83,7 +90,7 @@ class Requireorder extends BaseController{
                 'status' => key_exists($v['status'],$status) ? $status[$v['status']] : $v['status'],//状态 init=初始 hang=挂起 inquiry=询价中 close = 关闭
                 'pur_attr' => $v['pur_attr'],//物料采购属性
                 'is_appoint_sup' => $v['is_appoint_sup'],//是否指定供应商
-                'inquiry_way' => $v['inquiry_way'],//询价方式
+                'inquiry_way' => $inquiry,//询价方式
                 'check_status' => $v['check_status'],//主管审批
             ];
 
@@ -121,7 +128,7 @@ class Requireorder extends BaseController{
         if($data['is_appoint_sup'] == 0){
             $dataArr = [
                 'status' => '',
-                'inquiry_way' => 'init',
+                'inquiry_way' => '',
                 'is_appoint_sup' => 0,
                 'appoint_sup_code' => '',
                 'appoint_sup_name' => '',
@@ -136,7 +143,11 @@ class Requireorder extends BaseController{
         }else{
             return json(['code'=>4000,'msg'=>'请传入合法的is_appoint_sup参数值','data'=>[]]);
         }
-        $result = $logicPrInfo->updateByPrCode($data['pr_code'],$dataArr);
+        $where = [
+            'pr_code' => $data['pr_code'],
+            'item_code' => $data['item_code'],
+        ];
+        $result = $logicPrInfo->updateByPrCode($where,$dataArr);
         if (false === $result) {
             return json(['code'=>4000,'msg'=>'更改指定供应商状态失败','data'=>[]]);
         }
@@ -154,7 +165,11 @@ class Requireorder extends BaseController{
             'appoint_sup_code' => $data['appoint_sup_code'],
             'appoint_sup_name' => $data['appoint_sup_name'],
         ];
-        $result = $logicPrInfo->updateByPrCode($data['pr_code'],$dataArr);
+        $where = [
+            'pr_code' => $data['pr_code'],
+            'item_code' => $data['item_code'],
+        ];
+        $result = $logicPrInfo->updateByPrCode($where,$dataArr);
         if (false === $result) {
             return json(['code'=>4000,'msg'=>'指定供应商状态失败','data'=>[]]);
         }

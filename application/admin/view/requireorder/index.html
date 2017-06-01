@@ -226,14 +226,16 @@
             is_appoint_sup =1;
           }else{
             is_appoint_sup =0;
-            _this.parent().next().html("指定");
+            _this.parent().next().html("自动询价");
           }
           var sendObj ={
             'pr_code' :  $(this).attr("data-pr_code"),
-            'is_appoint_sup' : is_appoint_sup
+            'is_appoint_sup' : is_appoint_sup,
+            'item_code' : $(this).attr("data-item_code")
           };
           $.post("{:url('Requireorder/changeInquiType')}",sendObj,function(res){
             if(res.code == 2000){
+              $.form.reload();
             }else{
               alert("请求失败");
             }
@@ -284,6 +286,7 @@
       flag = 1;
       appoint_sup_code = $(this).attr('data-sup_code');
       pr_code   = $(this).attr('data-pr_code');
+      item_code = $(this).attr('data-item_code');
       appoint_sup_name=  $(this).parent().next().next().html();
 
     });
@@ -292,10 +295,12 @@
       alert('选中一个才能提交');
       return;
     }
+    console.log(item_code);return;
     var sendObj ={
       'is_appoint_sup' :   1,
       'appoint_sup_code' : appoint_sup_code ,
       'appoint_sup_name':appoint_sup_name,
+      'item_code':item_code,
       'pr_code':pr_code
     };
     $.post("{:url('Requireorder/savePr')}",sendObj,function(res){

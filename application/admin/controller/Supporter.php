@@ -250,10 +250,11 @@ class Supporter extends BaseController{
         $where = [
             'code' => input('param.code'),
         ];
-        if(input('param.pay_way_status') == 'agree'){
+        if(input('param.pay_way_status') == 'pass'){
             $data = [
                 'pay_way_status' => input('param.pay_way_status'),
-                'pay_way' => input('param.pay_way')
+                'pay_way' => input('param.pay_way'),
+                'pay_way_change' => ''
             ];
         }else{
             $data = [

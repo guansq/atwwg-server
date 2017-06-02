@@ -142,9 +142,10 @@
           }
           tmpstr = '<input onclick="laydate({})"  class="laydate-icon" type="text" name="req_date" lay-verify="required" value="'+$('td', row).eq(7).html()+'" '+data.showinfo+'>';
           $('td', row).eq(7).html(tmpstr);
-          tmpstr ='<input type="text" name="quote_price" lay-verify="required|float" value="'+data.quote_price+'"'+data.showinfo+' placeholder="请输入单价">';
+          tmpstr ='￥<input type="text" style="width:80%;float:right" name="quote_price" lay-verify="required|float" value="'+data.quote_price+'"'+data.showinfo+' placeholder="请输入单价">';
           $('td', row).eq(8).html(tmpstr);
           $('td', row).eq(9).attr('id','total_price_'+data.id);
+          $('td', row).eq(9).html( '￥'+$('td', row).eq(9).html())
           $('td', row).eq(9).addClass('active');
           tmpstr ='<input type="text" value="'+data.remark+'" name="remark" '+data.showinfo+'>';
           $('td', row).eq(10).html(tmpstr);
@@ -215,7 +216,7 @@
               $("tr[id^=io-"+data.field.id+"]").find($('input[name="remark"]')).attr("disabled",true);
               $("tr[id^=io-"+data.field.id+"]").find($('input[name="req_date"]')).attr("disabled",true);
               str = 'total_price_'+data.field.id;
-              $("#"+str).text(obj.data.total_price);
+              $("#"+str).text('￥'+obj.data.total_price);
               $(data.elem).attr("disabled",true);
             }else{
               layer.alert(obj.msg);

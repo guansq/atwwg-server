@@ -20,7 +20,7 @@ class Suppliercenter extends Base{
         $sup_code = session('spl_user')['sup_code'];
         $logicSupInfo = Model('Supportercenter','logic');
         $sup_info = $logicSupInfo->getOneSupInfo($sup_code);//联合查询得到相关信息
-        //dump($sup_info);
+       // dump($sup_info);
        // die();
         $supQuali = '';
         // 资质编码
@@ -53,13 +53,13 @@ class Suppliercenter extends Base{
             'other'=>''
         ];
         $statusCheck = ['init'=>'初始状态','unchecked'=>'待审核','refuse'=>'拒绝','agree'=>'同意'];
+
         if($sup_info){
             $this->assign('sup_info',$sup_info);
             $supQuali = $logicSupInfo->getSupQuali($sup_code);
             if(!empty($supQuali)){
                 foreach ($supQuali as $key => $iv){
-                    $supQualiList[$iv['code']] = array('term_start'=>date('Y-m-d',$iv['term_start']),'term_end'=>date('Y-m-d',$iv['term_end']),'img_src'=>$iv['img_src']);
-                //,'status'=>$statusCheck[$iv['status']]
+                   $supQualiList[$iv['code']] = array('term_start'=>date('Y-m-d',$iv['term_start']),'term_end'=>date('Y-m-d',$iv['term_end']),'img_src'=>$iv['img_src'],'status'=>$statusCheck[$iv['status']]);
                 }
             }
         }
@@ -71,6 +71,22 @@ class Suppliercenter extends Base{
         $this->assign('supquali',$supQuali);
         return view();
     }
+    //更新支付方式
+    public function  updatePayStatus(){
+        $data=input('param.');
+        $logicSupInfo = Model('Supportercenter','logic');
+        $sup_code = session('spl_user')['sup_code'];
+        $payway = $data['payway'];
+        $result = $logicSupInfo->updatepayway($sup_code,$payway);
+         if($result){
+            return json(['code'=>2000,'msg'=>'成功','data'=>[]]);
+        }else{
+            return json(['code'=>4000,'msg'=>'更新失败','data'=>[]]);
+        }
+    }
+
+
+    //更新图片状态
     public function  updateSupconfirmStatus(){
          $data=input('param.');
          $logicSupInfo = Model('Supportercenter','logic');
@@ -86,6 +102,7 @@ class Suppliercenter extends Base{
              return json(['code'=>4000,'msg'=>'更新失败','data'=>[]]);
          }
     }
+
     //添加图片
     public function add(){
         if(request()->isPost()){

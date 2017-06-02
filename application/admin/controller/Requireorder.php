@@ -38,8 +38,8 @@ class Requireorder extends BaseController{
 
         $checkStatus = [
             '' => '未审批',
-            'agree' => '同意',
-            'refuse' => '拒绝',
+            'agree' => '已同意',
+            'refuse' => '已拒绝',
         ];
 
         $inquiry_way = [
@@ -53,13 +53,23 @@ class Requireorder extends BaseController{
             if($v['inquiry_way'] == 'assign' && $v['status'] == 'hang'){//订单挂起状态 且询价方式为指定
                 $v['is_appoint_sup'] = '<input style="margin-right: 15px;" type="checkbox" data-pr_id="'.$v['id'].'" data-pr_code="'.$v['pr_code'].'" data-item_code="'.$v['item_code'].'" class="ver_top" checked value="1">指定';
                 if(!empty($v['appoint_sup_code'])){
-                    $inquiry = $v['appoint_sup_name'];
+                    $inquiry = $v['appoint_sup_name'];//可以进行主管审批操作
+                    if($v['check_status'] == ''){
+                        //auth();
+                        $v['check_status'] =  '<a href="javascript:;" onclick="checkStatus(\'agree\','.$v['id'].');">通过</a>&nbsp;&nbsp;<a href="javascript:;" onclick="checkStatus(\'refuse\','.$v['id'].');">拒绝</a>';
+                    }else{
+                        if(key_exists($v['check_status'],$checkStatus)){
+                            $v['check_status'] = $checkStatus[$v['check_status']];
+                        }
+                    }
                 }else{
                     //选择供应商
                     $inquiry = '<a class="select_sell" href="javascript:void(0);" onclick="bomb_box(event,\''.$v['pr_code'].'\',\''.$v['item_code'].'\',\''.$v['id'].'\');" data-url="'.url('requireorder/selectSup',array('pr_code'=>$v['pr_code'],'item_code'=>$v['item_code'])).'">选择供应商</a>';
+                    $v['check_status'] = '';
                 }
             }else{
                 $v['is_appoint_sup'] = '<input style="margin-right: 15px;" type="checkbox" data-pr_id="'.$v['id'].'"  data-pr_code="'.$v['pr_code'].'" data-item_code="'.$v['item_code'].'" class="ver_top" value="1">指定';
+                $v['check_status'] = '';
                 if(key_exists($v['inquiry_way'],$inquiry_way)){
                     $inquiry = $inquiry_way[$v['inquiry_way']];
                 }else{
@@ -68,14 +78,12 @@ class Requireorder extends BaseController{
                     $inquiry = $v['inquiry_way'];
                 }
             }
-            if(key_exists($v['check_status'],$checkStatus)){
-                $v['check_status'] = $checkStatus[$v['check_status']];
-            }
-            if($v['inquiry_way'] == 'assign'){
+
+            /*if($v['inquiry_way'] == 'assign'){
 
             }else{
                 $v['check_status'] = '';
-            }
+            }*/
             $returnArr[] = [
                 'pr_code' => $v['pr_code'],//请购单号
                 'pr_date' => $v['pr_date'],//请购日期
@@ -183,8 +191,28 @@ class Requireorder extends BaseController{
      * 审批指定供应商状态
      */
     public function checkStatus(){
-
+        $data=input('param.');
+        $logicPrInfo = Model('RequireOrder','logic');
+        $dataArr = [
+            'check_status' => $data['check_status'],
+        ];
+        $where = [
+            'id' => $data['id'],
+        ];
+        $checkStatus = [
+            '' => '未审批',
+            'agree' => '已同意',
+            'refuse' => '已拒绝',
+        ];
+        $result = $logicPrInfo->updateByPrCode($where,$dataArr);
+        if (false === $result) {
+            return json(['code'=>4000,'msg'=>'失败','data'=>[]]);
+        }else{
+            $status = $checkStatus[$data['check_status']];
+            return json(['code'=>2000,'msg'=>'成功','data'=>['check_status'=>$status]]);
+        }
     }
+
     //public function agree
     public function del(){
 

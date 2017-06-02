@@ -60,6 +60,7 @@ class Supporter extends BaseController{
             '' => '待审核',
             '正常' => '正常',
             '禁用' => '禁用',
+            '待审核' => '待审核',
         ];
         $pay_way_status = [
             '' => '待审核',

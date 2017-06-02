@@ -159,7 +159,7 @@
    * 请购单管理
    * Created by Administrator on 2017/5/11.
    */
-
+  var prTable;
   require(["jquery.dataTables"],function(){
     require(["dataTables.bootstrap"],function(){
       $(document).ready(function(){
@@ -173,7 +173,7 @@
   };
   function initPage(){
 
-    var table = $('#example').DataTable({
+    prTable = $('#example').DataTable({
       //paging: false, //设置是否分页
       "info": false,  //去除左下角的信息
       "lengthChange": false, //是否允许用户改变表格每页显示的记录数
@@ -227,6 +227,7 @@
           }else{
             is_appoint_sup =0;
             _this.parent().next().html("自动询价");
+            _this.parent().next().next().html("");
           }
           var sendObj ={
             'pr_code' :  $(this).attr("data-pr_code"),
@@ -308,12 +309,38 @@
       if(res.code == 2000){
         $(".barcode_box").css("display","none");
         $("input[data-pr_id^="+pr_id+"]") .parent().next().html(res.data.sup_name)
-
+        var str = '<a href="javascript:;" onclick="checkStatus(\'agree\','+pr_id+')">通过</a>&nbsp;&nbsp;<a href="javascript:;" onclick="checkStatus(\'refuse\','+pr_id+')">拒绝</a>';
+        $("input[data-pr_id^="+pr_id+"]") .parent().next().next().html(str)
       }else{
         alert("请求失败");
       }
     });
   })
+  function checkStatus(status,id){
+    var url = "{:URL('Requireorder/checkStatus')}";
+
+    layer.confirm("你确定该操作吗？",{
+      bth: ['确定','取消']
+    },function(index){
+      layer.close(index);
+      layer.load();
+      data = {
+        'check_status' : status,
+        'id' : id,
+      }
+      $.post(url,data,function(res){
+        layer.closeAll();
+        if(res.code == '2000'){
+          $("input[data-pr_id^="+id+"]") .parent().next().next().html(res.data.check_status)
+        }else{
+          layer.alert('操作失败');
+        }
+//        console.log(status);
+//        console.log(id);
+      })
+    });
+
+  }
   // 关闭条形码的弹出框
   $(".close_box").click(function(){
     $(".barcode_box").css("display","none");

@@ -50,4 +50,10 @@ class RequireOrder extends BaseLogic{
      function updateByPrCode($where,$data){
          return model('U9Pr')->where($where)->update($data);
      }
+     /*
+      * 获得pro_no项目号
+      */
+     function getProNo($where){
+         return model('U9Pr')->where($where)->value('pro_no');
+     }
 }

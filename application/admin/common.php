@@ -6,6 +6,8 @@
  * Time: 17:08
  */
 use service\NodeService;
+use service\DataService;
+use think\Db;
 
 /**
  * RBAC节点权限验证
@@ -42,4 +44,15 @@ function getSupplyRisk($code){
  */
 function getQualiLevel($code){
     return '优秀';
+}
+
+/*
+ * 得到项目号
+ */
+function getProNo($pr_code){
+    $prLogic = model('RequireOrder','logic');
+    $where = [
+        'pr_code' => $pr_code,
+    ];
+    return $prLogic->getProNo($where);
 }

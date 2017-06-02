@@ -37,7 +37,11 @@ class Io extends BaseLogic{
      }
 
      function getIoInfo($io_code){
-         $list = IoModel::alias('a')->field('a.id,a.sup_code,a.sup_name,a.quote_price,a.quote_date,b.ctc_name,b.mobile,b.email')->join('supplier_info b','a.sup_code=b.code')->where('io_code',"$io_code")->select();
+         $list = IoModel::alias('a')->field('a.*,b.ctc_name,b.mobile,b.email')
+                ->join('supplier_info b','a.sup_code=b.code','LEFT')
+                ->where('io_code',"$io_code")->select();
+         //->join('u9_pr c','a.pr_code=c.pr_code','LEFT'),c.pro_no
+         //echo $this->getLastSql();
          if($list){
              $list = collection($list)->toArray();
          }

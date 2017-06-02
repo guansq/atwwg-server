@@ -12,47 +12,47 @@
       <table class="table table-bordered">
         <tr>
           <td class="col-sm-2 tex_r">询价单号</td>
-          <td class="col-sm-4"></td>
+          <td class="col-sm-4">{$commonInfo['io_code']}</td>
           <td class="col-sm-2 tex_r">请购单号</td>
-          <td class="col-sm-4"></td>
+          <td class="col-sm-4">{$commonInfo['pr_code']}</td>
         </tr>
         <tr>
           <td class="col-sm-2 tex_r">料号</td>
-          <td class="col-sm-4"></td>
+          <td class="col-sm-4">{$commonInfo['item_code']}</td>
           <td class="col-sm-2 tex_r">物料描述</td>
-          <td class="col-sm-4"></td>
+          <td class="col-sm-4">{$commonInfo['item_name']}</td>
         </tr>
         <tr>
           <td class="col-sm-2 tex_r">项目号</td>
-          <td class="col-sm-4"></td>
+          <td class="col-sm-4">{:getProNo($commonInfo['pr_code'])}</td>
           <td class="col-sm-2 tex_r">交易单位</td>
-          <td class="col-sm-4"></td>
+          <td class="col-sm-4">{$commonInfo['price_uom']}</td>
         </tr>
         <tr>
           <td class="col-sm-2 tex_r">计价单位</td>
-          <td class="col-sm-4"></td>
+          <td class="col-sm-4">{$commonInfo['tc_uom']}</td>
           <td class="col-sm-2 tex_r">数量</td>
-          <td class="col-sm-4"></td>
+          <td class="col-sm-4">{$commonInfo['tc_num']}</td>
         </tr>
         <tr>
           <td class="col-sm-2 tex_r">交期</td>
-          <td class="col-sm-4"></td>
+          <td class="col-sm-4">{if $commonInfo['req_date'] eq ''}{else /}{$commonInfo['req_date']|date="Y-m-d",###}{/if}</td>
           <td class="col-sm-2 tex_r">询价日期</td>
-          <td class="col-sm-4"></td>
+          <td class="col-sm-4">{$commonInfo['create_at']|date="Y-m-d",###}</td>
         </tr>
         <tr>
           <td class="col-sm-2 tex_r">报价截止日期</td>
-          <td class="col-sm-4"></td>
+          <td class="col-sm-4">{$commonInfo['quote_endtime']|date="Y-m-d",###}</td>
           <td class="col-sm-2 tex_r">报价状态</td>
-          <td class="col-sm-4">3/5</td>
+          <td class="col-sm-4">{$commonInfo['price_status']}</td>
         </tr>
         <tr>
           <td class="col-sm-2 tex_r">状态</td>
-          <td class="col-sm-4">询价中</td>
-          <td class="col-sm-2 tex_r">责任采购</td>
+          <td class="col-sm-4">{$commonInfo['status_desc']}</td>
+<!--          <td class="col-sm-2 tex_r">责任采购</td>
           <td class="col-sm-4">
             <select class="form-control  input-sm"></select>
-          </td>
+          </td>-->
         </tr>
       </table>
     </div>

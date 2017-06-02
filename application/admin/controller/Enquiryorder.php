@@ -101,12 +101,35 @@ class Enquiryorder extends BaseController{
 
     public function particulars(){
         //列出所有的询价单
-        //echo input('param.io_code');
+        //$commonInfo = ;
         $ioCode = input('param.io_code');
         $logicIoInfo = Model('Io','logic');
         $info = $logicIoInfo->getIoInfo($ioCode);
+
+        $commonInfo = $info[0];//单个记录
+        //得到全部的询价单 by pr_code item_code
+        $where = [
+            'pr_code' => $commonInfo['pr_code'],
+            'item_code' => $commonInfo['item_code'],
+        ];
+        $allIo = $logicIoInfo->getIoCountByWhere($where);
+        //得到已报价的询价单by pr_code item_code status
+        $where = [
+            'pr_code' => $commonInfo['pr_code'],
+            'item_code' => $commonInfo['item_code'],
+            'status' => 'quoted',//已报价
+        ];
+        $quotedIo = $logicIoInfo->getIoCountByWhere($where);
+        if($quotedIo < $allIo){
+            $status_desc = '询价中';
+        }else{
+            $status_desc = '已报价';
+        }
+        $commonInfo['price_status'] = $quotedIo.'/'.$allIo;//报价状态
+        $commonInfo['status_desc'] = $status_desc;//状态
         $this->assign('ioInfo',$info);
-        //dump($info);
+        $this->assign('commonInfo',$commonInfo);
+        //dump($commonInfo);
         return view();
     }
 

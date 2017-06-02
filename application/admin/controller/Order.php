@@ -142,7 +142,6 @@ class Order extends BaseController{
         $this->assign('poInfo',$poInfo);
         $this->assign('poItemInfo',$poItemInfo);
         $this->assign('allAmount',$allAmount);
-        echo $allAmount;
         return view();
     }
 }

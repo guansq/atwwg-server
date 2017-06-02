@@ -14,8 +14,15 @@ class Supporter extends BaseLogic{
     /*
      * 得到U9供应商数据
      */
-    public function getListInfo($start,$length){
-        $list = supModel::alias('a')->field('a.id,a.code,a.name,a.type_code,a.type_name,a.status,a.pay_way_status,t.arv_rate,t.pp_rate')->join('supplier_tendency t','a.code=t.sup_code','LEFT')->limit("$start,$length")->select();
+    public function getListInfo($start,$length,$where = []){
+        if(empty($where)){
+            $list = supModel::alias('a')->field('a.id,a.code,a.name,a.type_code,a.type_name,a.status,a.pay_way_status,t.arv_rate,t.pp_rate')
+                ->join('supplier_tendency t','a.code=t.sup_code','LEFT')->limit("$start,$length")->select();
+        }else{
+            $list = supModel::alias('a')->field('a.id,a.code,a.name,a.type_code,a.type_name,a.status,a.pay_way_status,t.arv_rate,t.pp_rate')
+                ->where($where)->join('supplier_tendency t','a.code=t.sup_code','LEFT')->limit("$start,$length")->select();
+        }
+
 
         if($list) {
             $list = collection($list)->toArray();
@@ -37,8 +44,12 @@ class Supporter extends BaseLogic{
     /*
      * 得到U9供应商数据总数
      */
-    public function getListNum(){
-        $num = supModel::alias('a')->join('supplier_tendency t','a.code=t.sup_code','LEFT')->count();
+    public function getListNum($where = []){
+        if(empty($where)){
+            $num = supModel::alias('a')->join('supplier_tendency t','a.code=t.sup_code','LEFT')->count();
+        }else{
+            $num = supModel::alias('a')->where($where)->join('supplier_tendency t','a.code=t.sup_code','LEFT')->count();
+        }
         //dump($list);die;
         return $num;
     }
@@ -118,5 +129,16 @@ class Supporter extends BaseLogic{
      */
     public function changeSupplierInfo($where,$data){
         return supModel::where($where)->update($data);
+    }
+
+    /*
+     * 得到供应商分类
+     */
+    public function getTypeInfo(){
+        $list = supModel::group('type_name')->select();
+        if($list){
+            $list = collection($list)->toArray();
+        }
+        return $list;
     }
 }

@@ -23,6 +23,9 @@ class Supporter extends BaseController{
         $this->assign('title',$this->title);
         //得到供应商分类
         $logicSupInfo = Model('Supporter','logic');
+        $typeInfo = $logicSupInfo->getTypeInfo();
+        //dump($typeInfo);
+        $this->assign('typeInfo',$typeInfo);
         return view();
     }
 
@@ -54,7 +57,16 @@ class Supporter extends BaseController{
         $logicSupInfo = Model('Supporter','logic');
         $start = input('start');
         $length = input('length');
-        $list = $logicSupInfo->getListInfo($start,$length);//分页
+        $get = input('param.');
+        //dump($requestInfo);die;
+        $where = [];
+        // 应用搜索条件
+        foreach (['code', 'name', 'type_name', 'status', 'pay_way_status'] as $key) {
+            if (isset($get[$key]) && $get[$key] !== '') {
+                $where[$key] = ['like',"%{$get[$key]}%"];
+            }
+        }
+        $list = $logicSupInfo->getListInfo($start,$length,$where);//分页
         $returnArr = [];
         $status = [
             '' => '待审核',

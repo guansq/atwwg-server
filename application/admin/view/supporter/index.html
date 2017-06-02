@@ -16,19 +16,25 @@
       <form class="form-inline">
         <input type="text" class="form-control" id="code" placeholder="供应商编码">
         <input type="text" class="form-control" id="name" placeholder="供应商名称">
-        <select class="form-control">
-          <option>供应商分类</option>
+        <select class="form-control" id="type_name">
+          {volist name="typeInfo" id="vo"}
+          {if $vo.type_name eq ''}
+          <option value="">供应商分类</option>
+          {else /}
+          <option value="{$vo.type_name}">{$vo.type_name}</option>
+          {/if}
+          {/volist}
         </select>
         <select class="form-control" id="status">
-          <option>状态</option>
-          <option>待审核</option>
-          <option>正常</option>
-          <option>禁用</option>
+          <option value="">状态</option>
+          <option value="待审核">待审核</option>
+          <option value="正常">正常</option>
+          <option value="禁用">禁用</option>
         </select>
         <select class="form-control" id="pay_way_status">
-          <option>付款方式审核</option>
-          <option>待审核</option>
-          <option>不需要审核</option>
+          <option value="">付款方式审核</option>
+          <option value="待审核">待审核</option>
+          <option value="正常">不需要审核</option>
         </select>
         <!--<select class="form-control">
           <option>供应商资质审核</option>
@@ -127,7 +133,12 @@ function initPage(){
       "url": '{:URL("Supporter/getSupList")}',
       "type": "POST",
       "data": function(parameter){
-
+        //添加额外的参数传给服务器
+        parameter.code = $("#code").val();
+        parameter.name = $("#name").val();
+        parameter.type_name = $("#type_name").val();
+        parameter.status = $("#status").val();
+        parameter.pay_way_status = $("#pay_way_status").val();
       }
     },
     "pageLength": 10,

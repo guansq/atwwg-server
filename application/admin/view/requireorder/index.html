@@ -15,30 +15,30 @@
     <div class="inquiry_box">
       <form id="requireOrder" class="form-inline">
         <div class="pb_15">
-          <input type="text" class="form-control" placeholder="请购单号">
-          <input type="text" class="form-control" placeholder="请购日期">
-          <input type="text" class="form-control" placeholder="料号">
-          <input type="text" class="form-control" placeholder="物料描述">
-          <input type="text" class="form-control" placeholder="项目号">
-          <input type="text" class="form-control" placeholder="物料采购属性">
+          <input type="text" class="form-control" id="pr_code" placeholder="请购单号">
+          <input type="text" class="form-control" id="pr_date" placeholder="请购日期">
+          <input type="text" class="form-control" id="item_code" placeholder="料号">
+          <input type="text" class="form-control" id="item_name" placeholder="物料描述">
+          <input type="text" class="form-control" id="pro_no" placeholder="项目号">
+          <input type="text" class="form-control" id="pur_attr" placeholder="物料采购属性">
         </div>
         <div>
-          <select class="form-control">
-            <option>状态</option>
-            <option>询价中</option>
-            <option>已下单</option>
+          <select id="status" class="form-control">
+            <option value="">状态</option>
+            <option value="inquiry">询价中</option>
+            <option value="close">已下单</option>
           </select>
-          <select class="form-control">
-            <option>是否指定供应商</option>
-            <option>是</option>
-            <option>否</option>
+          <select class="form-control" id="is_appoint_sup">
+            <option value="">是否指定供应商</option>
+            <option value="1">是</option>
+            <option value="0">否</option>
           </select>
-          <select class="form-control">
-            <option>审批状态</option>
-            <option>已审批</option>
-            <option>待审批</option>
+          <select class="form-control" id="check_status">
+            <option value="">审批状态</option>
+            <option value="agree">已审批</option>
+            <option value="">待审批</option>
           </select>
-          <button type="button" class="btn btn-info">查询</button>
+          <button type="button" class="btn btn-info" id="searchVal">查询</button>
         </div>
       </form>
     </div>
@@ -93,54 +93,6 @@
         <td></td>
         <td>禁用</td>
       </tr>
-      <tr>
-        <td><input type="checkbox"></td>
-        <td></td>
-        <td></td>
-        <td>正常</td>
-      </tr>
-      <tr>
-        <td>
-          <input type="checkbox">
-        </td>
-        <td></td>
-        <td></td>
-        <td>禁用</td>
-      </tr>
-      <tr>
-        <td><input type="checkbox"></td>
-        <td></td>
-        <td></td>
-        <td>正常</td>
-      </tr>
-      <tr>
-        <td>
-          <input type="checkbox">
-        </td>
-        <td></td>
-        <td></td>
-        <td>禁用</td>
-      </tr>
-      <tr>
-        <td><input type="checkbox"></td>
-        <td></td>
-        <td></td>
-        <td>正常</td>
-      </tr>
-      <tr>
-        <td>
-          <input type="checkbox">
-        </td>
-        <td></td>
-        <td></td>
-        <td>禁用</td>
-      </tr>
-      <tr>
-        <td><input type="checkbox"></td>
-        <td></td>
-        <td></td>
-        <td>正常</td>
-      </tr>
     </table>
     <section>
       <span class="col_red mr_15 fs_13">选择指定供应商后提交申请，等待采购主管审核通过，审核信息可以在消息中心看到</span>
@@ -191,7 +143,18 @@
       "serverSide": true,
       "ajax": {
         "url": '{:url("Requireorder/getPrList")}',
-        "type": "POST"
+        "type": "POST",
+        "data": function(parameter){
+          parameter.pr_code = $('#pr_code').val();
+          parameter.pr_date = $('#pr_date').val();
+          parameter.item_code = $('#item_code').val();
+          parameter.item_name = $('#item_name').val();
+          parameter.pro_no = $('#pro_no').val();
+          parameter.pur_attr = $('#pur_attr').val();
+          parameter.status = $('#status').val();
+          parameter.is_appoint_sup = $('#is_appoint_sup').val();
+          parameter.check_status = $('#check_status').val();
+        }
       },
       "pageLength": 10,
       "columns": [
@@ -344,6 +307,9 @@
   // 关闭条形码的弹出框
   $(".close_box").click(function(){
     $(".barcode_box").css("display","none");
+  });
+  $('#searchVal').click(function(){
+    prTable.ajax.reload();
   });
 </script>
 {/block}

@@ -128,7 +128,20 @@ class Order extends BaseController{
         //echo $id;
         $poLogic = model('Po','logic');
         $poInfo = $poLogic->getPoInfo($id);
-        $poItemInfo = $poLogic->getPoInfo($id);
+        $prLogic = model('RequireOrder','logic');
+        $where = ['pr_code'=>$poInfo['pr_code']];
+        $poInfo['pr_date'] = $prLogic->getPrDate($where);
+        $supLogic = model('Supporter','logic');
+        $where = ['code'=>$poInfo['sup_code']];
+        $poInfo['sup_name'] = $supLogic->getSupName($where);
+        $poItemInfo = $poLogic->getPoItemInfo($id);
+        $allAmount = 0;
+        foreach($poItemInfo as $k => $v){
+            $allAmount += $v['amount'];
+        }
+        $this->assign('poInfo',$poInfo);
+        $this->assign('poItemInfo',$poItemInfo);
+        $this->assign('allAmount',$allAmount);
         return view();
     }
 }

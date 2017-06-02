@@ -12,19 +12,19 @@
       <table class="table table-hover">
         <tr>
           <td class="col-sm-1">订单编号</td>
-          <td></td>
+          <td>{$poInfo['order_code']}</td>
           <td class="col-sm-1">下单日期</td>
-          <td></td>
+          <td>{$poInfo['create_at']|date="Y-m-d",###}</td>
           <td class="col-sm-1">供应商编号</td>
-          <td></td>
+          <td>{$poInfo['sup_code']}</td>
         </tr>
         <tr>
           <td>请购单编号</td>
-          <td></td>
+          <td>{$poInfo['pr_code']}</td>
           <td>请购日期</td>
-          <td></td>
+          <td>{$poInfo['pr_date']|date="Y-m-d",###}</td>
           <td>供应商名称</td>
-          <td></td>
+          <td>{$poInfo['sup_name']}</td>
         </tr>
       </table>
       <table class="table table-bordered">
@@ -44,49 +44,25 @@
         </tr>
         </thead>
         <tbody>
+        {volist name="poItemInfo" id="vo"}
         <tr>
-          <td>1</td>
-          <td>1503010168</td>
-          <td>棒料-φ150-630</td>
-          <td></td>
-          <td>mm</td>
-          <td>公斤</td>
-          <td>412.24500</td>
-          <td>2017-02-28</td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>{$i}</td>
+          <td>{$vo['item_code']}</td>
+          <td>{$vo['item_name']}</td>
+          <td>{$vo['item_name']}</td>
+          <td>{$vo['price_uom']}</td>
+          <td>{$vo['tc_uom']}</td>
+          <td>{$vo['price_num']}</td>
+          <td>{$vo['req_date']|date="Y-m-d",###}</td>
+          <td>{$poInfo['sup_name']}</td>
+          <td>{$vo['price']}</td>
+          <td>{$vo['amount']}</td>
         </tr>
-        <tr>
-          <td>2</td>
-          <td>1503010168</td>
-          <td>棒料-φ150-630</td>
-          <td></td>
-          <td>mm</td>
-          <td>公斤</td>
-          <td>412.24500</td>
-          <td>2017-02-28</td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>1503010168</td>
-          <td>棒料-φ150-630</td>
-          <td></td>
-          <td>mm</td>
-          <td>公斤</td>
-          <td>412.24500</td>
-          <td>2017-02-28</td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
+        {/volist}
         <tr>
           <td colspan="2">合并</td>
           <td colspan="7"></td>
-          <td colspan="2">￥200000.00</td>
+          <td colspan="2">￥{$allAmount}</td>
         </tr>
         </tbody>
       </table>
@@ -110,7 +86,7 @@
           <span class="col_red">*同步U9财务数据</span>
         </div>
         <div class="pt_20">
-          <p><span>合计金额</span> : ￥20000.00</p>
+          <p><span>合计金额</span> : ￥{$allAmount}</p>
           <p>2016/3/23 16:00  付款XXXX，付款说明</p>
           <p>2016/3/23 16:00  付款XXXX，付款说明</p>
         </div>

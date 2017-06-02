@@ -44,13 +44,15 @@
       <tr>
         <td>付款方式：</td>
         <td colspan="3" class="colspan">
-            <select class="form-control">
+            <select class="form-control" name="payway" id="payway">
               <option {if $sup_info.pay_way eq '货到验收合格，票到120天付款'}selected{/if} >货到验收合格，票到120天付款</option>
               <option {if $sup_info.pay_way eq '货到验收合格，票到90天付款'}selected{/if} >货到验收合格，票到90天付款</option>
               <option {if $sup_info.pay_way eq '货到验收合格，票到30天付款'}selected{/if} >货到验收合格，票到30天付款</option>
               <option {if $sup_info.pay_way eq '预付30%，发货前付70%'}selected{/if} >预付30%，发货前付70%</option>
               <option {if $sup_info.pay_way eq '预付30%，货到现场30%，安装调试合格30%，一年质保金10%'}selected{/if} >预付30%，货到现场30%，安装调试合格30%，一年质保金10%</option>
             </select>
+            <span class="annotate">{$sup_info.pay_way_status}</span>
+            <button name="paywaybtn" class="btn btn-primary submitpaybtn" >修改付款方式</button>
           <br>
           <span class="annotate">*选择修改后需要平台运营人员审核通过，通过后会通过邮件和手机短信息通知您</span>
         </td>
@@ -94,9 +96,9 @@
         <td></td>
       </tr>
       <tr class="cont" id="qua-{$key}">
-        {if condition="$supqualilist[$key] eq ''"}
+        {if condition="$supqualilist[$key] eq '' "}
         <td>
-          <img class="upload" src="/static/spl/img/add.png" alt="">
+          <img class="uploadnew" src="/static/spl/img/add.png" alt="">
           <p>证件有效期 <input type="text" class="laydate-icon" class="begintime" name="begintime"><input type="text" class="laydate-icon" class="endtime" name="endtime"></p>
         </td>
         <td class="btn2"><button class="btn btn-primary submitbtn">提交</button></td>
@@ -105,8 +107,12 @@
         <img class="" src="{$supqualilist[$key]['img_src']}" alt="">
         <p>证件有效期 <input type="text" class="laydate-icon" value="{$supqualilist[$key]['term_start']}" class="begintime" name="begintime"><input type="text" value="{$supqualilist[$key]['term_end']}" class="laydate-icon" class="endtime" name="endtime"></p>
        </td>
-        <td class="btn2"><button class="btn btn-primary submitbtn" disabled="true">提交</button></td>
+        {if condition ="$supqualilist[$key]['status'] eq '初始状态'"}
+        <td class="btn2"><button class="btn btn-primary submitbtn">提交</button></td>
+        {else}
+        <td class="btn2"><button class="btn btn-primary submitbtn" disabled="true">{$supqualilist[$key]['status']}</button></td>
         {/if}
+       {/if}
       </tr>
       {/volist}
     </table>
@@ -126,10 +132,46 @@
       $("#contractUpload").attr('data-modal','{:url("$classuri/add")}?code=contract')
     }else{
       $("#contractUpload").attr('data-modal','');
-
     }
-
   })
+
+  $(".submitpaybtn").click(function () {
+    var payway = $('#payway').val();
+
+    layer.confirm('确定修改付款方式？',{
+      btn: ['确定','取消']
+    }, function(index){
+      layer.close(index);
+      $.ajax({
+        'url' : '{:url("Suppliercenter/updatePayStatus")}',
+        'type' : 'POST',
+        //'dataType' : 'html',
+        'data' : {
+          'payway':payway,
+        },
+        'complete' : function(){
+          //layer.closeAll();
+        },
+        'success' : function(obj){
+          layer.closeAll();
+          if(obj.code == 2000){
+            location.reload();
+          }else{
+            layer.alert(obj.msg);
+          }
+          //console.log(obj);
+        },
+        'error' : function(){
+          layer.closeAll();
+          layer.alert('请求失败');
+        }
+      });
+    });
+
+
+  });
+
+
   $(".submitbtn").click(function () {
     var trObj = $(this).parent().parent();
     var imgid =  trObj.attr('id').substring(4);
@@ -174,7 +216,7 @@
 
   });
 
-  $(".upload").click(function () {
+  $(".uploadnew").click(function () {
     var trObj = $(this).parent().parent();
     var imgid =  trObj.attr('id').substring(4);
     var begintime = trObj.find($('input[name="begintime"]')).val();
@@ -184,19 +226,7 @@
       return;
     }
     $(this).attr('data-modal','{:url("$classuri/add")}?code='+imgid+'&begintime='+begintime+'&endtime='+endtime)
- //   console.log(begintime);
-//    if($('#contractcheck').is(':checked')){
-//      $(this).attr('data-modal','{:url("$classuri/add")}?code=contract')
-//    }else{
-//      $("#contractUpload").attr('data-modal','');
-//
-//    }
-
   })
-
-//  <img class="upload" src="/static/spl/img/add.png" alt="" data-modal='{:url("$classuri/add")}?code={$key}' >
-//          <p>证件有效期 <input type="text" class="laydate-icon" class="begintime"><input type="text" class="laydate-icon" class="endtime"></p>
-
 </script>
 <script>
   //调用示例

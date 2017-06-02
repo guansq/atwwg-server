@@ -10,7 +10,7 @@ namespace app\admin\controller;
 use controller\BasicAdmin;
 use service\LogService;
 use service\DataService;
-
+use service\HttpService;
 use think\Db;
 
 class Enquiryorder extends BaseController{
@@ -156,4 +156,11 @@ class Enquiryorder extends BaseController{
         return view();
     }
 
+    /*
+     * 立即评标
+     */
+    public function quickbid(){
+        $info = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/evaluateBid'));
+        return json($info);
+    }
 }

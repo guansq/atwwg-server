@@ -52,14 +52,21 @@ class Suppliercenter extends Base{
             'bam_lic'=>'',
             'other'=>''
         ];
-        $statusCheck = ['init'=>'初始状态','unchecked'=>'待审核','refuse'=>'拒绝','agree'=>'同意'];
+        $payStatus = [''=>'','uncheck'=>'待审核','pass'=>'审核通过','refuse'=>'拒绝'];
 
         if($sup_info){
+            if(empty($sup_info['pay_way_status'])){
+                $sup_info['pay_way_status'] = '';
+            }
+            $sup_info['pay_way_status_name'] = $payStatus[$sup_info['pay_way_status']];
+            $sup_info['found_date'] = empty($sup_info['found_date'])?'':date('Y-m-d',$sup_info['found_date']);
+
             $this->assign('sup_info',$sup_info);
             $supQuali = $logicSupInfo->getSupQuali($sup_code);
             if(!empty($supQuali)){
                 foreach ($supQuali as $key => $iv){
-                   $supQualiList[$iv['code']] = array('term_start'=>date('Y-m-d',$iv['term_start']),'term_end'=>date('Y-m-d',$iv['term_end']),'img_src'=>$iv['img_src'],'status'=>$statusCheck[$iv['status']]);
+                   // ,'status'=>$statusCheck[$iv['status']]
+                   $supQualiList[$iv['code']] = array('term_start'=>date('Y-m-d',$iv['term_start']),'term_end'=>date('Y-m-d',$iv['term_end']),'img_src'=>$iv['img_src']);
                 }
             }
         }
@@ -84,7 +91,45 @@ class Suppliercenter extends Base{
             return json(['code'=>4000,'msg'=>'更新失败','data'=>[]]);
         }
     }
-
+    //上传资格证书
+    public function uploadSupInfo(){
+        $data=input('param.');
+        $logicSupInfo = Model('Supportercenter','logic');
+        $sup_code = session('spl_user')['sup_code'];
+        $begintime = strtotime($data['begintime']);
+        $endtime =  strtotime($data['endtime']);
+        $code = $data['imgid'];
+        $src = $data['img_src'];
+        $qualilist = [
+            'biz_lic'=>'营业执照',
+            'tax_reg_ctf'=>'税务登记证',
+            'org_code_ctf'=>'组织机构代码证',
+            'prd_ctf'=>'生产许可证',
+            'ISO90001'=>'ISO90001',
+            'ts_lic'=>'TS认证',
+            'ped_lic'=>'PED',
+            'api_lic'=>'API',
+            'ce_lic'=>'CE',
+            'sil_lic'=>'SIL',
+            'bam_lic'=>'BAM',
+            'other'=>'其他'
+        ];
+        $queryQuali = $logicSupInfo->querysupplierqualification($sup_code,$code);
+        if(empty($queryQuali)){
+            $sup_info = $logicSupInfo->getOneSupInfo($sup_code);//联合查询得到相关信息
+            //var_dump($sup_info);
+            $result = DataService::save('supplier_qualification', [ 'code' =>$code,'create_at'=>time(),'update_at'=>time(),
+                'com_name'=>$sup_info['name'],'sup_code'=>$sup_code,'term_start'=>$begintime,'term_end'=>$endtime,
+                'status'=>'','img_src'=>$src,'name'=>$qualilist[$code]]);
+        }else{
+            $result = $logicSupInfo->updatesupplierqualification($sup_code,$src,$code,$begintime,$endtime);
+        }
+        if($result){
+            return json(['code'=>2000,'msg'=>'成功','data'=>[]]);
+        }else{
+            return json(['code'=>4000,'msg'=>'更新失败','data'=>[]]);
+        }
+    }
 
     //更新图片状态
     public function  updateSupconfirmStatus(){

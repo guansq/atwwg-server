@@ -19,7 +19,7 @@
     <table class="table table-bordered atw-supplier-tab">
       <tr>
         <td>成立日期：</td>
-        <td><input type="text" disabled="true" value="{$sup_info['found_date']|date='y-m-d',###}"></td>
+        <td><input type="text" disabled="true" value="{$sup_info['found_date']}"></td>
         <td>供应商名称：</td>
         <td><input type="text" disabled="true" value="{$sup_info['name']}"></td>
       </tr>
@@ -44,15 +44,19 @@
       <tr>
         <td>付款方式：</td>
         <td colspan="3" class="colspan">
-            <select class="form-control" name="payway" id="payway">
-              <option {if $sup_info.pay_way eq '货到验收合格，票到120天付款'}selected{/if} >货到验收合格，票到120天付款</option>
-              <option {if $sup_info.pay_way eq '货到验收合格，票到90天付款'}selected{/if} >货到验收合格，票到90天付款</option>
-              <option {if $sup_info.pay_way eq '货到验收合格，票到30天付款'}selected{/if} >货到验收合格，票到30天付款</option>
-              <option {if $sup_info.pay_way eq '预付30%，发货前付70%'}selected{/if} >预付30%，发货前付70%</option>
-              <option {if $sup_info.pay_way eq '预付30%，货到现场30%，安装调试合格30%，一年质保金10%'}selected{/if} >预付30%，货到现场30%，安装调试合格30%，一年质保金10%</option>
+          <span class="" style="    display: block;    height: 20px;    margin: 8px;">当前支付方式：  {$sup_info.pay_way}</span>
+            <select class="form-control" name="payway" id="payway" style="height: 40px;">
+              <option {if $sup_info.pay_way_change eq '货到验收合格，票到120天付款'}selected{/if} >货到验收合格，票到120天付款</option>
+              <option {if $sup_info.pay_way_change eq '货到验收合格，票到90天付款'}selected{/if} >货到验收合格，票到90天付款</option>
+              <option {if $sup_info.pay_way_change eq '货到验收合格，票到30天付款'}selected{/if} >货到验收合格，票到30天付款</option>
+              <option {if $sup_info.pay_way_change eq '预付30%，发货前付70%'}selected{/if} >预付30%，发货前付70%</option>
+              <option {if $sup_info.pay_way_change eq '预付30%，货到现场30%，安装调试合格30%，一年质保金10%'}selected{/if} >预付30%，货到现场30%，安装调试合格30%，一年质保金10%</option>
             </select>
-            <span class="annotate">{$sup_info.pay_way_status}</span>
+          <br>
+
+            <span class="annotate">{$sup_info.pay_way_status_name}</span>
             <button name="paywaybtn" class="btn btn-primary submitpaybtn" >修改付款方式</button>
+          <br>
           <br>
           <span class="annotate">*选择修改后需要平台运营人员审核通过，通过后会通过邮件和手机短信息通知您</span>
         </td>
@@ -76,6 +80,7 @@
       <input type="checkbox" id ="contractcheck">
       <span>同意安特威采购合同条约</span>
       <a href="">下载打印采购合同条约</a>
+
       <div class="upload">
         <p>
           {if $imgInfos|@count neq 0 }
@@ -98,7 +103,11 @@
       <tr class="cont" id="qua-{$key}">
         {if condition="$supqualilist[$key] eq '' "}
         <td>
-          <img class="uploadnew" src="/static/spl/img/add.png" alt="">
+          <span class="layui-input-block" style="margin-left:0px">
+            <img  id="img-{$key}" name="img-{$key}" data-tips-image src="/static/spl/img/add.png"/>
+            <input type="hidden" name="src-{$key}" onchange="$('#img-{$key}').attr('src', this.value)" value="" class="layui-input">
+            <a class="btn btn-link" data-file="one" data-field="src-{$key}">上传图片</a>
+          </span>
           <p>证件有效期 <input type="text" class="laydate-icon" class="begintime" name="begintime"><input type="text" class="laydate-icon" class="endtime" name="endtime"></p>
         </td>
         <td class="btn2"><button class="btn btn-primary submitbtn">提交</button></td>
@@ -107,11 +116,7 @@
         <img class="" src="{$supqualilist[$key]['img_src']}" alt="">
         <p>证件有效期 <input type="text" class="laydate-icon" value="{$supqualilist[$key]['term_start']}" class="begintime" name="begintime"><input type="text" value="{$supqualilist[$key]['term_end']}" class="laydate-icon" class="endtime" name="endtime"></p>
        </td>
-        {if condition ="$supqualilist[$key]['status'] eq '初始状态'"}
-        <td class="btn2"><button class="btn btn-primary submitbtn">提交</button></td>
-        {else}
-        <td class="btn2"><button class="btn btn-primary submitbtn" disabled="true">{$supqualilist[$key]['status']}</button></td>
-        {/if}
+        <td class="btn2"><button class="btn btn-primary submitbtn" disabled="true">提交</button></td>
        {/if}
       </tr>
       {/volist}
@@ -177,8 +182,9 @@
     var imgid =  trObj.attr('id').substring(4);
     var begintime = trObj.find($('input[name="begintime"]')).val();
     var endtime = trObj.find($('input[name="endtime"]')).val();
-    if(begintime=='' || endtime=='' ){
-      layer.alert('请先确定时间是否正确');
+    var img_src = trObj.find($('img')).attr('src');
+    if(begintime=='' || endtime=='' || img_src==''){
+      layer.alert('请先确定图片是否上传和时间是否选择');
       return ;
     }
     layer.confirm('确定提交申请', {
@@ -186,13 +192,14 @@
     }, function(index){
       layer.close(index);
       $.ajax({
-        'url' : '{:url("Suppliercenter/updateSupconfirmStatus")}',
+        'url' : '{:url("Suppliercenter/uploadSupInfo")}',
         'type' : 'POST',
         //'dataType' : 'html',
         'data' : {
           'begintime':begintime,
           'endtime':endtime,
-          'imgid':imgid
+          'imgid':imgid,
+          'img_src':img_src,
         },
         'complete' : function(){
           //layer.closeAll();

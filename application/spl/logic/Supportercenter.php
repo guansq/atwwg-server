@@ -70,7 +70,7 @@ class Supportercenter extends BaseLogic{
     public function getOneSupInfo($sup_code){
         //缺少建立日期,技术分,责任采购,信用等级,供应风险
         $supinfo = supModel::alias('a')
-            ->field('a.id,a.name,a.code,u.user_name,a.type_code,a.type_name,a.pay_way_status,a.state_tax_code,a.purch_contract,a.found_date,a.ctc_name,a.mobile,a.fax,a.email,a.address,a.status,a.purch_type,a.check_type,a.check_rate,a.pay_way,t.arv_rate,t.pp_rate')
+            ->field('a.id,a.name,a.code,u.user_name,a.type_code,a.type_name,a.pay_way_status,a.pay_way_change,a.state_tax_code,a.purch_contract,a.found_date,a.ctc_name,a.mobile,a.fax,a.email,a.address,a.status,a.purch_type,a.check_type,a.check_rate,a.pay_way,t.arv_rate,t.pp_rate')
             ->join('supplier_tendency t','a.code=t.sup_code','LEFT')
             ->join('system_user u','a.sup_id=u.id','LEFT')
             ->where('a.code',$sup_code)->find();
@@ -115,7 +115,7 @@ class Supportercenter extends BaseLogic{
     }
     //更新支付方式
     function updatepayway($code,$payway){
-        $list = supModel::where(['code'=>$code])->update([ 'pay_way' => $payway,'pay_way_status'=>'待审核']);
+        $list = supModel::where(['code'=>$code])->update([ 'pay_way_change' => $payway,'pay_way_status'=>'uncheck']);
         //echo $this->getLastSql();
         //die();
         return $list;
@@ -123,7 +123,7 @@ class Supportercenter extends BaseLogic{
 
     //更新资质图片
     function updatesupplierqualification($sup_code,$src,$code,$begintime,$endtime){
-        $list = model('SupplierQualification')->where(['code'=>$code,'sup_code'=>$sup_code])->update(['update_at'=>time(),'status'=>'init','term_start'=>$begintime,'term_end'=>$endtime, 'img_src' =>$src]);
+        $list = model('SupplierQualification')->where(['code'=>$code,'sup_code'=>$sup_code])->update(['update_at'=>time(),'status'=>'','term_start'=>$begintime,'term_end'=>$endtime, 'img_src' =>$src]);
         // 'img_src' => ['exp', 'concat(IFNULL(img_src,\'\'),\''.','.$src.'\')']
         //echo $this->getLastSql();
         //die();

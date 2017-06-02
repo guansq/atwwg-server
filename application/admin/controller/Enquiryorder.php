@@ -71,7 +71,7 @@ class Enquiryorder extends BaseController{
                 'hang' => '挂起',
                 'inquiry' => '询价中',
                 'flow' => '流标',
-                'windbid' => '已评标',
+                'winbid' => '已评标',
                 'order' => '已下单',
                 'close' => '关闭'
             ];
@@ -141,7 +141,7 @@ class Enquiryorder extends BaseController{
             'hang' => '挂起',
             'inquiry' => '询价中',
             'flow' => '流标',
-            'windbid' => '已评标',
+            'winbid' => '已评标',
             'order' => '已下单',
             'close' => '关闭'
         ];

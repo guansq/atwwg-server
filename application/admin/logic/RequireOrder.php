@@ -56,4 +56,10 @@ class RequireOrder extends BaseLogic{
      function getProNo($where){
          return model('U9Pr')->where($where)->value('pro_no');
      }
+     /*
+      * 得到请购日期
+      */
+     function getPrDate($where){
+         return model('U9Pr')->where($where)->value('pr_date');
+     }
 }

@@ -25,6 +25,8 @@ class Requireorder extends BaseController{
     public function getPrList(){
         $start = input('start') == '' ? 0 : input('start');
         $length = input('length') == '' ? 10 : input('length');
+        $whereInfo = ['pr_code','pr_date','item_code','item_name','pro_no','pur_attr','status','is_appoint_sup','check_status'];//继续筛选操作
+
         $logicPrInfo = Model('RequireOrder','logic');
         $list = $logicPrInfo->getPrList($start,$length);
         $returnArr = [];
@@ -86,15 +88,15 @@ class Requireorder extends BaseController{
             }*/
             $returnArr[] = [
                 'pr_code' => $v['pr_code'],//请购单号
-                'pr_date' => $v['pr_date'],//请购日期
+                'pr_date' => date('Y-m-d',$v['pr_date']),//请购日期
                 'item_code' => $v['item_code'],//料号
-                'desc' => $v['desc'],//物料描述
+                'desc' => $v['item_name'],//物料描述
                 'pro_no' => $v['pro_no'],//项目号
                 'tc_uom' => $v['tc_uom'],//交易单位
                 'tc_num' => $v['tc_num'],//交易数量
                 'price_uom' => $v['price_uom'],//计价单位
                 'price_num' => $v['price_num'],//计价数量
-                'req_date' => $v['req_date'],//交期
+                'req_date' => date('Y-m-d',$v['req_date']),//交期
                 'status' => key_exists($v['status'],$status) ? $status[$v['status']] : $v['status'],//状态 init=初始 hang=挂起 inquiry=询价中 close = 关闭
                 'pur_attr' => $v['pur_attr'],//物料采购属性
                 'is_appoint_sup' => $v['is_appoint_sup'],//是否指定供应商

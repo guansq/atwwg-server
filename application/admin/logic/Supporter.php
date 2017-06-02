@@ -141,4 +141,11 @@ class Supporter extends BaseLogic{
         }
         return $list;
     }
+
+    /*
+     * 获取name
+     */
+    public function getSupName($where){
+        return supModel::where($where)->value('name');
+    }
 }

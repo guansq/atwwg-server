@@ -76,7 +76,7 @@
       <input type="checkbox" id ="contractcheck">
       <span>同意安特威采购合同条约</span>
       <a href="">下载打印采购合同条约</a>
-      <div class="uploadnew">
+      <div class="upload">
         <p>
           {if $imgInfos|@count neq 0 }
           {volist name='imgInfos' id='pimgInfos'}
@@ -98,7 +98,7 @@
       <tr class="cont" id="qua-{$key}">
         {if condition="$supqualilist[$key] eq '' "}
         <td>
-          <img class="upload" src="/static/spl/img/add.png" alt="">
+          <img class="uploadnew" src="/static/spl/img/add.png" alt="">
           <p>证件有效期 <input type="text" class="laydate-icon" class="begintime" name="begintime"><input type="text" class="laydate-icon" class="endtime" name="endtime"></p>
         </td>
         <td class="btn2"><button class="btn btn-primary submitbtn">提交</button></td>
@@ -216,7 +216,7 @@
 
   });
 
-  $(".upload").click(function () {
+  $(".uploadnew").click(function () {
     var trObj = $(this).parent().parent();
     var imgid =  trObj.attr('id').substring(4);
     var begintime = trObj.find($('input[name="begintime"]')).val();
@@ -226,19 +226,7 @@
       return;
     }
     $(this).attr('data-modal','{:url("$classuri/add")}?code='+imgid+'&begintime='+begintime+'&endtime='+endtime)
- //   console.log(begintime);
-//    if($('#contractcheck').is(':checked')){
-//      $(this).attr('data-modal','{:url("$classuri/add")}?code=contract')
-//    }else{
-//      $("#contractUpload").attr('data-modal','');
-//
-//    }
-
   })
-
-//  <img class="upload" src="/static/spl/img/add.png" alt="" data-modal='{:url("$classuri/add")}?code={$key}' >
-//          <p>证件有效期 <input type="text" class="laydate-icon" class="begintime"><input type="text" class="laydate-icon" class="endtime"></p>
-
 </script>
 <script>
   //调用示例

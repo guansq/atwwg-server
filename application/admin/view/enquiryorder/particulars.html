@@ -82,7 +82,7 @@
           </td>
           <td>{$vo.sup_code}</td>
           <th>{$vo.sup_name}</th>
-          <td>{if $vo.quote_price neq ''}{:round($vo.quote_price,2)}{/if}</td>
+          <td>{if $vo.quote_price neq ''}{:number_format($vo.quote_price,2)}{/if}</td>
           <td>{if $vo.promise_date neq ''}{$vo.promise_date|date='Y-m-d',###}{/if}</td>
           <td>{$vo.ctc_name}</td>
           <td>{$vo.mobile}</td>

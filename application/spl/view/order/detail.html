@@ -18,21 +18,20 @@
   <div class="atw-orderdet-title">订单基本信息 <span class="glyphicon glyphicon-circle-arrow-left"></span></div>
   <div class="atw-orderdet-list">
     <div class="top"><p>订单编号：{$codeInfo.order_code}</p>
-      {if $codeInfo.contract_time eq null || $codeInfo.contract_time eq ''}
-      <p>订单合同签订日期：--</p>
-      {else}
-      <p>订单合同签订日期：{$codeInfo.contract_time|date="Y-m-d",###}</p>
-      {/if}
+      <p>订单合同签订日期：{$codeInfo.contract_time}</p>
     </div>
-    <div class="center">
+    <div class="center" >
       合同影像：<a href="">下载合同模板</a>
-      {if $imgInfos|@count neq 0 }
-      {volist name='imgInfos' id='pimgInfos'}
-      <img src="{$pimgInfos}" alt=""  >
-      {/volist}
-      {/if}
+      <span id="ImageList">
+        {if $imgInfos|@count neq 0 }
+        {volist name='imgInfos' id='pimgInfos'}
+        <img src="{$pimgInfos}" alt=""  >
+        {/volist}
+        {/if}
+      </span>
+
       {if $statusButton.contractable eq 1}
-      <img src="/static/spl/img/add.png" alt="" class="uploadImg" data-modal='{:url("$classuri/add")}?pr_code={$codeInfo.order_code}' >
+      <img src="/static/spl/img/add.png" alt="" class="uploadImg" data-modal='{:url("$classuri/add")}?id={$codeInfo.id}' >
      {else}
       <img src="/static/spl/img/add.png" alt=""  >
       {/if}
@@ -69,7 +68,7 @@
         <td>{$plist.price_num}</td>
         <td>{$plist.price_uom}</td>
         <td name="showdate">{$plist.sup_confirm_date|date="Y-m-d",###}</td>
-        <td  > <input type="text" class="laydate-icon" name="confirmdate" ><button name="confirmdatesubmit" class="btn btn-primary confirmdatesubmit" value="{$plist.item_code}" {if $statusButton.confirmable eq 0 || $plist.times egt 3}disabled="true"{/if}>提交</button></td>
+        <td  > <input type="text" class="laydate-icon" name="confirmdate" ><button name="confirmdatesubmit" class="btn btn-primary confirmdatesubmit" value="{$plist.id}" data-item_code="{$plist.item_code}" {if $statusButton.confirmable eq 0 || $plist.times egt 3}disabled="true"{/if}>提交</button></td>
         <td>{$plist.tax_price}</td>
         <td>{$plist.amount}</td>
         <td><a href="">打印</a></td>
@@ -95,7 +94,13 @@
 
 {block name="script"}
 <script src="/static/spl/order/detail.js"></script>
-
+<script>
+  //调用示例
+  layer.photos({
+    photos: '#ImageList'
+    ,anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+  });
+</script>
 <script>
   $("#order_confirm").click(function () {
 
@@ -109,7 +114,7 @@
         'type' : 'POST',
         //'dataType' : 'html',
         'data' : {
-          'pr_code':'{$codeInfo.order_code}'
+          'id':'{$codeInfo.id}'
         },
         'complete' : function(){
           //layer.closeAll();
@@ -144,7 +149,7 @@
           'type' : 'POST',
           //'dataType' : 'html',
           'data' : {
-                'pr_code':'{$codeInfo.order_code}'
+                'id':'{$codeInfo.id}'
           },
           'complete' : function(){
             //layer.closeAll();
@@ -169,7 +174,8 @@
       });
   })
   $(".confirmdatesubmit").click(function () {
-    var item_code= $(this).val();
+    var id =  $(this).val();
+    var item_code= $(this).attr('data-item_code');
     //console.log(($("tr[id^=po-"+item_code+"]").find($('input[name="confirmdate"]'))).val());
     var supconfirmdate = ($("tr[id^=po-"+item_code+"]").find($('input[name="confirmdate"]'))).val();
     if(supconfirmdate == ''){
@@ -185,8 +191,8 @@
         'type' : 'POST',
         //'dataType' : 'html',
         'data' : {
-          'pr_code':'{$codeInfo.order_code}',
-          'item_code':item_code,
+          'id':id,
+          'po_id':'{$codeInfo.id}',
           'supconfirmdate':supconfirmdate
         },
         'complete' : function(){

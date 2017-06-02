@@ -56,8 +56,8 @@ class Order extends BaseLogic{
         return $list;
     }*/
     //获取某条订单状态
-    function getOrderListOneInfo($pr_code){
-        $list = Po::where(['order_code'=>$pr_code])->select();
+    function getOrderListOneInfo($id){
+        $list = Po::where(['id'=>$id])->select();
         if($list){
             $list = collection($list)->toArray();
         }
@@ -65,30 +65,30 @@ class Order extends BaseLogic{
     }
 
     //修改订单状态
-    function updateStatus($pr_code,$status='sup_cancel'){
-        $list = Po::where(['order_code'=>$pr_code])->update(['status'=>$status]);
+    function updateStatus($id,$status='sup_cancel'){
+        $list = Po::where(['id'=>$id])->update(['status'=>$status]);
         return $list;
     }
     //更新交期时间
-    function updateSupconfirmdate($pr_code,$item_code,$supconfirmdate){
-        $list = PoItem::where(['po_code'=>$pr_code,'item_code'=>$item_code])->update(['sup_confirm_date'=>$supconfirmdate]);
+    function updateSupconfirmdate($po_id,$supconfirmdate){
+        $list = PoItem::where(['po_id'=>$po_id])->update(['sup_confirm_date'=>$supconfirmdate,'status'=>'uncheck']);
         //echo $this->getLastSql();
         return $list;
     }
     //更新合同图片
-    function updatecontract($pr_code,$src,$status){
-        $list = Po::where(['order_code'=>$pr_code])->update(['status'=>$status, 'contract' => ['exp', 'concat(contract,\''.','.$src.'\')']]);
+    function updatecontract($id,$src,$status){
+        $list = Po::where(['id'=>$id])->update(['status'=>$status, 'contract' => ['exp', 'concat(IFNULL(contract,\'\'),\''.','.$src.'\')']]);
         //echo $this->getLastSql();
         //die();
         return $list;
     }
     //获取订单详情
-    function getOrderDetailInfo($pr_code,$item_code=''){
-        if (!empty($pr_code)){
+    function getOrderDetailInfo($po_id,$item_code=''){
+        if (!empty($po_id)){
             if(empty($item_code)){
-                $list = PoItem::where(['po_code'=>$pr_code])->select();
+                $list = PoItem::where(['po_id'=>$po_id])->select();
             }else{
-                $list = PoItem::where(['po_code'=>$pr_code,'item_code'=>$item_code])->select();
+                $list = PoItem::where(['po_id'=>$po_id,'item_code'=>$item_code])->select();
             }
             //echo $this->getLastSql();//die;
             if($list){
@@ -100,9 +100,9 @@ class Order extends BaseLogic{
     }
 
     //获取订单记录
-    function getOrderRecordInfo($pr_code,$item_code){
-        if(!empty($pr_code) && !empty($item_code)){
-            $list = PoRecord::where(['po_code'=>$pr_code,'item_code'=>$item_code])->select();
+    function getOrderRecordInfo($id){
+        if(!empty($id) ){
+            $list = PoRecord::where(['pi_id'=>$id])->select();
             //echo $this->getLastSql();//die;
             if($list){
                 $list = collection($list)->toArray();

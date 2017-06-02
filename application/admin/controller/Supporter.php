@@ -132,7 +132,7 @@ class Supporter extends BaseController{
         foreach($list as $k => $v){
             $num = $num+1;
             $PHPSheet->setCellValue('A'.$num,$v['id'])->setCellValue('B'.$num,$v['code'])
-                ->setCellValue('C'.$num,$v['name'])->setCellValue('D'.$num,'')
+                ->setCellValue('C'.$num,$v['name'])->setCellValue('D'.$num,strtolower($v['code']))
                 ->setCellValue('E'.$num,'');
         }
         $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel,'Excel2007');//按照指定格式生成Excel文件，'Excel2007’表示生成2007版本的xlsx，

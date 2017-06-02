@@ -14,7 +14,6 @@
 
 namespace app\admin\controller;
 
-use app\common\model\AuthNode;
 use service\DataService;
 use service\ToolsService;
 use service\NodeService;

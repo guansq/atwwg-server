@@ -16,6 +16,7 @@ namespace app\admin\controller;
 
 use app\common\model\AuthNode;
 use service\DataService;
+use service\NodeService;
 use service\ToolsService;
 use think\Db;
 
@@ -50,7 +51,7 @@ class Auth extends BaseController {
         $auth_id = $this->request->get('id', '0');
         switch (strtolower($this->request->get('action', '0'))) {
             case 'getnode':
-                $nodes = AuthNode::getNodes();
+                $nodes = NodeService::getNodes();
                 $checked = Db::name('SystemAuthNode')->where('auth', $auth_id)->column('node');
                 foreach ($nodes as $key => &$node) {
                     $node['checked'] = in_array($node['node'], $checked);

@@ -97,18 +97,7 @@
             <input type="text" value="{$sup_info['address']}" class="form-control" placeholder="详细地址">
           </div>
         </div>
-        <div class="form-group col-sm-6">
-          <label class="col-sm-2 control-label">付款方式</label>
-          <div class="col-sm-10">
-            <select class="form-control">
-              <option {if $sup_info.pay_way eq '货到验收合格，票到120天付款'}selected{/if} >货到验收合格，票到120天付款</option>
-              <option {if $sup_info.pay_way eq '货到验收合格，票到90天付款'}selected{/if} >货到验收合格，票到90天付款</option>
-              <option {if $sup_info.pay_way eq '货到验收合格，票到30天付款'}selected{/if} >货到验收合格，票到30天付款</option>
-              <option {if $sup_info.pay_way eq '预付30%，发货前付70%'}selected{/if} >预付30%，发货前付70%</option>
-              <option {if $sup_info.pay_way eq '预付30%，货到现场30%，安装调试合格30%，一年质保金10%'}selected{/if} >预付30%，货到现场30%，安装调试合格30%，一年质保金10%</option>
-            </select>
-          </div>
-        </div>
+
         <div class="form-group col-sm-6">
           <label class="col-sm-2 control-label">供应商采购属性</label>
           <div class="col-sm-10">
@@ -123,9 +112,9 @@
           <label class="col-sm-2 control-label">状态</label>
           <div class="col-sm-10">
             <select class="form-control">
-              <option {if $sup_info.status eq '正常'}selected{/if} >正常</option>
-              <option {if $sup_info.status eq '禁用'}selected{/if} >禁用</option>
-              <option {if $sup_info.status eq '待审核'}selected{/if} >待审核</option>
+              <option {if $sup_info.status eq 'normal'}selected{/if} >正常</option>
+              <option {if $sup_info.status eq 'forbid'}selected{/if} >禁用</option>
+              <option {if $sup_info.status eq 'uncheck'}selected{/if} >待审核</option>
             </select>
           </div>
         </div>
@@ -179,17 +168,46 @@
             <span class="scale_span">%</span>
           </div>
         </div>
+
+        <div class="form-group col-sm-6">
+          <label class="col-sm-2 control-label">&nbsp;&nbsp;</label>
+          <div class="col-sm-10">
+            <div class="form-control" style="border: none;"></div>
+
+          </div>
+        </div>
+        <div class="form-group col-sm-6">
+          <label class="col-sm-2 control-label">原始的付款方式</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" value="{$sup_info['pay_way']}" disabled="">
+          </div>
+        </div>
+        {notempty name="$sup_info['pay_way_change']"}
+        <div class="form-group col-sm-6">
+          <label class="col-sm-2 control-label">更改后付款方式</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" name="pay_way_change" value="{$sup_info['pay_way_change']}" disabled="">
+            <!--<select class="form-control" id="pay_way_change">
+              <option {if $sup_info.pay_way_change eq '货到验收合格，票到120天付款'}selected{/if} >货到验收合格，票到120天付款</option>
+              <option {if $sup_info.pay_way_change eq '货到验收合格，票到90天付款'}selected{/if} >货到验收合格，票到90天付款</option>
+              <option {if $sup_info.pay_way_change eq '货到验收合格，票到30天付款'}selected{/if} >货到验收合格，票到30天付款</option>
+              <option {if $sup_info.pay_way_change eq '预付30%，发货前付70%'}selected{/if} >预付30%，发货前付70%</option>
+              <option {if $sup_info.pay_way_change eq '预付30%，货到现场30%，安装调试合格30%，一年质保金10%'}selected{/if} >预付30%，货到现场30%，安装调试合格30%，一年质保金10%</option>
+            </select>-->
+          </div>
+        </div>
+        {/notempty}
+        {notempty name="$sup_info['pay_way_change']"}
+        {if $sup_info.pay_way_status eq 'uncheck'}
         <div class="form-group col-sm-6">
           <label class="col-sm-2 control-label">付款方式状态</label>
           <div class="col-sm-10">
-            <select class="form-control" id="pay_way_status">
-              <option {if $sup_info.pay_way_status eq '正常'}selected{/if} value="正常">正常</option>
-              <option {if $sup_info.pay_way_status eq '禁用'}selected{/if} value="禁用">禁用</option>
-              <option {if $sup_info.pay_way_status eq '待审核'}selected{/if} value="待审核">待审核</option>
-            </select>
-            <button type="button" class="btn btn-success" onclick="changePayWayStatus('{$sup_info.code}');">付款方式审核状态更改</button>
+            <button type="button" class="btn btn-success" onclick="changePayWayStatus('{$sup_info.code}','pass');">同意更改付款方式</button>
+            <button type="button" class="btn btn-danger" onclick="changePayWayStatus('{$sup_info.code}','refuse');">拒绝更改付款方式</button>
           </div>
         </div>
+        {/if}
+        {/notempty}
       </form>
     </div>
     <div class="edit-table">
@@ -276,7 +294,7 @@
 
     });
   }
-  function changePayWayStatus(code){
+  function changePayWayStatus(code,status){
     layer.confirm('确认该操作吗？', {
       btn: ['提交','取消'], //按钮
       shade: false //不显示遮罩
@@ -284,7 +302,8 @@
       url = '{:url("Supporter/changePayWayStatus")}';
       data = {
         'code' : code,
-        'pay_way_status' : $('#pay_way_status').val()
+        'pay_way_status' : status,
+        'pay_way' : $('#pay_way_change').val()
       };
       layer.close(index);
       layer.load();

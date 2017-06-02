@@ -22,8 +22,8 @@ require(["laydate"],function(){
      * issure - 是否显示确认按钮
      */
     laydate({
-      format : "YYYY/MM/DD/ hh:mm:ss",
-      istime : true,
+      format : "YYYY-MM-DD",
+     // istime : true,
       isclear : true,
       istoday : true,
       issure : true
@@ -36,7 +36,7 @@ $(function(){
   $(".atw-supplier-tab2 .center span").click(function(){
     $(".atw-supplier-tab2 .center span").removeClass("select");
     $(this).addClass("select");
-    if( $(this).html()=="<i></i>三证合一"){
+    if( $(this).html()=="<i></i>三证"){
       $(".atw-supplier-tab2 .bottom .three").show().siblings().hide();
     }else{
       $(".atw-supplier-tab2 .bottom .one").show().siblings().hide();

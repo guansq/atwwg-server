@@ -97,7 +97,7 @@
           { "data": "exec_desc" },
           { "data": "status" },
           { "data": "contract_time" },
-          { "data": "order_code" },
+          { "data": "id" },
         ],
         "drawCallback": function( settings ) {
         },
@@ -106,7 +106,7 @@
             "targets": 4,
             "data": null,
             "render": function (data) {
-              var url = '{:url(\'Order/detail\')}?pr_code='+data;
+              var url = '{:url(\'Order/detail\')}?id='+data;
               return '<a href="javascript:void(0);"  data-open="'+url+'" >详情</a>';
             }
           }

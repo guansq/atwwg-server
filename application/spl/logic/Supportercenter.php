@@ -5,7 +5,7 @@
  * Date: 2017/5/22
  * Time: 9:45
  */
-namespace app\admin\logic;
+namespace app\spl\logic;
 
 use app\common\model\SupplierInfo as supModel;
 
@@ -67,13 +67,13 @@ class Supportercenter extends BaseLogic{
     /**
      * 得到单个供应商信息
      */
-    public function getOneSupInfo($sup_id){
+    public function getOneSupInfo($sup_code){
         //缺少建立日期,技术分,责任采购,信用等级,供应风险
         $supinfo = supModel::alias('a')
-            ->field('a.id,a.name,a.code,u.user_name,a.type_code,a.type_name,a.state_tax_code,a.found_date,a.ctc_name,a.mobile,a.fax,a.email,a.address,a.status,a.purch_type,a.check_type,a.check_rate,a.pay_way,t.arv_rate,t.pp_rate')
+            ->field('a.id,a.name,a.code,u.user_name,a.type_code,a.type_name,a.state_tax_code,a.purch_contract,a.found_date,a.ctc_name,a.mobile,a.fax,a.email,a.address,a.status,a.purch_type,a.check_type,a.check_rate,a.pay_way,t.arv_rate,t.pp_rate')
             ->join('supplier_tendency t','a.code=t.sup_code','LEFT')
             ->join('system_user u','a.sup_id=u.id','LEFT')
-            ->where('a.id',$sup_id)->find();
+            ->where('a.code',$sup_code)->find();
         if($supinfo){
             $supinfo = $supinfo->toArray();
         }
@@ -84,7 +84,12 @@ class Supportercenter extends BaseLogic{
      * 得到供应商图片信息
      */
     public function getSupQuali($sup_code){
-        return $supQuali = model('SupplierQualification')->where("sup_code",$sup_code)->select();
+        $supQuali = model('SupplierQualification')->where("sup_code",$sup_code)->select();
+        if($supQuali){
+            $supQuali = collection($supQuali)->toArray();
+            return $supQuali;
+        }
+        return false;
     }
 
     /*
@@ -100,4 +105,35 @@ class Supportercenter extends BaseLogic{
     public function saveSupId($id,$data){
         return supModel::where('id',$id)->update($data);
     }
+
+    //更新合同图片
+    function updatecontract($code,$src){
+        $list = supModel::where(['code'=>$code])->update([ 'purch_contract' => ['exp', 'concat(IFNULL(purch_contract,\'\'),\''.','.$src.'\')']]);
+        //echo $this->getLastSql();
+        //die();
+        return $list;
+    }
+    //更新资质图片
+    function updatesupplierqualification($sup_code,$src,$code,$begintime,$endtime){
+        $list = model('SupplierQualification')->where(['code'=>$code,'sup_code'=>$sup_code])->update(['update_at'=>time(),'status'=>'init','term_start'=>$begintime,'term_end'=>$endtime, 'img_src' =>$src]);
+        // 'img_src' => ['exp', 'concat(IFNULL(img_src,\'\'),\''.','.$src.'\')']
+        //echo $this->getLastSql();
+        //die();
+        return $list;
+    }
+    //更新资质状态
+    function updateSupconfirmStatus($sup_code,$code,$begintime,$endtime){
+        $list = model('SupplierQualification')->where(['code'=>$code,'sup_code'=>$sup_code])->update(['update_at'=>time(),'status'=>'unchecked ','term_start'=>$begintime,'term_end'=>$endtime]);
+        return $list;
+    }
+    //查询资质图片
+    function querysupplierqualification($sup_code,$code){
+        $list =model('SupplierQualification')->where(['code'=>$code,'sup_code'=>$sup_code])->select();
+       // echo $this->getLastSql();
+        //die();
+        return $list;
+    }
+
+
+
 }

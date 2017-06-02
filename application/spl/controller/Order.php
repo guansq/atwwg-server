@@ -37,6 +37,7 @@ class Order extends Base{
             }
         }
         $list = $offerLogic->getPolist($where);
+
         $returnInfo = [];
         $status = [
             '' => '',
@@ -71,7 +72,7 @@ class Order extends Base{
             $returnInfo[$k]['create_at'] = date('Y-m-d',$v['create_at']);
             $returnInfo[$k]['status'] = $status[$v['status']];
             $returnInfo[$k]['contract_time'] = empty($v['contract_time']) ?'--':date('Y-m-d',$v['contract_time']);
-            $returnInfo[$k]['detail'] = $v['id'];
+            $returnInfo[$k]['id'] = $v['id'];
         }
         //dump($returnInfo);
         $info = ['draw'=>time(),'data'=>$returnInfo,'extData'=>[],];
@@ -88,15 +89,16 @@ class Order extends Base{
         return view();
     }
     public function detail(){
-        $pr_code = input('pr_code');
+        $pr_id = input('id');
         //$pr_code = '1111222';
         $offerLogic = model('Order','logic');
-        $detail = $offerLogic->getOrderDetailInfo($pr_code);
+        $detail = $offerLogic->getOrderDetailInfo($pr_id);
+
         foreach ($detail as $key => $item){
-            $result = $offerLogic->getOrderRecordInfo($pr_code,$item['item_code']);
+            $result = $offerLogic->getOrderRecordInfo($item['id']);
             $detail[$key]['times'] = (!empty($result)?count($result):0);
         }
-        $codeInfo = $offerLogic->getOrderListOneInfo($pr_code);
+        $codeInfo = $offerLogic->getOrderListOneInfo($pr_id);
         $contractable = in_array($codeInfo[0]['status'],array('sup_sure','upload_contract'))?'1':'0';
         $cancelable = in_array($codeInfo[0]['status'],array('init','atw_sure'))?'1':'0';
         $confirmorderable = in_array($codeInfo[0]['status'],array('init','atw_sure'))?'1':'0';
@@ -107,15 +109,24 @@ class Order extends Base{
         $imgInfos=array_filter($imgInfos);
         $this->assign('statusButton',$statusButton);
         $this->assign('imgInfos',$imgInfos);
+       // var_dump($detail);
         $this->assign('list',$detail);
+        if(empty($codeInfo[0]['order_code'])){
+            $codeInfo[0]['order_code'] = '--';
+        }
+        if(empty($codeInfo[0]['contract_time'])){
+            $codeInfo[0]['contract_time'] = '--';
+        }else{
+            $codeInfo[0]['contract_time'] = date('Y-m-d',$codeInfo[0]['contract_time']);
+        }
         $this->assign('codeInfo',$codeInfo[0]);
         return view();
     }
 
     public function cancel(){
-        $pr_code = input('pr_code');
+        $id = input('id');
         $offerLogic = model('Order','logic');
-        $detail = $offerLogic->updateStatus($pr_code,'sup_cancel');
+        $detail = $offerLogic->updateStatus($id,'sup_cancel');
         if($detail){
             return json(['code'=>2000,'msg'=>'成功','data'=>[]]);
         }else{
@@ -123,9 +134,9 @@ class Order extends Base{
         }
     }
     public function orderconfirm(){
-        $pr_code = input('pr_code');
+        $id = input('id');
         $offerLogic = model('Order','logic');
-        $detail = $offerLogic->updateStatus($pr_code,'sup_sure');
+        $detail = $offerLogic->updateStatus($id,'sup_sure');
         if($detail){
             return json(['code'=>2000,'msg'=>'成功','data'=>[]]);
         }else{
@@ -134,16 +145,20 @@ class Order extends Base{
     }
 
     public function updateSupconfirmdate(){
-        $pr_code = input('pr_code');
+        $id = input('id');
+        $po_id = input('po_id');
         $supconfirmdate =strtotime(input('supconfirmdate')) ;
         $item_code = input("item_code");
         $offerLogic = model('Order','logic');
-        $detailInfo = $offerLogic->getOrderDetailInfo($pr_code,$item_code);
-       // var_dump($detailInfo);
+        $detailInfo = $offerLogic->getOrderDetailInfo($po_id);
+        //var_dump($detailInfo);
         if(!empty($detailInfo)){
-            if (DataService::save('po_record', [ 'po_code' =>$pr_code,'item_code'=>$item_code,'create_at'=>time(),'update_at'=>time(),'po_ln'=>$detailInfo[0]['po_ln'],'promise_date'=>$detailInfo[0]['sup_confirm_date']])) {
-                $detail = $offerLogic->updateSupconfirmdate($pr_code,$item_code,$supconfirmdate);
-                $detailPo = $offerLogic->updateStatus($pr_code,'sup_edit');
+            $result = $offerLogic->getOrderRecordInfo($id);
+            $times = (!empty($result)?count($result):0);
+            $times = $times+1;
+            if (DataService::save('po_record', [ 'pi_id' =>$id,'create_at'=>time(),'update_at'=>time(),'promise_date'=>$detailInfo[0]['sup_confirm_date'],'req'=>$times])) {
+                $detail = $offerLogic->updateSupconfirmdate($id,$supconfirmdate);
+                $detailPo = $offerLogic->updateStatus($detailInfo[0]['po_id'],'sup_edit');
                 if($detail){
                     return json(['code'=>2000,'msg'=>'成功','data'=>[]]);
                 }else{
@@ -160,14 +175,14 @@ class Order extends Base{
     public function add(){
         if(request()->isPost()){
             $data=input('param.');
-            $pr_code = $data['pr_code'];
+            $id = $data['id'];
             $src = $data['src'];
             $offerLogic = model('Order','logic');
-            $result = $offerLogic->updatecontract($pr_code,$src,'upload_contract');
+            $result = $offerLogic->updatecontract($id,$src,'upload_contract');
             $result !== false ? $this->success('恭喜，保存成功哦！', '') : $this->error('保存失败，请稍候再试！');
         }else{
-            $pr_code = input('pr_code');
-            $this->assign('pr_code',$pr_code);
+            $id = input('id');
+            $this->assign('pr_code',$id);
             return view();
         }
 

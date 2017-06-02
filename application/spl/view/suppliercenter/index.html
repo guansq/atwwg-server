@@ -19,34 +19,39 @@
     <table class="table table-bordered atw-supplier-tab">
       <tr>
         <td>成立日期：</td>
-        <td><input type="text" class="laydate-icon"></td>
+        <td><input type="text" disabled="true" value="{$sup_info['found_date']|date='y-m-d',###}"></td>
         <td>供应商名称：</td>
-        <td><input type="text"></td>
+        <td><input type="text" disabled="true" value="{$sup_info['name']}"></td>
       </tr>
       <tr>
         <td>电话：</td>
-        <td><input type="text"></td>
+        <td><input type="text" disabled="true" value="{$sup_info['mobile']}"></td>
         <td>税号：</td>
-        <td><input type="text"></td>
+        <td><input type="text" disabled="true" value="{$sup_info['state_tax_code']}"></td>
       </tr>
       <tr>
         <td>邮箱：</td>
-        <td><input type="text"></td>
+        <td><input type="text" disabled="true" value="{$sup_info['email']}"></td>
         <td>联系人：</td>
-        <td><input type="text"></td>
+        <td><input type="text" disabled="true" value="{$sup_info['ctc_name']}"></td>
       </tr>
       <tr>
         <td>地址：</td>
-        <td><input type="text"></td>
+        <td><input type="text" disabled="true" value="{$sup_info['address']}"></td>
         <td>传真：</td>
-        <td><input type="text"></td>
+        <td><input type="text" disabled="true" value="{$sup_info['fax']}"></td>
       </tr>
       <tr>
         <td>付款方式：</td>
         <td colspan="3" class="colspan">
-          <select name="" id="">
-            <option value=""></option>
-          </select>
+            <select class="form-control">
+              <option {if $sup_info.pay_way eq '货到验收合格，票到120天付款'}selected{/if} >货到验收合格，票到120天付款</option>
+              <option {if $sup_info.pay_way eq '货到验收合格，票到90天付款'}selected{/if} >货到验收合格，票到90天付款</option>
+              <option {if $sup_info.pay_way eq '货到验收合格，票到30天付款'}selected{/if} >货到验收合格，票到30天付款</option>
+              <option {if $sup_info.pay_way eq '预付30%，发货前付70%'}selected{/if} >预付30%，发货前付70%</option>
+              <option {if $sup_info.pay_way eq '预付30%，货到现场30%，安装调试合格30%，一年质保金10%'}selected{/if} >预付30%，货到现场30%，安装调试合格30%，一年质保金10%</option>
+            </select>
+          <br>
           <span class="annotate">*选择修改后需要平台运营人员审核通过，通过后会通过邮件和手机短信息通知您</span>
         </td>
       </tr>
@@ -65,90 +70,45 @@
         <td></td>
       </tr>
     </table>
-    <div class="atw-supplier-upload">
-      <input type="checkbox">
+    <div class="atw-supplier-upload" >
+      <input type="checkbox" id ="contractcheck">
       <span>同意安特威采购合同条约</span>
       <a href="">下载打印采购合同条约</a>
       <div class="upload">
         <p>
-          <img src="/static/spl/img/add.png" alt="">
-          <img src="/static/spl/img/add.png" alt="">
-          <img src="/static/spl/img/add.png" alt="">
+          {if $imgInfos|@count neq 0 }
+          {volist name='imgInfos' id='pimgInfos'}
+          <img src="{$pimgInfos}" alt=""  >
+          {/volist}
+          {/if}
+          <img src="/static/spl/img/add.png" alt="" id="contractUpload">
         </p>
         <p class="hint">上传采购合同条约</p>
       </div>
     </div>
     <div class="atw-supplier-title">企业资质</div>
     <table class="table table-bordered atw-supplier-tab2">
+      {volist name="qualilist" id="pqualilist"}
       <tr class="active">
-        <td>经营信息</td>
-        <td>操作</td>
-      </tr>
-      <tr>
-        <td>
-          <div class="top">公司名称：<input class="name" type="text"> 证件有效期：<input class="time laydate-icon" type="text"> 到 <input class="time laydate-icon" type="text"></div>
-          <div class="center">资质照片：
-            <span class="select"><i></i>三证合一</span>
-            <span><i></i>三证</span>
-          </div>
-          <div class="bottom">
-            <div class="three">
-              <div>
-                <p>营业执照</p>
-                <img src="/static/spl/img/add.png" alt="">
-              </div>
-              <div>
-                <p>营业执照</p>
-                <img src="/static/spl/img/add.png" alt="">
-              </div>
-              <div>
-                <p>营业执照</p>
-                <img src="/static/spl/img/add.png" alt="">
-              </div>
-            </div>
-            <div class="one" style="display: none">
-              <div>
-                <p>营业执照</p>
-                <img src="/static/spl/img/add.png" alt="">
-              </div>
-            </div>
-          </div>
-        </td>
-        <td class="btn1"><button class="btn btn-primary">提交</button></td>
-      </tr>
-      <tr class="active">
-        <td>ISO90001</td>
+        <td>{$pqualilist}</td>
         <td></td>
       </tr>
-      <tr class="cont">
+      <tr class="cont" id="qua-{$key}">
+        {if condition="$supqualilist[$key] eq ''"}
         <td>
-          <img src="/static/spl/img/add.png" alt="">
-          <p>证件有效期 <input type="text" class="laydate-icon"><input type="text" class="laydate-icon"></p>
+          <img class="upload" src="/static/spl/img/add.png" alt="">
+          <p>证件有效期 <input type="text" class="laydate-icon" class="begintime" name="begintime"><input type="text" class="laydate-icon" class="endtime" name="endtime"></p>
         </td>
-        <td class="btn2"><button class="btn btn-primary">提交</button></td>
-      </tr>
-      <tr class="active">
-        <td>TS认证</td>
-        <td></td>
-      </tr>
-      <tr class="cont">
+        <td class="btn2"><button class="btn btn-primary submitbtn">提交</button></td>
+        {else}
         <td>
-          <img src="/static/spl/img/add.png" alt="">
-          <p>证件有效期 <input type="text" class="laydate-icon"><input type="text" class="laydate-icon"></p>
-        </td>
-        <td class="btn2"><button class="btn btn-primary">提交</button></td>
+        <img class="" src="{$supqualilist[$key]['img_src']}" alt="">
+        <p>证件有效期 <input type="text" class="laydate-icon" value="{$supqualilist[$key]['term_start']}" class="begintime" name="begintime"><input type="text" value="{$supqualilist[$key]['term_end']}" class="laydate-icon" class="endtime" name="endtime"></p>
+       </td>
+        <td class="btn2"><button class="btn btn-primary submitbtn" disabled="true">提交</button></td>
+        {/if}
       </tr>
-      <tr class="active">
-        <td>其他</td>
-        <td></td>
-      </tr>
-      <tr class="cont">
-        <td>
-          <img src="/static/spl/img/add.png" alt="">
-          <p>证件有效期 <input type="text" class="laydate-icon"><input type="text" class="laydate-icon"></p>
-        </td>
-        <td class="btn2"><button class="btn btn-primary">提交</button></td>
-      </tr>
+      {/volist}
     </table>
   </div>
 </main>
@@ -158,4 +118,91 @@
 
 {block name="script"}
 <script src="/static/spl/suppliercenter/index.js"></script>
+
+<script>
+
+  $("#contractcheck").click(function () {
+    if($('#contractcheck').is(':checked')){
+      $("#contractUpload").attr('data-modal','{:url("$classuri/add")}?code=contract')
+    }else{
+      $("#contractUpload").attr('data-modal','');
+
+    }
+
+  })
+  $(".submitbtn").click(function () {
+    var trObj = $(this).parent().parent();
+    var imgid =  trObj.attr('id').substring(4);
+    var begintime = trObj.find($('input[name="begintime"]')).val();
+    var endtime = trObj.find($('input[name="endtime"]')).val();
+    if(begintime=='' || endtime=='' ){
+      layer.alert('请先确定时间是否正确');
+      return ;
+    }
+    layer.confirm('确定提交申请', {
+      btn: ['确定','取消']
+    }, function(index){
+      layer.close(index);
+      $.ajax({
+        'url' : '{:url("Suppliercenter/updateSupconfirmStatus")}',
+        'type' : 'POST',
+        //'dataType' : 'html',
+        'data' : {
+          'begintime':begintime,
+          'endtime':endtime,
+          'imgid':imgid
+        },
+        'complete' : function(){
+          //layer.closeAll();
+        },
+        'success' : function(obj){
+          layer.closeAll();
+          if(obj.code == 2000){
+            location.reload();
+          }else{
+            layer.alert(obj.msg);
+          }
+          //console.log(obj);
+        },
+        'error' : function(){
+          layer.closeAll();
+          layer.alert('请求失败');
+        }
+      });
+    });
+
+
+  });
+
+  $(".upload").click(function () {
+    var trObj = $(this).parent().parent();
+    var imgid =  trObj.attr('id').substring(4);
+    var begintime = trObj.find($('input[name="begintime"]')).val();
+    var endtime = trObj.find($('input[name="endtime"]')).val();
+    if(begintime == '' || endtime == '' ){
+      alert('请先填写日期');
+      return;
+    }
+    $(this).attr('data-modal','{:url("$classuri/add")}?code='+imgid+'&begintime='+begintime+'&endtime='+endtime)
+ //   console.log(begintime);
+//    if($('#contractcheck').is(':checked')){
+//      $(this).attr('data-modal','{:url("$classuri/add")}?code=contract')
+//    }else{
+//      $("#contractUpload").attr('data-modal','');
+//
+//    }
+
+  })
+
+//  <img class="upload" src="/static/spl/img/add.png" alt="" data-modal='{:url("$classuri/add")}?code={$key}' >
+//          <p>证件有效期 <input type="text" class="laydate-icon" class="begintime"><input type="text" class="laydate-icon" class="endtime"></p>
+
+</script>
+<script>
+  //调用示例
+  layer.photos({
+    photos: '#ImageList'
+    ,anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+  });
+</script>
 {/block}

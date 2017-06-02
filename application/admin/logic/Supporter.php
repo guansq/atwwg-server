@@ -82,7 +82,7 @@ class Supporter extends BaseLogic{
         //缺少建立日期,技术分,责任采购,信用等级,供应风险
         $supinfo = supModel::alias('a')
             ->field('a.id,a.name,a.code,u.user_name,u.create_at as u_create,a.type_code,a.type_name,a.state_tax_code,a.found_date,a.ctc_name,
-            a.mobile,a.fax,a.email,a.address,a.status,a.purch_code,a.purch_name,a.purch_type,a.check_type,a.check_rate,a.pay_way,a.pay_way_status,a.create_at,t.arv_rate,t.pp_rate')
+            a.mobile,a.fax,a.email,a.address,a.status,a.purch_code,a.purch_name,a.purch_type,a.check_type,a.check_rate,a.pay_way,a.pay_way_change,a.pay_way_status,a.create_at,t.arv_rate,t.pp_rate')
             ->join('supplier_tendency t','a.code=t.sup_code','LEFT')
             ->join('system_user u','a.sup_id=u.id','LEFT')
             ->where('a.id',$sup_id)->find();

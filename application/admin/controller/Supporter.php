@@ -69,15 +69,15 @@ class Supporter extends BaseController{
         $list = $logicSupInfo->getListInfo($start,$length,$where);//分页
         $returnArr = [];
         $status = [
-            '' => '待审核',
-            '正常' => '正常',
-            '禁用' => '禁用',
-            '待审核' => '待审核',
+            'normal' => '正常',
+            'forbid' => '禁用',
+            'uncheck' => '待审核',
         ];
         $pay_way_status = [
             '' => '待审核',
-            '正常' => '不需要审核',
-            '禁用' => '禁用',
+            'uncheck' => '待审核',
+            'pass' => '不需要审核',
+            'refuse' => '拒绝',
         ];
         foreach($list as $k => $v){
             $v['arv_rate'] = $v['arv_rate'] == '' ? '暂无数据' : $v['arv_rate'];
@@ -250,9 +250,17 @@ class Supporter extends BaseController{
         $where = [
             'code' => input('param.code'),
         ];
-        $data = [
-            'pay_way_status' => input('param.pay_way_status'),
-        ];
+        if(input('param.pay_way_status') == 'agree'){
+            $data = [
+                'pay_way_status' => input('param.pay_way_status'),
+                'pay_way' => input('param.pay_way')
+            ];
+        }else{
+            $data = [
+                'pay_way_status' => input('param.pay_way_status'),
+                //'pay_way' => input('param.pay_way')
+            ];
+        }
         $result = $logicSupInfo->changeSupplierInfo($where,$data);
         if($result !== false){
             return json(['code'=>2000,'data'=>[],'msg'=>'成功']);

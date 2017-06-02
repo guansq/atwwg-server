@@ -30,6 +30,7 @@ class Enquiryorder extends BaseController{
         $start = input('start') == '' ? 0 : input('start');
         $length = input('length') == '' ? 10 : input('length');
         $logicIoInfo = Model('Io','logic');
+        $prLogic = Model('RequireOrder','logic');
         $list = $logicIoInfo->getIoList($start,$length);
 
         $returnArr = [];
@@ -47,24 +48,35 @@ class Enquiryorder extends BaseController{
         foreach($list as $k => $v){
             //得到全部的询价单 by pr_code item_code
             $where = [
-                'pr_code' => $v['pr_code'],
-                'item_code' => $v['item_code'],
+                //'pr_code' => $v['pr_code'],
+                //'item_code' => $v['item_code'],
+                'pr_id' => $v['pr_id'],
             ];
             $allIo = $logicIoInfo->getIoCountByWhere($where);
             //得到已报价的询价单by pr_code item_code status
             $where = [
-                'pr_code' => $v['pr_code'],
-                'item_code' => $v['item_code'],
-                'status' => 'quoted',//已报价
+                'pr_id' => $v['pr_id'],
+                'quote_price' => ['<>',''],//已报价
+                'quote_date' => ['<>','']//已报价日期
             ];
             $quotedIo = $logicIoInfo->getIoCountByWhere($where);
 
-            if($quotedIo < $allIo){
+            /*if($quotedIo < $allIo){
                 $status_desc = '询价中';
             }else{
                 $status_desc = '已报价';
-            }
-
+            }*/
+            $statusArr = [
+                'init' => '初始',
+                'hang' => '挂起',
+                'inquiry' => '询价中',
+                'flow' => '流标',
+                'windbid' => '已评标',
+                'order' => '已下单',
+                'close' => '关闭'
+            ];
+            $prStatus = $prLogic->getPrStatus(['id'=>$v['pr_id']]);
+            $status_desc = $statusArr[$prStatus];
             $returnArr[] = [
                 'io_code' => $v['io_code'],//询价单号
                 'pr_code' => $v['pr_code'],//请购单号
@@ -105,26 +117,37 @@ class Enquiryorder extends BaseController{
         $ioCode = input('param.io_code');
         $logicIoInfo = Model('Io','logic');
         $info = $logicIoInfo->getIoInfo($ioCode);
-
+        $prLogic = Model('RequireOrder','logic');
         $commonInfo = $info[0];//单个记录
+        $prId = $commonInfo['pr_id'];
+
         //得到全部的询价单 by pr_code item_code
         $where = [
-            'pr_code' => $commonInfo['pr_code'],
-            'item_code' => $commonInfo['item_code'],
+            //'pr_code' => $v['pr_code'],
+            //'item_code' => $v['item_code'],
+            'pr_id' => $prId,
         ];
         $allIo = $logicIoInfo->getIoCountByWhere($where);
         //得到已报价的询价单by pr_code item_code status
         $where = [
-            'pr_code' => $commonInfo['pr_code'],
-            'item_code' => $commonInfo['item_code'],
-            'status' => 'quoted',//已报价
+            'pr_id' => $prId,
+            'quote_price' => ['<>',''],//已报价
+            'quote_date' => ['<>','']//已报价日期
         ];
         $quotedIo = $logicIoInfo->getIoCountByWhere($where);
-        if($quotedIo < $allIo){
-            $status_desc = '询价中';
-        }else{
-            $status_desc = '已报价';
-        }
+
+        $statusArr = [
+            'init' => '初始',
+            'hang' => '挂起',
+            'inquiry' => '询价中',
+            'flow' => '流标',
+            'windbid' => '已评标',
+            'order' => '已下单',
+            'close' => '关闭'
+        ];
+        $prStatus = $prLogic->getPrStatus(['id'=>$prId]);
+        $status_desc = $statusArr[$prStatus];
+
         $commonInfo['price_status'] = $quotedIo.'/'.$allIo;//报价状态
         $commonInfo['status_desc'] = $status_desc;//状态
         $this->assign('ioInfo',$info);

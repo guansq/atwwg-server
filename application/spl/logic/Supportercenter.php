@@ -115,7 +115,7 @@ class Supportercenter extends BaseLogic{
     }
     //更新支付方式
     function updatepayway($code,$payway){
-        $list = supModel::where(['code'=>$code])->update([ 'pay_way' => $payway,'pay_way_status'=>'待审核']);
+        $list = supModel::where(['code'=>$code])->update([ 'pay_way_change' => $payway,'pay_way_status'=>'uncheck']);
         //echo $this->getLastSql();
         //die();
         return $list;
@@ -123,7 +123,7 @@ class Supportercenter extends BaseLogic{
 
     //更新资质图片
     function updatesupplierqualification($sup_code,$src,$code,$begintime,$endtime){
-        $list = model('SupplierQualification')->where(['code'=>$code,'sup_code'=>$sup_code])->update(['update_at'=>time(),'status'=>'init','term_start'=>$begintime,'term_end'=>$endtime, 'img_src' =>$src]);
+        $list = model('SupplierQualification')->where(['code'=>$code,'sup_code'=>$sup_code])->update(['update_at'=>time(),'status'=>'','term_start'=>$begintime,'term_end'=>$endtime, 'img_src' =>$src]);
         // 'img_src' => ['exp', 'concat(IFNULL(img_src,\'\'),\''.','.$src.'\')']
         //echo $this->getLastSql();
         //die();

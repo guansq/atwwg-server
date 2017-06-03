@@ -90,7 +90,7 @@ class Supporter extends BaseController{
                 'arv_rate' => $v['arv_rate'],
                 'pp_rate' => $v['pp_rate'],
                 'quali_score' => getQualiScore($v['code']),//质量分
-                'status' => $status[$v['status']],
+                'status' => '正常',// FIXME $status[$v['status']],
                 'pay_type_status' => $pay_way_status[$v['pay_way_status']],
                 'quali' => '<a class="edit" href="javascript:void(0);" data-open="'.url('Supporter/edit',['id'=>$v['id']]).'" >查看</a>',
                 'action' => '<a class="edit" href="javascript:void(0);" data-open="'.url('Supporter/edit',['id'=>$v['id']]).'" >编辑</a>',

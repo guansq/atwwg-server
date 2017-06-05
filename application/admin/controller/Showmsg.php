@@ -17,7 +17,17 @@ class Showmsg extends BaseController{
     protected $title = '相关信息';
 
     public function index(){
-        //echo '111111111';die;
+        $current_time = time();
+        //询价待审批
+
+        //订单逾期警告
+
+        //供应商资质过期
+
+        //流拍询价数量
+
+        //运营情况一览表
+
         $this->assign('title',$this->title);
         return view();
     }

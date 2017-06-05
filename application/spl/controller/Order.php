@@ -182,7 +182,7 @@ class Order extends Base{
             $result !== false ? $this->success('恭喜，保存成功哦！', '') : $this->error('保存失败，请稍候再试！');
         }else{
             $id = input('id');
-            $this->assign('pr_code',$id);
+            $this->assign('id',$id);
             return view();
         }
 

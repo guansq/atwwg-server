@@ -148,4 +148,11 @@ class Supporter extends BaseLogic{
     public function getSupName($where){
         return supModel::where($where)->value('name');
     }
+
+    /*
+     * 得到供应商资质过期数量
+     */
+    public function getPastSuppNum($time){
+        return qualiModel::where('term_end','<',$time)->count();
+    }
 }

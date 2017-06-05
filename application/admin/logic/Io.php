@@ -47,4 +47,18 @@ class Io extends BaseLogic{
          }
          return $list;
      }
+
+     /*
+      * 得到询价待审批数量
+      */
+     function getQuoteNum(){
+         return IoModel::where('status','in',['quoted'])->count();
+     }
+
+     /*
+      *得到流拍询价数量
+      */
+     function getGiveupNum(){
+         return IoModel::where('status','in',['giveupbid'])->count();
+     }
 }

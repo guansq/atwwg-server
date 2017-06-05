@@ -68,6 +68,7 @@
       </table>
     </div>
     <div class="other_box">
+      {notempty name="$poInfo['contract']"}
       <section class="other_box_se1">
         <div class="pb_10 other_one">
           <span class="mr_15">合同扫描件</span>
@@ -80,6 +81,7 @@
           <img src="/static/admin/img/entering_pic.png" alt="">
         </div>
       </section>
+      {/notempty}
       <section class="other_box_se2">
         <div class="pb_10 other_one">
           <span class="mr_15">付款凭证</span>

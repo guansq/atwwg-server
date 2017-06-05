@@ -11,7 +11,7 @@ use controller\BasicAdmin;
 use service\LogService;
 use service\DataService;
 use think\Db;
-//use Qiniu\Auth;
+use Qiniu\Auth as QiniuAuth;
 use Qiniu\Processing\PersistentFop;
 
 class Order extends BaseController{
@@ -124,9 +124,10 @@ class Order extends BaseController{
         $host = sysconf('storage_qiniu_domain');
         $key = '1.png';
 
-        $auth = new Auth($accessKey, $secretKey);
+        $auth = new QiniuAuth($accessKey, $secretKey);
 
     }
+
     public function detailed(){
         $id = input('get.id');
         //echo $id;

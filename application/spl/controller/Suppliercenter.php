@@ -63,10 +63,14 @@ class Suppliercenter extends Base{
 
             $this->assign('sup_info',$sup_info);
             $supQuali = $logicSupInfo->getSupQuali($sup_code);
+            $statusList = [''=>'未审核','agree'=>'同意','refuse'=>'拒绝'];
             if(!empty($supQuali)){
                 foreach ($supQuali as $key => $iv){
+                    if (empty($iv['status'])){
+                        $iv['status'] = '';
+                    }
                    // ,'status'=>$statusCheck[$iv['status']]
-                   $supQualiList[$iv['code']] = array('term_start'=>date('Y-m-d',$iv['term_start']),'term_end'=>date('Y-m-d',$iv['term_end']),'img_src'=>$iv['img_src']);
+                   $supQualiList[$iv['code']] = array('term_start'=>date('Y-m-d',$iv['term_start']),'term_end'=>date('Y-m-d',$iv['term_end']),'img_src'=>$iv['img_src'],'status'=>$statusList[$iv['status']]);
                 }
             }
         }

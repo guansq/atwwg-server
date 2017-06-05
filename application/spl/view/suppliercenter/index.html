@@ -77,18 +77,20 @@
       </tr>
     </table>
     <div class="atw-supplier-upload" >
-      <input type="checkbox" id ="contractcheck">
+      <input type="checkbox" id ="contractcheck"{if $sup_info.is_agree_purch_contract eq 1} checked="checked"{/if}>
       <span>同意安特威采购合同条约</span>
       <a href="">下载打印采购合同条约</a>
 
       <div class="upload">
         <p>
+          <span class="clickenlarge">
           {if $imgInfos|@count neq 0 }
           {volist name='imgInfos' id='pimgInfos'}
           <img src="{$pimgInfos}" alt=""  >
           {/volist}
           {/if}
-          <img src="/static/spl/img/add.png" alt="" id="contractUpload">
+          </span>
+          <img src="/static/spl/img/add.png" alt="" id="contractUpload" {if $sup_info.is_agree_purch_contract eq 1} data-modal='{:url("$classuri/add")}?code=contract'{/if}>
         </p>
         <p class="hint">上传采购合同条约</p>
       </div>
@@ -98,6 +100,7 @@
       {volist name="qualilist" id="pqualilist"}
       <tr class="active">
         <td>{$pqualilist}</td>
+        <td>审核状态</td>
         <td></td>
       </tr>
       <tr class="cont" id="qua-{$key}">
@@ -110,12 +113,16 @@
           </span>
           <p>证件有效期 <input type="text" class="laydate-icon" class="begintime" name="begintime"><input type="text" class="laydate-icon" class="endtime" name="endtime"></p>
         </td>
+        <td ></td>
         <td class="btn2"><button class="btn btn-primary submitbtn">提交</button></td>
         {else}
         <td>
-        <img class="" src="{$supqualilist[$key]['img_src']}" alt="">
+          <span class="clickenlarge">
+            <img class="" src="{$supqualilist[$key]['img_src']}" alt="">
+          </span>
         <p>证件有效期 <input type="text" class="laydate-icon" value="{$supqualilist[$key]['term_start']}" class="begintime" name="begintime"><input type="text" value="{$supqualilist[$key]['term_end']}" class="laydate-icon" class="endtime" name="endtime"></p>
        </td>
+        <td >{$supqualilist[$key]['status']}</td>
         <td class="btn2"><button class="btn btn-primary submitbtn" disabled="true">提交</button></td>
        {/if}
       </tr>
@@ -238,7 +245,7 @@
 <script>
   //调用示例
   layer.photos({
-    photos: '#ImageList'
+    photos: '.clickenlarge'
     ,anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
   });
 </script>

@@ -70,7 +70,7 @@ class Supportercenter extends BaseLogic{
     public function getOneSupInfo($sup_code){
         //缺少建立日期,技术分,责任采购,信用等级,供应风险
         $supinfo = supModel::alias('a')
-            ->field('a.id,a.name,a.code,u.user_name,a.type_code,a.type_name,a.pay_way_status,a.pay_way_change,a.state_tax_code,a.purch_contract,a.found_date,a.ctc_name,a.mobile,a.fax,a.email,a.address,a.status,a.purch_type,a.check_type,a.check_rate,a.pay_way,t.arv_rate,t.pp_rate')
+            ->field('a.id,a.name,a.code,u.user_name,a.type_code,a.type_name,a.is_agree_purch_contract,a.pay_way_status,a.pay_way_change,a.state_tax_code,a.purch_contract,a.found_date,a.ctc_name,a.mobile,a.fax,a.email,a.address,a.status,a.purch_type,a.check_type,a.check_rate,a.pay_way,t.arv_rate,t.pp_rate')
             ->join('supplier_tendency t','a.code=t.sup_code','LEFT')
             ->join('system_user u','a.sup_id=u.id','LEFT')
             ->where('a.code',$sup_code)->find();
@@ -108,7 +108,7 @@ class Supportercenter extends BaseLogic{
 
     //更新合同图片
     function updatecontract($code,$src){
-        $list = supModel::where(['code'=>$code])->update([ 'purch_contract' => ['exp', 'concat(IFNULL(purch_contract,\'\'),\''.','.$src.'\')']]);
+        $list = supModel::where(['code'=>$code])->update([ 'is_agree_purch_contract'=>1,'purch_contract' => ['exp', 'concat(IFNULL(purch_contract,\'\'),\''.','.$src.'\')']]);
         //echo $this->getLastSql();
         //die();
         return $list;

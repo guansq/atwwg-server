@@ -17,7 +17,27 @@ class Showmsg extends BaseController{
     protected $title = '相关信息';
 
     public function index(){
-        //echo '111111111';die;
+        $current_time = time();
+        //询价待审批
+        $ioLogic = model('Io','Logic');
+        $quoteNum = $ioLogic->getQuoteNum();
+        $this->assign('quoteNum',$quoteNum);
+
+        //订单逾期警告    //dump($quoteNum);
+        $poLogic = model('Po','Logic');
+        $poItemNum = $poLogic->getPoItemNum();
+        $this->assign('poItemNum',$poItemNum);
+
+        //供应商资质过期
+        $suppLogic = model('Supporter','Logic');
+        $pastSuppNum = $suppLogic->getPastSuppNum($current_time);
+        $this->assign('pastSuppNum',$pastSuppNum);
+        //流拍询价数量
+        $giveupNum = $ioLogic->getGiveupNum();
+        $this->assign('giveupNum',$giveupNum);
+        //运营情况一览表
+        $msgNum = $quoteNum + $poItemNum + $pastSuppNum;
+        $this->assign('msgNum',$msgNum);
         $this->assign('title',$this->title);
         return view();
     }

@@ -47,4 +47,11 @@ class Po extends BaseLogic{
         return $list;
     }
 
+    /*
+     * 得到即将过期的订单数量
+     */
+    function getPoItemNum(){
+        return poItemModel::alias('a')->join('po b','a.po_id = b.id')
+                ->where('b.status','in',['executing'])->where('pro_goods_num','>',0)->count();//得到执行中的订单，和订单未到货数量>0
+    }
 }

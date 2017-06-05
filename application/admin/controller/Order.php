@@ -74,30 +74,34 @@ class Order extends BaseController{
            switch($v['status']){
                case 'init'://初始
                    $action = [];
-                   $returnInfo[$k]['status'] = '待签订';
+                   $returnInfo[$k]['status'] = '待供应商确定订单';
                    break;
                case 'sup_cancel'://供应商取消
                    $action = [];
+                   $returnInfo[$k]['status'] = '供应商取消了订单';
                    break;
                case 'sup_edit'://供应商修改
-                   $action = ['atw_sure'=>'确认订单'];
+                   $returnInfo[$k]['status'] = '<a href="javascript:;" onclick="verifyOrder('.$v['id'].',\'atw_sure\',this);">供应商修改，确定订单</a>';
                    break;
-               case 'atw_sure'://安特威确定
-                   $action = [];
+               case 'atw_sure'://安特威确定 以及init
+                   $returnInfo[$k]['status'] = '待供应商确定订单';
                    break;
                case 'sup_sure'://供应商确定/待上传合同
-                   $action = ['atw_sure'=>'确认订单'];
+                   $returnInfo[$k]['status'] = '供应商确定/待上传合同';
                    break;
                case 'upload_contract'://供应商已经上传合同
+                   $returnInfo[$k]['status'] = '<a href="javascript:;" onclick="verifyOrder('.$v['id'].',\'contract_pass\',this);">合同审核通过</a>
+                                                <a href="javascript:;" onclick="verifyOrder('.$v['id'].',\'contract_refuse\',this);">拒绝该合同</a>';
                    $action = ['contract_pass'=>'通过','contract_refuse'=>'拒绝'];
                    break;
                case 'contract_pass'://合同审核通过
-                   $action = [];
+                   $returnInfo[$k]['status'] = '合同审核通过';
                    break;
                case 'contract_refuse'://合同审核拒绝
-                   $action = [];
+                   $returnInfo[$k]['status'] = '合同已被拒绝';
                    break;
            }
+
             $returnInfo[$k]['detail'] = $v['id'];
         }
         //dump($returnInfo);
@@ -143,5 +147,28 @@ class Order extends BaseController{
         $this->assign('poItemInfo',$poItemInfo);
         $this->assign('allAmount',$allAmount);
         return view();
+    }
+
+    public function verifyStatus(){
+        $poLogic = model('Po','logic');
+        $param = input('param.');
+        $data = [
+            'status' => $param['action']
+        ];
+        $where = [
+            'id' => $param['id'],
+        ];
+        $status = [
+            'atw_sure' => '待供应商确定订单',
+            'contract_pass' => '合同审核通过',
+            'contract_refuse' => '合同已被拒绝',
+
+        ];
+        $res = $poLogic->saveStatus($where, $data);
+        if($res !== false){
+            return json(['code'=>2000,'msg'=>$status[$param['action']],'data'=>[]]);
+        }else{
+            return json(['code'=>4000,'msg'=>'更新失败','data'=>[]]);
+        }
     }
 }

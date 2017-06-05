@@ -260,3 +260,12 @@ function format_excel2array11($excelObj,$filePath='',$sheet=0){
     }
     return $data;
 }
+
+function prDates($start,$end){
+    $dt_start = strtotime($start);
+    $dt_end = strtotime($end);
+    while ($dt_start<=$dt_end){
+        echo date('Y-m-d',$dt_start)."\n";
+        $dt_start = strtotime('+1 day',$dt_start);
+    }
+}

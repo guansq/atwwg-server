@@ -39,7 +39,7 @@ require(["echarts","laydate"],function(echarts){
       {
         name: '质量合格率',
         type: 'line',
-        data: [3, 20, 44, 18, 68, 35,60,23,88]
+        data: [0, 0, 0, 0, 0, 0, 0, 0, 0]
       },
     ]
   };

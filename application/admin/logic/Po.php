@@ -54,4 +54,11 @@ class Po extends BaseLogic{
         return poItemModel::alias('a')->join('po b','a.po_id = b.id')
                 ->where('b.status','in',['executing'])->where('pro_goods_num','>',0)->count();//得到执行中的订单，和订单未到货数量>0
     }
+
+    /*
+     *保存订单状态
+     */
+    function saveStatus($where, $data){
+        return poModel::where($where)->update($data);
+    }
 }

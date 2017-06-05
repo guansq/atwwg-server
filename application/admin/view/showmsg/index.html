@@ -54,13 +54,15 @@
         </tr>
         </thead>
         <tbody>
+        {volist name="showInfo" id="vo"}
         <tr>
-          <td>2017/3/19</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>{$vo['date']}</td>
+          <td>{$vo['unfinishPrnum']}</td>
+          <td>{$vo['ioNum']}</td>
+          <td>{$vo['poNum']}</td>
+          <td>{$vo['failPrNum']}</td>
         </tr>
+        {/volist}
         </tbody>
       </table>
     </div>

@@ -61,4 +61,11 @@ class Io extends BaseLogic{
      function getGiveupNum(){
          return IoModel::where('status','in',['giveupbid'])->count();
      }
+
+     /*
+      * 通过条件得到询价单数量
+      */
+     function getIoNumByWhere($where){
+         return IoModel::where($where)->count();
+     }
 }

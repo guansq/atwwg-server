@@ -61,4 +61,11 @@ class Po extends BaseLogic{
     function saveStatus($where, $data){
         return poModel::where($where)->update($data);
     }
+
+    /*
+     * 根据条件得到订单数量
+     */
+    public function getPoNumByWhere($where){
+        return poModel::where($where)->count();
+    }
 }

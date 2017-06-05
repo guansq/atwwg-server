@@ -69,4 +69,11 @@ class RequireOrder extends BaseLogic{
     function getPrStatus($where){
         return model('U9Pr')->where($where)->value('status');
     }
+
+    /*
+     * 通过条件得到请购单数量
+     */
+    function getNumByWhere($where){
+        return prModel::where($where)->count();
+    }
 }

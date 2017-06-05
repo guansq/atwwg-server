@@ -39,19 +39,46 @@ class Showmsg extends BaseController{
         $msgNum = $quoteNum + $poItemNum + $pastSuppNum;
         $this->assign('msgNum',$msgNum);
         $this->assign('title',$this->title);
+        $prLogic = model('RequireOrder', 'Logic');
         $oneDay = 24*60*60;
         $showArr = [];
         //显示最近7天的运营信息
         $defultShow = [strtotime("-1 day"),strtotime("-2 day"),strtotime("-3 day"),strtotime("-4 day"),strtotime("-5 day"),strtotime("-6 day"),strtotime("-7 day")];
+        
         foreach($defultShow as $k => $v){
             $showArr[$k]['date'] = date('Y-m-d',$v);
-            //未处理请购单数量
+            $startTime = $v;
+            $endTime = $v+$oneDay;
+            //未处理请购单数量 init
+            $where = [
+                'update_at'=>['between',"$startTime,$endTime"],
+                'status'=>'init'
+            ];
+
+            $showArr[$k]['unfinishPrnum'] = $prLogic->getNumByWhere($where);
             //已发送询价单数量
+            $where = [];
+            $where = [
+                'update_at'=>['between',"$startTime,$endTime"],
+            ];
+            $showArr[$k]['ioNum'] = $ioLogic->getIoNumByWhere($where);
             //已发送订单数量
-            //处理请购单数量失败数量
+            $where = [];
+            $where = [
+                'update_at'=>['between',"$startTime,$endTime"],
+            ];
+            $showArr[$k]['poNum'] = $poLogic->getPoNumByWhere($where);
+            //处理请购单数量失败数量 hang=挂起 close = 关闭
+            $where = [];
+            $where = [
+                'update_at'=>['between',"$startTime,$endTime"],
+                'status'=>['in',['hang','close']]
+            ];
+            $showArr[$k]['failPrNum'] = $prLogic->getNumByWhere($where);
             //echo date('Y-m-d',$v).'<br>';
         }
-        dump($showArr);
+        //dump($showArr);
+        $this->assign('showInfo',$showArr);
         return view();
     }
 
@@ -60,6 +87,10 @@ class Showmsg extends BaseController{
     }
 
     public function add(){
+
+    }
+
+    public function runInfo(){
 
     }
 

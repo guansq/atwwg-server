@@ -11,7 +11,7 @@ require(["jquery.dataTables","laydate"],function(){
 });
 
 function initPage(){
-  $('#example').DataTable({
+  /*$('#example').DataTable({
     //paging: false, 设置是否分页
     "info": false,  //去除左下角的信息
     "lengthChange": false, //是否允许用户改变表格每页显示的记录数
@@ -25,7 +25,7 @@ function initPage(){
         "sLast": "末页"
       }
     }
-  });
+  });*/
 
   //时间选择
   $(".date_time").focus(function(){
@@ -46,7 +46,7 @@ function initPage(){
      * issure - 是否显示确认按钮
      */
     laydate({
-      format : "YYYY年MM月DD日 hh:mm:ss",
+      format : "YYYY-MM-DD",
       istime : true,
       isclear : true,
       istoday : true,

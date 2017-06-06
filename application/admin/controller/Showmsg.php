@@ -42,9 +42,28 @@ class Showmsg extends BaseController{
         $prLogic = model('RequireOrder', 'Logic');
         $oneDay = 24*60*60;
         $showArr = [];
+        $revData = input('param.');
+        //dump($revData);
+
         //显示最近7天的运营信息
         $defultShow = [strtotime("-1 day"),strtotime("-2 day"),strtotime("-3 day"),strtotime("-4 day"),strtotime("-5 day"),strtotime("-6 day"),strtotime("-7 day")];
-        
+        if(isset($revData['startTime']) && isset($revData['endTime'])){
+            //echo strtotime($revData['endTime']);
+            $endTime = strtotime($revData['endTime']) > time() ? time() : strtotime($revData['endTime']);
+            $midtime = $endTime - strtotime($revData['startTime']);
+            if($midtime >= $oneDay){
+                $days = $midtime/$oneDay;
+                $defultShow = [];
+
+                for ($x=0; $x<=$days; $x++) {
+                    $endTime = $defultShow[$x] = $endTime - $oneDay;
+                    //echo date('y-m-d',$endTime);
+                }
+                //echo $days;
+            }
+        }
+//        dump($defultShow);
+//        die;
         foreach($defultShow as $k => $v){
             $showArr[$k]['date'] = date('Y-m-d',$v);
             $startTime = $v;

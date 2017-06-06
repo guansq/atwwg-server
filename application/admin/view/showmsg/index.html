@@ -36,12 +36,12 @@
       </ul>
     </section>
     <div class="rd_table">
-      <form class="search form-inline">
+      <form class="search form-inline animated form-search" onsubmit="return false" method="get" action ="{:url('Showmsg/index')}" >
         <span>运营情况一览表（默认一周）</span>
-        <input type="text" class="date_time form-control" style="min-width: 200px;">
+        <input type="text" name="startTime" value="{$Think.get.startTime|default=''}" class="date_time form-control" style="min-width: 200px;">
         到
-        <input type="text" class="date_time form-control" style="min-width: 200px;">
-        <button type="button" class="btn btn-primary">查询</button>
+        <input type="text" name="endTime" value="{$Think.get.endTime|default=''}" class="date_time form-control" style="min-width: 200px;">
+        <button type="submit" class="btn btn-primary">查询</button>
       </form>
       <table id="example" class="cell-border table table-bordered" width="100%" cellspacing="0" style="margin-bottom: 20px;">
         <thead>

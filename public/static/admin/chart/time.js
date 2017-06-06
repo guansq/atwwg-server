@@ -45,7 +45,7 @@ require(["echarts","laydate"],function(echarts){
       {
         name: '交货及时率',
         type: 'line',
-        data: [3, 50, 36, 18, 68, 35,60,23,88]
+        data: [0, 0, 0, 0, 0, 0,0,0,0]
       },
     ]
   };

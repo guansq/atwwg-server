@@ -137,7 +137,7 @@
           shade: [0.1,"#fff"]
         });
         $.post(url,function(resdata){
-          console.log(resdata);
+          //console.log(resdata);
           layer.closeAll();
           //var obj = JSON.parse(resdata);
           if(resdata.prToIo.code == 2000){
@@ -162,7 +162,7 @@
 
     //导出
     $("#excel_out").click(function(){
-      console.log(1);
+      //console.log(1);
       layer.confirm('是否进行导出', {
         btn: ['确定导出','取消导出']
       }, function(index){

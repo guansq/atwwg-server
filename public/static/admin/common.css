@@ -417,12 +417,39 @@ html,body{
 }
 .dialogue_con .right_con .chat_con{
   float: right;
+  /*text-align: right;*/
 }
 .dialogue_con li .chat_con img{
   width: 50px;
   height: 50px;
   border-radius: 50% 50%;
+  vertical-align: sub;
 }
+.dialogue_con .left_con .chat_con section{
+  margin-left: 10px;
+}
+.dialogue_con .right_con .chat_con section{
+  margin-right: 10px;
+}
+.dialogue_con li .chat_con section{
+  width: 80%;
+  display: inline-block;
+}
+.dialogue_con li .chat_con .chat_name{
+  font-size: 13px;
+  color: #666666;
+}
+.dialogue_con li .chat_con .chat_text{
+  font-size: 14px;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 5px 10px;
+}
+.dialogue_con .right_con .chat_con .chat_name{
+  text-align: right;
+}
+
 
 
 

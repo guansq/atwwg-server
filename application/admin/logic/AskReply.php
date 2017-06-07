@@ -30,7 +30,29 @@ class AskReply extends BaseLogic{
         /*if($list){
             $list = collection($list)->toArray();
         }*/
-        //$page = preg_replace(['|href="(.*?)"|', '|pagination|'], ['data-load="$1" href="javascript:void(0);"', 'pagination pull-right'], $page->render());
+        return $list;
+    }
+
+    /*
+     * 得到询问ID信息
+     */
+    public function getAskInfo($id){
+        $askRely = model('AskReply');
+        $info = $askRely->where("id","$id")->find();
+        if($info){
+            $info = $info->toArray();
+        }
+        return $info;
+    }
+    /*
+     * 得到询问ID下的所有回复
+     */
+    public function getAllReply($id){
+        $askRely = model('AskReply');
+        $list = $askRely->where("pid","$id")->order('create_at desc')->select();
+        if($list){
+            $list = collection($list)->toArray();
+        }
         return $list;
     }
 }

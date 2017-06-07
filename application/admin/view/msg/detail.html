@@ -1,0 +1,66 @@
+{extend name='extra@admin/content' /}
+
+{block name="button"}
+<!--<div class="nowrap pull-right" style="margin-top:10px">
+  <button data-modal='{:url("$classuri/add")}' data-title="添加菜单" class='layui-btn layui-btn-small'><i class='fa fa-plus'></i> 添加菜单</button>
+  <button data-update data-field='delete' data-action='{:url("$classuri/del")}' class='layui-btn layui-btn-small layui-btn-danger'><i class='fa fa-remove'></i> 删除菜单</button>
+</div>-->
+{/block}
+
+{block name="content"}
+
+<form class="layui-form" onsubmit="return false;" data-auto="" method="POST">
+  <input type="hidden" value="resort" name="action"/>
+  <table class="table table-hover">
+    <thead>
+    <tr>
+
+      <th class='text-center'>咨询问题</th>
+      <th class='text-center'>咨询时间</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td class='text-center'>{$askInfo['content']}</td>
+      <td class='text-center'>{$askInfo['create_at']|date="Y-m-d H:i:s",###}</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div class="layui-form-item">
+
+      <input type="text" name="name" value='' required="required" title="请输入回复内容" placeholder="请输入回复内容" class="layui-input">
+
+  </div>
+  <div class="layui-form-item text-center">
+    <button class="layui-btn" type='submit'>回复</button>
+  </div>
+
+<!--  <table class="table table-hover">
+    <thead>
+    <tr>
+      <th class='text-center'>回复内容</th>
+      <th class='text-center'>回复时间</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td class='text-center'>11111</td>
+      <td class='text-center'>22222</td>
+    </tr>
+    </tbody>
+  </table>-->
+  <ul class="list-group">
+    <li class="list-group-item left"> <span class="badge">13</span>揭开CSS3的面
+    </li>
+    <li class="list-group-item"> <span class="badge">456</span>CSS3选择器
+    </li>
+    <li class="list-group-item"> <span class="badge">892</span>CSS3边框
+    </li>
+    <li class="list-group-item"> <span class="badge">90</span>CSS3背景
+    </li>
+    <li class="list-group-item"> <span class="badge">1290</span>CSS3文本
+    </li>
+  </ul>
+</form>
+{/block}

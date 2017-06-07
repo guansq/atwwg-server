@@ -33,9 +33,9 @@
         <input class="list-check-box" value='{$vo.id}' type='checkbox'/>
       </td>-->
       <td class="text-center">{$vo.id}</td>
-      <td class='text-center'>{$vo.content}</td>
+      <td class='text-left'>{$vo.content}</td>
       <td class='text-center'>{$vo.update_at|date="Y-m-d",###}</td>
-      <td class='text-center'>查看详情</td>
+      <td class='text-center'><a data-open="{:url('Msg/detail',array('id'=>$vo['id']))}">查看详情</a></td>
     </tr>
     {/foreach}
     </tbody>

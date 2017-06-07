@@ -37,4 +37,26 @@ class Msg extends BaseController{
         $this->assign('title',$this->title);
         return view();
     }
+
+    public function detail(){
+        $this->title = '咨询回复详情';
+        $id = input('param.id');
+        $askReplyLogic = model('AskReply','logic');
+        $curInfo = $askReplyLogic->getAskInfo($id);
+        $replyList = $askReplyLogic->getAllReply($id);
+        $replayArr = [
+            $curInfo['sender_id'] => 'left',
+            $curInfo['sendee_id'] => 'right'
+        ];
+        foreach($replyList as $k => $v){
+            if(key_exists($v['sender_id'],$replayArr)){
+                $replyList[$k]['position'] = $replayArr[$v['sender_id']];
+            }
+        }
+        $this->assign('title',$this->title);
+        $this->assign('askInfo',$curInfo);
+        //dump($replyList);
+        //echo $id;
+        return view();
+    }
 }

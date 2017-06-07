@@ -19,17 +19,17 @@ class Showmsg extends BaseController{
     public function index(){
         $current_time = time();
         //询价待审批
-        $ioLogic = model('Io','Logic');
+        $ioLogic = model('Io','logic');
         $quoteNum = $ioLogic->getQuoteNum();
         $this->assign('quoteNum',$quoteNum);
 
         //订单逾期警告    //dump($quoteNum);
-        $poLogic = model('Po','Logic');
+        $poLogic = model('Po','logic');
         $poItemNum = $poLogic->getPoItemNum();
         $this->assign('poItemNum',$poItemNum);
 
         //供应商资质过期
-        $suppLogic = model('Supporter','Logic');
+        $suppLogic = model('Supporter','logic');
         $pastSuppNum = $suppLogic->getPastSuppNum($current_time);
         $this->assign('pastSuppNum',$pastSuppNum);
         //流拍询价数量
@@ -39,7 +39,7 @@ class Showmsg extends BaseController{
         $msgNum = $quoteNum + $poItemNum + $pastSuppNum;
         $this->assign('msgNum',$msgNum);
         $this->assign('title',$this->title);
-        $prLogic = model('RequireOrder', 'Logic');
+        $prLogic = model('RequireOrder', 'logic');
         $oneDay = 24*60*60;
         $showArr = [];
         $revData = input('param.');

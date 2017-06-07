@@ -144,13 +144,22 @@ class Material extends BaseController{
     public function exportExcel(){
         //$path = config('upload_path'); //找到当前脚本所在路径
         //echo $path = dirname(__FILE__);
-        //echo die;
+        $where = [];
+        $get = input('param.');
+        $where = [];
+        // 应用搜索条件
+        foreach (['main_name', 'name', 'code', 'pur_attr'] as $key) {
+            if (isset($get[$key]) && $get[$key] !== '') {
+                $where[$key] = ['like',"%{$get[$key]}%"];
+            }
+        }
         $path = ROOT_PATH.'public'.DS.'upload'.DS;
+        $logicItemInfo = Model('Item','logic');
+        $list = $logicItemInfo->getAllListInfo($where);
+        //dump($list);die;
         $PHPExcel = new PHPExcel(); //实例化PHPExcel类，类似于在桌面上新建一个Excel表格
         $PHPSheet = $PHPExcel->getActiveSheet(); //获得当前活动sheet的操作对象
         $PHPSheet->setTitle('物料列表'); //给当前活动sheet设置名称
-        $logicItemInfo = Model('Item','logic');
-        $list = $logicItemInfo->getAllListInfo();
         $PHPSheet->setCellValue('A1','ID');
         $PHPSheet->setCellValue('B1','物料编码');
         $PHPSheet->setCellValue('C1','物料名称');

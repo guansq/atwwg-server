@@ -45,8 +45,13 @@ class Item extends Baselogic{
     /*
      * 得到U9全部供应商数据
      */
-    public function getAllListInfo(){
-        $list = ItemModel::select();
+    public function getAllListInfo($where){
+        if(!empty($where)){
+            $list = ItemModel::where($where)->select();
+        }else{
+            $list = ItemModel::select();
+        }
+
         if($list) {
             $list = collection($list)->toArray();
         }

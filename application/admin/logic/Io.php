@@ -11,23 +11,55 @@ use app\common\model\Io as IoModel;
 
 class Io extends BaseLogic{
 
-     function getIoList($start,$length){
+     function getIoList($start,$length,$where){
         //->join('u9_pr c','a.pr_code=c.pr_code','LEFT'),c.pro_no
-        $list = IoModel::alias('a')
-            ->field('a.*,b.desc,pr.pro_no,pr.status as pr_status')
-            ->join('item b','a.item_code=b.code','LEFT')
-            ->join('u9_pr pr','pr.id = a.pr_id','LEFT')
-            ->limit("$start,$length")
-            ->group('pr_id')
-            ->select();
+         $list = IoModel::alias('a')
+             ->field('a.*,b.desc,pr.pro_no,pr.status as pr_status')
+             ->join('item b','a.item_code=b.code','LEFT')
+             ->join('u9_pr pr','pr.id = a.pr_id','LEFT')
+             ->limit("$start,$length")
+             ->group('pr_id');
+         if(!empty($where)){
+             $list = $list->where($where);
+         }
+        $list = $list->select();
         if($list){
             $list = collection($list)->toArray();
         }
         return $list;
      }
 
-     function getListNum(){
-         $count = IoModel::alias('a')->field('a.*,b.desc')->join('item b','a.item_code=b.code','LEFT')->group('pr_code,item_code')->count();
+     /*
+      * 得到不含分页的数据
+      */
+    function getIoAllList($where){
+        //->join('u9_pr c','a.pr_code=c.pr_code','LEFT'),c.pro_no
+        $list = IoModel::alias('a')
+            ->field('a.*,b.desc,pr.pro_no,pr.status as pr_status')
+            ->join('item b','a.item_code=b.code','LEFT')
+            ->join('u9_pr pr','pr.id = a.pr_id','LEFT')
+            ->group('pr_id');
+        if(!empty($where)){
+            $list = $list->where($where);
+        }
+        $list = $list->select();
+        if($list){
+            $list = collection($list)->toArray();
+        }
+        return $list;
+    }
+
+     function getListNum($where){
+         $count = IoModel::alias('a')
+             ->field('a.id')
+             ->join('item b','a.item_code=b.code','LEFT')
+             ->join('u9_pr pr','pr.id = a.pr_id','LEFT')
+             ->group('pr_id');
+         if(!empty($where)){
+             $count = $count->where($where);
+         }
+         $count = $count->select();
+         //$count = IoModel::alias('a')->field('a.*,b.desc')->join('item b','a.item_code=b.code','LEFT')->group('pr_code,item_code')->count();
          return $count;
      }
 

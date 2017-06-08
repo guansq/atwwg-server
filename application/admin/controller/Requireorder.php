@@ -69,25 +69,56 @@ class Requireorder extends BaseController{
         ];
         //dump($list);die;
         foreach($list as $k => $v){
-            if($v['inquiry_way'] == 'assign' && $v['status'] == 'hang'){//订单挂起状态 且询价方式为指定
-                $v['is_appoint_sup'] = '<input style="margin-right: 15px;" type="checkbox" data-pr_id="'.$v['id'].'" data-pr_code="'.$v['pr_code'].'" data-item_code="'.$v['item_code'].'" class="ver_top" checked value="1">指定';
-                if(!empty($v['appoint_sup_code'])){
-                    $inquiry = $v['appoint_sup_name'];//可以进行主管审批操作
-                    if($v['check_status'] == ''){
-                        //auth();
-                        $v['check_status'] =  '<a href="javascript:;" onclick="checkStatus(\'agree\','.$v['id'].');">通过</a>&nbsp;&nbsp;<a href="javascript:;" onclick="checkStatus(\'refuse\','.$v['id'].');">拒绝</a>';
+            //status为init状态可以指定
+            $is_appoint_sup = $v['is_appoint_sup'];//先获取是否指定
+            if($v['status'] == 'init' || $v['status'] == 'hang'){//订单挂起状态 且订单为初始状态
+                if($v['status'] == 'init'){
+
+                    $v['check_status'] = '';
+                    if($v['appoint_sup_code'] == 1){
+                        //选择供应商
+                        $inquiry = '<a class="select_sell" href="javascript:void(0);" onclick="bomb_box(event,\''.$v['pr_code'].'\',\''.$v['item_code'].'\',\''.$v['id'].'\');" data-url="'
+                            .url('requireorder/selectSup',array('pr_code'=>$v['pr_code'],'item_code'=>$v['item_code'])).'">选择供应商</a>';
                     }else{
-                        if(key_exists($v['check_status'],$checkStatus)){
-                            $v['check_status'] = $checkStatus[$v['check_status']];
-                        }
+                        $inquiry = $inquiry_way[$v['inquiry_way']];
                     }
                 }else{
-                    //选择供应商
-                    $inquiry = '<a class="select_sell" href="javascript:void(0);" onclick="bomb_box(event,\''.$v['pr_code'].'\',\''.$v['item_code'].'\',\''.$v['id'].'\');" data-url="'.url('requireorder/selectSup',array('pr_code'=>$v['pr_code'],'item_code'=>$v['item_code'])).'">选择供应商</a>';
-                    $v['check_status'] = '';
+                    if($is_appoint_sup == 1){//为指定状态 --->挂起状态下的指定
+                        if(!empty($v['appoint_sup_code'])){//指定状态下有供应商的名称
+                            $inquiry = $v['appoint_sup_name'];
+                            if($v['check_status'] == ''){//判断主管审核
+                                //auth();
+                                $v['check_status'] =  '<a href="javascript:;" onclick="checkStatus(\'agree\','.$v['id'].');">通过</a>
+                                &nbsp;&nbsp;<a href="javascript:;" onclick="checkStatus(\'refuse\','.$v['id'].');">拒绝</a>';
+                            }else{
+                                if(key_exists($v['check_status'],$checkStatus)){
+                                    $v['check_status'] = $checkStatus[$v['check_status']];
+                                }else{
+                                    $v['check_status'] = $v['check_status'];
+                                }
+                            }
+                        }else{//非指定状态下无供应商名称---->选择供应商 && 无审核状态
+                            $v['check_status'] = '';
+                            $inquiry = '<a class="select_sell" href="javascript:void(0);" 
+                            onclick="bomb_box(event,\''.$v['pr_code'].'\',\''.$v['item_code'].'\',\''.$v['id'].'\');" data-url="'
+                                .url('requireorder/selectSup',array('pr_code'=>$v['pr_code'],'item_code'=>$v['item_code'])).'">选择供应商</a>';
+                        }
+
+                    }else{//挂起 &&  非指定状态
+                        $inquiry = $inquiry_way[$v['inquiry_way']];
+                        $v['check_status'] = '';
+                    }
                 }
-            }else{
-                $v['is_appoint_sup'] = '<input style="margin-right: 15px;" type="checkbox" data-pr_id="'.$v['id'].'"  data-pr_code="'.$v['pr_code'].'" data-item_code="'.$v['item_code'].'" class="ver_top" value="1">指定';
+                //init 和 hang 只要 appoint_sup_code 为可以选择供应商都可以指定
+                if($is_appoint_sup == 1){
+                    $v['is_appoint_sup'] = '<input style="margin-right: 15px;" type="checkbox" data-pr_id="'.$v['id'].'" data-pr_code="'.
+                    $v['pr_code'].'" data-item_code="'.$v['item_code'].'" checked class="ver_top" checked value="1">指定';//有指定的时候
+                }else{
+                    $v['is_appoint_sup'] = '<input style="margin-right: 15px;" type="checkbox" data-pr_id="'.$v['id'].'" data-pr_code="'.
+                        $v['pr_code'].'" data-item_code="'.$v['item_code'].'" class="ver_top" value="0">指定';//没有指定的时候
+                }
+            }else{//订单非挂起 和  非指定
+                $v['is_appoint_sup'] = '';
                 $v['check_status'] = '';
                 if(key_exists($v['inquiry_way'],$inquiry_way)){
                     $inquiry = $inquiry_way[$v['inquiry_way']];
@@ -149,11 +180,12 @@ class Requireorder extends BaseController{
 
         if($data['is_appoint_sup'] == 0){
             $dataArr = [
-                'status' => '',
+                'status' => 'init',
                 'inquiry_way' => '',
                 'is_appoint_sup' => 0,
                 'appoint_sup_code' => '',
                 'appoint_sup_name' => '',
+                'check_status' => '',
             ];
 
         }else if($data['is_appoint_sup'] == 1){

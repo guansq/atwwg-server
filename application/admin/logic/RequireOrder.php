@@ -14,8 +14,18 @@ class RequireOrder extends BaseLogic{
     /*
      * 得到请购单信息
      */
-     function getPrList($start,$length){
-        $list = prModel::alias('a')->field('a.*,b.desc,b.pur_attr')->join('item b','a.item_code=b.code','LEFT')->where('a.status','<>','close')->limit("$start,$length")->select();
+     function getPrList($start,$length,$where){
+         if(!empty($where)){
+             if(key_exists('status',$where)){
+                 $list = prModel::alias('a')->field('a.*,b.desc,b.pur_attr')->join('item b','a.item_code=b.code','LEFT')->where($where)->limit("$start,$length")->select();
+             }else{
+                 $list = prModel::alias('a')->field('a.*,b.desc,b.pur_attr')->join('item b','a.item_code=b.code','LEFT')->where($where)->where('a.status','<>','close')->limit("$start,$length")->select();
+             }
+
+         }else{
+             $list = prModel::alias('a')->field('a.*,b.desc,b.pur_attr')->join('item b','a.item_code=b.code','LEFT')->where('a.status','<>','close')->limit("$start,$length")->select();
+         }
+
 //        echo $this->getLastSql();
         if($list){
             $list = collection($list)->toArray();
@@ -24,11 +34,41 @@ class RequireOrder extends BaseLogic{
         return $list;
      }
 
+     /*
+      *无分页得到所有信息
+      */
+     function getAllListInfo($where){
+         if(!empty($where)){
+             if(key_exists('status',$where)){
+                 $list = prModel::alias('a')->field('a.*,b.desc,b.pur_attr')->join('item b','a.item_code=b.code','LEFT')->where($where)->select();
+             }else{
+                 $list = prModel::alias('a')->field('a.*,b.desc,b.pur_attr')->join('item b','a.item_code=b.code','LEFT')->where($where)->where('a.status','<>','close')->select();
+             }
+
+         }else{
+             $list = prModel::alias('a')->field('a.*,b.desc,b.pur_attr')->join('item b','a.item_code=b.code','LEFT')->where('a.status','<>','close')->select();
+         }
+
+         if($list){
+             $list = collection($list)->toArray();
+         }
+         return $list;
+     }
+
     /*
      * 得到列表数量
      */
-     function getListNum(){
-         $count = prModel::alias('a')->field('a.*,b.desc,b.pur_attr')->join('item b','a.item_code=b.code','LEFT')->where('a.status','<>','close')->count('pr_code');
+     function getListNum($where){
+         if(!empty($where)){
+             if(key_exists('status',$where)){
+                 $count = prModel::alias('a')->field('a.*,b.desc,b.pur_attr')->join('item b','a.item_code=b.code','LEFT')->where($where)->count();
+             }else{
+                 $count = prModel::alias('a')->field('a.*,b.desc,b.pur_attr')->join('item b','a.item_code=b.code','LEFT')->where($where)->where('a.status','<>','close')->count();
+             }
+
+         }else{
+             $count = prModel::alias('a')->field('a.*,b.desc,b.pur_attr')->join('item b','a.item_code=b.code','LEFT')->where('a.status','<>','close')->count();
+         }
          return $count;
      }
 

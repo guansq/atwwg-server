@@ -16,7 +16,7 @@
       <form id="requireOrder" class="form-inline">
         <div class="pb_15">
           <input type="text" class="form-control" id="pr_code" placeholder="请购单号">
-          <input type="text" class="form-control" id="pr_date" placeholder="请购日期">
+          <input type="text" class="form-control date_time" id="pr_date" placeholder="请购日期">
           <input type="text" class="form-control" id="item_code" placeholder="料号">
           <input type="text" class="form-control" id="item_name" placeholder="物料描述">
           <input type="text" class="form-control" id="pro_no" placeholder="项目号">
@@ -25,8 +25,14 @@
         <div>
           <select id="status" class="form-control">
             <option value="">状态</option>
+            <option value="init">待询价</option>
+            <option value="hang">挂起</option>
             <option value="inquiry">询价中</option>
-            <option value="close">已下单</option>
+            <option value="quoted">供应商全部报价完毕</option>
+            <option value="flow">流标</option>
+            <option value="winbid">中标</option>
+            <option value="order">已下单</option>
+            <option value="close">关闭</option>
           </select>
           <select class="form-control" id="is_appoint_sup">
             <option value="">是否指定供应商</option>
@@ -36,13 +42,17 @@
           <select class="form-control" id="check_status">
             <option value="">审批状态</option>
             <option value="agree">已审批</option>
-            <option value="">待审批</option>
+            <option value="refuse">已拒绝</option>
           </select>
           <button type="button" class="btn btn-info" id="searchVal">查询</button>
         </div>
       </form>
     </div>
     <div class="mt_table">
+      <div class="pb_15">
+        <!--<button type="button" id="synchronization_btn" class="btn btn-info" style="margin-right: 15px;">立即同步ERP</button>-->
+        <button type="button" id="excel_out" class="btn btn-info" style="margin-right: 15px;">导出Excel</button>
+      </div>
       <div>
         <table id="example" class="display table table-bordered" cellspacing="0" width="100%">
           <thead>
@@ -112,10 +122,11 @@
    * Created by Administrator on 2017/5/11.
    */
   var prTable;
-  require(["jquery.dataTables"],function(){
+  require(["jquery.dataTables","laydate"],function(){
     require(["dataTables.bootstrap"],function(){
       $(document).ready(function(){
         initPage();
+        initTimePicker();
       });
     })
   });
@@ -123,6 +134,34 @@
     'item_code' : '',
     'pr_code' : ''
   };
+
+  function initTimePicker(){
+    $(".date_time").focus(function(){
+      /*
+       laydate插件提供显示日期控件的方法
+       laydate(options)
+       * options - 选项,格式为 { key : value }
+       * 选项
+       * format - 日期格式
+       默认格式为 YYYY-MM-DD hh:mm:ss(标准格式)
+       * 客户端
+       * 服务器端
+       * 数据库
+       * istime - 是否开启时间选择
+       * 默认值为false,不开启
+       * isclear - 是否显示清空按钮
+       * istoday - 是否显示今天按钮
+       * issure - 是否显示确认按钮
+       */
+      laydate({
+        format : "YYYY-MM-DD",
+        istime : true,
+        isclear : true,
+        istoday : true,
+        issure : true
+      });
+    });
+  }
   function initPage(){
 
     prTable = $('#example').DataTable({
@@ -311,5 +350,29 @@
   $('#searchVal').click(function(){
     prTable.ajax.reload();
   });
+
+  //导出
+  $("#excel_out").click(function(){
+    //console.log(1);
+    layer.confirm('是否进行导出', {
+      btn: ['确定导出','取消导出']
+    }, function(index){
+      layer.close(index);
+      //添加额外的参数传给服务器
+      var pr_code = $('#pr_code').val();
+      var pr_date = $('#pr_date').val();
+      var item_code = $('#item_code').val();
+      var item_name = $('#item_name').val();
+      var pro_no = $('#pro_no').val();
+      var pur_attr = $('#pur_attr').val();
+      var status = $('#status').val();
+      var is_appoint_sup = $('#is_appoint_sup').val();
+      var check_status = $('#check_status').val();
+      var str = "{:url('Requireorder/exportExcel')}"+'?pr_code='+pr_code+'&pr_date='+pr_date+'&item_code='+item_code+'&item_name='+item_name
+          +'&pro_no='+pro_no+'&pur_attr='+pur_attr+'&status='+status+'&is_appoint_sup='+is_appoint_sup+'&check_status='+check_status;
+      window.open(str);
+      //console.log(str);
+    });
+  })
 </script>
 {/block}

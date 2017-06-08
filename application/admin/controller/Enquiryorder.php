@@ -106,9 +106,52 @@ class Enquiryorder extends BaseController{
         return json($info);
     }
 
-
-    public function del(){
-
+    /*
+     * 发送选中的全部消息
+     */
+    public function sendAllMsg(){
+        $allId = input('param.io_id');
+        if($allId == ''){
+            return json(['code'=>4000,'msg'=>'请传入询价ID','data'=>[]]);
+        }
+        $ids = explode('|',$allId);
+        $logicIoInfo = Model('Io','logic');
+        $logicSystemUser = Model('SystemUser','logic');
+        foreach($ids as $k => $v){
+            $where = ['a.id' => $v];
+            $info = $logicIoInfo->getSupId($where);//通过IOid获取supid->
+            $sendInfo = [
+                'email' => '',
+                'phone' => '',
+                'token' => ''
+            ];
+            if($info){
+                $sendInfo['email'] = $info['email'];
+                $sendInfo['phone'] = $info['phone'];
+                $where = ['id'=>$info['sup_id']];//获取token条件
+                $sendInfo['token'] = $logicSystemUser->getPushToken($where);
+            }
+            if(!empty($sendInfo['email'])){
+                $sendData = [
+                    'rt_appkey' => 'atw_wg',
+                    'fromName' => '安特威物供平台',//发送人名
+                    'to' => $sendInfo['email'],
+                    'subject' => '测试主题',
+                    'html' => '测试内容',
+                    'from' => 'tan3250204@sina.com',//平台的邮件头
+                ];
+                echo sendEmail($sendData);
+            }
+            if(!empty($sendInfo['phone'])){
+                //sendSms($data)
+            }
+            if(!empty($sendInfo['token'])){
+                //pushMsg($data)
+            }
+            //dump($sendInfo);
+        }
+        //dump($ids);
+        //echo 'test';
     }
 
     public function add(){

@@ -15,4 +15,11 @@ class SystemUser extends BaseLogic{
         Db::name('SystemUser')->insert($data);
         return Db::name('SystemUser')->getLastInsID();
     }
+
+    /*
+     * 读取 token
+     */
+    function getPushToken($where){
+        return Db::name('SystemUser')->where($where)->value('push_token');
+    }
 }

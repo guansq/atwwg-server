@@ -8,7 +8,7 @@
 use service\NodeService;
 use service\DataService;
 use think\Db;
-
+use service\HttpService;
 /**
  * RBAC节点权限验证
  * @param string $node
@@ -55,4 +55,25 @@ function getProNo($pr_code){
         'pr_code' => $pr_code,
     ];
     return $prLogic->getProNo($where);
+}
+
+/*
+ * 发送消息
+ */
+function sendSms($data){
+    HttpService::curl(getenv('API_MSG').'/SendSms/sendText',$data);//发送短信
+}
+
+/*
+ * 发送邮件
+ */
+function sendEmail($data){
+    HttpService::curl(getenv('API_MSG').'/SendEmail/sendHtml',$data);//发送邮件
+}
+
+/*
+ * 推送消息
+ */
+function pushMsg($data){
+    HttpService::curl(getenv('API_MSG').'/push',$data);//推送信息
 }

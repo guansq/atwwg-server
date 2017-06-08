@@ -58,7 +58,7 @@
     </div>
     <div class="particulars_tableTwo">
       <div class="pb_15">
-        <button type="button" class="btn btn-info" style="margin-right: 15px;">发消息</button>
+        <button type="button" class="btn btn-info" style="margin-right: 15px;" onclick="sendAllMsg();">发消息</button>
         <span class="col_red">*提醒未报价供应商报价</span>
       </div>
       <table class="table table-bordered">
@@ -78,7 +78,7 @@
         {volist name='ioInfo' id='vo'}
         <tr>
           <td>
-            <input type="checkbox" value="{$vo.id}">
+            <input type="checkbox" name="checkinfo" value="{$vo.id}">
           </td>
           <td>{$vo.sup_code}</td>
           <th>{$vo.sup_name}</th>
@@ -99,4 +99,26 @@
 
 {block name="script"}
 <script src="/static/admin/enquiryorder/particulars.js"></script>
+<script>
+//发送消息
+function sendAllMsg(){
+  var chekVal = ''
+  $("input[name='checkinfo']:checked").each(function () {
+      chekVal += this.value+'|';//通过|来
+  });
+  if(chekVal == ''){
+    layer.alert('抱歉，没有选中数据');
+    return;
+  }
+  chekVal = chekVal.substr(0,chekVal.length-1);//截掉最后|
+  url = "{:url('Enquiryorder/sendAllMsg')}";
+  data = {
+    'io_id' : chekVal
+  }
+  $.post(url,data,function(res){
+    console.log(res);
+  });
+  //console.log(chekVal);
+}
+</script>
 {/block}

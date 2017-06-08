@@ -15,9 +15,9 @@ class Order extends BaseLogic{
      */
     function getPolist($where){
         if(empty($where)){
-            $list = Po::select();
+            $list = Po::order('update_at DESC')->select();
         }else{
-            $list = Po::where($where)->select();
+            $list = Po::where($where)->order('update_at DESC')->select();
         }
         if($list){
             $list = collection($list)->toArray();

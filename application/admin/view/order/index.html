@@ -16,16 +16,14 @@
     <div class="inquiry_box">
       <form class="form-inline">
         <input type="text" id="order_code" class="form-control" placeholder="订单编号">
-        <input type="text" id="pr_code" class="form-control" placeholder="采购单编号">
-        <input type="text" class="form-control" placeholder="需求部门">
-        <input type="text" class="form-control" placeholder="需求人员">
-        <input type="text" class="form-control" placeholder="交期">
+        <input type="text" id="pr_code" class="form-control" placeholder="请购单编号">
         <button type="button" id="searchVal" class="btn btn-info">查询</button>
       </form>
     </div>
     <div class="order_table">
       <div class="pb_15">
         <!--<button type="button" id="remove_btn" class="btn btn-danger">删除</button>-->
+        <button type="button" id="excel_out" class="btn btn-info" style="margin-right: 15px;">导出Excel</button>
       </div>
       <div class="order_box">
         <table id="example" class="display table table-bordered" cellspacing="0" width="100%">
@@ -223,6 +221,20 @@
 
     //console.log(dom);
   }
+
+  //导出
+  $("#excel_out").click(function(){
+    layer.confirm('是否进行导出', {
+      btn: ['确定导出','取消导出']
+    }, function(index){
+      layer.close(index);
+      var order_code = $("#order_code").val();
+      var pr_code = $("#pr_code").val();
+      var str = "{:url('Order/exportExcel')}"+'?order_code='+order_code+'&pr_code='+pr_code;
+      window.open(str);
+      //console.log(str);
+    });
+  })
 </script>
 
 

@@ -100,4 +100,15 @@ class Io extends BaseLogic{
      function getIoNumByWhere($where){
          return IoModel::where($where)->count();
      }
+
+     /*
+      * 获取supid通过ioid
+      */
+     function getSupId($where){
+         $list = IoModel::alias('a')->field('b.sup_id,b.phone,b.email')->join('supplier_info b','a.sup_code=b.code','LEFT')->where($where)->find();
+         if($list){
+             $list = $list->toArray();
+         }
+         return $list;
+     }
 }

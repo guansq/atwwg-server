@@ -173,9 +173,8 @@
         var code = $("#code").val();
         var pur_attr = $("#pur_attr").val();
         var str = "{:url('Material/exportExcel')}"+'?main_name='+main_name+'&name='+name+'&code='+code+'&pur_attr='+pur_attr;
-        console.log(str);
-        //console.log("{:url('Material/exportExcel',array('main_name'=> "+123456+",'name'=> "+name+",'code'=> "+code+",'pur_attr'=> "+pur_attr+"))}");return;
-        //window.open("{:url('Material/exportExcel',array('main_name'=> "+main_name+",'name'=> "+name+",'code'=> "+code+",'pur_attr'=> "+pur_attr+"))}");
+        window.open(str);
+        //console.log(str);
       });
     })
 

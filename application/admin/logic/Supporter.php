@@ -34,8 +34,16 @@ class Supporter extends BaseLogic{
     /*
      * 得到U9供应商supcode supname
      */
-    public function getExcelFiledInfo(){
-        $list = supModel::field('id,code,name')->select();
+    public function getExcelFiledInfo($where){
+        if(!empty($where)){
+            //$list = supModel::field('id,code,name')->where($where)->select();
+            $list = supModel::alias('a')->field('a.id,a.code,a.name,a.type_code,a.type_name,a.status,a.pay_way_status,t.arv_rate,t.pp_rate')
+                ->join('supplier_tendency t','a.code=t.sup_code','LEFT')->where($where)->select();
+        }else{
+            $list = supModel::alias('a')->field('a.id,a.code,a.name,a.type_code,a.type_name,a.status,a.pay_way_status,t.arv_rate,t.pp_rate')
+                ->join('supplier_tendency t','a.code=t.sup_code','LEFT')->select();
+            //$list = supModel::field('id,code,name')->select();
+        }
         if($list) {
             $list = collection($list)->toArray();
         }

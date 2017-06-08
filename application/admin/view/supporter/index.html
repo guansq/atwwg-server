@@ -247,7 +247,13 @@ $("#excel_out").click(function(){
     btn: ['确定导出','取消导出']
   }, function(index){
     layer.close(index);
-    window.open("{:url('Supporter/exportExcel')}");
+    var code = $("#code").val();
+    var name = $("#name").val();
+    var type_name = $("#type_name").val();
+    var status = $("#status").val();
+    var pay_way_status = $("#pay_way_status").val();
+    var str = "{:url('Supporter/exportExcel')}"+'?code='+code+'&name='+name+'&type_name='+type_name+'&status='+status+'&pay_way_status='+pay_way_status;
+    window.open(str);
   });
 })
 $("#searchVal").on('click', function () {

@@ -112,28 +112,71 @@ class Supporter extends BaseController{
         //$path = config('upload_path'); //找到当前脚本所在路径
         //echo $path = dirname(__FILE__);
         //echo die;
+        $where = [];
+        $get = input('param.');
+        // 应用搜索条件
+        foreach (['code', 'name', 'type_name', 'status', 'pay_way_status'] as $key) {
+            if (isset($get[$key]) && $get[$key] !== '') {
+                $where[$key] = ['like',"%{$get[$key]}%"];
+            }
+        }
+        $logicSupInfo = Model('Supporter','logic');
+        $list = $logicSupInfo->getExcelFiledInfo($where);
+        $returnArr = [];
+        $status = [
+            'normal' => '正常',
+            'forbid' => '禁用',
+            'uncheck' => '待审核',
+        ];
+        $pay_way_status = [
+            '' => '待审核',
+            'uncheck' => '待审核',
+            'pass' => '不需要审核',
+            'refuse' => '拒绝',
+        ];
+        foreach($list as $k => $v){
+            $v['arv_rate'] = $v['arv_rate'] == '' ? '暂无数据' : $v['arv_rate'];
+            $v['pp_rate'] = $v['pp_rate'] == '' ? '暂无数据' : $v['pp_rate'];
+            $returnArr[] = [
+                'id' => $v['id'],
+                'code' => $v['code'],
+                'name' => $v['name'],
+                'type_name' => $v['type_name'],
+                'tech_score' => getTechScore($v['code']),//技术分
+                'arv_rate' => $v['arv_rate'],
+                'pp_rate' => $v['pp_rate'],
+                'quali_score' => getQualiScore($v['code']),//质量分
+                'status' => '正常',// FIXME $status[$v['status']],
+                'pay_type_status' => $pay_way_status[$v['pay_way_status']],
+            ];
+        }
+        $list = $returnArr;
+        //dump($list);die;
         $path = ROOT_PATH.'public'.DS.'upload'.DS;
         $PHPExcel = new PHPExcel(); //实例化PHPExcel类，类似于在桌面上新建一个Excel表格
         $PHPSheet = $PHPExcel->getActiveSheet(); //获得当前活动sheet的操作对象
         $PHPSheet->setTitle('供应商列表'); //给当前活动sheet设置名称
-        $logicSupInfo = Model('Supporter','logic');
-        $list = $logicSupInfo->getExcelFiledInfo();
        // dump($list);die;
-//        $PHPSheet->getActiveSheet()->getColumnDimension('A')->setWidth(12);
-//        $PHPSheet->getActiveSheet()->getColumnDimension('B')->setWidth(20);
-//        $PHPSheet->getActiveSheet()->getColumnDimension('C')->setWidth(40);
-//        $PHPSheet->getActiveSheet()->getColumnDimension('D')->setWidth(25);
-//        $PHPSheet->getActiveSheet()->getColumnDimension('E')->setWidth(25);
 
         $PHPSheet->setCellValue('A1','供应商ID')->setCellValue('B1','供应商CODE');
         $PHPSheet->setCellValue('C1','供应商名称')->setCellValue('D1','供应商登录名');
         $PHPSheet->setCellValue('E1','供应商密码');
+        $PHPSheet->setCellValue('F1','供应商分类');
+        $PHPSheet->setCellValue('G1','技术评分');
+        $PHPSheet->setCellValue('H1','供应商交货及时率');
+        $PHPSheet->setCellValue('I1','供应商质量合格率');
+        $PHPSheet->setCellValue('J1','供应商资质评分');
+        $PHPSheet->setCellValue('K1','状态');
+        $PHPSheet->setCellValue('L1','付款方式审核');
         $num = 1;
         foreach($list as $k => $v){
             $num = $num+1;
             $PHPSheet->setCellValue('A'.$num,$v['id'])->setCellValue('B'.$num,$v['code'])
                 ->setCellValue('C'.$num,$v['name'])->setCellValue('D'.$num,strtolower($v['code']))
-                ->setCellValue('E'.$num,'');
+                ->setCellValue('E'.$num,'')->setCellValue('F'.$num,$v['type_name'])
+                ->setCellValue('G'.$num,$v['tech_score'])->setCellValue('H'.$num,$v['arv_rate'])
+                ->setCellValue('I'.$num,$v['pp_rate'])->setCellValue('J'.$num,$v['quali_score'])
+                ->setCellValue('K'.$num,$v['status'])->setCellValue('L'.$num,$v['pay_type_status']);
         }
         $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel,'Excel2007');//按照指定格式生成Excel文件，'Excel2007’表示生成2007版本的xlsx，
         $PHPWriter->save($path.'/supList.xlsx'); //表示在$path路径下面生成supList.xlsx文件
@@ -269,5 +312,9 @@ class Supporter extends BaseController{
             return json(['code'=>4000,'data'=>[],'msg'=>'失败']);
         }
     }
+
+    /*
+     *
+     */
 
 }

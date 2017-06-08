@@ -31,7 +31,7 @@
       </span>
 
       {if $statusButton.contractable eq 1}
-      <img src="/static/spl/img/add.png" alt="" class="uploadImg" data-modal='{:url("$classuri/add")}?id={$codeInfo.id}' >
+      <img src="/static/spl/img/add.png" alt="" class="uploadImg" data-modal='{:url("$classuri/add")}?id={$codeInfo.id}&contract={$codeInfo.contract}' >
      {else}
       <img src="/static/spl/img/add.png" alt=""  >
       {/if}

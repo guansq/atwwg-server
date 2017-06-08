@@ -146,6 +146,7 @@ class Order extends BaseController{
         foreach($poItemInfo as $k => $v){
             $allAmount += $v['amount'];
         }
+        exit(json_encode($poInfo));
         $this->assign('poInfo',$poInfo);
         $this->assign('poItemInfo',$poItemInfo);
         $this->assign('allAmount',$allAmount);

@@ -32,6 +32,7 @@ class Po extends BaseLogic{
         $info = poModel::where('id',$id)->find();
         if($info){
             $info = $info->toArray();
+            $info['contract'] = empty($info['contract'])?[]:explode(',',$info['contract']);
         }
         return $info;
     }

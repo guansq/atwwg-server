@@ -140,18 +140,41 @@ class Enquiryorder extends BaseController{
                     'html' => '测试内容',
                     'from' => 'tan3250204@sina.com',//平台的邮件头
                 ];
-                echo sendEmail($sendData);
+                HttpService::curl(getenv('APP_API_MSG').'SendEmail/sendHtml',$sendData);
             }
             if(!empty($sendInfo['phone'])){
-                //sendSms($data)
+                $sendData = [
+                    'mobile' => $sendInfo['phone'],
+                    'rt_appkey' => 'atw_wg',
+                    'text' => '测试测试文本',
+                ];
+                HttpService::curl(getenv('APP_API_MSG').'SendSms/sendText',$sendData);//sendSms($data)
             }
+            //echo $sendInfo['token'];
             if(!empty($sendInfo['token'])){
-                //pushMsg($data)
+                $sendData = [
+                    "platform" => "all",
+                    "rt_appkey" => "atw_wg",
+                    "alert" => "android手机专属消息4",
+                    "regIds" => $sendInfo['token'],
+                    //"platform" => "all",
+                    "androidNotification" => [
+                        "alert" => "alertalert alert alert",
+                        "title" => "安特威",
+                        "builder_id" => "builder_id",
+                        "priority" => 0,
+                        "style" => 0,
+                        "alert_type" => -1,
+                        "extras" => [
+                            "0" => "RuiTu",
+                            "key" => "value"
+                        ]
+                    ]/**/
+                ];
+                //dump($sendData);
+                echo HttpService::curl(getenv('APP_API_MSG').'push',$sendData);
             }
-            //dump($sendInfo);
         }
-        //dump($ids);
-        //echo 'test';
     }
 
     public function add(){

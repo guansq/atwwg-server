@@ -176,13 +176,16 @@ class Order extends Base{
         if(request()->isPost()){
             $data=input('param.');
             $id = $data['id'];
-            $src = $data['src'];
+            $contract = input('contract');
+            $src  = empty($contract)?$data['src']:$contract.','.$data['src'];
             $offerLogic = model('Order','logic');
             $result = $offerLogic->updatecontract($id,$src,'upload_contract');
             $result !== false ? $this->success('恭喜，保存成功哦！', '') : $this->error('保存失败，请稍候再试！');
         }else{
             $id = input('id');
+            $contract = input('contract');
             $this->assign('id',$id);
+            $this->assign('contract',$contract);
             return view();
         }
 

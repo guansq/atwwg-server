@@ -77,7 +77,7 @@ class Order extends BaseLogic{
     }
     //更新合同图片
     function updatecontract($id,$src,$status){
-        $list = Po::where(['id'=>$id])->update(['status'=>$status, 'contract' => ['exp', 'concat(IFNULL(contract,\'\'),\''.','.$src.'\')']]);
+        $list = Po::where(['id'=>$id])->update(['status'=>$status, 'contract' => $src]);
         //echo $this->getLastSql();
         //die();
         return $list;

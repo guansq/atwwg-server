@@ -179,7 +179,7 @@ class Enquiryorder extends BaseController{
         return json(['code' => 2000 ,'smg' => '发送成功','data'=>[]]);
     }
 
-    public function sendOneSmg(){
+    public function sendOneMsg(){
         $ioId = input('param.io_id');
         $logicIoInfo = Model('Io','logic');
         $logicSystemUser = Model('SystemUser','logic');
@@ -201,8 +201,8 @@ class Enquiryorder extends BaseController{
                 'rt_appkey' => 'atw_wg',
                 'fromName' => '安特威物供平台',//发送人名
                 'to' => $sendInfo['email'],
-                'subject' => '测试主题',
-                'html' => '测试内容',
+                'subject' => '您有新的报价单，请尽快查收',
+                'html' => '您有新的报价单，请尽快查收',
                 'from' => 'tan3250204@sina.com',//平台的邮件头
             ];
             HttpService::curl(getenv('APP_API_MSG').'SendEmail/sendHtml',$sendData);
@@ -211,7 +211,7 @@ class Enquiryorder extends BaseController{
             $sendData = [
                 'mobile' => $sendInfo['phone'],
                 'rt_appkey' => 'atw_wg',
-                'text' => '测试测试文本',
+                'text' => '您有新的报价单，请尽快查收',
             ];
             HttpService::curl(getenv('APP_API_MSG').'SendSms/sendText',$sendData);//sendSms($data)
         }
@@ -220,7 +220,7 @@ class Enquiryorder extends BaseController{
             $sendData = [
                 "platform" => "all",
                 "rt_appkey" => "atw_wg",
-                "alert" => "android手机专属消息4",
+                "alert" => "您有新的报价单，请尽快查收",
                 "regIds" => $sendInfo['token'],
                 //"platform" => "all",
                 "androidNotification" => [
@@ -234,9 +234,8 @@ class Enquiryorder extends BaseController{
                         "0" => "RuiTu",
                         "key" => "value"
                     ]
-                ]/**/
+                ]
             ];
-            //dump($sendData);
             HttpService::curl(getenv('APP_API_MSG').'push',$sendData);
         }
         return json(['code' => 2000 ,'smg' => '发送成功','data'=>[]]);

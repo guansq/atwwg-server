@@ -101,7 +101,7 @@ class Offer extends Base{
         $dataArr = [
             'quote_date' => time(),
             'promise_date' => strtotime($data['req_date']),
-            'quote_price' => number_format($data['quote_price'],2),
+            'quote_price' => ($data['quote_price']),
             'remark' => $data['remark'],
             'status' => 'quoted',//改变已报价
         ];

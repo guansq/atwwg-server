@@ -135,7 +135,10 @@
           layer.alert('更改成功');
           $(dom).parent().html('<p class="h2">' + res.msg + '</p>');
         }else{
-          layer.alert('更改失败');
+          layer.alert('更改失败，请刷新后再试',function(){
+            layer.closeAll();
+            $.form.reload();
+          });
         }
       });
       //$("#form 的 id").submit();

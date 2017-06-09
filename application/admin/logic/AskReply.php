@@ -49,7 +49,7 @@ class AskReply extends BaseLogic{
      */
     public function getAllReply($id){
         $askRely = model('AskReply');
-        $list = $askRely->where("pid","$id")->order('create_at desc')->select();
+        $list = $askRely->where("pid","$id")->order('create_at asc')->select();
         if($list){
             $list = collection($list)->toArray();
         }
@@ -69,5 +69,13 @@ class AskReply extends BaseLogic{
     public function getUnreadNum(){
         $askRely = model('AskReply');
         return $askRely->field('read_at')->where('read_at','')->count();
+    }
+
+    /*
+     * 保存消息
+     */
+    public function saveSmg($data){
+        $askRely = model('AskReply');
+        return $askRely->save($data);
     }
 }

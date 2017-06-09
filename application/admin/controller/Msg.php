@@ -72,6 +72,21 @@ class Msg extends BaseController{
     }
 
     public function sendMsg(){
-        echo '1111111';
+        $data = input('param.');
+        $askReplyLogic = model('AskReply','logic');
+        $dataArr = [];
+        $dataArr['content'] = $data['content'];
+        $dataArr['type'] = 'reply';
+        $dataArr['pid'] = $data['pid'];
+        $dataArr['sender_id'] = 0;
+        $dataArr['sendee_id'] = $data['sender_id'];
+        $dataArr['create_at'] = time();
+        $dataArr['update_at'] = time();
+        $res = $askReplyLogic->saveSmg($dataArr);
+        if($res){
+            return json(['code'=>2000,'msg'=>'回复成功','data'=>[]]);
+        }else{
+            return json(['code'=>4000,'msg'=>'回复失败','data'=>[]]);
+        }
     }
 }

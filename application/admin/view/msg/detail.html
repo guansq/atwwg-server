@@ -32,7 +32,7 @@
 
 <div class="dialogue_box">
   <div class="dialogue_con">
-    <ul>
+    <ul id="maincontent">
       {volist name="replyList" id="vo"}
       <li class="{$vo['position']}_con">
         <div class="chat_con">
@@ -63,11 +63,28 @@ function sendSmg(){
   data = {
     'pid' : $('#p_id').val(),
     'sender_id' : $('#sender_id').val(),
-    'sender_content' : $('#content').val(),
+    'content' : $('#content').val(),
   }
   url = "{:url('Msg/sendMsg')}";
+  layer.load();
   $.post(url,data,function(res){
-    console.log(res);
+    layer.closeAll();
+    if(res.code == 2000){
+      var str = '<li class="right_con">' +
+          '<div class="chat_con">'+
+          '<img src="/static/admin/img/personal.png" alt="系统管理员">'+
+          '<section>'+
+          '<p class="chat_name">系统管理员</p>'+
+          '<p class="chat_text">'+$('#content').val()+'</p>'+
+          '</section>'+
+          '</div>'+
+          '</li>';
+      $('#content').val('');
+      $('#maincontent').append(str);
+      $('#maincontent').scrollTop( $('#maincontent')[0].scrollHeight);
+    }else{
+      layer.alert('发送失败');
+    }
   });
 }
 </script>

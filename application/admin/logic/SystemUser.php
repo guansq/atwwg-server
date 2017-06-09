@@ -22,4 +22,18 @@ class SystemUser extends BaseLogic{
     function getPushToken($where){
         return Db::name('SystemUser')->where($where)->value('push_token');
     }
+
+    /*
+     * 读取 头像
+     */
+    function getAvatar($where){
+        return Db::name('SystemUser')->where($where)->value('avatar');
+    }
+
+    /*
+     * 读取 用户名
+     */
+    function getName($where){
+        return Db::name('SystemUser')->where($where)->value('user_name');
+    }
 }

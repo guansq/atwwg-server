@@ -55,4 +55,19 @@ class AskReply extends BaseLogic{
         }
         return $list;
     }
+    /*
+     * 更新阅读时间
+     */
+    public function updateReadAt($where,$data){
+        $askRely = model('AskReply');
+        return $askRely->where($where)->update($data);
+    }
+
+    /*
+     * 得到消息未读数量
+     */
+    public function getUnreadNum(){
+        $askRely = model('AskReply');
+        return $askRely->field('read_at')->where('read_at','')->count();
+    }
 }

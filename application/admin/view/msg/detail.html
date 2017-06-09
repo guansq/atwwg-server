@@ -10,7 +10,8 @@
 {block name="content"}
 
 <form class="layui-form" onsubmit="return false;" data-auto="" method="POST">
-  <input type="hidden" value="resort" name="action"/>
+  <input type="hidden" value="{$askInfo['sender_id']}" id="sender_id" />
+  <input type="hidden" value="{$askInfo['id']}" id="p_id" />
   <table class="table table-hover">
     <thead>
     <tr>
@@ -32,84 +33,42 @@
 <div class="dialogue_box">
   <div class="dialogue_con">
     <ul>
-      <li class="left_con">
+      {volist name="replyList" id="vo"}
+      <li class="{$vo['position']}_con">
         <div class="chat_con">
-          <img src="/static/admin/img/personal.png" alt="">
+          {if $vo['avatar'] eq ''}
+          <img src="/static/admin/img/personal.png" alt="{$vo['name']}">
+          {else /}
+          <img src="{$vo['avatar']}" alt="{$vo['name']}">
+          {/if}
           <section>
-            <p class="chat_name">小明同学</p>
-            <p class="chat_text">检索或设置当对象的内容超过其指定高度及宽度时如何管理内容。设置textarea对象为hidden值将隐藏其滚动条。</p>
+            <p class="chat_name">{$vo['name']}</p>
+            <p class="chat_text">{$vo['content']}</p>
           </section>
         </div>
       </li>
-      <li class="right_con">
-        <div class="chat_con">
-          <section>
-            <p class="chat_name">小明同学</p>
-            <p class="chat_text">检索或设置当对象的内容超过其指定高度及宽度时如何管理内容。设置及宽度时如何对象为hidden值将隐藏其滚动条。</p>
-          </section>
-          <img src="/static/admin/img/personal.png" alt="">
-        </div>
-      </li>
-      <li class="left_con">
-        <div class="chat_con">
-          <img src="/static/admin/img/personal.png" alt="">
-          <section>
-            <p class="chat_name">小明同学</p>
-            <p class="chat_text">检索或设置当对象的内容超过其指定高度及宽度时如何管理内容。设置textarea对象为hidden值将隐藏其滚动条。</p>
-          </section>
-        </div>
-      </li>
-      <li class="right_con">
-        <div class="chat_con">
-          <section>
-            <p class="chat_name">小明同学</p>
-            <p class="chat_text">检索或设置当对象的内容超过其指定高度及宽度时如何管理内容。设置及宽度时如何对象为hidden值将隐藏其滚动条。</p>
-          </section>
-          <img src="/static/admin/img/personal.png" alt="">
-        </div>
-      </li>
-      <li class="left_con">
-        <div class="chat_con">
-          <img src="/static/admin/img/personal.png" alt="">
-          <section>
-            <p class="chat_name">小明同学</p>
-            <p class="chat_text">检索或设置当对象的内容超过其指定高度及宽度时如何管理内容。设置textarea对象为hidden值将隐藏其滚动条。</p>
-          </section>
-        </div>
-      </li>
-      <li class="right_con">
-        <div class="chat_con">
-          <section>
-            <p class="chat_name">小明同学</p>
-            <p class="chat_text">检索或设置当对象的内容超过其指定高度及宽度时如何管理内容。设置及宽度时如何对象为hidden值将隐藏其滚动条。</p>
-          </section>
-          <img src="/static/admin/img/personal.png" alt="">
-        </div>
-      </li>
-      <li class="left_con">
-        <div class="chat_con">
-          <img src="/static/admin/img/personal.png" alt="">
-          <section>
-            <p class="chat_name">小明同学</p>
-            <p class="chat_text">检索或设置当对象的内容超过其指定高度及宽度时如何管理内容。设置textarea对象为hidden值将隐藏其滚动条。</p>
-          </section>
-        </div>
-      </li>
-      <li class="right_con">
-        <div class="chat_con">
-          <section>
-            <p class="chat_name">小明同学</p>
-            <p class="chat_text">检索或设置当对象的内容超过其指定高度及宽度时如何管理内容。设置及宽度时如何对象为hidden值将隐藏其滚动条。</p>
-          </section>
-          <img src="/static/admin/img/personal.png" alt="">
-        </div>
-      </li>
+      {/volist}
     </ul>
   </div>
   <div class="dialogue_import">
-    <textarea></textarea>
-    <a href="javascript:void(0);" class="send_con">发送</a>
+    <textarea id="content"></textarea>
+    <a href="javascript:sendSmg();" class="send_con">发送</a>
   </div>
 </div>
 
+{/block}
+{block name="script"}
+<script>
+function sendSmg(){
+  data = {
+    'pid' : $('#p_id').val(),
+    'sender_id' : $('#sender_id').val(),
+    'sender_content' : $('#content').val(),
+  }
+  url = "{:url('Msg/sendMsg')}";
+  $.post(url,data,function(res){
+    console.log(res);
+  });
+}
+</script>
 {/block}

@@ -15,6 +15,7 @@ use Qiniu\Auth as QiniuAuth;
 use Qiniu\Processing\PersistentFop;
 use PHPExcel_IOFactory;
 use PHPExcel;
+use service\HttpService;
 
 class Order extends BaseController{
     protected $table = 'SystemPo';
@@ -174,6 +175,32 @@ class Order extends BaseController{
         ];
         $res = $poLogic->saveStatus($where, $data);
         if($res !== false){
+            if($param['action'] == 'contract_pass'){//已审核通过---》执行同步U9订单
+                $sendData = [];
+                $poInfo = $poLogic->getPoInfo($param['id']);
+
+                $sendData['DocDate'] = $poInfo['doc_date'];//单价日期
+                $sendData['DocTypeCode'] = $poInfo['doc_type'];//单据类型
+                $sendData['TCCode'] = $poInfo['tc_code'];//币种编码
+                $sendData['bizType'] = $poInfo['biz_type'];//U9参数
+                $sendData['isPriceIncludeTax'] = $poInfo['is_include_tax'];//是否含税
+                $sendData['supplierCode'] = $poInfo['sup_code'];//供应商代码
+
+                $poItemInfo = $poLogic->getPoItemInfo($poInfo['id']);
+                $sendData['lines']['ItemCode'] = $poItemInfo['item_code'];//料品号
+                $sendData['lines']['OrderPriceTC'] = $poItemInfo['price'];//采购单价
+                $sendData['lines']['OrderTotalTC'] = $poItemInfo['price']*$poItemInfo['price_num'];//采购总金额
+                $sendData['lines']['ReqQty'] = $poItemInfo['price_num'];//采购数量
+                $sendData['lines']['RequireDate'] = $poItemInfo['req_date'];//请购时间
+                $sendData['lines']['SupConfirmDate'] = $poItemInfo['sup_confirm_date'];//供应商供货日期
+                $sendData['lines']['TaxRate'] = $poItemInfo['tax_rate']*100;//税率
+                $sendData['lines']['TradeUOM'] = $poItemInfo['tc_uom'];//交易单位
+                $sendData['lines']['ValuationQty'] = $poItemInfo['tc_num'];//
+                $sendData['lines']['ValuationUnit'] = $poItemInfo['price_uom'];//
+                $sendData['lines']['srcDocPRLineNo'] = $poItemInfo['pr_ln'];
+                $sendData['lines']['srcDocPRNo'] = $poItemInfo['pr_code'];
+                HttpService::curl(getenv('APP_API_U9').'index/po');
+            }
             return json(['code'=>2000,'msg'=>$status[$param['action']],'data'=>[]]);
         }else{
             return json(['code'=>4000,'msg'=>'更新失败','data'=>[]]);

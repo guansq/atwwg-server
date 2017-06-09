@@ -24,7 +24,7 @@ use \think\Db;
  * @date 2017/03/14 18:12
  */
 class NodeService{
-
+    const SUPER_ADMIN = 'supper';
     /**
      * 应用用户权限节点
      * @return bool
@@ -66,7 +66,7 @@ class NodeService{
      */
     public static function checkAuthNode($node) {
         $auth_node = strtolower($node);
-        if (session('user.username') === 'admin' || stripos($node, 'admin/index') === 0) {
+        if (session('user.username') === self::SUPER_ADMIN || stripos($node, 'admin/index') === 0) {
             return true;
         }
         if (!in_array($auth_node, self::getAuthNode())) {

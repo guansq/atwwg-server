@@ -16,6 +16,7 @@ namespace app\admin\controller;
 
 use controller\BasicAdmin;
 use service\DataService;
+use service\NodeService;
 use think\Db;
 
 /**
@@ -42,7 +43,7 @@ class Admin extends BaseController {
         // 获取到所有GET参数
         $get = $this->request->get();
         // 实例Query对象
-        $db = Db::name($this->table)->where('is_deleted', '0');
+        $db = Db::name($this->table)->where('is_deleted', '0')->where('username','<>',NodeService::SUPER_ADMIN);
         // 应用搜索条件
         foreach (['username', 'phone'] as $key) {
             if (isset($get[$key]) && $get[$key] !== '') {

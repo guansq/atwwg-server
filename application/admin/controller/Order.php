@@ -129,6 +129,7 @@ class Order extends BaseController{
     }
 
     public function detailed(){
+        $this->assign('title', $this->title);
         $id = input('get.id');
         //echo $id;
         $poLogic = model('Po', 'logic');

@@ -15,7 +15,7 @@ use think\Validate;
 
 class Banner extends BaseController{
     protected $table = 'SystemBanner';
-    protected $title = 'banner';
+    protected $title = 'banner管理';
 
     public function index(){
         $db = Db::name($this->table);

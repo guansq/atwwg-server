@@ -248,6 +248,7 @@ class Supporter extends BaseController{
      * 供应商编辑页面展示
      */
     public function edit(){
+        $this->assign('title',$this->title);
         $sup_id = intval(input('param.id'));
         $logicSupInfo = Model('Supporter','logic');
         $sup_info = $logicSupInfo->getOneSupInfo($sup_id);//联合查询得到相关信息

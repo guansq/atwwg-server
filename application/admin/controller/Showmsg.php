@@ -13,8 +13,8 @@ use service\DataService;
 use think\Db;
 
 class Showmsg extends BaseController{
-    protected $table = 'SystemArea';
-    protected $title = '相关信息';
+    protected $table = 'AskReply';
+    protected $title = '首页';
 
     public function index(){
         $current_time = time();

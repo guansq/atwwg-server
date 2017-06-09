@@ -74,7 +74,7 @@ class Order extends BaseController{
             $returnInfo[$k]['pr_date'] = date('Y-m-d',$poLogic->getPrDate($v['pr_code']));
             $returnInfo[$k]['create_at'] = date('Y-m-d',$v['create_at']);
             $returnInfo[$k]['sup_name'] = $poLogic->getSupName($v['sup_code']);
-            $returnInfo[$k]['status'] = $status[$v['status']];
+            $returnInfo[$k]['status'] = empty($v['u9_status'])? $status[$v['status']]:$v['u9_status'];
            switch($v['status']){
                case 'init'://初始
                    $action = [];

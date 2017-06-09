@@ -41,7 +41,7 @@ class Offer extends Base{
     public function getOrderList(){
         $sup_code = session('spl_user')['sup_code'];
         $offerLogic = model('Offer', 'logic');
-        $where = ['status'=>'init'];
+        $where = ['status' => 'init'];
         $data = input('param.');
         //        var_dump( $data);
         // 应用搜索条件
@@ -76,11 +76,12 @@ class Offer extends Base{
             $list[$k]['statusStr'] = self::STATUS_ARR[$v['status']];
             $list[$k]['status'] = $v['status'];
             $list[$k]['promise_date'] = empty($v['promise_date']) ? '' : date('Y-m-d', $v['promise_date']);
-            $list[$k]['quote_date'] = empty($v['quote_date']) ? '--' : date('Y-m-d H:i:s', $v['quote_date']);
-            $list[$k]['quote_endtime'] = empty($v['quote_endtime']) ? '--' : date('Y-m-d H:i:s', $v['quote_endtime']);
-            $list[$k]['req_date'] = empty($v['req_date']) ? '--' : date('Y-m-d H:i:s', $v['req_date']);
-            $list[$k]['total_price'] = ($v['price_num']*$v['quote_price']);
-            $list[$k]['quote_price'] = empty($v['quote_price']) ? '' : $v['quote_price'];
+            $list[$k]['create_at'] = empty($v['create_at']) ? '--' : date('Y-m-d', $v['create_at']);
+            $list[$k]['quote_date'] = empty($v['quote_date']) ? '--' : date('Y-m-d', $v['quote_date']);
+            $list[$k]['quote_endtime'] = empty($v['quote_endtime']) ? '--' : date('Y-m-d', $v['quote_endtime']);
+            $list[$k]['req_date'] = empty($v['req_date']) ? '--' : date('Y-m-d', $v['req_date']);
+            $list[$k]['total_price'] = number_format($v['price_num']*$v['quote_price'],2);
+            $list[$k]['quote_price'] = empty($v['quote_price']) ? '0.00' :number_format( $v['quote_price'],2);
             $list[$k]['remark'] = empty($v['remark']) ? '' : $v['remark'];
         }
         //dump($returnInfo);
@@ -100,7 +101,7 @@ class Offer extends Base{
         $dataArr = [
             'quote_date' => time(),
             'promise_date' => strtotime($data['req_date']),
-            'quote_price' => $data['quote_price'],
+            'quote_price' => number_format($data['quote_price'],2),
             'remark' => $data['remark'],
             'status' => 'quoted',//改变已报价
         ];
@@ -108,7 +109,7 @@ class Offer extends Base{
         //dump($list);die;
         if($list !== false){
             $info = $offerLogic->getOneById($key);
-            $total_price = ($info['price_num']*$info['quote_price']);
+            $total_price = number_format($info['price_num']*$info['quote_price'],2);
             //dump($offerLogic->toArray());die;
             return json(['code' => 2000, 'msg' => '成功', 'data' => ['total_price' => $total_price]]);
         }else{

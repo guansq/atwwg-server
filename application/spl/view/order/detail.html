@@ -69,7 +69,7 @@
         <td>{$plist.price_uom}</td>
         <td name="showdate">{$plist.sup_confirm_date|date="Y-m-d",###}</td>
         <td  > <input type="text" class="laydate-icon" name="confirmdate" ><button name="confirmdatesubmit" class="btn btn-primary confirmdatesubmit" value="{$plist.id}" data-item_code="{$plist.item_code}" {if $statusButton.confirmable eq 0 || $plist.times egt 3}disabled="true"{/if}>提交</button></td>
-        <td>{$plist.tax_price}</td>
+        <td>{$plist.price}</td>
         <td>{$plist.amount}</td>
         <td><a href="">打印</a></td>
         <td>{$plist.arv_goods_num}</td>

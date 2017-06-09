@@ -111,6 +111,8 @@ class Offer extends Base{
             $info = $offerLogic->getOneById($key);
             $total_price = number_format($info['price_num']*$info['quote_price'],2);
             //dump($offerLogic->toArray());die;
+            // 如果请购单的 供应商已经全部报完价了，则该状态为 已报价
+            model('Offer','logic')->updatePrStatusById($key);
             return json(['code' => 2000, 'msg' => '成功', 'data' => ['total_price' => $total_price]]);
         }else{
             return json(['code' => 4000, 'msg' => '更新失败', 'data' => []]);
@@ -218,5 +220,6 @@ class Offer extends Base{
             $this->success("上传失败！", '');
         }
     }
+
 
 }

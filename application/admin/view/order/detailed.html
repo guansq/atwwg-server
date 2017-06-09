@@ -89,7 +89,10 @@
         <button class="layui-btn" onclick="verifyOrder({$poInfo['id']},'contract_pass',this)">拒绝该合同</button>
       </section>
       {elseif $poInfo['status'] eq 'contract_pass' /}
-      <p class="h2">合同已审核通过</p>
+      <p class="h2">合同已审核通过
+        <button class="layui-btn" onclick="placeOrder({$poInfo['id']})">ERP下单</button>
+      </p>
+
       {elseif $poInfo['status'] eq 'contract_refuse' /}
       <p class="h2">合同已拒绝</p>
       {/if}
@@ -111,24 +114,26 @@
 {/block}
 {block name="script"}
 <script>
-  function verifyOrder(id,action,dom){
+
+
+  function verifyOrder(id, action, dom){
     layer.confirm('确认该操作吗？', {
-      btn: ['提交','取消'], //按钮
-      shade: false //不显示遮罩
+      btn:['提交', '取消'], //按钮
+      shade:false //不显示遮罩
     }, function(index){
       url = '{:url("Order/verifyStatus")}';
       data = {
-        'id' : id,
-        'action' : action
+        'id':id,
+        'action':action
       };
       layer.close(index);
       layer.load();
-      $.post(url,data,function(res){
+      $.post(url, data, function(res){
         layer.closeAll();
         console.log(res);
         if(res.code == 2000){
           layer.alert('更改成功');
-          $(dom).parent().html('<p class="h2">'+res.msg+'</p>');
+          $(dom).parent().html('<p class="h2">' + res.msg + '</p>');
         }else{
           layer.alert('更改失败');
         }
@@ -136,8 +141,27 @@
       //$("#form 的 id").submit();
 
     });
-
     //console.log(dom);
+  }
+
+  function placeOrder(id){
+    layer.msg('加载中', {
+      icon: 16,
+      shade: 0.01,
+      time:9999000,
+    });
+
+    $.get('{:url("Order/placeOrder")}?id='+id,function(ret){
+      if(!ret){
+        layer.alert('网络异常请稍后再试。', {icon: 6});
+        return false;
+      }
+      if(ret.code !== 2000){
+        layer.alert(ret.msg, {icon: 6});
+        return false;
+      }
+      layer.closeAll();
+    });
   }
 </script>
 {/block}

@@ -92,7 +92,7 @@
 
           <td>
             {if $commonInfo['status_desc'] eq '询价中'}
-            <button type="button" class="btn btn-info">发消息</button>
+            <button type="button" class="btn btn-info" onclick="sendOneMsg('{$vo.id}');">发消息</button>
             {else /}
             {$commonInfo['status_desc']}
             {/if}
@@ -126,13 +126,27 @@ function sendAllMsg(){
     'io_id' : chekVal
   }
   $.post(url,data,function(res){
-    console.log(res);
+    if(res.code == 2000){
+      layer.alert('发送成功');
+    }
   });
   //console.log(chekVal);
 }
 //单发消息
-  function sendOneMsg(){
-
+  function sendOneMsg($ioId){
+    if($ioId == ''){
+      layer.alert('抱歉，无法发送信息');
+      return;
+    }
+    url = "{:url('Enquiryorder/sendOneMsg')}";
+    data = {
+      'io_id' : $ioId
+    }
+    $.post(url,data,function(res){
+      if(res.code == 2000){
+        layer.alert('发送成功');
+      }
+    });
   }
 </script>
 {/block}

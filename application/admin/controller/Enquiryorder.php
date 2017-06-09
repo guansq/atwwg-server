@@ -172,13 +172,74 @@ class Enquiryorder extends BaseController{
                     ]/**/
                 ];
                 //dump($sendData);
-                echo HttpService::curl(getenv('APP_API_MSG').'push',$sendData);
+                HttpService::curl(getenv('APP_API_MSG').'push',$sendData);
             }
+
         }
+        return json(['code' => 2000 ,'smg' => '发送成功','data'=>[]]);
     }
 
-    public function add(){
-
+    public function sendOneSmg(){
+        $ioId = input('param.io_id');
+        $logicIoInfo = Model('Io','logic');
+        $logicSystemUser = Model('SystemUser','logic');
+        $where = ['a.id' => $ioId];
+        $info = $logicIoInfo->getSupId($where);//通过IOid获取supid->
+        $sendInfo = [
+            'email' => '',
+            'phone' => '',
+            'token' => ''
+        ];
+        if($info){
+            $sendInfo['email'] = $info['email'];
+            $sendInfo['phone'] = $info['phone'];
+            $where = ['id'=>$info['sup_id']];//获取token条件
+            $sendInfo['token'] = $logicSystemUser->getPushToken($where);
+        }
+        if(!empty($sendInfo['email'])){
+            $sendData = [
+                'rt_appkey' => 'atw_wg',
+                'fromName' => '安特威物供平台',//发送人名
+                'to' => $sendInfo['email'],
+                'subject' => '测试主题',
+                'html' => '测试内容',
+                'from' => 'tan3250204@sina.com',//平台的邮件头
+            ];
+            HttpService::curl(getenv('APP_API_MSG').'SendEmail/sendHtml',$sendData);
+        }
+        if(!empty($sendInfo['phone'])){
+            $sendData = [
+                'mobile' => $sendInfo['phone'],
+                'rt_appkey' => 'atw_wg',
+                'text' => '测试测试文本',
+            ];
+            HttpService::curl(getenv('APP_API_MSG').'SendSms/sendText',$sendData);//sendSms($data)
+        }
+        //echo $sendInfo['token'];
+        if(!empty($sendInfo['token'])){
+            $sendData = [
+                "platform" => "all",
+                "rt_appkey" => "atw_wg",
+                "alert" => "android手机专属消息4",
+                "regIds" => $sendInfo['token'],
+                //"platform" => "all",
+                "androidNotification" => [
+                    "alert" => "alertalert alert alert",
+                    "title" => "安特威",
+                    "builder_id" => "builder_id",
+                    "priority" => 0,
+                    "style" => 0,
+                    "alert_type" => -1,
+                    "extras" => [
+                        "0" => "RuiTu",
+                        "key" => "value"
+                    ]
+                ]/**/
+            ];
+            //dump($sendData);
+            HttpService::curl(getenv('APP_API_MSG').'push',$sendData);
+        }
+        return json(['code' => 2000 ,'smg' => '发送成功','data'=>[]]);
     }
 
     public function particulars(){

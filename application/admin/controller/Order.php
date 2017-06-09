@@ -174,12 +174,13 @@ class Order extends BaseController{
 
         ];
         $res = $poLogic->saveStatus($where, $data);
+        //$res = true;
         if($res !== false){
             if($param['action'] == 'contract_pass'){//已审核通过---》执行同步U9订单
                 $sendData = [];
                 $poInfo = $poLogic->getPoInfo($param['id']);
 
-                $sendData['DocDate'] = $poInfo['doc_date'];//单价日期
+                $sendData['DocDate'] = $poInfo['doc_date'] == '' ? time() : $poInfo['doc_date'];//单价日期
                 $sendData['DocTypeCode'] = $poInfo['doc_type'];//单据类型
                 $sendData['TCCode'] = $poInfo['tc_code'];//币种编码
                 $sendData['bizType'] = $poInfo['biz_type'];//U9参数
@@ -187,19 +188,37 @@ class Order extends BaseController{
                 $sendData['supplierCode'] = $poInfo['sup_code'];//供应商代码
 
                 $poItemInfo = $poLogic->getPoItemInfo($poInfo['id']);
-                $sendData['lines']['ItemCode'] = $poItemInfo['item_code'];//料品号
-                $sendData['lines']['OrderPriceTC'] = $poItemInfo['price'];//采购单价
-                $sendData['lines']['OrderTotalTC'] = $poItemInfo['price']*$poItemInfo['price_num'];//采购总金额
-                $sendData['lines']['ReqQty'] = $poItemInfo['price_num'];//采购数量
-                $sendData['lines']['RequireDate'] = $poItemInfo['req_date'];//请购时间
-                $sendData['lines']['SupConfirmDate'] = $poItemInfo['sup_confirm_date'];//供应商供货日期
-                $sendData['lines']['TaxRate'] = $poItemInfo['tax_rate']*100;//税率
-                $sendData['lines']['TradeUOM'] = $poItemInfo['tc_uom'];//交易单位
-                $sendData['lines']['ValuationQty'] = $poItemInfo['tc_num'];//
-                $sendData['lines']['ValuationUnit'] = $poItemInfo['price_uom'];//
-                $sendData['lines']['srcDocPRLineNo'] = $poItemInfo['pr_ln'];
-                $sendData['lines']['srcDocPRNo'] = $poItemInfo['pr_code'];
-                HttpService::curl(getenv('APP_API_U9').'index/po');
+                //dump($poItemInfo);die;
+                foreach($poItemInfo as $k =>$v){
+                    $sendData['lines'][$k]['ItemCode'] = $v['item_code'];//料品号
+                    $sendData['lines'][$k]['OrderPriceTC'] = $v['price'];//采购单价
+                    $sendData['lines'][$k]['OrderTotalTC'] = $v['price']*$v['price_num'];//采购总金额
+                    $sendData['lines'][$k]['ReqQty'] = $v['price_num'];//采购数量
+                    $sendData['lines'][$k]['RequireDate'] = $v['req_date'];//请购时间
+                    $sendData['lines'][$k]['SupConfirmDate'] = $v['sup_confirm_date'];//供应商供货日期
+                    $sendData['lines'][$k]['TaxRate'] = $v['tax_rate']*100;//税率
+                    $sendData['lines'][$k]['TradeUOM'] = $v['tc_uom'];//交易单位
+                    $sendData['lines'][$k]['ValuationQty'] = $v['tc_num'];//
+                    $sendData['lines'][$k]['ValuationUnit'] = $v['price_uom'];//
+                    $sendData['lines'][$k]['srcDocPRLineNo'] = $v['pr_ln'];
+                    $sendData['lines'][$k]['srcDocPRNo'] = $v['pr_code'];
+                }
+                //dump($sendData);die;
+                $res = json_decode(HttpService::curl(getenv('APP_API_U9').'index/po',$sendData));//成功回写数据库
+                if($res['code'] == 2000){
+                    $where = [
+                        'id' => $param['id'],
+                    ];
+                    $data = [
+                        'order_code' => $res['result']['DocNo'],
+                    ];
+                    $res = $poLogic->saveStatus($where, $data);//订单写入数据库
+                    if($res !== false){
+                        return json(['code'=>2000,'msg'=>'合同审核通过，U9已生成订单','data'=>[]]);
+                    }else{
+                        return json(['code'=>2000,'msg'=>'合同审核通过，U9生成订单失败','data'=>[]]);
+                    }
+                }
             }
             return json(['code'=>2000,'msg'=>$status[$param['action']],'data'=>[]]);
         }else{

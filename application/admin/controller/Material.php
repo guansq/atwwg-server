@@ -94,6 +94,7 @@ class Material extends BaseController{
        // var_dump($info);
         //关联供应商
         $supInfo = $logicItemInfo->getRelationSup($code);
+        $this->assign('title',$this->title);
         $this->assign('supInfo',$supInfo);//
         //var_dump($info);
         return view();

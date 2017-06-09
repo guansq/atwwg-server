@@ -245,6 +245,7 @@ class Enquiryorder extends BaseController{
     public function particulars(){
         //列出所有的询价单
         //$commonInfo = ;
+        $this->assign('title',$this->title);
         $ioCode = input('param.io_code');
         $logicIoInfo = Model('Io','logic');
         $info = $logicIoInfo->getIoInfo($ioCode);

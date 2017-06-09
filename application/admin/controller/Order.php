@@ -240,25 +240,29 @@ class Order extends BaseController{
         $sendData['supplierCode'] = $poInfo['sup_code'];//供应商代码
         $poItemInfo = $poLogic->getPoItemInfo($poInfo['id']);
         //dump($poItemInfo);die;
+        $lines = [];
         foreach($poItemInfo as $k => $v){
-            $sendData['lines'][$k]['ItemCode'] = $v['item_code'];//料品号
-            $sendData['lines'][$k]['OrderPriceTC'] = $v['price'];//采购单价
-            $sendData['lines'][$k]['OrderTotalTC'] = $v['price']*$v['price_num'];//采购总金额
-            $sendData['lines'][$k]['ReqQty'] = $v['price_num'];//采购数量
-            $sendData['lines'][$k]['RequireDate'] = $v['req_date'];//请购时间
-            $sendData['lines'][$k]['SupConfirmDate'] = $v['sup_confirm_date'];//供应商供货日期
-            $sendData['lines'][$k]['TaxRate'] = $v['tax_rate']*100;//税率
-            $sendData['lines'][$k]['TradeUOM'] = $v['tc_uom'];//交易单位
-            $sendData['lines'][$k]['ValuationQty'] = $v['tc_num'];//
-            $sendData['lines'][$k]['ValuationUnit'] = $v['price_uom'];//
-            $sendData['lines'][$k]['srcDocPRLineNo'] = $v['pr_ln'];
-            $sendData['lines'][$k]['srcDocPRNo'] = $v['pr_code'];
+            $lines[] = [
+                'ItemCode' => $v['item_code'],//料品号
+                'OrderPriceTC' => $v['price'],//采购单价
+                'OrderTotalTC' => $v['price']*$v['price_num'],//采购总金额
+                'ReqQty' => $v['price_num'],//采购数量
+                'RequireDate' => $v['req_date'],//请购时间
+                'SupConfirmDate' => $v['sup_confirm_date'],//供应商供货日期
+                'TaxRate' => $v['tax_rate']*100,//税率
+                'TradeUOM' => $v['tc_uom'],//交易单位
+                'ValuationQty' => $v['tc_num'],//
+                'ValuationUnit' => $v['price_uom'],//
+                'srcDocPRLineNo' => $v['pr_ln'],
+                'srcDocPRNo' => $v['pr_code']
+            ];
         }
-
+        $sendData['lines'] = $lines;
+        //exit(json_encode($sendData));
         $httpRet = HttpService::curl(getenv('APP_API_U9').'index/po', $sendData);
         $res = json_decode($httpRet, true);//成功回写数据库
         if($res['code'] != 2000){
-            returnJson(6000,'调用U9接口异常',$res);
+            returnJson(6000, '调用U9接口异常', $res);
         }
         $where = [
             'id' => $id,

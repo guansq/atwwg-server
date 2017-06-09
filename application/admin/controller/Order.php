@@ -5,16 +5,12 @@
  * Date: 2017/5/9
  * Time: 9:33
  */
+
 namespace app\admin\controller;
 
-use controller\BasicAdmin;
-use service\LogService;
-use service\DataService;
-use think\Db;
-use Qiniu\Auth as QiniuAuth;
-use Qiniu\Processing\PersistentFop;
-use PHPExcel_IOFactory;
 use PHPExcel;
+use PHPExcel_IOFactory;
+use Qiniu\Auth as QiniuAuth;
 use service\HttpService;
 
 class Order extends BaseController{
@@ -23,19 +19,19 @@ class Order extends BaseController{
 
     public function index(){
         //echo '111111111';die;
-        $this->assign('title',$this->title);
+        $this->assign('title', $this->title);
         return view();
     }
 
     public function getOrderList(){
-        $poLogic = model('Po','logic');
+        $poLogic = model('Po', 'logic');
         $get = input('param.');
         //dump($requestInfo);die;
         $where = [];
         // 应用搜索条件
-        foreach (['order_code', 'pr_code'] as $key) {
-            if (isset($get[$key]) && $get[$key] !== '') {
-                $where[$key] = ['like',"%{$get[$key]}%"];
+        foreach(['order_code', 'pr_code'] as $key){
+            if(isset($get[$key]) && $get[$key] !== ''){
+                $where[$key] = ['like', "%{$get[$key]}%"];
             }
         }
         $list = $poLogic->getPolist($where);
@@ -61,8 +57,7 @@ class Order extends BaseController{
                 foreach($itemInfo as $vv){
                     $vv['arv_goods_num'] = $vv['arv_goods_num'] == '' ? 0 : $vv['arv_goods_num'];
                     $vv['pro_goods_num'] = $vv['pro_goods_num'] == '' ? 0 : $vv['pro_goods_num'];
-                    $exec_desc .= '物料名称：'.$vv['item_name'].'; '.'到货数量：'
-                        .$vv['arv_goods_num'].'; 未到货数量：'.$vv['pro_goods_num'].'; 可供货交期：'.date('Y-m-d',$vv['sup_confirm_date']).'<br>';
+                    $exec_desc .= '物料名称：'.$vv['item_name'].'; '.'到货数量：'.$vv['arv_goods_num'].'; 未到货数量：'.$vv['pro_goods_num'].'; 可供货交期：'.date('Y-m-d', $vv['sup_confirm_date']).'<br>';
                 }
                 $returnInfo[$k]['exec_desc'] = $exec_desc;
             }else{
@@ -71,48 +66,49 @@ class Order extends BaseController{
 
             $returnInfo[$k]['order_code'] = $v['order_code'];
             $returnInfo[$k]['pr_code'] = $v['pr_code'];
-            $returnInfo[$k]['pr_date'] = date('Y-m-d',$poLogic->getPrDate($v['pr_code']));
-            $returnInfo[$k]['create_at'] = date('Y-m-d',$v['create_at']);
+            $returnInfo[$k]['pr_date'] = date('Y-m-d', $poLogic->getPrDate($v['pr_code']));
+            $returnInfo[$k]['create_at'] = date('Y-m-d', $v['create_at']);
             $returnInfo[$k]['sup_name'] = $poLogic->getSupName($v['sup_code']);
-            $returnInfo[$k]['status'] = empty($v['u9_status'])? $status[$v['status']]:$v['u9_status'];
-           switch($v['status']){
-               case 'init'://初始
-                   $action = [];
-                   $returnInfo[$k]['status'] = '待供应商确定订单';
-                   break;
-               case 'sup_cancel'://供应商取消
-                   $action = [];
-                   $returnInfo[$k]['status'] = '供应商取消了订单';
-                   break;
-               case 'sup_edit'://供应商修改
-                   $returnInfo[$k]['status'] = '<a href="javascript:;" onclick="verifyOrder('.$v['id'].',\'atw_sure\',this);">供应商修改，确定订单</a>';
-                   break;
-               case 'atw_sure'://安特威确定 以及init
-                   $returnInfo[$k]['status'] = '待供应商确定订单';
-                   break;
-               case 'sup_sure'://供应商确定/待上传合同
-                   $returnInfo[$k]['status'] = '供应商确定/待上传合同';
-                   break;
-               case 'upload_contract'://供应商已经上传合同
-                   $returnInfo[$k]['status'] = '合同待审核';
-                   /*$returnInfo[$k]['status'] = '<a href="javascript:;" onclick="verifyOrder('.$v['id'].',\'contract_pass\',this);">合同审核通过</a>
-                                                <a href="javascript:;" onclick="verifyOrder('.$v['id'].',\'contract_refuse\',this);">拒绝该合同</a>';*/
-                   break;
-               case 'contract_pass'://合同审核通过
-                   $returnInfo[$k]['status'] = '合同审核通过';
-                   break;
-               case 'contract_refuse'://合同审核拒绝
-                   $returnInfo[$k]['status'] = '合同已被拒绝';
-                   break;
-           }
+            $returnInfo[$k]['status'] = empty($v['u9_status']) ? $status[$v['status']] : $v['u9_status'];
+            switch($v['status']){
+                case 'init'://初始
+                    $action = [];
+                    $returnInfo[$k]['status'] = '待供应商确定订单';
+                    break;
+                case 'sup_cancel'://供应商取消
+                    $action = [];
+                    $returnInfo[$k]['status'] = '供应商取消了订单';
+                    break;
+                case 'sup_edit'://供应商修改
+                    $returnInfo[$k]['status'] = '<a href="javascript:;" onclick="verifyOrder('.$v['id'].',\'atw_sure\',this);">供应商修改，确定订单</a>';
+                    break;
+                case 'atw_sure'://安特威确定 以及init
+                    $returnInfo[$k]['status'] = '待供应商确定订单';
+                    break;
+                case 'sup_sure'://供应商确定/待上传合同
+                    $returnInfo[$k]['status'] = '供应商确定/待上传合同';
+                    break;
+                case 'upload_contract'://供应商已经上传合同
+                    $returnInfo[$k]['status'] = '合同待审核';
+                    /*$returnInfo[$k]['status'] = '<a href="javascript:;" onclick="verifyOrder('.$v['id'].',\'contract_pass\',this);">合同审核通过</a>
+                                                 <a href="javascript:;" onclick="verifyOrder('.$v['id'].',\'contract_refuse\',this);">拒绝该合同</a>';*/
+                    break;
+                case 'contract_pass'://合同审核通过
+                    $returnInfo[$k]['status'] = '合同审核通过';
+                    break;
+                case 'contract_refuse'://合同审核拒绝
+                    $returnInfo[$k]['status'] = '合同已被拒绝';
+                    break;
+            }
 
             $returnInfo[$k]['detail'] = $v['id'];
         }
         //dump($returnInfo);
-        $info = ['draw'=>time(),'data'=>$returnInfo,'extData'=>[],];
+        $info = ['draw' => time(), 'data' => $returnInfo, 'extData' => [],];
 
         return json($info);
     }
+
     public function del(){
 
     }
@@ -135,31 +131,31 @@ class Order extends BaseController{
     public function detailed(){
         $id = input('get.id');
         //echo $id;
-        $poLogic = model('Po','logic');
+        $poLogic = model('Po', 'logic');
         $poInfo = $poLogic->getPoInfo($id);
-        $prLogic = model('RequireOrder','logic');
+        $prLogic = model('RequireOrder', 'logic');
 
-        $where = ['pr_code'=>$poInfo['pr_code']];
+        $where = ['pr_code' => $poInfo['pr_code']];
         if($poInfo['status'] == 'upload_contract'){//供应商已经上传合同
 
         }
         $poInfo['pr_date'] = $prLogic->getPrDate($where);
-        $supLogic = model('Supporter','logic');
-        $where = ['code'=>$poInfo['sup_code']];
+        $supLogic = model('Supporter', 'logic');
+        $where = ['code' => $poInfo['sup_code']];
         $poInfo['sup_name'] = $supLogic->getSupName($where);
         $poItemInfo = $poLogic->getPoItemInfo($id);
         $allAmount = 0;
         foreach($poItemInfo as $k => $v){
             $allAmount += $v['amount'];
         }
-        $this->assign('poInfo',$poInfo);
-        $this->assign('poItemInfo',$poItemInfo);
-        $this->assign('allAmount',$allAmount);
+        $this->assign('poInfo', $poInfo);
+        $this->assign('poItemInfo', $poItemInfo);
+        $this->assign('allAmount', $allAmount);
         return view();
     }
 
     public function verifyStatus(){
-        $poLogic = model('Po','logic');
+        $poLogic = model('Po', 'logic');
         $param = input('param.');
         $data = [
             'status' => $param['action']
@@ -189,7 +185,7 @@ class Order extends BaseController{
 
                 $poItemInfo = $poLogic->getPoItemInfo($poInfo['id']);
                 //dump($poItemInfo);die;
-                foreach($poItemInfo as $k =>$v){
+                foreach($poItemInfo as $k => $v){
                     $sendData['lines'][$k]['ItemCode'] = $v['item_code'];//料品号
                     $sendData['lines'][$k]['OrderPriceTC'] = $v['price'];//采购单价
                     $sendData['lines'][$k]['OrderTotalTC'] = $v['price']*$v['price_num'];//采购总金额
@@ -204,7 +200,7 @@ class Order extends BaseController{
                     $sendData['lines'][$k]['srcDocPRNo'] = $v['pr_code'];
                 }
                 //dump($sendData);die;
-                $res = json_decode(HttpService::curl(getenv('APP_API_U9').'index/po',$sendData));//成功回写数据库
+                $res = json_decode(HttpService::curl(getenv('APP_API_U9').'index/po', $sendData));//成功回写数据库
                 if($res['code'] == 2000){
                     $where = [
                         'id' => $param['id'],
@@ -215,15 +211,15 @@ class Order extends BaseController{
                     ];
                     $res = $poLogic->saveStatus($where, $data);//订单写入数据库
                     if($res !== false){
-                        return json(['code'=>2000,'msg'=>'合同审核通过，U9已生成订单','data'=>[]]);
+                        return json(['code' => 2000, 'msg' => '合同审核通过，U9已生成订单', 'data' => []]);
                     }else{
-                        return json(['code'=>2000,'msg'=>'合同审核通过，U9生成订单失败','data'=>[]]);
+                        return json(['code' => 2000, 'msg' => '合同审核通过，U9生成订单失败', 'data' => []]);
                     }
                 }
             }
-            return json(['code'=>2000,'msg'=>$status[$param['action']],'data'=>[]]);
+            return json(['code' => 2000, 'msg' => $status[$param['action']], 'data' => []]);
         }else{
-            return json(['code'=>4000,'msg'=>'更新失败','data'=>[]]);
+            return json(['code' => 4000, 'msg' => '更新失败', 'data' => []]);
         }
     }
 
@@ -231,14 +227,14 @@ class Order extends BaseController{
      * 导出excel
      */
     function exportExcel(){
-        $poLogic = model('Po','logic');
+        $poLogic = model('Po', 'logic');
         $get = input('param.');
         //dump($requestInfo);die;
         $where = [];
         // 应用搜索条件
-        foreach (['order_code', 'pr_code'] as $key) {
-            if (isset($get[$key]) && $get[$key] !== '') {
-                $where[$key] = ['like',"%{$get[$key]}%"];
+        foreach(['order_code', 'pr_code'] as $key){
+            if(isset($get[$key]) && $get[$key] !== ''){
+                $where[$key] = ['like', "%{$get[$key]}%"];
             }
         }
         $list = $poLogic->getPolist($where);
@@ -264,8 +260,7 @@ class Order extends BaseController{
                 foreach($itemInfo as $vv){
                     $vv['arv_goods_num'] = $vv['arv_goods_num'] == '' ? 0 : $vv['arv_goods_num'];
                     $vv['pro_goods_num'] = $vv['pro_goods_num'] == '' ? 0 : $vv['pro_goods_num'];
-                    $exec_desc .= '物料名称：'.$vv['item_name'].'; '.'到货数量：'
-                        .$vv['arv_goods_num'].'; 未到货数量：'.$vv['pro_goods_num'].'; 可供货交期：'.date('Y-m-d',$vv['sup_confirm_date']).'<br>';
+                    $exec_desc .= '物料名称：'.$vv['item_name'].'; '.'到货数量：'.$vv['arv_goods_num'].'; 未到货数量：'.$vv['pro_goods_num'].'; 可供货交期：'.date('Y-m-d', $vv['sup_confirm_date']).'<br>';
                 }
                 $returnInfo[$k]['exec_desc'] = $exec_desc;
             }else{
@@ -274,8 +269,8 @@ class Order extends BaseController{
 
             $returnInfo[$k]['order_code'] = $v['order_code'];
             $returnInfo[$k]['pr_code'] = $v['pr_code'];
-            $returnInfo[$k]['pr_date'] = date('Y-m-d',$poLogic->getPrDate($v['pr_code']));
-            $returnInfo[$k]['create_at'] = date('Y-m-d',$v['create_at']);
+            $returnInfo[$k]['pr_date'] = date('Y-m-d', $poLogic->getPrDate($v['pr_code']));
+            $returnInfo[$k]['create_at'] = date('Y-m-d', $v['create_at']);
             $returnInfo[$k]['sup_name'] = $poLogic->getSupName($v['sup_code']);
             //$returnInfo[$k]['detail'] = $v['id'];
         }
@@ -286,20 +281,23 @@ class Order extends BaseController{
         $PHPExcel = new PHPExcel(); //实例化PHPExcel类，类似于在桌面上新建一个Excel表格
         $PHPSheet = $PHPExcel->getActiveSheet(); //获得当前活动sheet的操作对象
         $PHPSheet->setTitle('订单列表'); //给当前活动sheet设置名称
-        $PHPSheet->setCellValue('A1','订单编号');
-        $PHPSheet->setCellValue('B1','请购单编号');
-        $PHPSheet->setCellValue('C1','请购日期');
-        $PHPSheet->setCellValue('D1','下单日期');
-        $PHPSheet->setCellValue('E1','供应商名称');
-        $PHPSheet->setCellValue('F1','执行情况');
+        $PHPSheet->setCellValue('A1', '订单编号');
+        $PHPSheet->setCellValue('B1', '请购单编号');
+        $PHPSheet->setCellValue('C1', '请购日期');
+        $PHPSheet->setCellValue('D1', '下单日期');
+        $PHPSheet->setCellValue('E1', '供应商名称');
+        $PHPSheet->setCellValue('F1', '执行情况');
         $num = 1;
         foreach($list as $k => $v){
-            $num = $num+1;
-            $PHPSheet->setCellValue('A'.$num,$v['order_code'])->setCellValue('B'.$num,$v['pr_code'])
-                ->setCellValue('C'.$num,$v['pr_date'])->setCellValue('D'.$num,$v['create_at'])
-                ->setCellValue('E'.$num,$v['sup_name'])->setCellValue('E'.$num,$v['exec_desc']);
+            $num = $num + 1;
+            $PHPSheet->setCellValue('A'.$num, $v['order_code'])
+                ->setCellValue('B'.$num, $v['pr_code'])
+                ->setCellValue('C'.$num, $v['pr_date'])
+                ->setCellValue('D'.$num, $v['create_at'])
+                ->setCellValue('E'.$num, $v['sup_name'])
+                ->setCellValue('E'.$num, $v['exec_desc']);
         }
-        $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel,'Excel2007');//按照指定格式生成Excel文件，'Excel2007’表示生成2007版本的xlsx，
+        $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel, 'Excel2007');//按照指定格式生成Excel文件，'Excel2007’表示生成2007版本的xlsx，
         $PHPWriter->save($path.'/poList.xlsx'); //表示在$path路径下面生成ioList.xlsx文件
         $file_name = "poList.xlsx";
         $contents = file_get_contents($path.'/poList.xlsx');
@@ -309,5 +307,23 @@ class Order extends BaseController{
         header("Accept-Length: $file_size");
         header("Content-Disposition: attachment; filename=".$file_name);
         exit($contents);
+    }
+
+    /**
+     * Author: WILL<314112362@qq.com>
+     * Time: ${DAY}
+     * Describe: 同步PO执行状态
+     */
+    public function syncErp(){
+        $httpRet = HttpService::get(getenv('APP_API_HOME').'/u9api/syncPOState');
+        if(empty($httpRet)){
+            returnJson(6000);
+        }
+
+        $httpRet = json_decode($httpRet, true);
+        if(empty($httpRet) || $httpRet['code'] != 2000){
+            returnJson(6000, '', $httpRet);
+        }
+        returnJson($httpRet);
     }
 }

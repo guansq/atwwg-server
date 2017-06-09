@@ -124,6 +124,9 @@ if(!function_exists('getCodeMsg')){
             5020 => '数据库操作异常',
             5030 => '文件操作异常',
 
+            // 调用第三方接口异常
+            6000 => '调用第三方接口异常',
+
         ];
 
         if(empty($code)){
@@ -135,16 +138,31 @@ if(!function_exists('getCodeMsg')){
 
 // 接口返回json 数据
 if(!function_exists('returnJson')){
-    function returnJson($code = 0, $msg = '', $data = []){
+    function returnJson($result = 0, $msg = '', $data = []){
+        $ret = resultArray($result, $msg, $data);
+        header('Content-type:application/json; charset=utf-8');
+        header("Access-Control-Allow-Origin: *");
+        exit(json_encode($ret));
+    }
+}
+// 返回数组
+if(!function_exists('resultArray')){
+    function resultArray($result = 0, $msg = '', $data = []){
+        $code = $result;
+        if(is_array($result)){
+            $code = $result['code'];
+            $msg = $result['msg'];
+            $data = $result['result'];
+        }
         if(empty($data)){
             $data = new stdClass();
         }
-        $info['code'] = $code;
-        $info['msg'] = empty($msg) ? getCodeMsg($code) : $msg;
-        $info['result'] = $data;
-        header('Content-type:application/json; charset=utf-8');
-        header("Access-Control-Allow-Origin: *");
-        exit(json_encode($info));
+        $info = [
+            'code' => $code,
+            'msg' => empty($msg) ? getCodeMsg($code) : $msg,
+            'result' => $data
+        ];
+        return $info;
     }
 }
 

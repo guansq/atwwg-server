@@ -245,7 +245,7 @@ class Enquiryorder extends BaseController{
         $where = [];
         if((isset($get['start_time']) && $get['start_time'] !== '') && (isset($get['end_time']) && $get['end_time'] !== '')){
             $get['start_time'] = strtotime($get['start_time']);
-            $get['end_time'] = strtotime($get['end_time']);
+            $get['end_time'] = strtotime($get['end_time'])+24*60*60;
             $where = [
                 'a.create_at' => ['between',[$get['start_time'],$get['end_time']]]
             ];

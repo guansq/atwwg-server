@@ -211,6 +211,7 @@ class Order extends BaseController{
                     ];
                     $data = [
                         'order_code' => $res['result']['DocNo'],
+                        'status' => 'executing',
                     ];
                     $res = $poLogic->saveStatus($where, $data);//订单写入数据库
                     if($res !== false){

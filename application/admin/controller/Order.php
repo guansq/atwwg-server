@@ -60,7 +60,8 @@ class Order extends BaseController{
                 foreach($itemInfo as $vv){
                     $vv['arv_goods_num'] = $vv['arv_goods_num'] == '' ? 0 : $vv['arv_goods_num'];
                     $vv['pro_goods_num'] = $vv['pro_goods_num'] == '' ? 0 : $vv['pro_goods_num'];
-                    $exec_desc .= '物料名称：'.$vv['item_name'].'; '.'到货数量：'.$vv['arv_goods_num'].'; 未到货数量：'.$vv['pro_goods_num'].'<br>';
+                    $exec_desc .= '物料名称：'.$vv['item_name'].'; '.'到货数量：'
+                        .$vv['arv_goods_num'].'; 未到货数量：'.$vv['pro_goods_num'].'; 可供货交期：'.date('Y-m-d',$vv['sup_confirm_date']).'<br>';
                 }
                 $returnInfo[$k]['exec_desc'] = $exec_desc;
             }else{
@@ -92,9 +93,9 @@ class Order extends BaseController{
                    $returnInfo[$k]['status'] = '供应商确定/待上传合同';
                    break;
                case 'upload_contract'://供应商已经上传合同
-                   $returnInfo[$k]['status'] = '<a href="javascript:;" onclick="verifyOrder('.$v['id'].',\'contract_pass\',this);">合同审核通过</a>
-                                                <a href="javascript:;" onclick="verifyOrder('.$v['id'].',\'contract_refuse\',this);">拒绝该合同</a>';
-                   $action = ['contract_pass'=>'通过','contract_refuse'=>'拒绝'];
+                   $returnInfo[$k]['status'] = '合同待审核';
+                   /*$returnInfo[$k]['status'] = '<a href="javascript:;" onclick="verifyOrder('.$v['id'].',\'contract_pass\',this);">合同审核通过</a>
+                                                <a href="javascript:;" onclick="verifyOrder('.$v['id'].',\'contract_refuse\',this);">拒绝该合同</a>';*/
                    break;
                case 'contract_pass'://合同审核通过
                    $returnInfo[$k]['status'] = '合同审核通过';
@@ -136,7 +137,11 @@ class Order extends BaseController{
         $poLogic = model('Po','logic');
         $poInfo = $poLogic->getPoInfo($id);
         $prLogic = model('RequireOrder','logic');
+
         $where = ['pr_code'=>$poInfo['pr_code']];
+        if($poInfo['status'] == 'upload_contract'){//供应商已经上传合同
+
+        }
         $poInfo['pr_date'] = $prLogic->getPrDate($where);
         $supLogic = model('Supporter','logic');
         $where = ['code'=>$poInfo['sup_code']];
@@ -163,7 +168,7 @@ class Order extends BaseController{
         ];
         $status = [
             'atw_sure' => '待供应商确定订单',
-            'contract_pass' => '合同审核通过',
+            'contract_pass' => '合同已审核通过',
             'contract_refuse' => '合同已被拒绝',
 
         ];
@@ -212,7 +217,8 @@ class Order extends BaseController{
                 foreach($itemInfo as $vv){
                     $vv['arv_goods_num'] = $vv['arv_goods_num'] == '' ? 0 : $vv['arv_goods_num'];
                     $vv['pro_goods_num'] = $vv['pro_goods_num'] == '' ? 0 : $vv['pro_goods_num'];
-                    $exec_desc .= '物料名称：'.$vv['item_name'].'; '.'到货数量：'.$vv['arv_goods_num'].'; 未到货数量：'.$vv['pro_goods_num'].'<br>';
+                    $exec_desc .= '物料名称：'.$vv['item_name'].'; '.'到货数量：'
+                        .$vv['arv_goods_num'].'; 未到货数量：'.$vv['pro_goods_num'].'; 可供货交期：'.date('Y-m-d',$vv['sup_confirm_date']).'<br>';
                 }
                 $returnInfo[$k]['exec_desc'] = $exec_desc;
             }else{

@@ -78,7 +78,7 @@
         </tr>
         </thead>
         {volist name='ioInfo' id='vo'}
-        <tr>
+        <tr class='{eq name="$vo.status" value="winbid"}success{/eq}'>
           <td>
             <input type="checkbox" name="checkinfo" value="{$vo.id}">
           </td>
@@ -94,7 +94,7 @@
             {if $commonInfo['status_desc'] eq '询价中'}
             <button type="button" class="btn btn-info" onclick="sendOneMsg('{$vo.id}');">发消息</button>
             {else /}
-            {$commonInfo['status_desc']}
+            {$vo['statusStr']}
             {/if}
           </td>
 

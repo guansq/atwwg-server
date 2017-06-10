@@ -14,5 +14,9 @@
  0. composer install
  0. chmod -R 777 *
  0. 域名解析 配置Nginx
+ 0. crontab -e
+
+    ``` 0 3 * * * /usr/bin/php /home/wwwroot/atw.u9api.antiwearvalve.com/cron.php ```
+
 
 

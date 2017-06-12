@@ -122,7 +122,7 @@
           { "data": "price_num" },
           { "data": "price_uom" },
           { "data": "tc_uom" },
-          { "data": "quote_date" },
+          { "data": "create_at" },
           { "data": "quote_endtime" },
           { "data": "req_date" },
           { "data": "promise_date" },
@@ -133,7 +133,7 @@
         ],
         "createdRow": function ( row, data, index ) {
           $('td', row).eq(0).html($('td', row).eq(0).html()+'<input type="hidden" name="id" value="'+data.id+'">');
-          if(data.quote_date == null || data.quote_date == ''){
+          if(!data.create_at){
             $('td', row).eq(4).html('--');
           }
           var tmpstr='';

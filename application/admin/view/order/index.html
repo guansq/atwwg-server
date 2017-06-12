@@ -259,35 +259,40 @@
 
   //立即下单
   $('#doorder_btn').click(function(){
-    layer.load();
-    $checkbox = $('[id ^= "order_id_"]:checked');
-    if($checkbox.length){
-      var po = '';
-      $checkbox.each(function(){
-        po += $(this).val()+'|';
+    layer.confirm('确定立即下单吗？', {
+      btn:['确定', '取消']
+    }, function(index){
+      layer.close(index);
+      $checkbox = $('[id ^= "order_id_"]:checked');
+      if($checkbox.length){
+        layer.load();
+        var po = '';
+        $checkbox.each(function(){
+          po += $(this).val()+'|';
 
-      });
-      po = po.substr(0,po.length-1);
-      var url = "{:url('Order/createU9Order')}";
-      var data = {
-        'ids' : po
-      };
-      $.post(url,data,function(res){
-        layer.closeAll();
-        if(res.code == '2000'){
-          if(res.data){
-            $.each(res.data,function(i,n){
-              $('#order_id_'+i).parent().next().html(this.data.order_code);
-              $('#order_id_'+i).parent().next().next().next().next().next().next().next().html('执行中');
-              //console.log(res);
-            })
+        });
+        po = po.substr(0,po.length-1);
+        var url = "{:url('Order/createU9Order')}";
+        var data = {
+          'ids' : po
+        };
+        $.post(url,data,function(res){
+          layer.closeAll();
+          if(res.code == '2000'){
+            if(res.data){
+              $.each(res.data,function(i,n){
+                $('#order_id_'+i).parent().next().html(this.data.order_code);
+                $('#order_id_'+i).parent().next().next().next().next().next().next().next().html('执行中');
+                //console.log(res);
+              })
+            }
           }
-        }
-      });
-    }else{
-      layer.alert('请选择订单');
-      return;
-    }
+        });
+      }else{
+        layer.alert('请选择订单');
+        return;
+      }
+    });
   });
 </script>
 

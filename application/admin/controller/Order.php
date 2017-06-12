@@ -209,7 +209,7 @@ class Order extends BaseController{
                 $where = [
                     'id' => $param['id'],
                 ];
-                dd($res['result']);
+                //dd($res['result']);
                 $data = [
                     'order_code' => $res['result']['DocNo'],
                     'status' => 'executing',
@@ -388,16 +388,19 @@ class Order extends BaseController{
         $idArr = explode('|',$ids);
         $reInfo = [];
         $poLogic = model('Po', 'logic');
-        $msg = '';
+        $num = 0;
         foreach($idArr as $k => $v){
             $where = ['id'=>$v];
             $status = $poLogic->getPoStatus($where);
             if($status == 'contract_pass'){//合同审核通过了
                 $res = $this->placeOrderAll($v);
                 $reInfo[$v] = $res;
+                if($res.code == 2000){
+                    $num += 1;
+                }
             }
         }
-        return json(['code' => 2000, 'msg' => '', 'data' => $reInfo]);
+        return json(['code' => 2000, 'msg' => '成功下了'.$num.'单', 'data' => $reInfo]);
     }
 
     /*

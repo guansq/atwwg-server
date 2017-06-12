@@ -387,18 +387,21 @@ class Order extends BaseController{
         $ids = input('param.ids');
         $idArr = explode('|',$ids);
         $reInfo = [];
+        $poLogic = model('Po', 'logic');
+        $msg = '';
         foreach($idArr as $k => $v){
-            $res = $this->placeOrderAll($v);
-            $reInfo[$v] = $res;
+            $where = ['id'=>$v];
+            $status = $poLogic->getPoStatus($where);
+            if($status == 'contract_pass'){//合同审核通过了
+                $res = $this->placeOrderAll($v);
+                $reInfo[$v] = $res;
+            }
         }
         return json(['code' => 2000, 'msg' => '', 'data' => $reInfo]);
     }
 
     /*
      * 内部创建U9订单
-     */
-    /*
-     * U9订单生成
      */
     public function placeOrderAll($id = ''){
         if($id == ''){

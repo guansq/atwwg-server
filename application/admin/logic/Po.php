@@ -69,4 +69,11 @@ class Po extends BaseLogic{
     public function getPoNumByWhere($where){
         return poModel::where($where)->count();
     }
+
+    /*
+     * 得到订单状态
+     */
+    public function getPoStatus($where){
+        return poModel::where($where)->value('status');
+    }
 }

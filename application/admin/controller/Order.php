@@ -395,7 +395,7 @@ class Order extends BaseController{
             if($status == 'contract_pass'){//合同审核通过了
                 $res = $this->placeOrderAll($v);
                 $reInfo[$v] = $res;
-                if($res.code == 2000){
+                if($res['code'] == 2000){
                     $num += 1;
                 }
             }

@@ -26,6 +26,9 @@ class Chart extends BaseController{
         $this->title = '供应商质量合格率';
         //查出全部的供应商
         $this->getAllSupp();
+        echo date('m');//06
+        echo date('y');//17
+        //往前推12月
 //        $start = '2017年05月05日';
 //        $end = '2017年08月10日';
 //        prDates($start,$end);
@@ -43,5 +46,7 @@ class Chart extends BaseController{
     public function getAllSupp(){
 
     }
+
+    //public function
 
 }

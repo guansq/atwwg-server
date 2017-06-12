@@ -379,4 +379,76 @@ class Order extends BaseController{
         }
         returnJson($httpRet);
     }
+
+    /*
+     *创建U9订单
+     */
+    public function createU9Order(){
+        $ids = input('param.ids');
+        $idArr = explode('|',$ids);
+        $reInfo = [];
+        foreach($idArr as $k => $v){
+            $res = $this->placeOrderAll($v);
+            $reInfo[$v] = $res;
+        }
+        return json(['code' => 2000, 'msg' => '', 'data' => $reInfo]);
+    }
+
+    /*
+     * 内部创建U9订单
+     */
+    /*
+     * U9订单生成
+     */
+    public function placeOrderAll($id = ''){
+        if($id == ''){
+            $id = input('id');
+        }
+        //echo $id;die;
+        $poLogic = model('Po', 'logic');
+        $sendData = [];
+        $poInfo = $poLogic->getPoInfo($id);
+
+        $sendData['DocDate'] = $poInfo['doc_date'] == '' ? time() : $poInfo['doc_date'];//单价日期
+        $sendData['DocTypeCode'] = $poInfo['doc_type'];//单据类型
+        $sendData['TCCode'] = $poInfo['tc_code'];//币种编码
+        $sendData['bizType'] = $poInfo['biz_type'];//U9参数
+        $sendData['isPriceIncludeTax'] = $poInfo['is_include_tax'];//是否含税
+        $sendData['supplierCode'] = $poInfo['sup_code'];//供应商代码
+        $poItemInfo = $poLogic->getPoItemInfo($poInfo['id']);
+        //dump($poItemInfo);die;
+        $lines = [];
+        foreach($poItemInfo as $k => $v){
+            $lines[] = [
+                'ItemCode' => $v['item_code'],//料品号
+                'OrderPriceTC' => $v['price'],//采购单价
+                'OrderTotalTC' => $v['price']*$v['price_num'],//采购总金额
+                'ReqQty' => $v['price_num'],//采购数量
+                'RequireDate' => $v['req_date'],//请购时间
+                'SupConfirmDate' => $v['sup_confirm_date'],//供应商供货日期
+                'TaxRate' => $v['tax_rate']*100,//税率
+                'TradeUOM' => $v['tc_uom'],//交易单位
+                'ValuationQty' => $v['tc_num'],//
+                'ValuationUnit' => $v['price_uom'],//
+                'srcDocPRLineNo' => $v['pr_ln'],
+                'srcDocPRNo' => $v['pr_code']
+            ];
+        }
+        $sendData['lines'] = $lines;
+        //exit(json_encode($sendData));
+        $httpRet = HttpService::curl(getenv('APP_API_U9').'index/po', $sendData);
+        $res = json_decode($httpRet, true);//成功回写数据库
+        if($res['code'] != 2000){
+            return ['code'=>6000,'msg'=>'调用U9接口异常','data'=>$res];
+        }
+        $where = [
+            'id' => $id,
+        ];
+        $data = [
+            'order_code' => $res['result']['DocNo'],
+            'status' => 'executing',
+        ];
+        $res = $poLogic->saveStatus($where, $data);//订单写入数据库
+        return ['code'=>2000,'msg'=>'','data'=>$data];
+    }
 }

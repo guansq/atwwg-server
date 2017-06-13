@@ -17,6 +17,7 @@
       <form class="form-inline">
         <input type="text" id="order_code" class="form-control" placeholder="订单编号">
         <input type="text" id="pr_code" class="form-control" placeholder="请购单编号">
+        <input type="text" id="sup_name" class="form-control" placeholder="供应商名称">
         <button type="button" id="searchVal" class="btn btn-info">查询</button>
       </form>
     </div>
@@ -96,14 +97,13 @@
         "processing":true,
         //"serverSide": true,
         "ajax":{
-          "url":'{:url("Order/getOrderList")}',
+          "url":'{:url("Order/getItemList")}',
           "type":"POST",
           "data":function(parameter){
             //添加额外的参数传给服务器
             parameter.order_code = $("#order_code").val();
             parameter.pr_code = $("#pr_code").val();
-            //parameter.order_code = $("#order_code").val();
-            //parameter.order_code = $("#order_code").val();
+            parameter.sup_name = $("#sup_name").val();
           }
         },
         "columnDefs":[
@@ -114,14 +114,14 @@
               return '<input type="checkbox" id="order_id_'+data+'" class="check" value="' + data + '">';
             }
           },
-          {
+          /*{
             "targets":8,
             "render":function(data){
               var url = '{:url(\'order/detailed\')}?id=' + data;//data
               return '<a class="detail" data-open="' + url + '">详情</a>';
               //return url;
             }
-          }
+          }*/
         ],
         "pageLength":10,
         language:{
@@ -134,7 +134,7 @@
         },
         "columns":[
           {"data":"checked"},
-          {"data":"order_code"},
+          {"data":"po_code"},
           {"data":"pr_code"},
           {"data":"pr_date"},
           {"data":"create_at"},
@@ -272,7 +272,7 @@
 
         });
         po = po.substr(0,po.length-1);
-        var url = "{:url('Order/createU9Order')}";
+        var url = "{:url('Order/placeOrderByPoItem')}";
         var data = {
           'ids' : po
         };
@@ -281,9 +281,10 @@
           if(res.code == '2000'){
             if(res.data){
               $.each(res.data,function(i,n){
-                $('#order_id_'+i).parent().next().html(this.data.order_code);
-                $('#order_id_'+i).parent().next().next().next().next().next().next().next().html('执行中');
-                //console.log(res);
+                console.log(n);
+                $('#order_id_'+n.id).parent().next().next().next().next().html(n.create_at);
+                $('#order_id_'+n.id).parent().next().next().next().next().next().next().next().html('待供应商确定订单');
+                $('#order_id_'+n.id).parent().next().next().next().next().next().next().next().next().html(n.url);
               })
             }
           }

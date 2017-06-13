@@ -109,6 +109,109 @@ class Order extends BaseController{
         return json($info);
     }
 
+    public function getItemList(){
+        $poLogic = model('Po', 'logic');
+        $get = input('param.');
+        $where = [];
+        // 应用搜索条件
+        foreach(['order_code', 'pr_code', 'sup_name'] as $key){
+            if(isset($get[$key]) && $get[$key] !== ''){
+                $where[$key] = ['like', "%{$get[$key]}%"];
+            }
+        }
+        $itemList = $poLogic->getPoItemList($where);
+        $returnInfo = [];
+        $itemStatus = [
+            '' => '未下单',
+            'init' => '未下单',
+        ];
+        $status = [
+            '' => '',
+            'init' => '初始',
+            'sup_cancel' => '供应商取消',
+            'sup_edit' => '供应商修改',
+            'atw_sure' => '安特威确定',
+            'sup_sure' => '供应商确定/待上传合同',
+            'upload_contract' => '供应商已经上传合同',
+            'contract_pass' => '合同审核通过',
+            'contract_refuse' => '合同审核拒绝',
+            'executing' => '执行中',
+            'finish' => '结束',
+        ];
+
+        foreach($itemList as $k => $v){
+            $returnInfo[$k]['checked'] = $v['id'];
+            $exec_desc = '';
+            $v['arv_goods_num'] = $v['arv_goods_num'] == '' ? 0 : $v['arv_goods_num'];
+            $v['pro_goods_num'] = $v['pro_goods_num'] == '' ? 0 : $v['pro_goods_num'];
+            $exec_desc .= '物料名称：'.$v['item_name'].'; '.'到货数量：'.$v['arv_goods_num'].
+                '; 未到货数量：'.$v['pro_goods_num'].'; 可供货交期：'.date('Y-m-d', $v['sup_confirm_date']).'<br>';
+            $returnInfo[$k]['exec_desc'] = $exec_desc;
+            $returnInfo[$k]['po_id'] = $v['po_id'];//合并订单编号
+            $returnInfo[$k]['po_code'] = $v['po_code'];//U9生成订单编号
+            $returnInfo[$k]['pr_code'] = $v['pr_code'];//请购单编号
+            $returnInfo[$k]['pr_date'] = date('Y-m-d', $poLogic->getPrDate($v['pr_code']));
+            $returnInfo[$k]['create_at'] = '';//合并订单日期  date('Y-m-d', $v['create_at'])
+            if(!empty($v['po_id'])){
+                $where = [
+                    'id' => $v['po_id']
+                ];
+                $returnInfo[$k]['create_at'] = date('Y-m-d', $poLogic->getPoCreateat($where));
+            }
+            $returnInfo[$k]['sup_name'] = $v['sup_name'];
+            //先判断是否已下单未下单
+            if($v['status'] == 'init' || $v['status'] == ''){
+                $returnInfo[$k]['status'] = $itemStatus[$v['status']];
+                //$returnInfo[$k]['detail'] = $v['id'];
+                $returnInfo[$k]['detail'] = '<a class="detail" data-open="'.url('order/pidetailed').'?id='.$v['id'].'">详情</a>';//未下单前的详情,['id'=>$v['id']]
+            }elseif($v['status'] == 'placeorder'){
+                //$<a class="detail" data-open="' + url + '">详情</a>
+                $returnInfo[$k]['detail'] = '<a class="detail" data-open="'.url('order/detailed').'?id='.$v['po_id'].'">详情</a>';//下单后的合并订单详情,['id'=>$v['po_id']]
+                $where = [
+                    'id' => $v['po_id']
+                ];
+                $poStatus = $poLogic->getPoStatus($where);
+                $returnInfo[$k]['status'] = $poStatus;
+                switch($poStatus){
+                    case 'init'://初始
+                        $action = [];
+                        $returnInfo[$k]['status'] = '待供应商确定订单';
+                        break;
+                    case 'sup_cancel'://供应商取消
+                        $action = [];
+                        $returnInfo[$k]['status'] = '供应商取消了订单';
+                        break;
+                    case 'sup_edit'://供应商修改
+                        $returnInfo[$k]['status'] = '<a href="javascript:;" onclick="verifyOrder('.$v['id'].',\'atw_sure\',this);">供应商修改，确定订单</a>';
+                        break;
+                    case 'atw_sure'://安特威确定 以及init
+                        $returnInfo[$k]['status'] = '待供应商确定订单';
+                        break;
+                    case 'sup_sure'://供应商确定/待上传合同
+                        $returnInfo[$k]['status'] = '供应商确定/待上传合同';
+                        break;
+                    case 'upload_contract'://供应商已经上传合同
+                        $returnInfo[$k]['status'] = '合同待审核';
+                        /*$returnInfo[$k]['status'] = '<a href="javascript:;" onclick="verifyOrder('.$v['id'].',\'contract_pass\',this);">合同审核通过</a>
+                                                     <a href="javascript:;" onclick="verifyOrder('.$v['id'].',\'contract_refuse\',this);">拒绝该合同</a>';*/
+                        break;
+                    case 'contract_pass'://合同审核通过
+                        $returnInfo[$k]['status'] = '合同审核通过';
+                        break;
+                    case 'contract_refuse'://合同审核拒绝
+                        $returnInfo[$k]['status'] = '合同已被拒绝';
+                        break;
+                }
+            }
+
+        }
+        //dump($itemList);
+        $info = ['draw' => time(), 'data' => $returnInfo, 'extData' => [],];
+
+        return json($info);
+    }
+
+
     public function del(){
 
     }
@@ -128,6 +231,9 @@ class Order extends BaseController{
 
     }
 
+    /*
+     * po详情
+     */
     public function detailed(){
         $this->assign('title', $this->title);
         $id = input('get.id');
@@ -135,7 +241,7 @@ class Order extends BaseController{
         $poLogic = model('Po', 'logic');
         $poInfo = $poLogic->getPoInfo($id);
         $prLogic = model('RequireOrder', 'logic');
-
+        //dump($id);die;
         $where = ['pr_code' => $poInfo['pr_code']];
         if($poInfo['status'] == 'upload_contract'){//供应商已经上传合同
 
@@ -152,6 +258,24 @@ class Order extends BaseController{
         $this->assign('poInfo', $poInfo);
         $this->assign('poItemInfo', $poItemInfo);
         $this->assign('allAmount', $allAmount);
+        return view();
+    }
+
+    /*
+     * po_item 详情
+     */
+    public function pidetailed(){
+        $this->assign('title', $this->title);
+        $id = input('get.id');
+        //得到item详情
+        $poLogic = model('Po', 'logic');
+        $poItemInfo  = $poLogic->getPoItem($id);
+        //添加pr_date
+        $prLogic = model('RequireOrder', 'logic');
+        $where = ['pr_code' => $poItemInfo['pr_code']];
+        $poItemInfo['pr_date'] = $prLogic->getPrDate($where);
+        //dump($poItemInfo);die;
+        $this->assign('poItemInfo', $poItemInfo);
         return view();
     }
 
@@ -285,13 +409,18 @@ class Order extends BaseController{
         //dump($requestInfo);die;
         $where = [];
         // 应用搜索条件
-        foreach(['order_code', 'pr_code'] as $key){
+        foreach(['order_code', 'pr_code', 'sup_name'] as $key){
             if(isset($get[$key]) && $get[$key] !== ''){
                 $where[$key] = ['like', "%{$get[$key]}%"];
             }
         }
-        $list = $poLogic->getPolist($where);
+        //$list = $poLogic->getPolist($where);
+        $itemList = $poLogic->getPoItemList($where);
         $returnInfo = [];
+        $itemStatus = [
+            '' => '未下单',
+            'init' => '未下单',
+        ];
         $status = [
             '' => '',
             'init' => '初始',
@@ -306,7 +435,7 @@ class Order extends BaseController{
             'finish' => '结束',
         ];
 
-        foreach($list as $k => $v){
+        /*foreach($list as $k => $v){
             $returnInfo[$k]['checked'] = $v['id'];
             $exec_desc = '';
             if(!empty($itemInfo = $poLogic->getPoItemInfo($v['id']))){
@@ -325,6 +454,28 @@ class Order extends BaseController{
             $returnInfo[$k]['pr_date'] = date('Y-m-d', $poLogic->getPrDate($v['pr_code']));
             $returnInfo[$k]['create_at'] = date('Y-m-d', $v['create_at']);
             $returnInfo[$k]['sup_name'] = $poLogic->getSupName($v['sup_code']);
+            //$returnInfo[$k]['detail'] = $v['id'];
+        }*/
+        foreach($itemList as $k => $v){
+            $returnInfo[$k]['checked'] = $v['id'];
+            $exec_desc = '';
+            $v['arv_goods_num'] = $v['arv_goods_num'] == '' ? 0 : $v['arv_goods_num'];
+            $v['pro_goods_num'] = $v['pro_goods_num'] == '' ? 0 : $v['pro_goods_num'];
+            $exec_desc .= '物料名称：'.$v['item_name'].'; '.'到货数量：'.$v['arv_goods_num'].
+                '; 未到货数量：'.$v['pro_goods_num'].'; 可供货交期：'.date('Y-m-d', $v['sup_confirm_date']).'<br>';
+            $returnInfo[$k]['exec_desc'] = $exec_desc;
+            $returnInfo[$k]['po_id'] = $v['po_id'];//合并订单编号
+            $returnInfo[$k]['po_code'] = $v['po_code'];//U9生成订单编号
+            $returnInfo[$k]['pr_code'] = $v['pr_code'];//请购单编号
+            $returnInfo[$k]['pr_date'] = date('Y-m-d', $poLogic->getPrDate($v['pr_code']));
+            $returnInfo[$k]['create_at'] = '';//合并订单日期  date('Y-m-d', $v['create_at'])
+            if(!empty($v['po_id'])){
+                $where = [
+                    'id' => $v['po_id']
+                ];
+                $returnInfo[$k]['create_at'] = date('Y-m-d', $poLogic->getPoCreateat($where));
+            }
+            $returnInfo[$k]['sup_name'] = $v['sup_name'];
             //$returnInfo[$k]['detail'] = $v['id'];
         }
 
@@ -456,5 +607,61 @@ class Order extends BaseController{
         ];
         $res = $poLogic->saveStatus($where, $data);//订单写入数据库
         return ['code'=>2000,'msg'=>'','data'=>$data];
+    }
+
+    /*
+     * 合并生成订单
+     */
+    public function placeOrderByPoItem(){
+        $ids = input('param.ids');
+        $idArr = explode('|',$ids);
+        $poLogic = model('Po', 'logic');
+        $supLogic = model('Supporter','logic');
+        $supCodeInfo = [];
+        if(!empty($ids)){
+            $poArr = [];
+            foreach($idArr as $k=>$v){
+                $po_id = $poLogic->getPoId(['id'=>$v]);//判断id是否存在po_id有存在返回不能合并订单操作
+                if($po_id){
+                    $poArr[$k] = $po_id;
+                }
+                $supInfo = $poLogic->getSupInfo(['id'=>$v]);//通过id获取sup_code sup_name
+                $supCodeInfo[$supInfo['sup_code']] = $supInfo['sup_name'];
+            }
+        }
+
+        if(!empty($poArr)){
+            return json(['code'=>4000,'msg'=>'抱歉，您选择的采购订单中已经存在下单后的订单状态','data'=>[]]);
+        }
+        if(count($supCodeInfo) != 1){
+            return json(['code'=>4000,'msg'=>'抱歉，您选择的采购订单中包含多家供应商或采购订单中供应商已不存在','data'=>[]]);
+        }
+        foreach($supCodeInfo as $k=>$v){
+            $sup_code = $k;
+            $sup_name = $v;
+        }
+        $now = time();
+        //进行生成订单
+        $itemInfo = $poLogic->getPoItem($idArr[0]);
+        //dump($itemInfo);die;
+        $poData = [
+            'pr_code' => $itemInfo['pr_code'],
+            'sup_code' => $sup_code,
+            'is_include_tax' => 1,      //是否含税
+            'status' => 'init',
+            'create_at' => $now,
+            'update_at' => $now,
+        ];
+        $po_id = $poLogic->insertOrGetId($poData);
+        $list = [];
+        foreach($idArr as $k=>$v){
+            $list[$k] = ['id'=>$v,'po_id'=>$po_id,'status'=>'placeorder'];
+        }
+        $res = $poLogic->updateAllPoid($list);
+        $data = [];
+        foreach($idArr as $k=>$v){
+            $data[$k] = ['id'=>$v,'po_id'=>$po_id,'create_at'=>date('Y-m-d',$now),'url'=>'<a class="detail" data-open="'.url('order/detailed').'?id=$po_id">详情</a>'];
+        }
+        return json(['code'=>2000,'msg'=>'下订单成功','data'=>$data]);
     }
 }

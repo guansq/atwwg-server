@@ -10,6 +10,7 @@ use app\common\model\Po as poModel;
 use app\common\model\PoItem as poItemModel;
 
 class Po extends BaseLogic{
+    protected $table = 'atw_po_item';
     /*
      * 得到订单列表
      */
@@ -75,5 +76,81 @@ class Po extends BaseLogic{
      */
     public function getPoStatus($where){
         return poModel::where($where)->value('status');
+    }
+
+    /*
+     * 得到poItemList
+     */
+    public function getPoItemList($where){
+        if(empty($where)){
+            $list = poItemModel::order('update_at DESC')->select();
+        }else{
+            $list = poItemModel::where($where)->order('update_at DESC')->select();
+        }
+        if($list){
+            $list = collection($list)->toArray();
+        }
+        return $list;
+    }
+    /*
+    * 得到订单生成日期
+    */
+    public function getPoCreateat($where){
+        return poModel::where($where)->value('create_at');
+    }
+    /*
+     * 得到po_id
+     */
+    public function getPoId($where){
+        return poItemModel::where($where)->value('po_id');
+    }
+    /*
+     * 手动生成订单
+     */
+    public function createOrder(){
+
+    }
+
+    /*
+     * 得到供应商code 得到供应商名称
+     */
+    public function getSupInfo($where){
+        $info = poItemModel::field('sup_code,sup_name')->where($where)->find();
+        if($info){
+            $info = $info->toArray();
+        }
+        return $info;
+    }
+    /*
+     * 得到poitemInfo
+     */
+    public function getPoItem($id){
+        $info = poItemModel::where('id',$id)->find();
+        if($info){
+            $info = $info->toArray();
+        }
+        return $info;
+    }
+
+    /*
+     * 得到OrderId
+     */
+    public function insertOrGetId($poData){
+        $findPo = poModel::where('pr_code', $poData['pr_code'])->where('sup_code', $poData['sup_code'])->find();
+        if(empty($findPo)){
+            return poModel::insertGetId($poData);
+        }
+        return $findPo['id'];
+    }
+
+    /*
+     * 批量更新ID
+     */
+    public function updateAllPoid($list){
+        $res = $this->saveAll($list);
+        if($res){
+            $res = collection($res)->toArray();
+        }
+        return $res;
     }
 }

@@ -1,0 +1,71 @@
+{extend name='extra@admin/content' /}
+
+{block name="button"}
+
+{/block}
+
+{block name="content"}
+
+<main class="main">
+  <div class="mt_box">
+    <div class="order_table">
+      <table class="table table-hover">
+        <tr>
+          <td class="col-sm-1">订单编号</td>
+          <td></td>
+          <td class="col-sm-1">下单日期</td>
+          <td></td>
+          <td class="col-sm-1">供应商编号</td>
+          <td>{$poItemInfo['sup_code']}</td>
+        </tr>
+        <tr>
+          <td>请购单编号</td>
+          <td>{$poItemInfo['pr_code']}</td>
+          <td>请购日期</td>
+          <td>{$poItemInfo['pr_date']|date="Y-m-d",###}</td>
+          <td>供应商名称</td>
+          <td>{$poItemInfo['sup_name']}</td>
+        </tr>
+      </table>
+      <table class="table table-bordered">
+        <thead>
+        <tr>
+          <th>序号</th>
+          <th>料号</th>
+          <th>物料名称</th>
+          <th>物料描述</th>
+          <th>单位</th>
+          <th>计价单位</th>
+          <th>数量</th>
+          <th>交期</th>
+          <th>供应商名称</th>
+          <th>单价</th>
+          <th>金额</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+          <td>1</td>
+          <td>{$poItemInfo['item_code']}</td>
+          <td>{$poItemInfo['item_name']}</td>
+          <td>{$poItemInfo['item_name']}</td>
+          <td>{$poItemInfo['price_uom']}</td>
+          <td>{$poItemInfo['tc_uom']}</td>
+          <td>{$poItemInfo['price_num']}</td>
+          <td>{$poItemInfo['sup_confirm_date']|date="Y-m-d",###}</td>
+          <td>{$poItemInfo['sup_name']}</td>
+          <td>{$poItemInfo['price']}</td>
+          <td>{$poItemInfo['amount']}</td>
+        </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</main>
+
+{/block}
+{block name="script"}
+{/block}

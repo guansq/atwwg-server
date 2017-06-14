@@ -105,6 +105,12 @@ class Po extends BaseLogic{
         return poItemModel::where($where)->value('po_id');
     }
     /*
+     * 得到order_code
+     */
+    public function getOrderCode($where){
+        return poModel::where($where)->value('order_code');
+    }
+    /*
      * 手动生成订单
      */
     public function createOrder(){

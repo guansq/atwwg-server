@@ -344,8 +344,16 @@ class Order extends BaseController{
                 $data = [
                     'order_code' => $res['result']['DocNo'],
                     'status' => 'executing',
+                    'update_at' => time()
                 ];
                 $res = $poLogic->saveStatus($where, $data);//订单写入数据库
+                $where = [
+                    'po_id' => $param['id'],
+                ];
+                $data = [
+                    'update_at' =>time(),
+                ];
+                $poLogic->saveItemInfo($where,$data);//更新时间
                 if($res !== false){
                     return json(['code' => 2000, 'msg' => '合同审核通过，U9已生成订单', 'data' => []]);
                 }else{

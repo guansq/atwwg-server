@@ -65,6 +65,12 @@ class Po extends BaseLogic{
     }
 
     /*
+     *保存明细订单状态
+     */
+    function saveItemInfo($where, $data){
+        return poItemModel::where($where)->update($data);
+    }
+    /*
      * 根据条件得到订单数量
      */
     public function getPoNumByWhere($where){

@@ -136,8 +136,8 @@ class Enquiryorder extends BaseController{
                     'rt_appkey' => 'atw_wg',
                     'fromName' => '安特威物供平台',//发送人名
                     'to' => $sendInfo['email'],
-                    'subject' => '测试主题',
-                    'html' => '测试内容',
+                    'subject' => '安特威询价单',
+                    'html' => '您有新的询价单，请注意查收。',
                     'from' => 'tan3250204@sina.com',//平台的邮件头
                 ];
                 HttpService::curl(getenv('APP_API_MSG').'SendEmail/sendHtml',$sendData);
@@ -146,7 +146,7 @@ class Enquiryorder extends BaseController{
                 $sendData = [
                     'mobile' => $sendInfo['phone'],
                     'rt_appkey' => 'atw_wg',
-                    'text' => '测试测试文本',
+                    'text' => '安特威询价单',
                 ];
                 HttpService::curl(getenv('APP_API_MSG').'SendSms/sendText',$sendData);//sendSms($data)
             }

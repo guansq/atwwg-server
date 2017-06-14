@@ -136,13 +136,11 @@ class Po extends BaseLogic{
      * 得到OrderId
      */
     public function insertOrGetId($poData){
-        $findPo = poModel::where('pr_code', $poData['pr_code'])->where('sup_code', $poData['sup_code'])->find();
-        if(empty($findPo)){
-            return poModel::insertGetId($poData);
-        }
-        return $findPo['id'];
+        //$findPo = poModel::where('pr_code', $poData['pr_code'])->where('sup_code', $poData['sup_code'])->find();
+        //if(empty($findPo)){} return $findPo['id'];
+        return poModel::insertGetId($poData);
     }
-
+    
     /*
      * 批量更新ID
      */

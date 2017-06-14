@@ -17,13 +17,15 @@ class RequireOrder extends BaseLogic{
      function getPrList($start,$length,$where){
          if(!empty($where)){
              if(key_exists('status',$where)){
-                 $list = prModel::alias('a')->field('a.*,b.desc,b.pur_attr')->join('item b','a.item_code=b.code','LEFT')->where($where)->limit("$start,$length")->select();
+                 $list = prModel::alias('a')->field('a.*,b.desc,b.pur_attr')->join('item b','a.item_code=b.code','LEFT')->where($where)->limit("$start,$length")->order('update_at desc')->select();
              }else{
-                 $list = prModel::alias('a')->field('a.*,b.desc,b.pur_attr')->join('item b','a.item_code=b.code','LEFT')->where($where)->where('a.status','<>','close')->limit("$start,$length")->select();
+                 //->where('a.status','<>','close')
+                 $list = prModel::alias('a')->field('a.*,b.desc,b.pur_attr')->join('item b','a.item_code=b.code','LEFT')->where($where)->limit("$start,$length")->order('update_at desc')->select();
              }
 
          }else{
-             $list = prModel::alias('a')->field('a.*,b.desc,b.pur_attr')->join('item b','a.item_code=b.code','LEFT')->where('a.status','<>','close')->limit("$start,$length")->select();
+             //->where('a.status','<>','close')
+             $list = prModel::alias('a')->field('a.*,b.desc,b.pur_attr')->join('item b','a.item_code=b.code','LEFT')->limit("$start,$length")->order('update_at desc')->select();
          }
 
 //        echo $this->getLastSql();
@@ -42,11 +44,13 @@ class RequireOrder extends BaseLogic{
              if(key_exists('status',$where)){
                  $list = prModel::alias('a')->field('a.*,b.desc,b.pur_attr')->join('item b','a.item_code=b.code','LEFT')->where($where)->select();
              }else{
-                 $list = prModel::alias('a')->field('a.*,b.desc,b.pur_attr')->join('item b','a.item_code=b.code','LEFT')->where($where)->where('a.status','<>','close')->select();
+                 //->where('a.status','<>','close')
+                 $list = prModel::alias('a')->field('a.*,b.desc,b.pur_attr')->join('item b','a.item_code=b.code','LEFT')->where($where)->select();
              }
 
          }else{
-             $list = prModel::alias('a')->field('a.*,b.desc,b.pur_attr')->join('item b','a.item_code=b.code','LEFT')->where('a.status','<>','close')->select();
+             //->where('a.status','<>','close')
+             $list = prModel::alias('a')->field('a.*,b.desc,b.pur_attr')->join('item b','a.item_code=b.code','LEFT')->select();
          }
 
          if($list){
@@ -63,11 +67,13 @@ class RequireOrder extends BaseLogic{
              if(key_exists('status',$where)){
                  $count = prModel::alias('a')->field('a.*,b.desc,b.pur_attr')->join('item b','a.item_code=b.code','LEFT')->where($where)->count();
              }else{
-                 $count = prModel::alias('a')->field('a.*,b.desc,b.pur_attr')->join('item b','a.item_code=b.code','LEFT')->where($where)->where('a.status','<>','close')->count();
+                 //->where('a.status','<>','close')
+                 $count = prModel::alias('a')->field('a.*,b.desc,b.pur_attr')->join('item b','a.item_code=b.code','LEFT')->where($where)->count();
              }
 
          }else{
-             $count = prModel::alias('a')->field('a.*,b.desc,b.pur_attr')->join('item b','a.item_code=b.code','LEFT')->where('a.status','<>','close')->count();
+             //->where('a.status','<>','close')
+             $count = prModel::alias('a')->field('a.*,b.desc,b.pur_attr')->join('item b','a.item_code=b.code','LEFT')->count();
          }
          return $count;
      }

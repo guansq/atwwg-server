@@ -20,33 +20,6 @@ function auth($node) {
 }
 
 /*
- * 得到技术评分
- */
-function getTechScore($code){
-    return '80分';
-}
-
-/*
- * 供应商资质评分
- */
-function getQualiScore($code){
-    return '70分';
-}
-
-/*
- * 供应风险
- */
-function getSupplyRisk($code){
-    return '极小';
-}
-/*
- * 信用等级
- */
-function getQualiLevel($code){
-    return '优秀';
-}
-
-/*
  * 得到项目号
  */
 function getProNo($pr_code){

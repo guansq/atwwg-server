@@ -82,7 +82,7 @@ class Io extends BaseLogic{
 
     function getIoInfo($io_code){
         $list = IoModel::alias('a')
-            ->field('a.*,b.ctc_name,b.mobile,b.email')
+            ->field('a.*,b.ctc_name,b.mobile,b.phone,b.email')
             ->join('supplier_info b', 'a.sup_code=b.code', 'LEFT')
             ->where('io_code', "$io_code")
             ->select();
@@ -94,6 +94,10 @@ class Io extends BaseLogic{
 
         foreach($list as &$item){
             $item['statusStr'] = self::STATUS_ARR[$item['status']];
+            $item['totalPrice'] = '';
+            if(!empty($item['quote_price'])){
+                $item['totalPrice'] = atwMoney($item['quote_price']*$item['price_num']);
+            }
          }
         return $list;
     }

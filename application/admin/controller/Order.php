@@ -352,6 +352,7 @@ class Order extends BaseController{
                 ];
                 $data = [
                     'update_at' =>time(),
+                    'po_code' => $res['result']['DocNo'],
                 ];
                 $poLogic->saveItemInfo($where,$data);//更新时间
                 if($res !== false){

@@ -47,13 +47,20 @@
           </div>
         </div>
         <div class="form-group col-sm-6">
+          <label class="col-sm-2 control-label">供应商采购属性</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" value="{$sup_info['purch_type']}" placeholder="供应商采购属性" disabled>
+          </div>
+        </div>
+        <div class="form-group col-sm-6">
           <label class="col-sm-2 control-label">供应商分类</label>
           <div class="col-sm-10">
-            <select class="form-control">
+            <input type="text" class="form-control" value="{$sup_info['type_name']}" placeholder="供应商采购属性" disabled>
+            <!--<select class="form-control">
               <option {if condition="$sup_info['type_name'] eq '原材料'"} selected {/if} >原材料</option>
               <option {if condition="$sup_info['type_name'] eq '气控件'"} selected {/if} >气控件</option>
               <option {if condition="$sup_info['type_name'] eq '电磁阀'"} selected {/if} >电磁阀</option>
-            </select>
+            </select>-->
           </div>
         </div>
         <div class="form-group col-sm-6">
@@ -65,7 +72,7 @@
         <div class="form-group col-sm-6">
           <label class="col-sm-2 control-label">成立日期</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" value="{$sup_info['found_date']|date='y-m-d',###}" placeholder="成立日期">
+            <input type="text" class="form-control" value="{$sup_info['found_date']|atwDate}" placeholder="成立日期">
           </div>
         </div>
         <div class="form-group col-sm-6">
@@ -78,6 +85,12 @@
           <label class="col-sm-2 control-label">电话</label>
           <div class="col-sm-10">
             <input type="text" class="form-control" value="{$sup_info['mobile']}" placeholder="电话">
+          </div>
+        </div>
+        <div class="form-group col-sm-6">
+          <label class="col-sm-2 control-label">手机</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" value="{$sup_info['phone']}" placeholder="电话">
           </div>
         </div>
         <div class="form-group col-sm-6">
@@ -100,16 +113,7 @@
           </div>
         </div>
 
-        <div class="form-group col-sm-6">
-          <label class="col-sm-2 control-label">供应商采购属性</label>
-          <div class="col-sm-10">
-            <select class="form-control">
-              <option {if $sup_info.purch_type eq '独家采购'}selected{/if} >独家采购</option>
-              <option {if $sup_info.purch_type eq '充分竞争'}selected{/if} >充分竞争</option>
 
-            </select>
-          </div>
-        </div>
         <div class="form-group col-sm-6">
           <label class="col-sm-2 control-label">状态</label>
           <div class="col-sm-10">
@@ -123,7 +127,7 @@
         <div class="form-group col-sm-6">
           <label class="col-sm-2 control-label">建立日期</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" value="{$sup_info['create_at']|date='y-m-d',###}" placeholder="供应商建立日期">
+            <input type="text" class="form-control" value="{$sup_info['found_date']|atwDate}" placeholder="供应商建立日期">
           </div>
         </div>
         <div class="form-group col-sm-6">

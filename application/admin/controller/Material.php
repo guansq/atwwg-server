@@ -37,9 +37,18 @@ class Material extends BaseController{
         //dump($requestInfo);die;
         $where = [];
         // 应用搜索条件
-        foreach (['main_name', 'name', 'code', 'pur_attr'] as $key) {
+        foreach (['main_name', 'name', 'code', 'pur_attr','update_cnt'] as $key) {
             if (isset($get[$key]) && $get[$key] !== '') {
-                $where[$key] = ['like',"%{$get[$key]}%"];
+                if($key == 'update_cnt'){
+                    $condition = [
+                        1 => '>=',//全部
+                        2 => '>',//已新增
+                        3 => '='//未新增
+                    ];
+                    $where[$key] = [$condition[$get[$key]],0];
+                }else{
+                    $where[$key] = ['like',"%{$get[$key]}%"];
+                }
             }
         }
         //dump($data);
@@ -51,15 +60,16 @@ class Material extends BaseController{
         foreach($list as $k => $v){
             //$v['arv_rate'] = $v['arv_rate'] == '' ? '暂无数据' : $v['arv_rate'];
             //$v['pp_rate'] = $v['pp_rate'] == '' ? '暂无数据' : $v['pp_rate'];
+
             $returnArr[] = [
                 'main_name' => $v['main_name'],//主分类
                 'code' => $v['code'],//料号
                 'name' => $v['name'],//物料描述
                 'pur_attr' => $v['pur_attr'],//物料采购属性
-                'future_scale' => $v['future_scale'],//货期让步比例
-                'price_weight' => $v['price_weight'],//价格权重
-                'tech_weight' => $v['tech_weight'],//技术权重
-                'business_weight' => $v['business_weight'],//商务权重
+                'future_scale' => initPerVal($v['future_scale']),//货期让步比例
+                'price_weight' => initPerVal($v['price_weight']),//价格权重
+                'tech_weight' => initPerVal($v['tech_weight']),//技术权重
+                'business_weight' => initPerVal($v['business_weight']),//商务权重
                 'pay_type_status' => '',//查看\打印条形码<a class="barcode" href="#">条形码</a>
                 'action' => '<a class="edit" href="javascript:void(0);" data-open="'.url('Material/edit',['code'=>$v['code']]).'" >编辑</a>',
             ];
@@ -99,7 +109,7 @@ class Material extends BaseController{
         //var_dump($info);
         return view();
     }
-    /*
+        /*
         * 得到单个物料信息
         */
     public function update(){
@@ -107,17 +117,20 @@ class Material extends BaseController{
         $logicItemInfo = Model('Item','logic');
         $code = $data['code'];
         $data = array(
-           'pur_attr'=> $data['purattr'],
-            'future_scale'=> $data['futurescale'],
-            'price_weight'=> $data['priceweight'],
-            'tech_weight'=> $data['techweight'],
-            'business_weight'=> $data['businessweight'],
+            //'pur_attr'=> $data['purattr'],//采购属性去掉
+            'future_scale'=> initPerVal($data['futurescale'],false),
+            'price_weight'=> initPerVal($data['priceweight'],false),
+            'tech_weight'=> initPerVal($data['techweight'],false),
+            'business_weight'=> initPerVal($data['businessweight'],false),
             'standard_date'=> $data['standarddate'],
+            'update_at'=> time(),
             'is_stop'=>$data['inlineRadioOptions'],
         );
         //dump($data);die;
         $info = $logicItemInfo->updateByCode($code,$data);
         if($info !== false){
+            //执行update_cnt自增+1
+            $logicItemInfo->setIncUpdate($code);
             $this->success('恭喜，保存成功哦！', '');
         }else{
             $this->error('保存失败，请稍候再试！');
@@ -180,10 +193,10 @@ class Material extends BaseController{
                     ->setCellValue('C'.$num,$v['name'])->setCellValue('D'.$num,$v['main_name'])
                     ->setCellValue('E'.$num,$v['desc'])->setCellValue('F'.$num,date('Y-m-d H:i:s',$v['create_at']))
                     ->setCellValue('G'.$num,date('Y-m-d H:i:s',$v['update_at']))
-                    ->setCellValue('H'.$num,$v['future_scale'])
-                    ->setCellValue('I'.$num,$v['price_weight'])
-                    ->setCellValue('J'.$num,$v['tech_weight'])
-                    ->setCellValue('K'.$num,$v['business_weight'])
+                    ->setCellValue('H'.$num,initPerVal($v['future_scale']))
+                    ->setCellValue('I'.$num,initPerVal($v['price_weight']))
+                    ->setCellValue('J'.$num,initPerVal($v['tech_weight']))
+                    ->setCellValue('K'.$num,initPerVal($v['business_weight']))
                     ->setCellValue('L'.$num,$v['standard_date']);
         }
         $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel,'Excel2007');//按照指定格式生成Excel文件，'Excel2007’表示生成2007版本的xlsx，
@@ -230,14 +243,31 @@ class Material extends BaseController{
                 $dataInfo['main_name'] = $objPHPExcel->getActiveSheet()->getCell("D".$currentRow)->getValue();//获取D列的值
                 $dataInfo['desc'] = $objPHPExcel->getActiveSheet()->getCell("E".$currentRow)->getValue();//获取E列的值
                 $dataInfo['update_at'] = time();//获取G列的值
-                $dataInfo['future_scale'] = $objPHPExcel->getActiveSheet()->getCell("H".$currentRow)->getValue();
-                $dataInfo['price_weight'] = $objPHPExcel->getActiveSheet()->getCell("I".$currentRow)->getValue();
-                $dataInfo['tech_weight'] = $objPHPExcel->getActiveSheet()->getCell("J".$currentRow)->getValue();
-                $dataInfo['business_weight'] = $objPHPExcel->getActiveSheet()->getCell("K".$currentRow)->getValue();
+                $dataInfo['future_scale'] = initPerVal($objPHPExcel->getActiveSheet()->getCell("H".$currentRow)->getValue(),false);
+                $dataInfo['price_weight'] = initPerVal($objPHPExcel->getActiveSheet()->getCell("I".$currentRow)->getValue(),false);
+                $dataInfo['tech_weight'] = initPerVal($objPHPExcel->getActiveSheet()->getCell("J".$currentRow)->getValue(),false);
+                $dataInfo['business_weight'] = initPerVal($objPHPExcel->getActiveSheet()->getCell("K".$currentRow)->getValue(),false);
                 $dataInfo['standard_date'] = $objPHPExcel->getActiveSheet()->getCell("L".$currentRow)->getValue();
                 //检查code是否存在
                 if($logicItemInfo->exist($data)){//不存在
+                    $dataInfo['create_at'] = time();
                     $logicItemInfo->saveItem($data,$dataInfo);
+                }else{
+                    //判断5个值是否都为空，都为空的话就不更新 否则更新
+                    if(!empty($dataInfo['future_scale']) || !empty($dataInfo['price_weight']) || !empty($dataInfo['tech_weight'])
+                        || !empty($dataInfo['business_weight']) || !empty($dataInfo['standard_date'])){
+                        $data = [
+                            'update_at' => time(),
+                            'future_scale' => $dataInfo['future_scale'],
+                            'price_weight' => $dataInfo['price_weight'],
+                            'tech_weight' => $dataInfo['tech_weight'],
+                            'business_weight' => $dataInfo['business_weight'],
+                            'standard_date' => $dataInfo['standard_date'],
+                        ];
+                        $logicItemInfo->updateByCode($data['code'],$data);
+                        $logicItemInfo->setIncUpdate($data['code']);
+                        //futurescale
+                    }
                 }
             }
             $this->success("更新成功！", '');
@@ -245,6 +275,15 @@ class Material extends BaseController{
         }else{
             $this->error("上传失败！", '');
         }
+    }
+
+    /*
+     * 得到未更新的数量
+     */
+    public function getInitDataNum(){
+        $logicItemInfo = Model('Item','logic');
+        $num = $logicItemInfo->getListNum(['update_cnt' => 0]);
+        return $num;
     }
 
 }

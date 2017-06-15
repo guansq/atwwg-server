@@ -31,9 +31,9 @@ class Item extends Baselogic{
      */
     public function getListInfo($start,$length,$where = []){
         if(empty($where)){
-            $list = ItemModel::limit("$start,$length")->select();
+            $list = ItemModel::limit("$start,$length")->order('update_at desc')->select();
         }else{
-            $list = ItemModel::where($where)->limit("$start,$length")->select();
+            $list = ItemModel::where($where)->order('update_at desc')->limit("$start,$length")->select();
         }
         if($list) {
             $list = collection($list)->toArray();
@@ -109,4 +109,12 @@ class Item extends Baselogic{
     public function saveItem($where,$data){
         return ItemModel::where($where)->update($data);
     }
+
+    /*
+     * 自增 update_cnt 更新次数
+     */
+    public function setIncUpdate($code){
+        return ItemModel::where(['code'=>$code])->setInc('update_cnt');
+    }
+
 }

@@ -67,7 +67,7 @@
           </div>
         </div>
         </fieldset>
-        <div class="form-group">
+        <!--<div class="form-group">
           <label class="col-sm-1 control-label">物料属性可选</label>
           <div class="col-sm-5">
             <select class="form-control" name="purattr">
@@ -91,7 +91,7 @@
               {/if}
             </select>
           </div>
-        </div>
+        </div>-->
         <div class="form-group">
           <label class="col-sm-1 control-label">是否需要停顿</label>
           <div class="col-sm-5">
@@ -116,28 +116,28 @@
         <div class="form-group">
           <label class="col-sm-1 control-label">货期让步比例</label>
           <div class="col-sm-5">
-            <input type="text" class="form-control w90" placeholder="货期让步比例"  name="futurescale" value="{$itemInfo.future_scale}">
+            <input type="text" class="form-control w90" placeholder="货期让步比例"  name="futurescale" value="{$itemInfo.future_scale|initPerVal}">
             <span class="scale_span">%</span>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-1 control-label">价格采购权重</label>
           <div class="col-sm-5">
-            <input type="text" class="form-control" placeholder="价格采购权重"   name="priceweight"  value="{$itemInfo.price_weight}">
+            <input type="text" class="form-control" placeholder="价格采购权重"   name="priceweight"  value="{$itemInfo.price_weight|initPerVal}">
             <span class="scale_span">%</span>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-1 control-label">技术采购权重</label>
           <div class="col-sm-5">
-            <input type="text" class="form-control" placeholder="技术采购权重"  name="techweight"  value="{$itemInfo.tech_weight}">
+            <input type="text" class="form-control" placeholder="技术采购权重"  name="techweight"  value="{$itemInfo.tech_weight|initPerVal}">
             <span class="scale_span">%</span>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-1 control-label">商务权重</label>
           <div class="col-sm-5">
-            <input type="text" class="form-control" placeholder="商务权重" name="businessweight"  value="{$itemInfo.business_weight}">
+            <input type="text" class="form-control" placeholder="商务权重" name="businessweight"  value="{$itemInfo.business_weight|initPerVal}">
             <span class="scale_span">%</span>
           </div>
         </div>

@@ -15,15 +15,22 @@
         <input type="text" class="form-control" id="main_name" placeholder="主分类">
         <input type="text" class="form-control" id="name" placeholder="物料描述">
         <input type="text" class="form-control" id="code" placeholder="料号">
-        <input type="text" class="form-control" id="pur_attr" placeholder="物料采购属性">
+        <!--<input type="text" class="form-control" id="pur_attr" placeholder="物料采购属性">-->
+        <select class="form-control" name="update_cnt" id="update_cnt">
+          <option value="1">全部</option>
+          <option value="2">已新增</option>
+          <option value="3">未新增</option>
+        </select>
         <button type="button" id="searchVal" class="btn btn-info">查询</button>
       </form>
+
     </div>
     <div class="mt_table">
       <div class="pb_15">
         <button type="button" id="synchronization_btn" class="btn btn-info" style="margin-right: 15px;">立即同步ERP</button>
         <button type="button" id="excel_in" data-modal='{:url("$classuri/add")}' class="btn btn-info" style="margin-right: 15px;">导入Excel</button>
         <button type="button" id="excel_out" class="btn btn-info" style="margin-right: 15px;">导出Excel</button>
+        <span style="margin-right: 25px;" class="col_red">*当前未更新的记录有<b id="num"></b>条</span>
       </div>
       <div>
         <table id="example" class="display table table-bordered" cellspacing="0" width="100%">
@@ -32,7 +39,7 @@
             <th>主分类</th>
             <th>料号</th>
             <th>物料描述</th>
-            <th>物料采购属性</th>
+            <!--<th>物料采购属性</th>-->
             <th>货期让步比例</th>
             <th>价格权重</th>
             <th>技术权重</th>
@@ -103,6 +110,7 @@
           parameter.name = $("#name").val();
           parameter.code = $("#code").val();
           parameter.pur_attr = $("#pur_attr").val();
+          parameter.update_cnt = $("#update_cnt").val();
         }
       },
       "pageLength": 10,
@@ -110,7 +118,7 @@
         { "data": "main_name" },
         { "data": "code" },
         { "data": "name" },
-        { "data": "pur_attr" },
+        //{ "data": "pur_attr" },
         { "data": "future_scale" },
         { "data": "price_weight" },
         { "data": "tech_weight" },
@@ -149,7 +157,9 @@
       });
     });
 
-
+    $.get("{:url('Material/getInitDataNum')}",{},function(res){
+      $('#num').html(res);
+    });
     //导入Excel
     /*$("#excel_in").click(function(){
       layer.confirm('<a style="color: #333;">导入前请点击下载最新的导入模版</a>', {

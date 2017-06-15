@@ -131,6 +131,7 @@ class Enquiryorder extends BaseController{
                 $where = ['id'=>$info['sup_id']];//获取token条件
                 $sendInfo['token'] = $logicSystemUser->getPushToken($where);
             }
+            sendMsg($info['sup_id'],'安特威询价单','您有新的询价单，请注意查收。');//发送消息
             if(!empty($sendInfo['email'])){
                 $sendData = [
                     'rt_appkey' => 'atw_wg',
@@ -196,6 +197,7 @@ class Enquiryorder extends BaseController{
             $where = ['id'=>$info['sup_id']];//获取token条件
             $sendInfo['token'] = $logicSystemUser->getPushToken($where);
         }
+        sendMsg($info['sup_id'],'安特威询价单','您有新的询价单，请注意查收。');//发送消息
         if(!empty($sendInfo['email'])){
             $sendData = [
                 'rt_appkey' => 'atw_wg',

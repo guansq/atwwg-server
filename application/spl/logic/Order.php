@@ -79,7 +79,7 @@ class Order extends BaseLogic{
         $list = PoItem::where(['id' => $id])->update([
             'sup_confirm_date' => $supconfirmdate,
             'update_at' => time(),
-            'status' => 'uncheck'//改成未审核
+            //'status' => 'uncheck'//改成未审核
         ]);
 
         return $list;

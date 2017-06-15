@@ -17,9 +17,10 @@ class Chart extends BaseController{
     protected $title = '';
 
     public function index(){
-        //echo '111111111';die;
-        $this->assign('title',$this->title);
-        return view();
+//        $res = sendMsg(295,'安特威询价单','您有新的询价单，请注意查收。');
+//        $this->assign('title',$this->title);
+//        dump($res);
+        //return view();
     }
 
     public function qualified(){

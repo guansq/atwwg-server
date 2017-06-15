@@ -358,3 +358,27 @@ function atwMoney($num){
     $formattedNum = number_format($num, 2);
     return $formattedNum;
 }
+
+/*
+ * 发送信息
+ */
+function sendMsg($sendeeId,$title,$content,$type='single',$pri=3){
+    $data = [
+        'title' => $title,
+        'content' => $content,
+        'type' => $type,
+        'publish_time' => time(),
+        'pri' => $pri,
+        'create_at' => time(),
+        'update_at' => time()
+    ];
+    $msgId = model('Message')->saveMsg($data);
+    $data = [
+        'msg_id' => $msgId,
+        'sendee_id' => $sendeeId,
+        'create_at' => time(),
+        'update_at' => time()
+    ];
+    $res = model('MessageSendee')->saveSendee($data);
+    return $res;
+}

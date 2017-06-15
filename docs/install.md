@@ -16,7 +16,9 @@
  0. 域名解析 配置Nginx
  0. crontab -e
 
-    ``` 0 3 * * * /usr/bin/php /home/wwwroot/atw.u9api.antiwearvalve.com/cron.php ```
+    ```
+    0 3 * * * /usr/bin/php /home/wwwroot/atwwg.api.antiwearvalve.com/cron.php
+    ```
 
 
 

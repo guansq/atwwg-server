@@ -12,8 +12,11 @@ use think\Db;
 
 class SystemUser extends BaseLogic{
     function saveUserInfo($data){
-        Db::name('SystemUser')->insert($data);
-        return Db::name('SystemUser')->getLastInsID();
+        $findUser = Db::name('SystemUser')->where('user_name', $data['user_name'])->find();
+        if(empty($findUser)){
+            return Db::name('SystemUser')->insertGetId($data);
+        }
+        return $findUser['id'];
     }
 
     /*

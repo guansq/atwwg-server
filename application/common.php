@@ -2,6 +2,8 @@
 
 use service\DataService;
 use think\Db;
+use think\Validate;
+
 /**
  * 打印输出数据到文件
  * @param mixed       $data
@@ -245,6 +247,31 @@ function randomNum($len = 4){
     }
     return $outputstr;
 }
+
+if(!function_exists('validateData')){
+    /**
+     * Auther: WILL<314112362@qq.com>
+     * Time: 2017-3-20 17:51:09
+     * Describe: 校验参数是否有空值
+     * @return bool
+     */
+    function validateData($params = [], $rule = []){
+        if(empty($params)){
+            returnJson(4001, '缺少必要参数.');
+        }
+        if(empty($rule)){
+            foreach($params as $k => $v){
+                $rule[$k] = 'require';
+            }
+        }
+        $validate = new Validate($rule);
+        if($validate->check($params)){
+            return true;
+        }
+        returnJson(4002, '', $validate->getError());
+    }
+}
+
 
 /*
  * PHPexcel读取并返回数组

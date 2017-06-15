@@ -1,0 +1,85 @@
+{extend name='extra@admin/content' /}
+
+{block name="button"}
+
+{/block}
+
+{block name="content"}
+<!-- 表单搜索 开始 -->
+<form class="animated form-search" action='{:url("$classuri/index")}' onsubmit="return false" method="get">
+  <div class="row">
+    <div class="col-xs-3">
+      <div class="form-group">
+        <input type="text" name="name" value="{$Think.get.name|default=''}" placeholder="品牌名称"
+               class="input-sm form-control">
+      </div>
+    </div>
+
+    <div class="col-xs-1">
+      <div class="form-group">
+        <button type="submit" class="btn btn-sm btn-white"><i class="fa fa-search"></i> 搜索</button>
+      </div>
+    </div>
+  </div>
+</form>
+<hr>
+<div class="row">
+  <div class="col-xs-2">
+    <button data-modal='{:url("$classuri/create")}' data-title="添加品牌" class='layui-btn '>
+      <i class='fa fa-plus'></i> 添加
+    </button>
+    <button data-update data-field='delete' data-action='{:url("$classuri/del")}' class='layui-btn layui-btn-danger'>
+      <i class='fa fa-remove'></i> 删除
+    </button>
+  </div>
+  <div class="col-xs-5">
+    <span class="text-danger">在此列表中的<code>启用</code>的品牌所属的物料在在询价流程中挂起。</span>
+  </div>
+</div>
+<hr>
+
+<!-- 表单搜索 结束 -->
+<form onsubmit="return false;" data-auto="" method="POST">
+  <input type="hidden" value="resort" name="action"/>
+  <table class="table table-hover">
+    <thead>
+    <tr>
+      <th class='list-table-check-td'>
+        <input data-none-auto="" data-check-target='.list-check-box' type='checkbox'/>
+      </th>
+      <th class='text-center' width="60">序号</th>
+      <th class='text-center'>品牌名称</th>
+      <th class='text-center'>状态</th>
+      <th class='text-center' width="200">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {volist name="list" id="vo" key="key" empty="<tr><td colspan=5>没有数据</td></tr>"}
+    <tr>
+      <td class='list-table-check-td'>
+        <input class="list-check-box" value='{$vo.id}' type='checkbox'/>
+      </td>
+      <td class='list-table-sort-td'>
+        {$key}
+      </td>
+      <td class='text-left'>{$vo.name}</td>
+      <td class='text-center'></td>
+      <td class='text-center'>
+        {if auth("$classuri/add")}
+        <!--<a class="layui-btn" data-modal='{:url("$classuri/edit")}?id={$vo.id}'>编辑</a>-->
+        {/if}
+        {if auth("$classuri/del")}
+        <a class="layui-btn layui-btn-small" data-update="{$vo.id}" data-field="delete" data-action='{:url("$classuri/del")}'>删除</a>
+        {/if}
+      </td>
+    </tr>
+    {/volist}
+    </tbody>
+  </table>
+</form>
+{/block}
+
+{block name="script"}
+{/block}
+
+

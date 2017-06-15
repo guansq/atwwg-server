@@ -21,5 +21,3 @@
     0 15 * * * /usr/bin/php /home/wwwroot/atwwg.api.antiwearvalve.com/cron/evaluateBid.php
     ```
 
-
-

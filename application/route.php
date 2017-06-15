@@ -11,4 +11,7 @@ return [
         'atwwg.oms'      => 'admin',
         'atwwg.spl'      => 'spl'
     ],
+    '__rest__'=>[
+        'brand' => 'Brand'
+    ]
 ];

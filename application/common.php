@@ -383,7 +383,7 @@ function atwDate($time){
 function atwMoney($num){
     $num = $num > 0 ? $num : 0;
     $formattedNum = number_format($num, 2);
-    return $formattedNum;
+    return '¥'.$formattedNum;
 }
 
 /*

@@ -40,13 +40,13 @@
         </tr>
         <tr>
           <td class="col-sm-2 tex_r">交期</td>
-          <td class="col-sm-4">{if $commonInfo['req_date'] eq ''}{else /}{$commonInfo['req_date']|date="Y-m-d",###}{/if}</td>
+          <td class="col-sm-4">{$commonInfo['req_date']|atwDate}</td>
           <td class="col-sm-2 tex_r">询价日期</td>
-          <td class="col-sm-4">{$commonInfo['create_at']|date="Y-m-d",###}</td>
+          <td class="col-sm-4">{$commonInfo['create_at']|atwDate}</td>
         </tr>
         <tr>
           <td class="col-sm-2 tex_r">报价截止日期</td>
-          <td class="col-sm-4">{$commonInfo['quote_endtime']|date="Y-m-d",###}</td>
+          <td class="col-sm-4">{$commonInfo['quote_endtime']|atwDate}</td>
           <td class="col-sm-2 tex_r">报价状态</td>
           <td class="col-sm-4">{$commonInfo['price_status']}</td>
         </tr>
@@ -74,6 +74,7 @@
           <th>供应商编码</th>
           <th>供应商名称</th>
           <th>供应商报价</th>
+          <th>总价格</th>
           <th>可供货交期</th>
           <th>供应商联系人</th>
           <th>联系电话</th>
@@ -87,11 +88,12 @@
             <input type="checkbox" name="checkinfo" value="{$vo.id}">
           </td>
           <td>{$vo.sup_code}</td>
-          <th>{$vo.sup_name}</th>
-          <td>{if $vo.quote_price neq ''}{:number_format($vo.quote_price,2)}{/if}</td>
-          <td>{if $vo.promise_date neq ''}{$vo.promise_date|date='Y-m-d',###}{/if}</td>
+          <td>{$vo.sup_name}</td>
+          <td>{if $vo.quote_price neq ''}{$vo.quote_price|atwMoney}{/if}</td>
+          <td>{$vo.totalPrice}</td>
+          <td>{if $vo.promise_date neq ''}{$vo.promise_date|atwDate}{/if}</td>
           <td>{$vo.ctc_name}</td>
-          <td>{$vo.mobile}</td>
+          <td>{$vo.phone}</td>
           <td>{$vo.email}</td>
 
           <td>

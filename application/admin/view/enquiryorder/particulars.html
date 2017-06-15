@@ -3,7 +3,11 @@
 {block name="style"}
 <link href="https://cdn.bootcss.com/iCheck/1.0.2/skins/minimal/minimal.css" rel="stylesheet">
 {/block}
-
+{block name="button"}
+<div class="nowrap pull-right" style="margin-top:10px">
+  <button onclick="javascript:window.history.go(-1);" class='layui-btn  layui-btn-small layui-btn-normal'>返回上一页</button>
+</div>
+{/block}
 {block name="content"}
 
 <main class="main">

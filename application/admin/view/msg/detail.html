@@ -1,10 +1,9 @@
 {extend name='extra@admin/content' /}
 
 {block name="button"}
-<!--<div class="nowrap pull-right" style="margin-top:10px">
-  <button data-modal='{:url("$classuri/add")}' data-title="添加菜单" class='layui-btn layui-btn-small'><i class='fa fa-plus'></i> 添加菜单</button>
-  <button data-update data-field='delete' data-action='{:url("$classuri/del")}' class='layui-btn layui-btn-small layui-btn-danger'><i class='fa fa-remove'></i> 删除菜单</button>
-</div>-->
+<div class="nowrap pull-right" style="margin-top:10px">
+  <button onclick="javascript:window.history.go(-1);" class='layui-btn  layui-btn-small layui-btn-normal'>返回上一页</button>
+</div>
 {/block}
 
 {block name="content"}

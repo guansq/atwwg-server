@@ -339,3 +339,22 @@ function getSupplyRisk($code){
 function getQualiLevel($code){
     return '优秀';
 }
+
+/*
+ * 时间的处理
+ */
+function atwDate($time){
+    if(empty($time)){
+        return $time;
+    }
+    return date('Y-m-d',$time);
+}
+
+/*
+ * 金钱的处理-->统一后两位小数点
+ */
+function atwMoney($num){
+    $num = $num > 0 ? $num : 0;
+    $formattedNum = number_format($num, 2);
+    return $formattedNum;
+}

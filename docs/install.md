@@ -17,7 +17,8 @@
  0. crontab -e
 
     ```
-    0 3 * * * /usr/bin/php /home/wwwroot/atwwg.api.antiwearvalve.com/cron.php
+    0 3 * * * /usr/bin/php /home/wwwroot/atwwg.api.antiwearvalve.com/cron/syncAll.php
+    0 15 * * * /usr/bin/php /home/wwwroot/atwwg.api.antiwearvalve.com/cron/evaluateBid.php
     ```
 
 

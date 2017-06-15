@@ -17,8 +17,19 @@ class Order extends BaseController{
     protected $table = 'SystemPo';
     protected $title = '订单管理';
 
+    /*
+     * 待下订单列表
+     */
+    public function wait(){
+        $this->title = '待下订单';
+        $this->assign('title', $this->title);
+        return view();
+    }
+    /*
+     * 采购订单列表
+     */
     public function index(){
-        //echo '111111111';die;
+        $this->title = '采购订单';
         $this->assign('title', $this->title);
         return view();
     }
@@ -109,14 +120,24 @@ class Order extends BaseController{
         return json($info);
     }
 
+    /*
+     * 待下订单列表
+     */
     public function getItemList(){
         $poLogic = model('Po', 'logic');
         $get = input('param.');
         $where = [];
+        if(isset($get['req_date']) && $get['req_date'] !== ''){
+            $get['req_date'] = strtotime($get['req_date']);
+        }
         // 应用搜索条件
-        foreach(['order_code', 'pr_code', 'sup_name'] as $key){
+        foreach(['item_code', 'pr_code', 'sup_name', 'req_date'] as $key){
             if(isset($get[$key]) && $get[$key] !== ''){
-                $where[$key] = ['like', "%{$get[$key]}%"];
+                if($key == 'req_date'){
+                    $where[$key] = ['between',[$get['req_date'],$get['req_date']+86399]];
+                }else{
+                    $where[$key] = ['like', "%{$get[$key]}%"];
+                }
             }
         }
         $itemList = $poLogic->getPoItemList($where);
@@ -124,19 +145,7 @@ class Order extends BaseController{
         $itemStatus = [
             '' => '未下单',
             'init' => '未下单',
-        ];
-        $status = [
-            '' => '',
-            'init' => '初始',
-            'sup_cancel' => '供应商取消',
-            'sup_edit' => '供应商修改',
-            'atw_sure' => '安特威确定',
-            'sup_sure' => '供应商确定/待上传合同',
-            'upload_contract' => '供应商已经上传合同',
-            'contract_pass' => '合同审核通过',
-            'contract_refuse' => '合同审核拒绝',
-            'executing' => '执行中',
-            'finish' => '结束',
+            'placeorder' => '已下单'
         ];
 
         foreach($itemList as $k => $v){
@@ -144,73 +153,32 @@ class Order extends BaseController{
             $exec_desc = '';
             $v['arv_goods_num'] = $v['arv_goods_num'] == '' ? 0 : $v['arv_goods_num'];
             $v['pro_goods_num'] = $v['pro_goods_num'] == '' ? 0 : $v['pro_goods_num'];
-            $exec_desc .= '物料名称：'.$v['item_name'].'; '.'到货数量：'.$v['arv_goods_num'].
-                '; 未到货数量：'.$v['pro_goods_num'].'; 可供货交期：'.date('Y-m-d', $v['sup_confirm_date']).'<br>';
+            //$exec_desc .= '物料名称：'.$v['item_name'].'; '.'到货数量：'.$v['arv_goods_num'].'; 未到货数量：'.$v['pro_goods_num'].'; 可供货交期：'.date('Y-m-d', $v['sup_confirm_date']).'<br>';
             $returnInfo[$k]['exec_desc'] = $exec_desc;
             $returnInfo[$k]['po_id'] = $v['po_id'];//合并订单编号
 
-            $returnInfo[$k]['po_code'] = '';//U9生成订单编号
+            //$returnInfo[$k]['po_code'] = '';//U9生成订单编号
 
             $returnInfo[$k]['pr_code'] = $v['pr_code'];//请购单编号
-            $returnInfo[$k]['pr_date'] = date('Y-m-d', $poLogic->getPrDate($v['pr_code']));
+            $returnInfo[$k]['pr_date'] = atwDate($poLogic->getPrDate($v['pr_code']));
             $returnInfo[$k]['create_at'] = '';//合并订单日期  date('Y-m-d', $v['create_at'])
            // $returnInfo[$k]['order_code'] = $v['order_code'];
-            if(!empty($v['po_id'])){
+            /*if(!empty($v['po_id'])){
                 $where = [
                     'id' => $v['po_id']
                 ];
                 $returnInfo[$k]['create_at'] = date('Y-m-d', $poLogic->getPoCreateat($where));
-            }
+            }*/
             $returnInfo[$k]['sup_name'] = $v['sup_name'];
-            //先判断是否已下单未下单
-            if($v['status'] == 'init' || $v['status'] == ''){
-                $returnInfo[$k]['status'] = $itemStatus[$v['status']];
-                //$returnInfo[$k]['detail'] = $v['id'];
-                $returnInfo[$k]['detail'] = '<a class="detail" data-open="'.url('order/pidetailed').'?id='.$v['id'].'">详情</a>';//未下单前的详情,['id'=>$v['id']]
-            }elseif($v['status'] == 'placeorder'){
-                //$<a class="detail" data-open="' + url + '">详情</a>
-                $returnInfo[$k]['detail'] = '<a class="detail" data-open="'.url('order/detailed').'?id='.$v['po_id'].'">详情</a>';//下单后的合并订单详情,['id'=>$v['po_id']]
-                $where = [
-                    'id' => $v['po_id']
-                ];
-                $poStatus = $poLogic->getPoStatus($where);
-                $returnInfo[$k]['status'] = $poStatus;
-                $poCode = $poLogic->getOrderCode($where);
-                $returnInfo[$k]['po_code'] = $poCode;//U9生成订单编号
-                switch($poStatus){
-                    case 'init'://初始
-                        $action = [];
-                        $returnInfo[$k]['status'] = '待供应商确定订单';
-                        break;
-                    case 'sup_cancel'://供应商取消
-                        $action = [];
-                        $returnInfo[$k]['status'] = '供应商取消了订单';
-                        break;
-                    case 'sup_edit'://供应商修改
-                        $returnInfo[$k]['status'] = '<a href="javascript:;" onclick="verifyOrder('.$v['id'].',\'atw_sure\',this);">供应商修改，确定订单</a>';
-                        break;
-                    case 'atw_sure'://安特威确定 以及init
-                        $returnInfo[$k]['status'] = '待供应商确定订单';
-                        break;
-                    case 'sup_sure'://供应商确定/待上传合同
-                        $returnInfo[$k]['status'] = '供应商确定/待上传合同';
-                        break;
-                    case 'upload_contract'://供应商已经上传合同
-                        $returnInfo[$k]['status'] = '合同待审核';
-                        break;
-                    case 'contract_pass'://合同审核通过
-                        $returnInfo[$k]['status'] = '合同审核通过';
-                        break;
-                    case 'contract_refuse'://合同审核拒绝
-                        $returnInfo[$k]['status'] = '合同已被拒绝';
-                        break;
-                    default :
-                        $returnInfo[$k]['status'] = $status[$poStatus];
-                        break;
-                }
-                //得到订单号
-            }
-
+            $returnInfo[$k]['item_code'] = $v['item_code'];
+            $returnInfo[$k]['winbid_time'] = atwDate($v['winbid_time']);
+            $returnInfo[$k]['req_date'] = atwDate($v['req_date']);//要求交期
+            $returnInfo[$k]['sup_confirm_date'] = atwDate($v['sup_confirm_date']);//承诺交期
+            $returnInfo[$k]['price_num'] = $v['price_num'];//采购数量
+            $returnInfo[$k]['price'] = atwMoney($v['price']);//报价
+            $returnInfo[$k]['total_price'] = atwMoney($v['price']*$v['price_num']);//小计
+            $returnInfo[$k]['status'] = $itemStatus[$v['status']];
+            $returnInfo[$k]['detail'] = '<a class="detail" data-open="'.url('order/pidetailed').'?id='.$v['id'].'">详情</a>';//未下单前的详情,['id'=>$v['id']]
         }
         //dump($itemList);
         $info = ['draw' => time(), 'data' => $returnInfo, 'extData' => [],];

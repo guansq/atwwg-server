@@ -28,11 +28,11 @@ class Offer extends Base{
         $status = [
             'init' => '未报价',
             'quoted' => '已报价',
-            'winbid_uncheck' => '中标但是需要审核',
-            'winbid_checked' => '中标已经审核',
-            'winbid' => '中标',
-            'giveupbid' => '弃标',
-            'close' => '已关闭'
+//            'winbid_uncheck' => '中标但是需要审核',
+//            'winbid_checked' => '中标已经审核',
+//            'winbid' => '中标',
+//            'giveupbid' => '弃标',
+//            'close' => '已关闭'
         ];
         $this->assign('status', $status);
         return view();
@@ -41,7 +41,7 @@ class Offer extends Base{
     public function getOrderList(){
         $sup_code = session('spl_user')['sup_code'];
         $offerLogic = model('Offer', 'logic');
-        $where = ['status' => 'init'];
+        $where = [];//'status' => 'init'
         $data = input('param.');
         //        var_dump( $data);
         // 应用搜索条件
@@ -51,7 +51,11 @@ class Offer extends Base{
                     if($key == 'status' && $data[$key] == 'all'){
                         continue;
                     }
-                    $where[$key] = $data[$key];
+                    if($data[$key] == 'quoted'){
+                        $where[$key] = ['in',['quoted','winbid_uncheck','winbid_checked','winbid','giveupbid','close']];
+                    }else{
+                        $where[$key] = $data[$key];
+                    }
                 }
             }
             if(!empty($data['quote_begintime']) && !empty($data['quote_endtime'])){

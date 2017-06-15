@@ -289,7 +289,7 @@ class Order extends BaseController{
     public function verifyStatus(){
         $poLogic = model('Po', 'logic');
         $param = input('param.');
-        $data = [
+        $piData = [
             'status' => $param['action']
         ];
         $where = [
@@ -301,7 +301,7 @@ class Order extends BaseController{
             'contract_refuse' => '合同已被拒绝',
 
         ];
-        $res = $poLogic->saveStatus($where, $data);
+        $res = $poLogic->saveStatus($where, $piData);
         //$res = true;
         if($res !== false){
             if($param['action'] == 'contract_pass'){//已审核通过---》执行同步U9订单
@@ -341,20 +341,21 @@ class Order extends BaseController{
                     'id' => $param['id'],
                 ];
                 //dd($res['result']);
-                $data = [
+                $poData = [
                     'order_code' => $res['result']['DocNo'],
                     'status' => 'executing',
                     'update_at' => time()
                 ];
-                $res = $poLogic->saveStatus($where, $data);//订单写入数据库
+                $res = $poLogic->saveStatus($where, $poData);//订单写入数据库
                 $where = [
                     'po_id' => $param['id'],
                 ];
-                $data = [
+                $piData = [
                     'update_at' =>time(),
-                    'po_code' => $res['result']['DocNo'],
+                    'po_code' => $poData['order_code'],
                 ];
-                $poLogic->saveItemInfo($where,$data);//更新时间
+                $poLogic->saveItemInfo($where,$piData);//更新时间
+
                 if($res !== false){
                     return json(['code' => 2000, 'msg' => '合同审核通过，U9已生成订单', 'data' => []]);
                 }else{

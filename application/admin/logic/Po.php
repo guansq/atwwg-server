@@ -68,7 +68,8 @@ class Po extends BaseLogic{
      *保存明细订单状态
      */
     function saveItemInfo($where, $data){
-        return poItemModel::where($where)->update($data);
+        $dbRet = poItemModel::where($where)->update($data);
+        return $dbRet;
     }
     /*
      * 根据条件得到订单数量

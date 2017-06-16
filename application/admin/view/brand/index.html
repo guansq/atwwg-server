@@ -28,7 +28,7 @@
     <button data-modal='{:url("$classuri/create")}' data-title="添加品牌" class='layui-btn '>
       <i class='fa fa-plus'></i> 添加
     </button>
-    <button data-update data-field='delete' data-action='{:url("$classuri/del")}' class='layui-btn layui-btn-danger'>
+    <button data-update data-field data-method="delete" data-action='{:url("$classuri/{ids}")}' class='layui-btn layui-btn-danger' data-optmsg="删除">
       <i class='fa fa-remove'></i> 删除
     </button>
   </div>
@@ -63,13 +63,19 @@
         {$key}
       </td>
       <td class='text-left'>{$vo.name}</td>
-      <td class='text-center'></td>
       <td class='text-center'>
-        {if auth("$classuri/add")}
-        <!--<a class="layui-btn" data-modal='{:url("$classuri/edit")}?id={$vo.id}'>编辑</a>-->
+        {if ($vo.is_enable==1)}
+        <span class="text-success">启用</span>
+        {else /}
+        <span class="text-danger">禁用</span>
         {/if}
-        {if auth("$classuri/del")}
-        <a class="layui-btn layui-btn-small" data-update="{$vo.id}" data-field="delete" data-action='{:url("$classuri/del")}'>删除</a>
+      </td>
+      <td class='text-center'>
+        {if ($vo.is_enable==1)}
+        <a class="layui-btn layui-btn-small layui-btn-danger" data-update="{$vo.id}" data-method="put" data-value='0' data-action='{:url("$classuri/$vo[id]")}'>禁用 </a>
+        {/if}
+        {if ($vo.is_enable==0) }
+        <a class="layui-btn layui-btn-small" data-update="{$vo.id}" data-method="put" data-value="1" data-action='{:url("$classuri/$vo[id]")}'>启用 </a>
         {/if}
       </td>
     </tr>

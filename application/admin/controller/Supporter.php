@@ -135,16 +135,16 @@ class Supporter extends BaseController{
             'refuse' => '拒绝',
         ];
         foreach($list as $k => $v){
-            $v['arv_rate'] = $v['arv_rate'] == '' ? '暂无数据' : $v['arv_rate'];
-            $v['pp_rate'] = $v['pp_rate'] == '' ? '暂无数据' : $v['pp_rate'];
+            $v['arv_rate'] = $v['arv_rate'] == '' ? '暂无数据' : initPerVal($v['arv_rate']);
+            $v['pass_rate'] = $v['pass_rate'] == '' ? '暂无数据' : initPerVal($v['pass_rate']);
             $returnArr[] = [
                 'id' => $v['id'],
                 'code' => $v['code'],
                 'name' => $v['name'],
                 'type_name' => $v['type_name'],
                 'tech_score' => getTechScore($v['code']),//技术分
-                'arv_rate' => initPerVal($v['arv_rate']),
-                'pp_rate' => initPerVal($v['pass_rate']),
+                'arv_rate' => $v['arv_rate'],
+                'pp_rate' => $v['pass_rate'],
                 'quali_score' => getQualiScore($v['code']),//质量分
                 'status' => '正常',// FIXME $status[$v['status']],
                 'pay_type_status' => $pay_way_status[$v['pay_way_status']],

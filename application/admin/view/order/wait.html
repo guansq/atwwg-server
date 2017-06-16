@@ -253,9 +253,11 @@
       btn:['确定导出', '取消导出']
     }, function(index){
       layer.close(index);
-      var order_code = $("#order_code").val();
       var pr_code = $("#pr_code").val();
-      var str = "{:url('Order/exportExcel')}" + '?order_code=' + order_code + '&pr_code=' + pr_code;
+      var item_code = $("#item_code").val();
+      var sup_name = $("#sup_name").val();
+      var req_date = $("#req_date").val();
+      var str = "{:url('Order/exportExcel')}" + '?pr_code=' + pr_code + '&item_code=' + item_code + '&sup_name=' + sup_name + '&req_date=' + req_date;
       window.open(str);
       //console.log(str);
     });

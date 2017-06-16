@@ -162,13 +162,7 @@ class Order extends BaseController{
             $returnInfo[$k]['pr_code'] = $v['pr_code'];//请购单编号
             $returnInfo[$k]['pr_date'] = atwDate($poLogic->getPrDate($v['pr_code']));
             $returnInfo[$k]['create_at'] = '';//合并订单日期  date('Y-m-d', $v['create_at'])
-           // $returnInfo[$k]['order_code'] = $v['order_code'];
-            /*if(!empty($v['po_id'])){
-                $where = [
-                    'id' => $v['po_id']
-                ];
-                $returnInfo[$k]['create_at'] = date('Y-m-d', $poLogic->getPoCreateat($where));
-            }*/
+
             $returnInfo[$k]['sup_name'] = $v['sup_name'];
             $returnInfo[$k]['item_code'] = $v['item_code'];
             $returnInfo[$k]['winbid_time'] = atwDate($v['winbid_time']);
@@ -178,7 +172,6 @@ class Order extends BaseController{
             $returnInfo[$k]['price'] = atwMoney($v['price']);//报价
             $returnInfo[$k]['total_price'] = atwMoney($v['price']*$v['price_num']);//小计
             $returnInfo[$k]['status'] = $itemStatus[$v['status']];
-            $returnInfo[$k]['detail'] = '<a class="detail" data-open="'.url('order/pidetailed').'?id='.$v['id'].'">详情</a>';//未下单前的详情,['id'=>$v['id']]
         }
         //dump($itemList);
         $info = ['draw' => time(), 'data' => $returnInfo, 'extData' => [],];
@@ -186,14 +179,6 @@ class Order extends BaseController{
         return json($info);
     }
 
-
-    public function del(){
-
-    }
-
-    public function add(){
-
-    }
 
     public function mkzip(){
         $accessKey = sysconf('storage_qiniu_access_key');
@@ -391,106 +376,86 @@ class Order extends BaseController{
     function exportExcel(){
         $poLogic = model('Po', 'logic');
         $get = input('param.');
-        //dump($requestInfo);die;
         $where = [];
+        if(isset($get['req_date']) && $get['req_date'] !== ''){
+            $get['req_date'] = strtotime($get['req_date']);
+        }
         // 应用搜索条件
-        foreach(['order_code', 'pr_code', 'sup_name'] as $key){
+        foreach(['item_code', 'pr_code', 'sup_name', 'req_date'] as $key){
             if(isset($get[$key]) && $get[$key] !== ''){
-                $where[$key] = ['like', "%{$get[$key]}%"];
+                if($key == 'req_date'){
+                    $where[$key] = ['between',[$get['req_date'],$get['req_date']+86399]];
+                }else{
+                    $where[$key] = ['like', "%{$get[$key]}%"];
+                }
             }
         }
-        //$list = $poLogic->getPolist($where);
         $itemList = $poLogic->getPoItemList($where);
         $returnInfo = [];
         $itemStatus = [
             '' => '未下单',
             'init' => '未下单',
-        ];
-        $status = [
-            '' => '',
-            'init' => '初始',
-            'sup_cancel' => '供应商取消',
-            'sup_edit' => '供应商修改',
-            'atw_sure' => '安特威确定',
-            'sup_sure' => '供应商确定/待上传合同',
-            'upload_contract' => '供应商已经上传合同',
-            'contract_pass' => '合同审核通过',
-            'contract_refuse' => '合同审核拒绝',
-            'executing' => '执行中',
-            'finish' => '结束',
+            'placeorder' => '已下单'
         ];
 
-        /*foreach($list as $k => $v){
-            $returnInfo[$k]['checked'] = $v['id'];
-            $exec_desc = '';
-            if(!empty($itemInfo = $poLogic->getPoItemInfo($v['id']))){
-                foreach($itemInfo as $vv){
-                    $vv['arv_goods_num'] = $vv['arv_goods_num'] == '' ? 0 : $vv['arv_goods_num'];
-                    $vv['pro_goods_num'] = $vv['pro_goods_num'] == '' ? 0 : $vv['pro_goods_num'];
-                    $exec_desc .= '物料名称：'.$vv['item_name'].'; '.'到货数量：'.$vv['arv_goods_num'].'; 未到货数量：'.$vv['pro_goods_num'].'; 可供货交期：'.date('Y-m-d', $vv['sup_confirm_date']).'<br>';
-                }
-                $returnInfo[$k]['exec_desc'] = $exec_desc;
-            }else{
-                $returnInfo[$k]['exec_desc'] = '';
-            }
-
-            $returnInfo[$k]['order_code'] = $v['order_code'];
-            $returnInfo[$k]['pr_code'] = $v['pr_code'];
-            $returnInfo[$k]['pr_date'] = date('Y-m-d', $poLogic->getPrDate($v['pr_code']));
-            $returnInfo[$k]['create_at'] = date('Y-m-d', $v['create_at']);
-            $returnInfo[$k]['sup_name'] = $poLogic->getSupName($v['sup_code']);
-            //$returnInfo[$k]['detail'] = $v['id'];
-        }*/
         foreach($itemList as $k => $v){
             $returnInfo[$k]['checked'] = $v['id'];
             $exec_desc = '';
             $v['arv_goods_num'] = $v['arv_goods_num'] == '' ? 0 : $v['arv_goods_num'];
             $v['pro_goods_num'] = $v['pro_goods_num'] == '' ? 0 : $v['pro_goods_num'];
-            $exec_desc .= '物料名称：'.$v['item_name'].'; '.'到货数量：'.$v['arv_goods_num'].
-                '; 未到货数量：'.$v['pro_goods_num'].'; 可供货交期：'.date('Y-m-d', $v['sup_confirm_date']).'<br>';
+            //$exec_desc .= '物料名称：'.$v['item_name'].'; '.'到货数量：'.$v['arv_goods_num'].'; 未到货数量：'.$v['pro_goods_num'].'; 可供货交期：'.date('Y-m-d', $v['sup_confirm_date']).'<br>';
             $returnInfo[$k]['exec_desc'] = $exec_desc;
             $returnInfo[$k]['po_id'] = $v['po_id'];//合并订单编号
-            $returnInfo[$k]['po_code'] = $v['po_code'];//U9生成订单编号
             $returnInfo[$k]['pr_code'] = $v['pr_code'];//请购单编号
-            $returnInfo[$k]['pr_date'] = date('Y-m-d', $poLogic->getPrDate($v['pr_code']));
+            $returnInfo[$k]['pr_date'] = atwDate($poLogic->getPrDate($v['pr_code']));
             $returnInfo[$k]['create_at'] = '';//合并订单日期  date('Y-m-d', $v['create_at'])
-            if(!empty($v['po_id'])){
-                $where = [
-                    'id' => $v['po_id']
-                ];
-                $returnInfo[$k]['create_at'] = date('Y-m-d', $poLogic->getPoCreateat($where));
-            }
             $returnInfo[$k]['sup_name'] = $v['sup_name'];
-            //$returnInfo[$k]['detail'] = $v['id'];
+            $returnInfo[$k]['item_code'] = $v['item_code'];
+            $returnInfo[$k]['winbid_time'] = atwDate($v['winbid_time']);
+            $returnInfo[$k]['req_date'] = atwDate($v['req_date']);//要求交期
+            $returnInfo[$k]['sup_confirm_date'] = atwDate($v['sup_confirm_date']);//承诺交期
+            $returnInfo[$k]['price_num'] = $v['price_num'];//采购数量
+            $returnInfo[$k]['price'] = atwMoney($v['price']);//报价
+            $returnInfo[$k]['total_price'] = atwMoney($v['price']*$v['price_num']);//小计
+            $returnInfo[$k]['status'] = $itemStatus[$v['status']];
         }
+
 
         $list = $returnInfo;
         $path = ROOT_PATH.'public'.DS.'upload'.DS;
-        //dump($list);die;
+        //dump($list);die;请购单编号-物料编号-请购日期-评标日期-供应商名称-要求交期-承诺交期-采购数量-报价-小计-状态
         $PHPExcel = new PHPExcel(); //实例化PHPExcel类，类似于在桌面上新建一个Excel表格
         $PHPSheet = $PHPExcel->getActiveSheet(); //获得当前活动sheet的操作对象
-        $PHPSheet->setTitle('订单列表'); //给当前活动sheet设置名称
-        $PHPSheet->setCellValue('A1', '订单编号');
-        $PHPSheet->setCellValue('B1', '请购单编号');
+        $PHPSheet->setTitle('待下订单列表'); //给当前活动sheet设置名称
+        $PHPSheet->setCellValue('A1', '请购单编号');
+        $PHPSheet->setCellValue('B1', '物料编号');
         $PHPSheet->setCellValue('C1', '请购日期');
-        $PHPSheet->setCellValue('D1', '下单日期');
+        $PHPSheet->setCellValue('D1', '评标日期');
         $PHPSheet->setCellValue('E1', '供应商名称');
-        $PHPSheet->setCellValue('F1', '执行情况');
+        $PHPSheet->setCellValue('F1', '要求交期');
+        $PHPSheet->setCellValue('G1', '承诺交期');
+        $PHPSheet->setCellValue('H1', '采购数量');
+        $PHPSheet->setCellValue('I1', '报价');
+        $PHPSheet->setCellValue('J1', '小计');
         $num = 1;
         foreach($list as $k => $v){
             $num = $num + 1;
-            $PHPSheet->setCellValue('A'.$num, $v['order_code'])
-                ->setCellValue('B'.$num, $v['pr_code'])
+            $PHPSheet->setCellValue('A'.$num, $v['pr_code'])
+                ->setCellValue('B'.$num, $v['item_code'])
                 ->setCellValue('C'.$num, $v['pr_date'])
-                ->setCellValue('D'.$num, $v['create_at'])
+                ->setCellValue('D'.$num, $v['winbid_time'])
                 ->setCellValue('E'.$num, $v['sup_name'])
-                ->setCellValue('E'.$num, $v['exec_desc']);
+                ->setCellValue('F'.$num, $v['req_date'])
+                ->setCellValue('G'.$num, $v['sup_confirm_date'])
+                ->setCellValue('H'.$num, $v['price_num'])
+                ->setCellValue('I'.$num, $v['price'])
+                ->setCellValue('J'.$num, $v['total_price']);
         }
         $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel, 'Excel2007');//按照指定格式生成Excel文件，'Excel2007’表示生成2007版本的xlsx，
-        $PHPWriter->save($path.'/poList.xlsx'); //表示在$path路径下面生成ioList.xlsx文件
-        $file_name = "poList.xlsx";
-        $contents = file_get_contents($path.'/poList.xlsx');
-        $file_size = filesize($path.'/poList.xlsx');
+        $PHPWriter->save($path.'/poItemList.xlsx'); //表示在$path路径下面生成ioList.xlsx文件
+        $file_name = "poItemList.xlsx";
+        $contents = file_get_contents($path.'/poItemList.xlsx');
+        $file_size = filesize($path.'/poItemList.xlsx');
         header("Content-type: application/octet-stream;charset=utf-8");
         header("Accept-Ranges: bytes");
         header("Accept-Length: $file_size");

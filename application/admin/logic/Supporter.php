@@ -163,4 +163,11 @@ class Supporter extends BaseLogic{
     public function getPastSuppNum($time){
         return qualiModel::where('term_end','<',$time)->count();
     }
+
+    /*
+     * 获取sup_id
+     */
+    public function getSupIdVal($where){
+        return supModel::where($where)->value('sup_id');
+    }
 }

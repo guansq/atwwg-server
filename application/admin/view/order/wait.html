@@ -253,9 +253,11 @@
       btn:['确定导出', '取消导出']
     }, function(index){
       layer.close(index);
-      var order_code = $("#order_code").val();
       var pr_code = $("#pr_code").val();
-      var str = "{:url('Order/exportExcel')}" + '?order_code=' + order_code + '&pr_code=' + pr_code;
+      var item_code = $("#item_code").val();
+      var sup_name = $("#sup_name").val();
+      var req_date = $("#req_date").val();
+      var str = "{:url('Order/exportExcel')}" + '?pr_code=' + pr_code + '&item_code=' + item_code + '&sup_name=' + sup_name + '&req_date=' + req_date;
       window.open(str);
       //console.log(str);
     });
@@ -301,7 +303,7 @@
         $.post(url,data,function(res){
           layer.closeAll();
           if(res.code == '2000'){
-            if(res.data){
+            if(res.data){            }
               /*$.each(res.data,function(i,n){
                 console.log(n);
                 $('#order_id_'+n.id).parent().next().next().next().next().html(n.create_at);
@@ -309,20 +311,22 @@
                 $('#order_id_'+n.id).parent().next().next().next().next().next().next().next().next().html(n.url);
               })*/
 
-              /* 左则菜单处理 */
-              var $menu = $('[data-menu-node="m-2-90"]').eq(0);
-              if ($menu.size() > 0) {
-                $('.framework-container').addClass('framework-sidebar-full');
-                var $li = $menu.parent('li').addClass('active');
-                $li.parents('.framework-sidebar').find('li.active').not($li).removeClass('active');
-                $menu.parents('.sidebar-trans').removeClass('hide').show();
-                $menu.parents('.main-nav').addClass('open');
-                $menu.parents('[data-menu-box]').removeClass('hide').siblings('[data-menu-box]').addClass('hide');
-              }
-              $.form.open('order/index',{},function(){
-                layer.alert('下单成功');
-              },true,'下单成功');
+            /* 左则菜单处理 */
+            var $menu = $('[data-menu-node="m-2-90"]').eq(0);
+            if ($menu.size() > 0) {
+              $('.framework-container').addClass('framework-sidebar-full');
+              var $li = $menu.parent('li').addClass('active');
+              $li.parents('.framework-sidebar').find('li.active').not($li).removeClass('active');
+              $menu.parents('.sidebar-trans').removeClass('hide').show();
+              $menu.parents('.main-nav').addClass('open');
+              $menu.parents('[data-menu-box]').removeClass('hide').siblings('[data-menu-box]').addClass('hide');
             }
+            $.form.open('order/index',{},function(){
+              layer.alert('下单成功');
+            },true,'下单成功');
+
+          }else{
+            layer.alert(res.msg);
           }
           //layer.alert(res.msg);
         });

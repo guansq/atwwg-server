@@ -74,11 +74,10 @@ class Order extends BaseController{
             }else{
                 $returnInfo[$k]['exec_desc'] = '';
             }
-
             $returnInfo[$k]['order_code'] = $v['order_code'];
             $returnInfo[$k]['pr_code'] = $v['pr_code'];
-            $returnInfo[$k]['pr_date'] = date('Y-m-d', $poLogic->getPrDate($v['pr_code']));
-            $returnInfo[$k]['create_at'] = date('Y-m-d', $v['create_at']);
+            $returnInfo[$k]['pr_date'] = atwDate($poLogic->getPrDate($v['pr_code']));
+            $returnInfo[$k]['create_at'] = atwDate($v['create_at']);
             $returnInfo[$k]['sup_name'] = $poLogic->getSupName($v['sup_code']);
             $returnInfo[$k]['status'] = empty($v['u9_status']) ? $status[$v['status']] : $v['u9_status'];
             switch($v['status']){
@@ -91,7 +90,7 @@ class Order extends BaseController{
                     $returnInfo[$k]['status'] = '供应商取消了订单';
                     break;
                 case 'sup_edit'://供应商修改
-                    $returnInfo[$k]['status'] = '<a href="javascript:;" onclick="verifyOrder('.$v['id'].',\'atw_sure\',this);">供应商修改，确定订单</a>';
+                    $returnInfo[$k]['status'] = '<a href="javascript:;" onclick="verifyOrder('.$v['id'].',\'atw_sure\',this);">供应商修改交期，请确认</a>';
                     break;
                 case 'atw_sure'://安特威确定 以及init
                     $returnInfo[$k]['status'] = '待供应商确定订单';
@@ -112,7 +111,8 @@ class Order extends BaseController{
                     break;
             }
 
-            $returnInfo[$k]['detail'] = $v['id'];
+            //$returnInfo[$k]['detail'] = $v['id'];
+            $returnInfo[$k]['detail'] = '<a class="detail" data-open="'.url('order/detailed').'?id='.$v['id'].'">详情</a>';//下单后的合并订单详情,['id'=>$v['po_id']]
         }
         //dump($returnInfo);
         $info = ['draw' => time(), 'data' => $returnInfo, 'extData' => [],];
@@ -258,7 +258,7 @@ class Order extends BaseController{
         //$res = true;
         if($res !== false){
             if($param['action'] == 'contract_pass'){//已审核通过---》执行同步U9订单
-                $sendData = [];
+                /*$sendData = [];
                 $poInfo = $poLogic->getPoInfo($param['id']);
 
                 $sendData['DocDate'] = $poInfo['doc_date'] == '' ? time() : $poInfo['doc_date'];//单价日期
@@ -308,6 +308,13 @@ class Order extends BaseController{
                     'po_code' => $poData['order_code'],
                 ];
                 $poLogic->saveItemInfo($where,$piData);//更新时间
+                */
+                $poData = [
+                    //'order_code' => $res['result']['DocNo'],
+                    'status' => 'executing',
+                    'update_at' => time()
+                ];
+                $res = $poLogic->saveStatus($where, $poData);//订单写入数据库
 
                 if($res !== false){
                     return json(['code' => 2000, 'msg' => '合同审核通过，U9已生成订单', 'data' => []]);

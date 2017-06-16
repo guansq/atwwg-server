@@ -55,12 +55,9 @@ class Brand extends BaseController{
 
     /**
      *详情
-     *
      */
     public function read($id){
-        $pagingParams = $this->getPagingParams();
-        $ret = model('Ask', 'logic')->getAskList($id, $this->loginUser, $pagingParams);
-        returnJson($ret);
+
     }
 
 
@@ -82,7 +79,12 @@ class Brand extends BaseController{
      * @return \think\Response
      */
     public function update(Request $request, $id){
-
+        $enable = $this->getReqParams(['value']);
+        $ret = model('Brand', 'logic')->switchEnable($id,$enable['value']);
+        if($ret['code'] != 2000){
+            $this->error($ret['msg']);
+        }
+        $this->success('更新成功','');
     }
 
     /**

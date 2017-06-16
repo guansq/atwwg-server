@@ -630,4 +630,76 @@ class Order extends BaseController{
         }
         return json(['code'=>6000,'msg'=>'下订单失败','data'=>$data]);
     }
+
+    /*
+     * 导出excel采购订单列表
+     */
+    function exportPoExcel(){
+        $poLogic = model('Po', 'logic');
+        $get = input('param.');
+        //dump($requestInfo);die;
+        $where = [];
+        // 应用搜索条件
+        foreach(['order_code', 'pr_code'] as $key){
+            if(isset($get[$key]) && $get[$key] !== ''){
+                $where[$key] = ['like', "%{$get[$key]}%"];
+            }
+        }
+        $list = $poLogic->getPolist($where);
+        $returnInfo = [];
+
+        foreach($list as $k => $v){
+            $returnInfo[$k]['checked'] = $v['id'];
+            $exec_desc = '';
+            if(!empty($itemInfo = $poLogic->getPoItemInfo($v['id']))){
+                foreach($itemInfo as $vv){
+                    $vv['arv_goods_num'] = $vv['arv_goods_num'] == '' ? 0 : $vv['arv_goods_num'];
+                    $vv['pro_goods_num'] = $vv['pro_goods_num'] == '' ? 0 : $vv['pro_goods_num'];
+                    $exec_desc .= '物料名称：'.$vv['item_name'].'; '.'到货数量：'.$vv['arv_goods_num'].'; 未到货数量：'.$vv['pro_goods_num'].'; 可供货交期：'.date('Y-m-d', $vv['sup_confirm_date']).'<br>';
+                }
+                $returnInfo[$k]['exec_desc'] = $exec_desc;
+            }else{
+                $returnInfo[$k]['exec_desc'] = '';
+            }
+            $returnInfo[$k]['order_code'] = $v['order_code'];
+            $returnInfo[$k]['pr_code'] = $v['pr_code'];
+            $returnInfo[$k]['pr_date'] = atwDate($poLogic->getPrDate($v['pr_code']));
+            $returnInfo[$k]['create_at'] = atwDate($v['create_at']);
+            $returnInfo[$k]['sup_name'] = $poLogic->getSupName($v['sup_code']);
+        }
+
+
+        $list = $returnInfo;
+        $path = ROOT_PATH.'public'.DS.'upload'.DS;
+        //dump($list);die;请购单编号-物料编号-请购日期-评标日期-供应商名称-要求交期-承诺交期-采购数量-报价-小计-状态
+        $PHPExcel = new PHPExcel(); //实例化PHPExcel类，类似于在桌面上新建一个Excel表格
+        $PHPSheet = $PHPExcel->getActiveSheet(); //获得当前活动sheet的操作对象
+        $PHPSheet->setTitle('采购订单列表'); //给当前活动sheet设置名称
+        $PHPSheet->setCellValue('A1', '订单编号');
+        $PHPSheet->setCellValue('B1', '请购单编号');
+        $PHPSheet->setCellValue('C1', '请购日期');
+        $PHPSheet->setCellValue('D1', '下单日期');
+        $PHPSheet->setCellValue('E1', '供应商名称');
+        $PHPSheet->setCellValue('F1', '执行情况');
+        $num = 1;
+        foreach($list as $k => $v){
+            $num = $num + 1;
+            $PHPSheet->setCellValue('A'.$num, $v['order_code'])
+                ->setCellValue('B'.$num, $v['pr_code'])
+                ->setCellValue('C'.$num, $v['pr_date'])
+                ->setCellValue('D'.$num, $v['create_at'])
+                ->setCellValue('E'.$num, $v['sup_name'])
+                ->setCellValue('F'.$num, $v['exec_desc']);
+        }
+        $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel, 'Excel2007');//按照指定格式生成Excel文件，'Excel2007’表示生成2007版本的xlsx，
+        $PHPWriter->save($path.'/poItemList.xlsx'); //表示在$path路径下面生成ioList.xlsx文件
+        $file_name = "poItemList.xlsx";
+        $contents = file_get_contents($path.'/poItemList.xlsx');
+        $file_size = filesize($path.'/poItemList.xlsx');
+        header("Content-type: application/octet-stream;charset=utf-8");
+        header("Accept-Ranges: bytes");
+        header("Accept-Length: $file_size");
+        header("Content-Disposition: attachment; filename=".$file_name);
+        exit($contents);
+    }
 }

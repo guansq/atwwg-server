@@ -71,7 +71,7 @@ require(["echarts","laydate"],function(echarts){
      * issure - 是否显示确认按钮
      */
     laydate({
-      format : "YYYY-MM-DD",
+      format : "YYYY-MM",
       istime : true,
       isclear : true,
       istoday : true,

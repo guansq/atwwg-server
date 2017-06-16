@@ -35,9 +35,9 @@ function getProNo($pr_code){
  */
 function initPerVal($num,$isMul = true){
     if($isMul){
-        return $num = $num == '' ? '' : $num*100;
+        return $num = empty($num) ? '' : ($num*100).'%';
     }else{
-        return $num = $num == '' ? '' : intval($num)/100;
+        return $num = empty($num) ? '' : intval($num)/100;
     }
 }
 

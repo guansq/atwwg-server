@@ -15,8 +15,8 @@ class Supportercenter extends BaseLogic{
      * 得到U9供应商数据
      */
     public function getListInfo($start,$length){
-        $list = supModel::alias('a')->field('a.id,a.code,a.name,a.type_code,a.type_name,a.status,t.arv_rate,t.pp_rate')->join('supplier_tendency t','a.code=t.sup_code','LEFT')->limit("$start,$length")->select();
-
+        //$list = supModel::alias('a')->field('a.id,a.code,a.name,a.type_code,a.type_name,a.status,t.arv_rate,t.pp_rate')->join('supplier_tendency t','a.code=t.sup_code','LEFT')->limit("$start,$length")->select();
+        $list = supModel::limit("$start,$length")->select();
         if($list) {
             $list = collection($list)->toArray();
         }
@@ -69,14 +69,15 @@ class Supportercenter extends BaseLogic{
      */
     public function getOneSupInfo($sup_code){
         //缺少建立日期,技术分,责任采购,信用等级,供应风险
-        $supinfo = supModel::alias('a')
+        /*$supinfo = supModel::alias('a')
             ->field('a.id,a.name,a.code,u.user_name,a.type_code,a.type_name,a.is_agree_purch_contract,a.pay_way_status,
             a.pay_way_change,a.state_tax_code,a.purch_contract,a.found_date,a.ctc_name,a.mobile,a.phone,a.fax,a.email,a.address,
-            a.status,a.purch_type,a.check_type,a.check_rate,a.pay_way,t.arv_rate,t.pp_rate')
+            a.status,a.purch_type,a.check_type,a.check_rate,a.pay_way,a.pass_rate,a.arv_rate,t.arv_rate,t.pp_rate')
             ->join('supplier_tendency t','a.code=t.sup_code','LEFT')
             ->join('system_user u','a.sup_id=u.id','LEFT')
-            ->where('a.code',$sup_code)->find();
+            ->where('a.code',$sup_code)->find();*/
         //echo $this->getLastSql();
+        $supinfo = supModel::where('a.code',$sup_code)->order('update_at desc')->find();
         if($supinfo){
             $supinfo = $supinfo->toArray();
         }

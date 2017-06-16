@@ -43,7 +43,7 @@
         <div class="form-group col-sm-6">
           <label class="col-sm-2 control-label">帐号注册日期</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" value="{$sup_info['u_create']|date='y-m-d',###}" placeholder="帐号注册日期" disabled>
+            <input type="text" class="form-control" value="{$sup_info['u_create']|atwDate}" placeholder="帐号注册日期" disabled>
           </div>
         </div>
         <div class="form-group col-sm-6">
@@ -220,9 +220,9 @@
       <table class="table table-bordered">
         <tr>
           <td class="col-sm-1 tex_r">供应商交货及时率</td>
-          <td class="col-sm-3">{$sup_info['arv_rate']}</td>
+          <td class="col-sm-3">{$sup_info['arv_rate']|initPerVal}</td>
           <td class="col-sm-1 tex_r">供应商质量合格率</td>
-          <td class="col-sm-3">{$sup_info['pp_rate']}</td>
+          <td class="col-sm-3">{$sup_info['pass_rate']|initPerVal}</td>
         </tr>
         <tr>
           <td class="col-sm-1 tex_r">供应商资质评分</td>
@@ -245,9 +245,9 @@
             <img class="" src="/static/admin/img/entering_pic.png" alt="">
             <section class="dis_inb ml_20 w75b">
               <label class="mr_15">证件有效期</label>
-              <input type="text" class="date_time form-control w30b" disabled value="{$vo['term_start']|date='Y-m-d',###}">
+              <input type="text" class="date_time form-control w30b" disabled value="{$vo['term_start']|atwDate}">
               到
-              <input type="text" class="date_time form-control w30b" disabled value="{$vo['term_end']|date='Y-m-d',###}">
+              <input type="text" class="date_time form-control w30b" disabled value="{$vo['term_end']|atwDate}">
             </section>
           </td>
           <td>

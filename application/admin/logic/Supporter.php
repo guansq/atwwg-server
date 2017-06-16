@@ -15,14 +15,18 @@ class Supporter extends BaseLogic{
      * 得到U9供应商数据
      */
     public function getListInfo($start,$length,$where = []){
-        if(empty($where)){
+        /*if(empty($where)){
             $list = supModel::alias('a')->field('a.id,a.code,a.name,a.type_code,a.type_name,a.status,a.pay_way_status,t.arv_rate,t.pp_rate')
                 ->join('supplier_tendency t','a.code=t.sup_code','LEFT')->limit("$start,$length")->select();
         }else{
             $list = supModel::alias('a')->field('a.id,a.code,a.name,a.type_code,a.type_name,a.status,a.pay_way_status,t.arv_rate,t.pp_rate')
                 ->where($where)->join('supplier_tendency t','a.code=t.sup_code','LEFT')->limit("$start,$length")->select();
+        }*/
+        if(empty($where)){
+            $list = supModel::limit("$start,$length")->select();
+        }else{
+            $list = supModel::where($where)->limit("$start,$length")->select();
         }
-
 
         if($list) {
             $list = collection($list)->toArray();
@@ -37,12 +41,13 @@ class Supporter extends BaseLogic{
     public function getExcelFiledInfo($where){
         if(!empty($where)){
             //$list = supModel::field('id,code,name')->where($where)->select();
-            $list = supModel::alias('a')->field('a.id,a.code,a.name,a.type_code,a.type_name,a.status,a.pay_way_status,t.arv_rate,t.pp_rate')
-                ->join('supplier_tendency t','a.code=t.sup_code','LEFT')->where($where)->select();
+            /*$list = supModel::alias('a')->field('a.id,a.code,a.name,a.type_code,a.type_name,a.status,a.pay_way_status,t.arv_rate,t.pp_rate')
+                ->join('supplier_tendency t','a.code=t.sup_code','LEFT')->where($where)->select();*/
+            $list = supModel::where($where)->select();
         }else{
-            $list = supModel::alias('a')->field('a.id,a.code,a.name,a.type_code,a.type_name,a.status,a.pay_way_status,t.arv_rate,t.pp_rate')
-                ->join('supplier_tendency t','a.code=t.sup_code','LEFT')->select();
-            //$list = supModel::field('id,code,name')->select();
+            /*$list = supModel::alias('a')->field('a.id,a.code,a.name,a.type_code,a.type_name,a.status,a.pay_way_status,t.arv_rate,t.pp_rate')
+                ->join('supplier_tendency t','a.code=t.sup_code','LEFT')->select();*/
+            $list = supModel::where($where)->select();
         }
         if($list) {
             $list = collection($list)->toArray();
@@ -54,9 +59,11 @@ class Supporter extends BaseLogic{
      */
     public function getListNum($where = []){
         if(empty($where)){
-            $num = supModel::alias('a')->join('supplier_tendency t','a.code=t.sup_code','LEFT')->count();
+            //$num = supModel::alias('a')->join('supplier_tendency t','a.code=t.sup_code','LEFT')->count();
+            $num = supModel::count();
         }else{
-            $num = supModel::alias('a')->where($where)->join('supplier_tendency t','a.code=t.sup_code','LEFT')->count();
+            //$num = supModel::alias('a')->where($where)->join('supplier_tendency t','a.code=t.sup_code','LEFT')->count();
+            $num = supModel::where($where)->count();
         }
         //dump($list);die;
         return $num;
@@ -88,12 +95,15 @@ class Supporter extends BaseLogic{
      */
     public function getOneSupInfo($sup_id){
         //缺少建立日期,技术分,责任采购,信用等级,供应风险
-        $supinfo = supModel::alias('a')
+        /*$supinfo = supModel::alias('a')
             ->field('a.id,a.name,a.code,u.user_name,u.create_at as u_create,a.type_code,a.type_name,a.state_tax_code,a.found_date,a.ctc_name,
-            a.mobile,a.phone,a.fax,a.email,a.address,a.status,a.purch_code,a.purch_name,a.purch_type,a.check_type,a.check_rate,a.pay_way,a.pay_way_change,a.pay_way_status,a.create_at,t.arv_rate,t.pp_rate')
+            a.mobile,a.phone,a.fax,a.email,a.address,a.status,a.purch_code,a.purch_name,a.purch_type,a.check_type,a.check_rate,a.pay_way,a.pay_way_change,
+            a.pay_way_status,a.pass_rate,a.arv_rate,a.create_at,t.arv_rate,t.pp_rate')
             ->join('supplier_tendency t','a.code=t.sup_code','LEFT')
             ->join('system_user u','a.sup_id=u.id','LEFT')
-            ->where('a.id',$sup_id)->find();
+            ->where('a.id',$sup_id)->find();*/
+
+        $supinfo = supModel::field('a.*,u.user_name,u.create_at as u_create')->alias('a')->where('a.id',$sup_id)->join('system_user u','a.sup_id=u.id','LEFT')->order('update_at desc')->find();
         if($supinfo){
             $supinfo = $supinfo->toArray();
         }

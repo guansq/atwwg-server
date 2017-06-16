@@ -94,7 +94,12 @@ class Brand extends BaseController{
      * @return \think\Response
      */
     public function delete($id){
-        //
+        $ids = input('delete.id');
+        $ret = db('brand_stop')->where("id IN ($ids)")->delete();
+        if(!$ret){
+            $this->error($ret['msg']);
+        }
+        $this->success('删除成功','');
     }
 
 

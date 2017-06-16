@@ -19,7 +19,9 @@ class Brand extends BaseController{
      * 列表
      */
     public function index(Request $request){
-        $list = db('brand_stop')->select();
+        $params = $this->getReqParams(['name']);
+        $ret = model('Brand', 'logic')->getList($params);
+        $list = empty($ret)?[]:$ret;
         $this->assign('list', $list);
         return $this->view();
     }
@@ -94,7 +96,12 @@ class Brand extends BaseController{
      * @return \think\Response
      */
     public function delete($id){
-        //
+        $ids = input('delete.id');
+        $ret = db('brand_stop')->where("id IN ($ids)")->delete();
+        if(!$ret){
+            $this->error($ret['msg']);
+        }
+        $this->success('删除成功','');
     }
 
 

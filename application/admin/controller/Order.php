@@ -546,14 +546,14 @@ class Order extends BaseController{
         $httpRet = HttpService::curl(getenv('APP_API_U9').'index/po', $sendData);
         $res = json_decode($httpRet, true);//成功回写数据库
         if($res['code'] != 2000){
-            return ['code'=>6000,'msg'=>'调用U9接口异常','data'=>$res];
+            returnjson(6000,'调用U9接口异常',$res);
         }
         $where = [
             'id' => $id,
         ];
         $data = [
             'order_code' => $res['result']['DocNo'],
-            'status' => 'executing',
+            'status' => 'init',
         ];
         $res = $poLogic->saveStatus($where, $data);//订单写入数据库
         return ['code'=>2000,'msg'=>'','data'=>$data];
@@ -603,6 +603,7 @@ class Order extends BaseController{
             'update_at' => $now,
         ];
         $po_id = $poLogic->insertOrGetId($poData);
+        //生成关联关系
         $list = [];
         foreach($idArr as $k=>$v){
             $list[$k] = ['id'=>$v,'po_id'=>$po_id,'status'=>'placeorder'];
@@ -610,8 +611,16 @@ class Order extends BaseController{
         $res = $poLogic->updateAllPoid($list);
         $data = [];
         foreach($idArr as $k=>$v){
-            $data[$k] = ['id'=>$v,'po_id'=>$po_id,'create_at'=>date('Y-m-d',$now),'url'=>'<a class="detail" data-open="'.url('order/detailed').'?id=$po_id">详情</a>'];
+            $data[$k] = ['id'=>$v,'po_id'=>$po_id,'create_at'=>date('Y-m-d',$now)];
         }
-        return json(['code'=>2000,'msg'=>'下订单成功','data'=>$data]);
+        $res = $this->placeOrderAll($po_id);//内部生成订单
+        //dump($res);
+        if($res['code'] == 2000){
+            //发消息通过$sup_code $sup_name得到$sup_id
+            $sup_id = $supLogic->getSupIdVal(['code'=> $sup_code,'name'=> $sup_name]);
+            sendMsg($sup_id,'安特威订单','您有新的订单，请注意查收。');//发送消息
+            return json(['code'=>2000,'msg'=>'下订单成功','data'=>$data]);
+        }
+        return json(['code'=>6000,'msg'=>'下订单失败','data'=>$data]);
     }
 }

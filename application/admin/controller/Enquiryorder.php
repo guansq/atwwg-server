@@ -80,7 +80,7 @@ class Enquiryorder extends BaseController{
                 'close' => '关闭'
             ];
             $prStatus = $prLogic->getPrStatus(['id'=>$v['pr_id']]);
-            $status_desc = $statusArr[$prStatus];
+            $status_desc = key_exists($prStatus,$statusArr) ? $statusArr[$prStatus] : $prStatus;
             $returnArr[] = [
                 'io_code' => $v['io_code'],//询价单号
                 'pr_code' => $v['pr_code'],//请购单号

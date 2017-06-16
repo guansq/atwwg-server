@@ -32,6 +32,13 @@ class Brand extends BaseLogic{
 
     }
 
+    public function getList($params){
+        return db('brand_stop')
+            ->where('name','LIKE',"%$params[name]%")
+            ->order('update_at DESC')
+            ->select();
+    }
+
     public function findByName($name){
         return db('brand_stop')->where('name', $name)->find();
     }

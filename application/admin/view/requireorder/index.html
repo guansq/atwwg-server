@@ -271,7 +271,7 @@
 //            status = '禁用';
 //            diabled = 'disabled="true"';
 //          }
-          tmphtml +=  '<tr><td><input class="listcheck" name="listcheck" type="checkbox" '+diabled+' data-pr_id="'+item_id+'" value="'+resDate[i]["item_code"]+'" data-pr_code="'+resDate[i]["pr_code"]+'"data-sup_code="'+resDate[i]["sup_code"]+'"></td><td>'+resDate[i]["item_code"]+'</td><td>'+resDate[i]["sup_name"]+'</td><td>'+status+'</td></tr>';
+          tmphtml +=  '<tr><td><input class="listcheck" name="listcheck" type="checkbox" '+diabled+' data-pr_id="'+item_id+'" value="'+resDate[i]["item_code"]+'" data-pr_code="'+resDate[i]["pr_code"]+'"data-sup_code="'+resDate[i]["sup_code"]+'"></td><td>'+resDate[i]["sup_code"]+'</td><td>'+resDate[i]["sup_name"]+'</td><td>'+status+'</td></tr>';
         }
         $(".listcheck").click(function () {
           $("[name='listcheck']").removeAttr("checked");//取消全选

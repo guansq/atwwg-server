@@ -59,4 +59,7 @@ class Offer extends BaseLogic{
         }
         return $count;
     }
+    /*
+     * 得到
+     */
 }

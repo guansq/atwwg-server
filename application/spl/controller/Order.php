@@ -186,7 +186,7 @@ class Order extends Base{
             return json(['code' => 5000, 'msg' => '保存po_record 失败', 'data' => []]);
         }
 
-        $detail = $orderLogic->updateSupconfirmdate($id, $supconfirmdate);
+        $detail = $orderLogic->updateSupconfirmdate($id, $supconfirmdate, $supconfirmdate);
         $detailPo = $orderLogic->updateStatus($detailInfo[0]['po_id'], 'sup_edit');
         if($detail){
             return json(['code' => 2000, 'msg' => '成功', 'data' => []]);

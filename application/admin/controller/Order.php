@@ -624,7 +624,10 @@ class Order extends BaseController{
         //dump($res);
         if($res['code'] == 2000){
             //发消息通过$sup_code $sup_name得到$sup_id
-            $sup_id = $supLogic->getSupIdVal(['code'=> $sup_code,'name'=> $sup_name]);
+            $sup_id = $supLogic->getSupIdVal(['code'=> $sup_code]);
+            if(empty($sup_id)){
+                return json(['code'=>5000,'msg'=>"下订单成功，消息发送失败。 code:$sup_code 未绑定账号。",'data'=>$data]);
+            }
             sendMsg($sup_id,'安特威订单','您有新的订单，请注意查收。');//发送消息
             return json(['code'=>2000,'msg'=>'下订单成功','data'=>$data]);
         }

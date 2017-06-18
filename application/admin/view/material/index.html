@@ -148,11 +148,12 @@
           //console.log(resdata);
           layer.closeAll();
           //var obj = JSON.parse(resdata);
-          if(resdata.prToIo.code == 2000){
-            $.form.reload();
-          }else{
-            alert("更新失败");
-          }
+          $.form.reload();
+          //if(resdata.prToIo.code == 2000){
+          //  $.form.reload();
+          //}else{
+          //  alert("更新失败");
+          //}
         })
       });
     });

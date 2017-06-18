@@ -16,6 +16,15 @@ class Showmsg extends Base{
 
     public function index(){
         $this->assign('title',$this->title);
+        $quoteLogic = model('Offer','logic');
+        //待报价
+        $waitQuoteNum = 1111;
+        //订单逾期警告
+
+        //资质过期提醒
+        //新订单
+        //合同未回传
+        //未处理异常订单
         return view();
     }
 

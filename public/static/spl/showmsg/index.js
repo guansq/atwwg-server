@@ -46,6 +46,7 @@ require(["echarts"],function(echarts){
 
     ]
   };
+
   var option1 = {
     //        标题
     title: {

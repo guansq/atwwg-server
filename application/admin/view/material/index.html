@@ -80,6 +80,7 @@
     require(["dataTables.bootstrap"],function(){
       $(document).ready(function() {
         initPage();
+        $.fn.dataTable.ext.errMode = 'none';
       } );
     })
   });

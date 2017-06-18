@@ -77,7 +77,7 @@ class Supportercenter extends BaseLogic{
             ->join('system_user u','a.sup_id=u.id','LEFT')
             ->where('a.code',$sup_code)->find();*/
         //echo $this->getLastSql();
-        $supinfo = supModel::where('a.code',$sup_code)->order('update_at desc')->find();
+        $supinfo = supModel::where('code',$sup_code)->order('update_at desc')->find();
         if($supinfo){
             $supinfo = $supinfo->toArray();
         }

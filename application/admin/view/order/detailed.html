@@ -38,7 +38,9 @@
           <th>单位</th>
           <th>计价单位</th>
           <th>数量</th>
-          <th>交期</th>
+          <th>需求交期</th>
+          <th>承诺交期</th>
+          <th>供应商修改交期</th>
           <th>供应商名称</th>
           <th>单价</th>
           <th>金额</th>
@@ -54,7 +56,9 @@
           <td>{$vo['price_uom']}</td>
           <td>{$vo['tc_uom']}</td>
           <td>{$vo['price_num']}</td>
+          <td>{$vo['req_date']|atwDate}</td>
           <td>{$vo['sup_confirm_date']|atwDate}</td>
+          <td>{$vo['sup_update_date']|atwDate}</td>
           <td>{$poInfo['sup_name']}</td>
           <td>{$vo['price']|atwMoney}</td>
           <td>{$vo['amount']|atwMoney}</td>

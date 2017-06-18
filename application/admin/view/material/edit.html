@@ -116,28 +116,28 @@
         <div class="form-group">
           <label class="col-sm-1 control-label">货期让步比例</label>
           <div class="col-sm-5">
-            <input type="text" class="form-control w90" placeholder="货期让步比例"  name="futurescale" value="{$itemInfo.future_scale|initPerVal}">
+            <input type="text" class="form-control w90" placeholder="货期让步比例"  name="futurescale" value="{$itemInfo.future_scale|initPerVal=true,true}">
             <span class="scale_span">%</span>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-1 control-label">价格采购权重</label>
           <div class="col-sm-5">
-            <input type="text" class="form-control" placeholder="价格采购权重"   name="priceweight"  value="{$itemInfo.price_weight|initPerVal}">
+            <input type="text" class="form-control" placeholder="价格采购权重"   name="priceweight"  value="{$itemInfo.price_weight|initPerVal=true,true}">
             <span class="scale_span">%</span>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-1 control-label">技术采购权重</label>
           <div class="col-sm-5">
-            <input type="text" class="form-control" placeholder="技术采购权重"  name="techweight"  value="{$itemInfo.tech_weight|initPerVal}">
+            <input type="text" class="form-control" placeholder="技术采购权重"  name="techweight"  value="{$itemInfo.tech_weight|initPerVal=true,true}">
             <span class="scale_span">%</span>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-1 control-label">商务权重</label>
           <div class="col-sm-5">
-            <input type="text" class="form-control" placeholder="商务权重" name="businessweight"  value="{$itemInfo.business_weight|initPerVal}">
+            <input type="text" class="form-control" placeholder="商务权重" name="businessweight"  value="{$itemInfo.business_weight|initPerVal=true,true}">
             <span class="scale_span">%</span>
           </div>
         </div>

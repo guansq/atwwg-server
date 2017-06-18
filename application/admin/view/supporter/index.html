@@ -91,6 +91,7 @@ require(["jquery.dataTables","laydate","layui"],function(){
     $(document).ready(function(){
       initPage();
       initEvent();
+      $.fn.dataTable.ext.errMode = 'none';
     });
   })
 });

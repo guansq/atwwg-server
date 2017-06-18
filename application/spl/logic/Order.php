@@ -75,10 +75,11 @@ class Order extends BaseLogic{
     }
 
     //更新交期时间
-    function updateSupconfirmdate($id, $supconfirmdate){
+    function updateSupconfirmdate($id, $supconfirmdate, $supconfirmdate){
         $list = PoItem::where(['id' => $id])->update([
             'sup_confirm_date' => $supconfirmdate,
             'update_at' => time(),
+            'sup_update_date' => $supconfirmdate
             //'status' => 'uncheck'//改成未审核
         ]);
 

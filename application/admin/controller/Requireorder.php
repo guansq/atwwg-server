@@ -74,18 +74,39 @@ class Requireorder extends BaseController{
             if($v['status'] == 'init' || $v['status'] == 'hang'){//订单挂起状态 且订单为初始状态
                 if($v['status'] == 'init'){
 
-                    $v['check_status'] = '';
-                    if($v['appoint_sup_code'] == 1){
-                        //选择供应商
-                        $inquiry = '<a class="select_sell" href="javascript:void(0);" onclick="bomb_box(event,\''.$v['pr_code'].'\',\''.$v['item_code'].'\',\''.$v['id'].'\');" data-url="'
-                            .url('requireorder/selectSup',array('pr_code'=>$v['pr_code'],'item_code'=>$v['item_code'])).'">选择供应商</a>';
+                    //$v['check_status'] = '';
+                    if($v['is_appoint_sup'] == 1){
+                        if(!empty($v['appoint_sup_name'])){
+                            $inquiry = $v['appoint_sup_name'];
+                            if(key_exists($v['check_status'],$checkStatus)){
+
+                                //$v['check_status'] = $v['check_status'];
+                                if($v['check_status'] == ''){
+                                    $v['check_status'] =  '<a href="javascript:;" onclick="checkStatus(\'agree\','.$v['id'].');">通过</a>
+                                &nbsp;&nbsp;<a href="javascript:;" onclick="checkStatus(\'refuse\','.$v['id'].');">拒绝</a>';
+                                }else{
+                                    $v['check_status'] = $checkStatus[$v['check_status']];
+                                }
+                                //$v['check_status'] = 'test';
+                            }else{
+                                $v['check_status'] = $v['check_status'];
+                                //$v['check_status'] = 'test';
+                            }
+                        }else{
+                            //选择供应商
+                            $inquiry = '<a class="select_sell" href="javascript:void(0);" onclick="bomb_box(event,\''.$v['pr_code'].'\',\''.$v['item_code'].'\',\''.$v['id'].'\');" data-url="'
+                                .url('requireorder/selectSup',array('pr_code'=>$v['pr_code'],'item_code'=>$v['item_code'])).'">选择供应商</a>';
+                            $v['check_status'] = $checkStatus[$v['check_status']];
+                        }
                     }else{
                         $inquiry = $inquiry_way[$v['inquiry_way']];
+                        //$inquiry = 'test';
                     }
                 }else{
                     if($is_appoint_sup == 1){//为指定状态 --->挂起状态下的指定
                         if(!empty($v['appoint_sup_code'])){//指定状态下有供应商的名称
                             $inquiry = $v['appoint_sup_name'];
+                            //$inquiry = 'test';
                             if($v['check_status'] == ''){//判断主管审核
                                 //auth();
                                 $v['check_status'] =  '<a href="javascript:;" onclick="checkStatus(\'agree\','.$v['id'].');">通过</a>
@@ -239,9 +260,19 @@ class Requireorder extends BaseController{
     public function checkStatus(){
         $data=input('param.');
         $logicPrInfo = Model('RequireOrder','logic');
-        $dataArr = [
-            'check_status' => $data['check_status'],
-        ];
+        if($data['check_status'] == 'agree'){//同意改为init状态
+            $dataArr = [
+                'check_status' => $data['check_status'],
+                'status' => 'init'
+            ];
+        }else{//拒绝
+            $dataArr = [
+                'check_status' => $data['check_status'],
+                'appoint_sup_code' => null,
+                'appoint_sup_name' => null,
+            ];
+        }
+
         $where = [
             'id' => $data['id'],
         ];

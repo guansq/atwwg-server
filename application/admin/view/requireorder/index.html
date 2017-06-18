@@ -338,7 +338,18 @@
       $.post(url,data,function(res){
         layer.closeAll();
         if(res.code == '2000'){
-          $("input[data-pr_id^="+id+"]") .parent().next().next().html(res.data.check_status)
+          $("input[data-pr_id^="+id+"]").parent().next().next().html(res.data.check_status)
+          if(status == 'agree'){
+            $("input[data-pr_id^="+id+"]").parent().prev().prev().html('待询价')
+          }else{
+            var pr_dom = $("input[data-pr_id^="+id+"]");
+            var pr_code = pr_dom.attr('data-pr_code');
+            var item_code = pr_dom.attr('data-item_code');
+            str = '<a class="select_sell" href="javascript:void(0);" onclick="bomb_box(event,'+pr_code+','+item_code+','+id+');"' +
+                ' data-url="{:url(\'requireorder/selectSup\',array(\'pr_code\'=>'+pr_code+',\'item_code\'=>'+item_code+'))}">选择供应商</a>';
+            $("input[data-pr_id^="+id+"]").parent().next().html(str)
+            $("input[data-pr_id^="+id+"]").parent().prev().prev().html('指定')
+          }
         }else{
           layer.alert('操作失败');
         }

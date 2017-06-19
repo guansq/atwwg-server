@@ -322,8 +322,13 @@ class Supporter extends BaseController{
         $result = $logicSupInfo->changeQualiStatus($where,$data);
         if($result !== false){
             if(in_array(input('param.code'),$scoreArr)){
-                //更新tech_score
-                $logicSupInfo->updateTechScore(['code',input('param.sup_code')]);
+                if($data['status'] == 'agree'){
+                    //更新tech_score
+                    $where = [
+                        'code' => input('param.sup_code')
+                    ];
+                    $logicSupInfo->updateTechScore($where);
+                }
             }
             return json(['code'=>2000,'data'=>[],'msg'=>'成功']);
         }else{

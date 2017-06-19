@@ -185,6 +185,7 @@ class Supporter extends BaseLogic{
      * 更新技术分 + 5
      */
     public function updateTechScore($where){
-        return supModel::where($where)->setInc('tech_score', 5);
+        supModel::where($where)->setInc('tech_score', 5);
+        return supModel::where($where)->setInc('qlf_score', 5);
     }
 }

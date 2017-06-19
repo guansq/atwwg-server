@@ -289,9 +289,9 @@
       layer.load();
       //console.log(data);
       $.post(url,data,function(res){
+        $.form.reload();
         if(res.code == 2000){
           layer.closeAll();
-          $.form.reload();
           layer.alert('更改成功');
         }else{
           layer.alert('更改失败');

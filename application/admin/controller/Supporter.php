@@ -141,15 +141,26 @@ class Supporter extends BaseController{
                 'id' => $v['id'],
                 'code' => $v['code'],
                 'name' => $v['name'],
-                'type_name' => $v['type_name'],
-                'tech_score' => getTechScore($v['code']),//技术分
-                'arv_rate' => $v['arv_rate'],
-                'pp_rate' => $v['pass_rate'],
-                'quali_score' => getQualiScore($v['code']),//质量分
-                'status' => '正常',// FIXME $status[$v['status']],
-                'pay_type_status' => $pay_way_status[$v['pay_way_status']],
+                'type_name' => $v['type_name'],//主分类名称
+                'type_code' => $v['type_code'],//主分类编码
+                'state_tax_code' => $v['state_tax_code'],//地税号
+                'national_tax_code' => $v['national_tax_code'],//国税号
+                'found_date' => atwDate($v['found_date']),//成立日期
+                'tax_rate' => initPerVal($v['tax_rate']),//税率
+                'mobile' => $v['mobile'],//电话
                 'phone' => $v['phone'],
                 'email' => $v['email'],
+                'fax' => $v['fax'],//传真
+                'ctc_name' => $v['ctc_name'],//联系人
+                'address' => $v['address'],//地址
+                'pay_way' => $v['pay_way'],//付款方式
+                'com_name' => $v['com_name'],//企业名称
+                'purch_code' => $v['purch_code'],//采购员工号
+                'purch_name' => $v['purch_name'],//采购员工姓名
+                'purch_type' => $v['purch_type'],//供应商采购属性
+                'check_type' => $v['check_type'],//检验类型
+                'check_rate' => initPerVal($v['check_rate']),//抽检比例
+                //'check_type' => $v['check_type'],//检验类型
             ];
         }
         $list = $returnArr;
@@ -163,25 +174,40 @@ class Supporter extends BaseController{
         $PHPSheet->setCellValue('A1','供应商ID')->setCellValue('B1','供应商CODE');
         $PHPSheet->setCellValue('C1','供应商名称')->setCellValue('D1','供应商登录名');
         $PHPSheet->setCellValue('E1','供应商密码');
-        $PHPSheet->setCellValue('F1','供应商分类');
-        $PHPSheet->setCellValue('G1','技术评分');
-        $PHPSheet->setCellValue('H1','供应商交货及时率');
-        $PHPSheet->setCellValue('I1','供应商质量合格率');
-        $PHPSheet->setCellValue('J1','供应商资质评分');
-        $PHPSheet->setCellValue('K1','状态');
-        $PHPSheet->setCellValue('L1','付款方式审核');
+        $PHPSheet->setCellValue('F1','主分类名称');
+        $PHPSheet->setCellValue('G1','主分类编码');
+        $PHPSheet->setCellValue('H1','地税号');
+        $PHPSheet->setCellValue('I1','国税号');
+        $PHPSheet->setCellValue('J1','成立日期');
+        $PHPSheet->setCellValue('K1','税率');
+        $PHPSheet->setCellValue('L1','供应商电话');
         $PHPSheet->setCellValue('M1','供应商手机');
-        $PHPSheet->setCellValue('N1','邮箱');
+        $PHPSheet->setCellValue('N1','供应商邮箱');
+        $PHPSheet->setCellValue('O1','供应商传真');
+        $PHPSheet->setCellValue('P1','联系人');
+        $PHPSheet->setCellValue('Q1','地址');
+        $PHPSheet->setCellValue('R1','付款方式');
+        $PHPSheet->setCellValue('S1','企业名称');
+        $PHPSheet->setCellValue('T1','采购员工号');
+        $PHPSheet->setCellValue('U1','采购员工姓名');
+        $PHPSheet->setCellValue('V1','供应商采购属性');
+        $PHPSheet->setCellValue('W1','检验类型');
+        $PHPSheet->setCellValue('X1','抽检比例');
         $num = 1;
         foreach($list as $k => $v){
             $num = $num+1;
             $PHPSheet->setCellValue('A'.$num,$v['id'])->setCellValue('B'.$num,$v['code'])
                 ->setCellValue('C'.$num,$v['name'])->setCellValue('D'.$num,strtolower($v['code']))
                 ->setCellValue('E'.$num,'')->setCellValue('F'.$num,$v['type_name'])
-                ->setCellValue('G'.$num,$v['tech_score'])->setCellValue('H'.$num,$v['arv_rate'])
-                ->setCellValue('I'.$num,$v['pp_rate'])->setCellValue('J'.$num,$v['quali_score'])
-                ->setCellValue('K'.$num,$v['status'])->setCellValue('L'.$num,$v['pay_type_status'])
-                ->setCellValue('M'.$num,$v['phone'])->setCellValue('N'.$num,$v['email']);
+                ->setCellValue('G'.$num,$v['type_code'])->setCellValue('H'.$num,$v['state_tax_code'])
+                ->setCellValue('I'.$num,$v['national_tax_code'])->setCellValue('J'.$num,$v['found_date'])
+                ->setCellValue('K'.$num,$v['tax_rate'])->setCellValue('L'.$num,$v['mobile'])
+                ->setCellValue('M'.$num,$v['phone'])->setCellValue('N'.$num,$v['email'])
+                ->setCellValue('O'.$num,$v['fax'])->setCellValue('P'.$num,$v['ctc_name'])
+                ->setCellValue('Q'.$num,$v['address'])->setCellValue('R'.$num,$v['pay_way'])
+                ->setCellValue('S'.$num,$v['com_name'])->setCellValue('T'.$num,$v['purch_code'])
+                ->setCellValue('U'.$num,$v['purch_name'])->setCellValue('V'.$num,$v['purch_type'])
+                ->setCellValue('W'.$num,$v['check_type'])->setCellValue('X'.$num,$v['check_rate']);
         }
         $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel,'Excel2007');//按照指定格式生成Excel文件，'Excel2007’表示生成2007版本的xlsx，
         $PHPWriter->save($path.'/supList.xlsx'); //表示在$path路径下面生成supList.xlsx文件

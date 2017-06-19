@@ -18,7 +18,8 @@ use PHPExcel;
 class Enquiryorder extends BaseController{
     protected $table = 'Io';
     protected $title = '询价单管理';
-
+    const MSGTITLE = '新的报价单';
+    const MSGCONTENT = '您有新的报价单，请尽快查收';
     public function index(){
         $statusArr=[
 
@@ -131,14 +132,14 @@ class Enquiryorder extends BaseController{
                 $where = ['id'=>$info['sup_id']];//获取token条件
                 $sendInfo['token'] = $logicSystemUser->getPushToken($where);
             }
-            sendMsg($info['sup_id'],'安特威询价单','您有新的询价单，请注意查收。');//发送消息
+            sendMsg($info['sup_id'],self::MSGCONTENT);//发送消息
             if(!empty($sendInfo['email'])){
                 $sendData = [
                     'rt_appkey' => 'atw_wg',
                     'fromName' => '安特威物供平台',//发送人名
                     'to' => $sendInfo['email'],
-                    'subject' => '安特威询价单',
-                    'html' => '您有新的询价单，请注意查收。',
+                    'subject' => self::MSGTITLE,
+                    'html' => self::MSGCONTENT,
                     'from' => 'tan3250204@sina.com',//平台的邮件头
                 ];
                 HttpService::curl(getenv('APP_API_MSG').'SendEmail/sendHtml',$sendData);
@@ -147,7 +148,7 @@ class Enquiryorder extends BaseController{
                 $sendData = [
                     'mobile' => $sendInfo['phone'],
                     'rt_appkey' => 'atw_wg',
-                    'text' => '安特威询价单',
+                    'text' => self::MSGCONTENT,
                 ];
                 HttpService::curl(getenv('APP_API_MSG').'SendSms/sendText',$sendData);//sendSms($data)
             }
@@ -156,12 +157,12 @@ class Enquiryorder extends BaseController{
                 $sendData = [
                     "platform" => "all",
                     "rt_appkey" => "atw_wg",
-                    "alert" => "android手机专属消息4",
+                    "alert" => self::MSGTITLE,
                     "regIds" => $sendInfo['token'],
                     //"platform" => "all",
                     "androidNotification" => [
-                        "alert" => "alertalert alert alert",
-                        "title" => "安特威",
+                        "alert" => self::MSGTITLE,
+                        "title" => self::MSGCONTENT,
                         "builder_id" => "builder_id",
                         "priority" => 0,
                         "style" => 0,
@@ -197,14 +198,14 @@ class Enquiryorder extends BaseController{
             $where = ['id'=>$info['sup_id']];//获取token条件
             $sendInfo['token'] = $logicSystemUser->getPushToken($where);
         }
-        sendMsg($info['sup_id'],'安特威询价单','您有新的询价单，请注意查收。');//发送消息
+        sendMsg($info['sup_id'],self::MSGCONTENT);//发送消息
         if(!empty($sendInfo['email'])){
             $sendData = [
                 'rt_appkey' => 'atw_wg',
                 'fromName' => '安特威物供平台',//发送人名
                 'to' => $sendInfo['email'],
-                'subject' => '您有新的报价单，请尽快查收',
-                'html' => '您有新的报价单，请尽快查收',
+                'subject' => self::MSGTITLE,
+                'html' => self::MSGCONTENT,
                 'from' => 'tan3250204@sina.com',//平台的邮件头
             ];
             HttpService::curl(getenv('APP_API_MSG').'SendEmail/sendHtml',$sendData);
@@ -213,7 +214,7 @@ class Enquiryorder extends BaseController{
             $sendData = [
                 'mobile' => $sendInfo['phone'],
                 'rt_appkey' => 'atw_wg',
-                'text' => '您有新的报价单，请尽快查收',
+                'text' => self::MSGCONTENT,
             ];
             HttpService::curl(getenv('APP_API_MSG').'SendSms/sendText',$sendData);//sendSms($data)
         }
@@ -222,12 +223,12 @@ class Enquiryorder extends BaseController{
             $sendData = [
                 "platform" => "all",
                 "rt_appkey" => "atw_wg",
-                "alert" => "您有新的报价单，请尽快查收",
+                "alert" => self::MSGTITLE,
                 "regIds" => $sendInfo['token'],
                 //"platform" => "all",
                 "androidNotification" => [
-                    "alert" => "alertalert alert alert",
-                    "title" => "安特威",
+                    "alert" => self::MSGTITLE,
+                    "title" => self::MSGCONTENT,
                     "builder_id" => "builder_id",
                     "priority" => 0,
                     "style" => 0,

@@ -75,8 +75,8 @@ class Order extends BaseController{
                 $returnInfo[$k]['exec_desc'] = '';
             }
             $returnInfo[$k]['order_code'] = $v['order_code'];
-            $returnInfo[$k]['pr_code'] = $v['pr_code'];
-            $returnInfo[$k]['pr_date'] = atwDate($poLogic->getPrDate($v['pr_code']));
+            //$returnInfo[$k]['pr_code'] = $v['pr_code'];
+            //$returnInfo[$k]['pr_date'] = atwDate($poLogic->getPrDate($v['pr_code']));
             $returnInfo[$k]['create_at'] = atwDate($v['create_at']);
             $returnInfo[$k]['sup_name'] = $poLogic->getSupName($v['sup_code']);
             $returnInfo[$k]['status'] = empty($v['u9_status']) ? $status[$v['status']] : $v['u9_status'];

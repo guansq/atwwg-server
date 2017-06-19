@@ -409,3 +409,22 @@ function sendMsg($sendeeId,$title,$content,$type='single',$pri=3){
     $res = model('MessageSendee')->saveSendee($data);
     return $res;
 }
+
+/*
+ * 通过当前日期得到最近12个月
+ */
+function getReceDateArr($m){
+    $mArr = [];
+    for ($x=0; $x<12; $x++) {
+        $tmpM = $m - 1;
+        if($tmpM > 0 ){
+            $mArr[$x] = $tmpM;
+        }else{
+            $mArr[$x] = 12 - abs($tmpM);
+        }
+        //$m[$x] = $m - 1;
+        //echo "数字是：$x <br>";
+    }
+    return $mArr;
+    //echo intval(date('m'));
+}

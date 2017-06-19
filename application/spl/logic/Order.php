@@ -123,4 +123,19 @@ class Order extends BaseLogic{
         return false;
     }
 
+    /*
+     * 得到即将过期的订单数量
+     */
+    function getPoItemNum($sup_code){
+        return PoItem::alias('a')->join('po b','a.po_id = b.id')
+            ->where('b.status','in',['executing'])->where('pro_goods_num','>',0)->where('a.sup_code',$sup_code)->count();//得到执行中的订单，和订单未到货数量>0
+    }
+
+    /*
+     * 得到新订单的数量
+     */
+    function getInitPoNum($where){
+        return Po::where($where)->count();
+    }
+
 }

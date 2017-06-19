@@ -148,6 +148,7 @@ class Supporter extends BaseController{
                 'quali_score' => getQualiScore($v['code']),//质量分
                 'status' => '正常',// FIXME $status[$v['status']],
                 'pay_type_status' => $pay_way_status[$v['pay_way_status']],
+                'phone' => $v['phone']
             ];
         }
         $list = $returnArr;
@@ -156,7 +157,7 @@ class Supporter extends BaseController{
         $PHPExcel = new PHPExcel(); //实例化PHPExcel类，类似于在桌面上新建一个Excel表格
         $PHPSheet = $PHPExcel->getActiveSheet(); //获得当前活动sheet的操作对象
         $PHPSheet->setTitle('供应商列表'); //给当前活动sheet设置名称
-       // dump($list);die;
+        //dump($list);die;
 
         $PHPSheet->setCellValue('A1','供应商ID')->setCellValue('B1','供应商CODE');
         $PHPSheet->setCellValue('C1','供应商名称')->setCellValue('D1','供应商登录名');
@@ -168,6 +169,7 @@ class Supporter extends BaseController{
         $PHPSheet->setCellValue('J1','供应商资质评分');
         $PHPSheet->setCellValue('K1','状态');
         $PHPSheet->setCellValue('L1','付款方式审核');
+        $PHPSheet->setCellValue('M1','供应商手机');
         $num = 1;
         foreach($list as $k => $v){
             $num = $num+1;
@@ -176,7 +178,8 @@ class Supporter extends BaseController{
                 ->setCellValue('E'.$num,'')->setCellValue('F'.$num,$v['type_name'])
                 ->setCellValue('G'.$num,$v['tech_score'])->setCellValue('H'.$num,$v['arv_rate'])
                 ->setCellValue('I'.$num,$v['pp_rate'])->setCellValue('J'.$num,$v['quali_score'])
-                ->setCellValue('K'.$num,$v['status'])->setCellValue('L'.$num,$v['pay_type_status']);
+                ->setCellValue('K'.$num,$v['status'])->setCellValue('L'.$num,$v['pay_type_status'])
+                ->setCellValue('M'.$num,$v['phone']);
         }
         $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel,'Excel2007');//按照指定格式生成Excel文件，'Excel2007’表示生成2007版本的xlsx，
         $PHPWriter->save($path.'/supList.xlsx'); //表示在$path路径下面生成supList.xlsx文件

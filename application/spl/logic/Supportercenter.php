@@ -8,6 +8,7 @@
 namespace app\spl\logic;
 
 use app\common\model\SupplierInfo as supModel;
+use app\common\model\SupplierQualification as qualiModel;
 
 class Supportercenter extends BaseLogic{
 
@@ -146,6 +147,11 @@ class Supportercenter extends BaseLogic{
         return $list;
     }
 
-
+    /*
+     * 得到供应商资质过期数量
+     */
+    public function getPastSuppNum($time,$sup_code){
+        return qualiModel::where('term_end','<',$time)->where('sup_code',$sup_code)->where('status','agree')->count();
+    }
 
 }

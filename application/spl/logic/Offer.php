@@ -60,6 +60,9 @@ class Offer extends BaseLogic{
         return $count;
     }
     /*
-     * 得到
+     * 得到待报价的数量
      */
+    public function getWaitQuoteNum($where){
+        return $this->where($where)->count();
+    }
 }

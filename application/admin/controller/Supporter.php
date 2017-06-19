@@ -274,6 +274,7 @@ class Supporter extends BaseController{
         $logicSupInfo = Model('Supporter','logic');
         $where = [
             'sup_code' => input('param.sup_code'),
+            'code' => input('param.code'),
         ];
         $data = [
             'status' => input('param.status'),

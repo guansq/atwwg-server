@@ -253,8 +253,8 @@
           <td>
             <section class="btn_box">
               {if $vo.status eq ''}
-              <button type="button" class="btn btn-success" onclick="changeStauts('{$vo.sup_code}','agree');">通过</button>
-              <button type="button" class="btn btn-warning" onclick="changeStauts('{$vo.sup_code}','refuse');">拒绝</button>
+              <button type="button" class="btn btn-success" onclick="changeStauts('{$vo.sup_code}','{$vo.code}','agree');">通过</button>
+              <button type="button" class="btn btn-warning" onclick="changeStauts('{$vo.sup_code}','{$vo.code}','refuse');">拒绝</button>
               {elseif $vo.status eq 'agree' /}
               <button type="button" class="btn btn-success" disabled>已通过</button>
               {elseif $vo.status eq 'refuse' /}
@@ -274,7 +274,7 @@
 {block name="script"}
 <script src="/static/admin/supporter/edit.js"/>
 <script>
-  function changeStauts(sup_code,status){
+  function changeStauts(sup_code,code,status){
     layer.confirm('确认该操作吗？', {
       btn: ['提交','取消'], //按钮
       shade: false //不显示遮罩
@@ -282,6 +282,7 @@
       url = '{:url("Supporter/changeQualiStatus")}';
       data = {
         'sup_code' : sup_code,
+        'code' : code,
         'status' : status
       };
       layer.close(index);

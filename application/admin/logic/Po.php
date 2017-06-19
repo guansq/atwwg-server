@@ -90,7 +90,7 @@ class Po extends BaseLogic{
      */
     public function getPoItemList($where){
         if(empty($where)){
-            $list = poItemModel::order('req_date DESC')->where('status','init')->select();
+            $list = poItemModel::order('update_at DESC')->where('status','init')->select();
         }else{
             $list = poItemModel::where($where)->where('status','init')->order('update_at DESC')->select();
         }

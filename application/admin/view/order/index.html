@@ -16,7 +16,6 @@
     <div class="inquiry_box">
       <form class="form-inline">
         <input type="text" id="order_code" class="form-control" placeholder="订单编号">
-        <input type="text" id="pr_code" class="form-control" placeholder="请购单编号">
         <input type="text" id="sup_name" class="form-control" placeholder="供应商名称">
         <button type="button" id="searchVal" class="btn btn-info">查询</button>
       </form>
@@ -36,8 +35,6 @@
               <input type="checkbox" class="all">
             </th>
             <th>订单编号</th>
-            <th>请购单编号</th>
-            <th>请购日期</th>
             <th>下单日期</th>
             <th>供应商名称</th>
             <th>状态</th>
@@ -127,8 +124,6 @@
         "columns":[
           {"data":"checked"},
           {"data":"order_code"},
-          {"data":"pr_code"},
-          {"data":"pr_date"},
           {"data":"create_at"},
           {"data":"sup_name"},
           {"data":"status"},

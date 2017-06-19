@@ -9,6 +9,8 @@
 namespace app\spl\controller;
 
 class Order extends Base{
+    protected $title = '采购订单';
+
     public function getOrderList(){
         $offerLogic = model('Order', 'logic');
         $sup_code = session('spl_user')['sup_code'];
@@ -93,6 +95,7 @@ class Order extends Base{
             'finish' => '结束'
         );
         $this->assign('orderstatus', $orderStatus);
+        $this->assign('title',$this->title);
         return view();
     }
 

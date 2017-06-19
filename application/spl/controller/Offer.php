@@ -12,7 +12,7 @@ use PHPExcel;
 use PHPExcel_IOFactory;
 
 class Offer extends Base{
-
+    protected $title = '报价中心';
     const STATUS_ARR = [
         'init' => '未报价',
         'quoted' => '已报价',
@@ -35,6 +35,7 @@ class Offer extends Base{
 //            'close' => '已关闭'
         ];
         $this->assign('status', $status);
+        $this->assign('title',$this->title);
         return view();
     }
 

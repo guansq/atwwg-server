@@ -12,8 +12,9 @@ use think\Db;
 use controller\BasicSpl;
 
 class Mistakeorder extends Base{
-
+    protected $title = '异常订单';
     public function index(){
+        $this->assign('title',$this->title);
         return view();
     }
 

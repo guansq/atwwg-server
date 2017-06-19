@@ -44,7 +44,7 @@ class Showmsg extends Base{
         ];
         $atwSureNum = $itemLogic->getInitPoNum($where);
         //未处理异常订单
-        dump(getReceDateArr(date('m')));
+        //dump(getReceDateArr(date('m')));
         $this->assign('title',$this->title);
         return view();
     }

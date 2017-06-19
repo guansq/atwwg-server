@@ -415,13 +415,14 @@ function sendMsg($sendeeId,$title,$content,$type='single',$pri=3){
  */
 function getReceDateArr($m){
     $mArr = [];
+    $m = intval($m);
     for ($x=0; $x<12; $x++) {
-        $tmpM = $m - 1;
-        if($tmpM > 0 ){
-            $mArr[$x] = $tmpM;
+        if($m > 0 ){
+            $mArr[$x] = $m;
         }else{
-            $mArr[$x] = 12 - abs($tmpM);
+            $mArr[$x] = 12 - abs($m);
         }
+        $m = $m - 1;
         //$m[$x] = $m - 1;
         //echo "数字是：$x <br>";
     }

@@ -148,7 +148,8 @@ class Supporter extends BaseController{
                 'quali_score' => getQualiScore($v['code']),//质量分
                 'status' => '正常',// FIXME $status[$v['status']],
                 'pay_type_status' => $pay_way_status[$v['pay_way_status']],
-                'phone' => $v['phone']
+                'phone' => $v['phone'],
+                'email' => $v['email'],
             ];
         }
         $list = $returnArr;
@@ -170,6 +171,7 @@ class Supporter extends BaseController{
         $PHPSheet->setCellValue('K1','状态');
         $PHPSheet->setCellValue('L1','付款方式审核');
         $PHPSheet->setCellValue('M1','供应商手机');
+        $PHPSheet->setCellValue('N1','邮箱');
         $num = 1;
         foreach($list as $k => $v){
             $num = $num+1;
@@ -179,7 +181,7 @@ class Supporter extends BaseController{
                 ->setCellValue('G'.$num,$v['tech_score'])->setCellValue('H'.$num,$v['arv_rate'])
                 ->setCellValue('I'.$num,$v['pp_rate'])->setCellValue('J'.$num,$v['quali_score'])
                 ->setCellValue('K'.$num,$v['status'])->setCellValue('L'.$num,$v['pay_type_status'])
-                ->setCellValue('M'.$num,$v['phone']);
+                ->setCellValue('M'.$num,$v['phone'])->setCellValue('N'.$num,$v['email']);
         }
         $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel,'Excel2007');//按照指定格式生成Excel文件，'Excel2007’表示生成2007版本的xlsx，
         $PHPWriter->save($path.'/supList.xlsx'); //表示在$path路径下面生成supList.xlsx文件

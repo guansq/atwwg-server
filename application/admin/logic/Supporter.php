@@ -180,4 +180,11 @@ class Supporter extends BaseLogic{
     public function getSupIdVal($where){
         return supModel::where($where)->value('sup_id');
     }
+
+    /*
+     * 更新技术分 + 5
+     */
+    public function updateTechScore($where){
+        return supModel::where($where)->setInc('tech_score', 5);
+    }
 }

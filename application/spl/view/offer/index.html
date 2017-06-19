@@ -151,7 +151,7 @@
           // console.log(row);
           $(row).attr('id','io-'+data.id);
           $(row).addClass("layui-form");
-          console.log(data.status.indexOf('winbid'));
+          //console.log(data.status.indexOf('winbid'));
           $(row).addClass( data.status && data.status.indexOf('winbid')>=0?'success':'');
           $(row).addClass( data.status && data.status.indexOf('winbid')>=0?'success':'');
 
@@ -178,7 +178,7 @@
   })
   //导出
   $("#excel_out").click(function(){
-    console.log(1);
+    //console.log(1);
     layer.confirm('是否进行导出', {
       btn: ['确定导出','取消导出']
     }, function(index){
@@ -211,6 +211,9 @@
               $("tr[id^=io-"+data.field.id+"]").find($('input[name="quote_price"]')).attr("disabled",true);
               $("tr[id^=io-"+data.field.id+"]").find($('input[name="remark"]')).attr("disabled",true);
               $("tr[id^=io-"+data.field.id+"]").find($('input[name="req_date"]')).attr("disabled",true);
+              var quote_price = $("tr[id^=io-"+data.field.id+"]").find($('input[name="quote_price"]')).val();
+              quote_price = parseFloat(quote_price).toFixed(2);
+              $("tr[id^=io-"+data.field.id+"]").find($('input[name="quote_price"]')).val(quote_price);
               str = 'total_price_'+data.field.id;
               $("#"+str).text('￥'+obj.data.total_price);
               $(data.elem).attr("disabled",true);
@@ -232,7 +235,7 @@
   });
   function subQuote(id){
 
-    console.log(id);
+    //console.log(id);
   }
 
   //$('tr[id^=io-]')

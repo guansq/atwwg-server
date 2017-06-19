@@ -118,6 +118,7 @@
 <script>
 //群发送消息
 function sendAllMsg(){
+  $.msg.loading();
   var chekVal = ''
   $("input[name='checkinfo']:checked").each(function () {
       chekVal += this.value+'|';//通过|来
@@ -132,6 +133,7 @@ function sendAllMsg(){
     'io_id' : chekVal
   }
   $.post(url,data,function(res){
+    $.msg.close();
     if(res.code == 2000){
       layer.alert('发送成功');
     }
@@ -140,6 +142,7 @@ function sendAllMsg(){
 }
 //单发消息
   function sendOneMsg($ioId){
+    $.msg.loading();
     if($ioId == ''){
       layer.alert('抱歉，无法发送信息');
       return;
@@ -149,6 +152,7 @@ function sendAllMsg(){
       'io_id' : $ioId
     }
     $.post(url,data,function(res){
+      $.msg.close();
       if(res.code == 2000){
         layer.alert('发送成功');
       }

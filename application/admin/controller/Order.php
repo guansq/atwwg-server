@@ -258,57 +258,7 @@ class Order extends BaseController{
         //$res = true;
         if($res !== false){
             if($param['action'] == 'contract_pass'){//已审核通过---》执行同步U9订单
-                /*$sendData = [];
-                $poInfo = $poLogic->getPoInfo($param['id']);
 
-                $sendData['DocDate'] = $poInfo['doc_date'] == '' ? time() : $poInfo['doc_date'];//单价日期
-                $sendData['DocTypeCode'] = $poInfo['doc_type'];//单据类型
-                $sendData['TCCode'] = $poInfo['tc_code'];//币种编码
-                $sendData['bizType'] = $poInfo['biz_type'];//U9参数
-                $sendData['isPriceIncludeTax'] = $poInfo['is_include_tax'];//是否含税
-                $sendData['supplierCode'] = $poInfo['sup_code'];//供应商代码
-
-                $poItemInfo = $poLogic->getPoItemInfo($poInfo['id']);
-                //dump($poItemInfo);die;
-                foreach($poItemInfo as $k => $v){
-                    $sendData['lines'][$k]['ItemCode'] = $v['item_code'];//料品号
-                    $sendData['lines'][$k]['OrderPriceTC'] = $v['price'];//采购单价
-                    $sendData['lines'][$k]['OrderTotalTC'] = $v['price']*$v['price_num'];//采购总金额
-                    $sendData['lines'][$k]['ReqQty'] = $v['price_num'];//采购数量
-                    $sendData['lines'][$k]['RequireDate'] = $v['req_date'];//请购时间
-                    $sendData['lines'][$k]['SupConfirmDate'] = $v['sup_confirm_date'];//供应商供货日期
-                    $sendData['lines'][$k]['TaxRate'] = $v['tax_rate']*100;//税率
-                    $sendData['lines'][$k]['TradeUOM'] = $v['tc_uom'];//交易单位
-                    $sendData['lines'][$k]['ValuationQty'] = $v['tc_num'];//
-                    $sendData['lines'][$k]['ValuationUnit'] = $v['price_uom'];//
-                    $sendData['lines'][$k]['srcDocPRLineNo'] = $v['pr_ln'];
-                    $sendData['lines'][$k]['srcDocPRNo'] = $v['pr_code'];
-                }
-                //dump($sendData);die;
-                $httpRet = HttpService::curl(getenv('APP_API_U9').'index/po', $sendData);
-                $res = json_decode($httpRet, true);//成功回写数据库
-                if($res['code'] != 2000){
-                    returnJson($res);
-                }
-                $where = [
-                    'id' => $param['id'],
-                ];
-                //dd($res['result']);
-                $poData = [
-                    'order_code' => $res['result']['DocNo'],
-                    'status' => 'executing',
-                    'update_at' => time()
-                ];
-                $res = $poLogic->saveStatus($where, $poData);//订单写入数据库
-                $where = [
-                    'po_id' => $param['id'],
-                ];
-                $piData = [
-                    'update_at' =>time(),
-                    'po_code' => $poData['order_code'],
-                ];
-                $poLogic->saveItemInfo($where,$piData);//更新时间
-                */
                 $poData = [
                     //'order_code' => $res['result']['DocNo'],
                     'status' => 'executing',
@@ -328,54 +278,7 @@ class Order extends BaseController{
         }
     }
 
-    public function placeOrder(){
-        $id = input('id');
-        $poLogic = model('Po', 'logic');
-        $sendData = [];
-        $poInfo = $poLogic->getPoInfo($id);
 
-        $sendData['DocDate'] = $poInfo['doc_date'] == '' ? time() : $poInfo['doc_date'];//单价日期
-        $sendData['DocTypeCode'] = $poInfo['doc_type'];//单据类型
-        $sendData['TCCode'] = $poInfo['tc_code'];//币种编码
-        $sendData['bizType'] = $poInfo['biz_type'];//U9参数
-        $sendData['isPriceIncludeTax'] = $poInfo['is_include_tax'];//是否含税
-        $sendData['supplierCode'] = $poInfo['sup_code'];//供应商代码
-        $poItemInfo = $poLogic->getPoItemInfo($poInfo['id']);
-        //dump($poItemInfo);die;
-        $lines = [];
-        foreach($poItemInfo as $k => $v){
-            $lines[] = [
-                'ItemCode' => $v['item_code'],//料品号
-                'OrderPriceTC' => $v['price'],//采购单价
-                'OrderTotalTC' => $v['price']*$v['price_num'],//采购总金额
-                'ReqQty' => $v['price_num'],//采购数量
-                'RequireDate' => $v['req_date'],//请购时间
-                'SupConfirmDate' => $v['sup_confirm_date'],//供应商供货日期
-                'TaxRate' => $v['tax_rate']*100,//税率
-                'TradeUOM' => $v['tc_uom'],//交易单位
-                'ValuationQty' => $v['tc_num'],//
-                'ValuationUnit' => $v['price_uom'],//
-                'srcDocPRLineNo' => $v['pr_ln'],
-                'srcDocPRNo' => $v['pr_code']
-            ];
-        }
-        $sendData['lines'] = $lines;
-        //exit(json_encode($sendData));
-        $httpRet = HttpService::curl(getenv('APP_API_U9').'index/po', $sendData);
-        $res = json_decode($httpRet, true);//成功回写数据库
-        if($res['code'] != 2000){
-            returnJson(6000, '调用U9接口异常', $res);
-        }
-        $where = [
-            'id' => $id,
-        ];
-        $data = [
-            'order_code' => $res['result']['DocNo'],
-            'status' => 'executing',
-        ];
-        $res = $poLogic->saveStatus($where, $data);//订单写入数据库
-        returnJson(2000);
-    }
 
     /*
      * 导出excel
@@ -488,51 +391,22 @@ class Order extends BaseController{
         returnJson($httpRet);
     }
 
-    /*
-     *创建U9订单
-     */
-    public function createU9Order(){
-        $ids = input('param.ids');
-        $idArr = explode('|',$ids);
-        $reInfo = [];
-        $poLogic = model('Po', 'logic');
-        $num = 0;
-        foreach($idArr as $k => $v){
-            $where = ['id'=>$v];
-            $status = $poLogic->getPoStatus($where);
-            if($status == 'contract_pass'){//合同审核通过了
-                $res = $this->placeOrderAll($v);
-                $reInfo[$v] = $res;
-                if($res['code'] == 2000){
-                    $num += 1;
-                }
-            }
-        }
-        return json(['code' => 2000, 'msg' => '成功下了'.$num.'单', 'data' => $reInfo]);
-    }
+
 
     /*
      * 内部创建U9订单
      */
-    public function placeOrderAll($id = ''){
-        if($id == ''){
-            $id = input('id');
-        }
-        //echo $id;die;
-        $poLogic = model('Po', 'logic');
-        $sendData = [];
-        $poInfo = $poLogic->getPoInfo($id);
+    public function placeOrderAll($itemInfo){
 
-        $sendData['DocDate'] = $poInfo['doc_date'] == '' ? time() : $poInfo['doc_date'];//单价日期
-        $sendData['DocTypeCode'] = $poInfo['doc_type'];//单据类型
-        $sendData['TCCode'] = $poInfo['tc_code'];//币种编码
-        $sendData['bizType'] = $poInfo['biz_type'];//U9参数
-        $sendData['isPriceIncludeTax'] = $poInfo['is_include_tax'];//是否含税
-        $sendData['supplierCode'] = $poInfo['sup_code'];//供应商代码
-        $poItemInfo = $poLogic->getPoItemInfo($poInfo['id']);
-        //dump($poItemInfo);die;
+        $sendData = [];
+        $sendData['DocDate'] = time();//单价日期
+        $sendData['DocTypeCode'] = 'PO01';//单据类型
+        $sendData['TCCode'] = 'C001';//币种编码
+        $sendData['bizType'] = '316';//U9参数
+        $sendData['isPriceIncludeTax'] = 1;//是否含税
+        $sendData['supplierCode'] = $itemInfo[0]['sup_code'];//供应商代码
         $lines = [];
-        foreach($poItemInfo as $k => $v){
+        foreach($itemInfo as $k => $v){
             $lines[] = [
                 'ItemCode' => $v['item_code'],//料品号
                 'OrderPriceTC' => $v['price'],//采购单价
@@ -555,15 +429,8 @@ class Order extends BaseController{
         if($res['code'] != 2000){
             returnjson(6000,'调用U9接口异常',$res);
         }
-        $where = [
-            'id' => $id,
-        ];
-        $data = [
-            'order_code' => $res['result']['DocNo'],
-            'status' => 'init',
-        ];
-        $res = $poLogic->saveStatus($where, $data);//订单写入数据库
-        return ['code'=>2000,'msg'=>'','data'=>$data];
+        //dump($res['result']);die;
+        return ['code'=>2000,'msg'=>'','data'=>['DocNo'=>$res['result']['DocNo']]];
     }
 
     /*
@@ -599,32 +466,37 @@ class Order extends BaseController{
         }
         $now = time();
         //进行生成订单
-        $itemInfo = $poLogic->getPoItem($idArr[0]);
-        //dump($itemInfo);die;
-        $poData = [
-            'pr_code' => $itemInfo['pr_code'],
-            'sup_code' => $sup_code,
-            'is_include_tax' => 1,      //是否含税
-            'status' => 'init',
-            'create_at' => $now,
-            'update_at' => $now,
-        ];
-        $po_id = $poLogic->insertOrGetId($poData);
-        //生成关联关系
-        $list = [];
-        foreach($idArr as $k=>$v){
-            $list[$k] = ['id'=>$v,'po_id'=>$po_id,'status'=>'placeorder'];
-        }
-        $res = $poLogic->updateAllPoid($list);
+        $idWhere = str_replace('|',',',$ids);
+        $itemInfo = $poLogic->getPoItemByIds($idWhere);//单个子订单信息
+        $res = $this->placeOrderAll($itemInfo);//内部生成订单
+        //dump($res);die;
         $data = [];
-        foreach($idArr as $k=>$v){
-            $data[$k] = ['id'=>$v,'po_id'=>$po_id,'create_at'=>date('Y-m-d',$now)];
-        }
-        $res = $this->placeOrderAll($po_id);//内部生成订单
-        //dump($res);
+        //dump($res);die;
         if($res['code'] == 2000){
+            //生成一条po记录
+            $poData = [
+                //'pr_code' => $itemInfo['pr_code'],
+                'order_code' => $res['data']['DocNo'],
+                'sup_code' => $sup_code,
+                'is_include_tax' => 1,      //是否含税
+                'status' => 'init',
+                'create_at' => $now,
+                'update_at' => $now,
+            ];
+            $po_id = $poLogic->insertOrGetId($poData);
+            //生成关联关系
+            $list = [];
+            foreach($idArr as $k=>$v){
+                $list[$k] = ['id'=>$v,'po_id'=>$po_id,'po_code'=>$res['data']['DocNo'],'update_at' => $now,'status'=>'placeorder'];
+            }
+            /*foreach($idArr as $k=>$v){
+                $data[$k] = ['id'=>$v,'po_id'=>$po_id,'po_code'=>$res['data']['DocNo'],'create_at'=>date('Y-m-d',$now)];
+            }*/
+            $res = $poLogic->updateAllPoid($list);
+            $data = $list;
             //发消息通过$sup_code $sup_name得到$sup_id
             $sup_id = $supLogic->getSupIdVal(['code'=> $sup_code]);
+
             if(empty($sup_id)){
                 return json(['code'=>5000,'msg'=>"下订单成功，消息发送失败。 code:$sup_code 未绑定账号。",'data'=>$data]);
             }
@@ -637,7 +509,7 @@ class Order extends BaseController{
     /*
      * 导出excel采购订单列表
      */
-    function exportPoExcel(){
+    public function exportPoExcel(){
         $poLogic = model('Po', 'logic');
         $get = input('param.');
         //dump($requestInfo);die;

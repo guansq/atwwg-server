@@ -164,4 +164,15 @@ class Po extends BaseLogic{
         }
         return $res;
     }
+
+    /*
+     * 得到订单记录
+     */
+    public function getPoItemByIds($idWhere){
+        $list = poItemModel::where('id','in',$idWhere)->where('status','init')->select();
+        if($list){
+            $list = collection($list)->toArray();
+        }
+        return $list;
+    }
 }

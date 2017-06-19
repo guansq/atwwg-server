@@ -69,7 +69,7 @@ class Order extends Base{
                 $returnInfo[$k]['exec_desc'] = '';
             }
             $returnInfo[$k]['order_code'] = $v['order_code'];
-            $returnInfo[$k]['pr_code'] = $v['pr_code'];
+            //$returnInfo[$k]['pr_code'] = $v['pr_code'];
             //  $returnInfo[$k]['pr_date'] = date('Y-m-d',$offerLogic->getPrDate($v['pr_code']));
             $returnInfo[$k]['create_at'] = date('Y-m-d', $v['create_at']);
             $returnInfo[$k]['status'] = $status[$v['status']];
@@ -132,7 +132,7 @@ class Order extends Base{
         if(empty($codeInfo[0]['contract_time'])){
             $codeInfo[0]['contract_time'] = '--';
         }else{
-            $codeInfo[0]['contract_time'] = date('Y-m-d', $codeInfo[0]['contract_time']);
+            $codeInfo[0]['contract_time'] = atwDate($codeInfo[0]['contract_time']);
         }
         $this->assign('codeInfo', $codeInfo[0]);
         return view();

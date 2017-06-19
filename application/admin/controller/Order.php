@@ -202,11 +202,11 @@ class Order extends BaseController{
         $poInfo = $poLogic->getPoInfo($id);
         $prLogic = model('RequireOrder', 'logic');
         //dump($id);die;
-        $where = ['pr_code' => $poInfo['pr_code']];
+        //$where = ['pr_code' => $poInfo['pr_code']];
         if($poInfo['status'] == 'upload_contract'){//供应商已经上传合同
 
         }
-        $poInfo['pr_date'] = $prLogic->getPrDate($where);
+        //$poInfo['pr_date'] = $prLogic->getPrDate($where);
         $supLogic = model('Supporter', 'logic');
         $where = ['code' => $poInfo['sup_code']];
         $poInfo['sup_name'] = $supLogic->getSupName($where);

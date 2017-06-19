@@ -171,7 +171,7 @@ class Supporter extends BaseLogic{
      * 得到供应商资质过期数量
      */
     public function getPastSuppNum($time){
-        return qualiModel::where('term_end','<',$time)->count();
+        return qualiModel::where('term_end','<',$time)->where('status','agree')->count();
     }
 
     /*

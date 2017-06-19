@@ -14,7 +14,11 @@ use controller\BasicSpl;
 class Suppliercenter extends Base{
     protected $table = 'SystemArea';
     protected $title = '供应商中心';
-
+    const RISKLEVEL = [
+        1 => '低',
+        2 => '中',
+        3 => '高',
+    ];
     public function index(){
         $this->assign('title',$this->title);
         $sup_code = session('spl_user')['sup_code'];
@@ -59,8 +63,10 @@ class Suppliercenter extends Base{
                 $sup_info['pay_way_status'] = '';
             }
             $sup_info['pay_way_status_name'] = $payStatus[$sup_info['pay_way_status']];
-            $sup_info['found_date'] = empty($sup_info['found_date'])?'':date('Y-m-d',$sup_info['found_date']);
-
+            $sup_info['found_date'] = atwDate($sup_info['found_date']);
+            $sup_info['arv_rate'] = initPerVal($sup_info['arv_rate']);
+            $sup_info['pass_rate'] = initPerVal($sup_info['pass_rate']);
+            $sup_info['risk_level'] = key_exists($sup_info['risk_level'],self::RISKLEVEL) ? self::RISKLEVEL[$sup_info['risk_level']] : $sup_info['risk_level'];
             $this->assign('sup_info',$sup_info);
             $supQuali = $logicSupInfo->getSupQuali($sup_code);
             $statusList = [''=>'未审核','agree'=>'同意','refuse'=>'拒绝'];
@@ -76,7 +82,7 @@ class Suppliercenter extends Base{
         }
         $imgInfos = explode(',',$sup_info['purch_contract']);
         $imgInfos=array_filter($imgInfos);
-        $this->assign('supqualilist',($supQualiList));
+        $this->assign('supqualilist',$supQualiList);
         $this->assign('qualilist',$qualilist);
         $this->assign('imgInfos',$imgInfos);
         $this->assign('supquali',$supQuali);

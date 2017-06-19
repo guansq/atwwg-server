@@ -30,18 +30,4 @@ function getProNo($pr_code){
     return $prLogic->getProNo($where);
 }
 
-/*
- * 初始化百分比的值
- */
-function initPerVal($num,$isMul = true,$ispre = ''){
-    if($isMul){
-        if($ispre == ''){
-            return $num = empty($num) ? '' : ($num*100).'%';
-        }else{
-            return $num = empty($num) ? '' : ($num*100);
-        }
-    }else{
-        return $num = empty($num) ? '' : intval($num)/100;
-    }
-}
 

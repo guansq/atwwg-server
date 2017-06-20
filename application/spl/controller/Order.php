@@ -8,6 +8,8 @@
 
 namespace app\spl\controller;
 
+use think\Request;
+
 class Order extends Base{
     protected $title = '采购订单';
 
@@ -216,5 +218,20 @@ class Order extends Base{
             return view();
         }
 
+    }
+
+    /**
+     * Author: WILL<314112362@qq.com>
+     * Time: ${DAY}
+     * Describe: 下载合同模版
+     */
+    public function downContract(){
+        $id = input('id');
+        $poLogic = model('Order', 'logic');
+        $po = $poLogic->find($id);
+        if(empty($po)){
+            $this->error('无效的id='.$id,'');
+        }
+        return   $poLogic->downContract($po);
     }
 }

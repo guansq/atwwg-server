@@ -426,21 +426,29 @@ function sendMsg($sendeeId,$title,$content,$type='single',$pri=3){
 }
 
 /*
- * 通过当前日期得到最近12个月
+ * 通过当前日期得到最近12个月的初始月份
  */
 function getReceDateArr($m){
     $mArr = [];
     $m = intval($m);
+    $Y = date('Y');//当前的年
     for ($x=0; $x<12; $x++) {
         if($m > 0 ){
-            $mArr[$x] = $m;
+            $mArr[$x] = $Y.'-'.$m.'-01';
         }else{
             $mArr[$x] = 12 - abs($m);
+            $PY = $Y - 1;//上一年
+            $mArr[$x] = $PY.'-'.$mArr[$x].'-01';
         }
         $m = $m - 1;
-        //$m[$x] = $m - 1;
-        //echo "数字是：$x <br>";
     }
     return $mArr;
-    //echo intval(date('m'));
+}
+/*
+ * 得到一个月的日期
+ */
+function getEndMonthTime($date){
+    $start = strtotime($date);
+    $times = 30*24*60*60;
+    return $start + $times;
 }

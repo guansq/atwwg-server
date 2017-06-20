@@ -380,10 +380,14 @@ function atwDate($time){
 /*
  * 金钱的处理-->统一后两位小数点
  */
-function atwMoney($num){
+function atwMoney($num,$ispre = true){
     $num = $num > 0 ? $num : 0;
     $formattedNum = number_format($num, 2);
-    return '¥'.$formattedNum;
+    if($ispre){
+        return '¥'.$formattedNum;
+    }else{
+        return $formattedNum;
+    }
 }
 
 /*
@@ -392,15 +396,18 @@ function atwMoney($num){
 function initPerVal($num,$isMul = true,$ispre = ''){
     if($isMul){
         if($ispre == ''){
-            return $num = empty($num) ? '' : ($num*100).'%';
+            return $num = empty($num) ? '' : (number_format($num*100, 2)).'%';
         }else{
-            return $num = empty($num) ? '' : ($num*100);
+            return $num = empty($num) ? '' : (number_format($num*100, 2));
         }
     }else{
         return $num = empty($num) ? '' : intval($num)/100;
     }
 }
 
+function keepdecimal($num){
+    return number_format($num, 2);
+}
 /*
  * 发送信息
  */
@@ -451,4 +458,41 @@ function getEndMonthTime($date){
     $start = strtotime($date);
     $times = 30*24*60*60;
     return $start + $times;
+}
+/*
+ * 根据结束月份和开始月份得到月份区间
+ */
+function getMonthBetweenTime($smonth,$emonth){
+    //得到各自的年
+    $sYear = date('Y',$smonth);
+    $eYear = date('Y',$emonth);
+    $smon = intval(date('m',$smonth));
+    $emon = intval(date('m',$emonth));
+    $resArr = [];
+
+    if($sYear == $eYear){
+        $k = 0;
+        for($i = $smon; $i <= $emon; $i++){
+            $resArr[$k] = $sYear.'-'.$i.'-01';
+            $k++;
+        }
+    }else if($sYear < $eYear){
+        $grpYear = $eYear - $sYear;
+        $months = $grpYear*12 - $smon + $emon;//总得月份数量
+        //echo $months;die;
+        $k = 0;
+        for($i=0;$i<=$months;$i++){
+            $curmon = ($smon + $i);//当前月份
+            //echo $curmon;die;
+            $curyear = intval(floor($curmon/12));//除以12取整  算出是否超出1年
+            if($curyear > 0){
+                $tmpmon = $curmon%12 == 0 ? 12 : $curmon%12;
+                $resArr[$k] = $sYear+$curyear.'-'.$tmpmon.'-01';
+            }else{
+                $resArr[$k] = $sYear.'-'.$curmon.'-01';//起始年 和 当前月
+            }
+            $k++;
+        }
+    }
+    return $resArr;
 }

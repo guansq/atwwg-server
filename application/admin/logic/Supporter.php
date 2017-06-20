@@ -9,6 +9,7 @@ namespace app\admin\logic;
 
 use app\common\model\SupplierInfo as supModel;
 use app\common\model\SupplierQualification as qualiModel;
+use app\common\model\SupplierTendency as tendModel;
 class Supporter extends BaseLogic{
 
     /*
@@ -185,7 +186,39 @@ class Supporter extends BaseLogic{
      * 更新技术分 + 5
      */
     public function updateTechScore($where){
-        supModel::where($where)->setInc('tech_score', 5);
+        supModel::where($where)->setInc('tech_score', 5*0.4);//技术分5*0.4
         return supModel::where($where)->setInc('qlf_score', 5);
+    }
+
+    /*
+    * 得到sup_code
+    */
+    public function getSupCode($where){
+        return supModel::where($where)->value('code');
+    }
+    /*
+     * 得到区间时间的平均到达率
+     */
+    public function getAvgArvRate($where,$startTime,$endTime){
+        if(empty($where)){
+            return tendModel::where('sync_date','between',[$startTime,$endTime])->avg('arv_rate');//sync_date
+        }
+        return tendModel::where($where)->where('sync_date','between',[$startTime,$endTime])->avg('arv_rate');//sync_date
+    }
+
+    /*
+     * 得到区间时间的质量合格率
+     */
+    public function getAvgPassRate($where,$startTime,$endTime){
+        if(empty($where)){
+            return tendModel::where('sync_date','between',[$startTime,$endTime])->avg('pass_rate');//sync_date
+        }
+        return tendModel::where($where)->where('sync_date','between',[$startTime,$endTime])->avg('pass_rate');//sync_date
+    }
+    /*
+     * 得到证书结束时间
+     */
+    public function getEndTime($where){
+        return qualiModel::where($where)->where('status','agree')->value('term_end');
     }
 }

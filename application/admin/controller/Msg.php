@@ -49,6 +49,7 @@ class Msg extends BaseController{
             $curInfo['sender_id'] => 'left',
             $curInfo['sendee_id'] => 'right'
         ];
+        $askReplyLogic->updateReadAt(['id' => $id],['read_at' => time()]);//打开的阅读时间进行更新
         foreach($replyList as $k => $v){
             //得到用户头像
             if($v['sender_id'] == 0){

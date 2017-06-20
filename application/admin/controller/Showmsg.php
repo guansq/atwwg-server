@@ -36,8 +36,9 @@ class Showmsg extends BaseController{
         $giveupNum = $ioLogic->getGiveupNum();
         $this->assign('giveupNum',$giveupNum);
         //运营情况一览表
-        $messLogic = model('Message','logic');
-        $msgNum = $messLogic->getMessNum();
+        $messLogic = model('AskReply','logic');
+        $msgNum = $messLogic->getAskUnreadNum();
+        echo $msgNum;
         $this->assign('msgNum',$msgNum);
         $this->assign('title',$this->title);
         $prLogic = model('RequireOrder', 'logic');

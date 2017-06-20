@@ -90,7 +90,7 @@ class Supporter extends BaseController{
                 'code' => $v['code'],
                 'name' => $v['name'],
                 'type_name' => $v['type_name'],
-                'tech_score' => $v['tech_score'],//技术分
+                'tech_score' => atwMoney($v['tech_score'],false) == 0 ? '' : atwMoney($v['tech_score'],false),//技术分
                 'arv_rate' => $v['arv_rate'],
                 'pass_rate' => $v['pass_rate'],
                 'quali_score' => $v['qlf_score'],//质量分getQualiScore
@@ -287,7 +287,7 @@ class Supporter extends BaseController{
         $sup_id = intval(input('param.id'));
         $logicSupInfo = Model('Supporter','logic');
         $sup_info = $logicSupInfo->getOneSupInfo($sup_id);//联合查询得到相关信息
-        $sup_info['tech_score'] = $sup_info['tech_score'];//技术分getTechScore
+        $sup_info['tech_score'] = atwMoney($sup_info['tech_score'],false);//技术分getTechScore
         if(key_exists($sup_info['risk_level'],self::RISKLEVEL)){
             $sup_info['supply_risk'] = self::RISKLEVEL[$sup_info['risk_level']];//供应风险
         }else{
@@ -327,7 +327,16 @@ class Supporter extends BaseController{
                     $where = [
                         'code' => input('param.sup_code')
                     ];
-                    $logicSupInfo->updateTechScore($where);
+
+                    //得到日期时间
+                    $condition = [
+                        'sup_code' => input('param.sup_code'),
+                        'code' => input('param.code')
+                    ];
+                    $endTime = $logicSupInfo->getEndTime($condition);
+                    if(time()< $endTime){
+                        $logicSupInfo->updateTechScore($where);//未过期状态才更新分
+                    }
                 }
             }
             return json(['code'=>2000,'data'=>[],'msg'=>'成功']);

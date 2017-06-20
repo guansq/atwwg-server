@@ -19,7 +19,11 @@ use PHPExcel;
 class Material extends BaseController{
     protected $table = 'SystemItem';
     protected $title = '物料管理';
-
+    const RISKLEVEL = [
+        '1' => '底',
+        '2' => '中',
+        '3' => '高',
+    ];
     public function index(){
         //得到全部INFO
 
@@ -106,7 +110,16 @@ class Material extends BaseController{
         $supInfo = $logicItemInfo->getRelationSup($code);
         $this->assign('title',$this->title);
         $this->assign('supInfo',$supInfo);//
-        //var_dump($info);
+        foreach($supInfo as $v){
+            $supInfo['tech_score'] = atwMoney($v['tech_score'],false);
+            if(key_exists($v['risk_level'],self::RISKLEVEL)){
+                $supInfo['supply_risk'] = self::RISKLEVEL[$v['risk_level']];//供应风险
+            }else{
+                $supInfo['supply_risk'] = $v['risk_level'];
+            }
+            $sup_info['quali_level'] = getQualiLevel($v['code']);//信用等级 getQualiLevel
+        }
+        //var_dump($supInfo);
         return view();
     }
         /*
@@ -138,19 +151,20 @@ class Material extends BaseController{
     }
 
     public function updataU9Info(){//同步
-        $itemInfo = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/syncItem'));//同步物料
+        /*$itemInfo = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/syncItem'));//同步物料
         $supItemInfo = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/syncSupItem'));//物料-供应商交叉表
         $supInfo = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/syncSupplier'));//同步供应商
         $prInfo = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/syncPr'));//请购单pr
-        $prToIo = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/prToInquiry'));//PR生成IO询价单
-        //同步所有接口syncAll
-        return json([
+        $prToIo = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/prToInquiry'));//PR生成IO询价单*/
+        $resAll = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/syncAll'));//同步所有接口syncAll
+        return json($resAll);
+        /*return json([
             'itemInfo' => $itemInfo,
             'supItemInfo' => $supItemInfo,
             'supInfo' => $supInfo,
             'prInfo' => $prInfo,
             'prToIo' => $prToIo,
-        ]);
+        ]);*/
     }
 
     /*

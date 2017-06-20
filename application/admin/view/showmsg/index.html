@@ -13,7 +13,7 @@
       <span style="color:#0000FF;">{$quoteNum}</span><span>条询价待审批，</span>
       <span style="color:#0000FF;">{$poItemNum}</span><span>个订单逾期警告 ，</span>
       <span style="color:#0000FF;">{$pastSuppNum}</span><span>个供应商资质将要过期，</span>
-      <span style="color:#0033FF;">{$msgNum}</span><span>条消息</span>
+      <span style="color:#0033FF;">{if $msgNum gt 0}<a data-open="/msg/index">{$msgNum}</a>{else /}0{/if}</span><span>条消息</span>
     </p>
     <section class="rd_chart">
       <ul>

@@ -68,7 +68,17 @@ class AskReply extends BaseLogic{
      */
     public function getUnreadNum(){
         $askRely = model('AskReply');
-        return $askRely->field('read_at')->where('read_at','')->count();
+        return $askRely->where('read_at','')->count();
+    }
+
+    /*
+     * 得到询问消息未读数量
+     */
+    public function getAskUnreadNum(){
+        $askRely = model('AskReply');
+        //echo $askRely->getLastSql();
+        return $askRely->where('type','ask')->where('read_at','null')->count();
+        //echo $askRely->getLastSql();die;
     }
 
     /*

@@ -8,19 +8,16 @@
 
 <main class="main">
   <div class="mt_box">
-<!--    <div class="edit-head">
-      <a data-open="{:url('showmsg/index')}"><i class="glyphicon glyphicon-home"></i>物供平台</a>
-      <i class="glyphicon glyphicon-menu-right"></i>报表管理</a>
-      <i class="glyphicon glyphicon-menu-right"></i>供应商质量合格率
-    </div>-->
+
     <div class="inquiry_box">
-      <form id="report_form" class="form-inline">
+      <form  action='{:url("$classuri/qualified")}' class="form-inline animated form-search" onsubmit="return false" method="get">
         <label>供应商名称</label>
-        <input type="text" placeholder="供应商名称" class="minw form-control">
-        <span>下单日期</span>
-        <input type="text" class="date_time form-control w20b">
+        <input type="text" name="sup_name" value="{$Think.get.sup_name|default=''}" placeholder="供应商名称" class="minw form-control">
+        <span>日期</span>
+        <input type="text" name="start_time" value="{$Think.get.start_time|default=''}" class="date_time form-control w20b">
         到
-        <input type="text" class="date_time form-control w20b">
+        <input type="text" name="end_time" value="{$Think.get.end_time|default=''}" class="date_time form-control w20b">
+        <button class="layui-btn" type="submit">提交</button>
       </form>
     </div>
     <div class="pt_20">
@@ -32,5 +29,81 @@
 {/block}
 
 {block name="script"}
-<script src="/static/admin/chart/qualified.js"></script>
+<script>
+  /**
+   *供应商质量合格率
+   * Created by Administrator on 2017/5/12.
+   */
+
+  require(["echarts","laydate"],function(echarts){
+    var myChart = echarts.init(document.getElementById('report-echarts'));
+
+    var option = {
+      title: {
+        text: '供应商质量合格率',
+        left: 'center'
+      },
+      tooltip: {
+        trigger: 'item',
+        formatter: '{a} <br/> {b} : {c}'+"%"
+      },
+      legend: {
+        left: 'left',
+        data: [ '合格率']
+      },
+      xAxis: {
+        type: 'category',
+        name: '时间',
+        splitLine: {show: false},
+        data: eval('{$monthArr}')
+      },
+      grid: {
+        left: '1%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+      },
+      yAxis: {
+        type: 'value',
+        name: '质量合格率(%)'
+      },
+      series: [
+        {
+          name: '质量合格率',
+          type: 'line',
+          data: eval('{$avgPassArr}')
+        },
+      ]
+    };
+    console.log('{$monthArr}');
+    myChart.setOption(option);
+
+
+    $(".date_time").focus(function(){
+      /*
+       laydate插件提供显示日期控件的方法
+       laydate(options)
+       * options - 选项,格式为 { key : value }
+       * 选项
+       * format - 日期格式
+       默认格式为 YYYY-MM-DD hh:mm:ss(标准格式)
+       * 客户端
+       * 服务器端
+       * 数据库
+       * istime - 是否开启时间选择
+       * 默认值为false,不开启
+       * isclear - 是否显示清空按钮
+       * istoday - 是否显示今天按钮
+       * issure - 是否显示确认按钮
+       */
+      laydate({
+        format : "YYYY-MM-DD",
+        istime : true,
+        isclear : true,
+        istoday : true,
+        issure : true
+      });
+    });
+  })
+</script>
 {/block}

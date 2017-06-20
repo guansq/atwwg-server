@@ -67,7 +67,39 @@ class Chart extends BaseController{
 
     public function time(){
         $this->title = '供应商交货及时率';
-        //查出全部的供应商
+        $get = input('param.');
+        $monTime = 30*24*60*60;
+        $curMon = date('m');
+        $monArr = getReceDateArr($curMon);//默认是最近12个月
+        $where = [];
+        if(isset($get['start_time']) && $get['start_time'] !== '' && isset($get['end_time']) && $get['end_time'] !== ''){
+            $stTime = strtotime($get['start_time']);
+            $etTime = strtotime($get['end_time']);
+            if($etTime - $stTime > $monTime){
+                $monArr = getMonthBetweenTime($stTime,$etTime);//满足一个月
+            }
+        }
+        if(isset($get['sup_name']) && $get['sup_name'] !== ''){
+            $sup_code = model('Supporter','logic')->getSupCode(['name'=>$get['sup_name']]);//得到sup_code
+            if($sup_code){
+                $where = ['sup_code'=>$sup_code];
+            }
+        }
+        $suppLogic = model('Supporter','logic');
+        //$avgPassArr = [];
+        $avgArvArr = [];
+        $monthArr = [];
+        foreach($monArr as $k => $v){
+            $monthArr[$k] = date('Y-m',strtotime($v));
+            $startTime = strtotime($v);
+            $endTime = getEndMonthTime($v);
+
+            $avgArvVal = $suppLogic->getAvgArvRate($where,$startTime,$endTime);//合格率
+            $avgArvVal = initPerVal($avgArvVal, true, false)*1;//转化百分比
+            $avgArvArr[$k] = $avgArvVal;
+        }
+        $this->assign('avgArvArr',json_encode($avgArvArr));
+        $this->assign('monthArr',json_encode($monthArr));
         $this->assign('title',$this->title);
         return view();
     }

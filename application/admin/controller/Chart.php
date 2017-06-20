@@ -50,7 +50,7 @@ class Chart extends BaseController{
             $monthArr[$k] = date('Y-m',strtotime($v));
             $startTime = strtotime($v);
             $endTime = getEndMonthTime($v);
-            $avgPassVal = $suppLogic->getAvgPassRate($where,$startTime,$endTime);//合格率
+            $avgPassVal = keepdecimal($suppLogic->getAvgPassRate($where,$startTime,$endTime));//合格率
             $avgPassVal = initPerVal($avgPassVal, true, false)*1;//转化百分比
             $avgPassArr[$k] = $avgPassVal;
         }
@@ -59,8 +59,8 @@ class Chart extends BaseController{
         //dump($monthArr);
         //查出全部的供应商$this->getAllSupp();
         //dump(getMonthBetweenTime(strtotime('2015-06-01'),strtotime('2017-06-01')));
-        $this->assign('avgPassArr',json_encode($avgPassArr));
-        $this->assign('monthArr',json_encode($monthArr));
+        $this->assign('avgPassArr',json_encode(array_reverse($avgPassArr)));
+        $this->assign('monthArr',json_encode(array_reverse($monthArr)));
         $this->assign('title',$this->title);
         return view();
     }
@@ -94,12 +94,12 @@ class Chart extends BaseController{
             $startTime = strtotime($v);
             $endTime = getEndMonthTime($v);
 
-            $avgArvVal = $suppLogic->getAvgArvRate($where,$startTime,$endTime);//合格率
+            $avgArvVal = keepdecimal($suppLogic->getAvgArvRate($where,$startTime,$endTime));//及时率
             $avgArvVal = initPerVal($avgArvVal, true, false)*1;//转化百分比
             $avgArvArr[$k] = $avgArvVal;
         }
-        $this->assign('avgArvArr',json_encode($avgArvArr));
-        $this->assign('monthArr',json_encode($monthArr));
+        $this->assign('avgArvArr',json_encode(array_reverse($avgArvArr)));
+        $this->assign('monthArr',json_encode(array_reverse($monthArr)));
         $this->assign('title',$this->title);
         return view();
     }

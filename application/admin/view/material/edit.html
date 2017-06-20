@@ -166,17 +166,17 @@
           <th>技术分</th>
           <th>供应风险</th>
           <th>信用等级</th>
-          <th>状态</th>
+          <!--<th>状态</th>-->
         </tr>
         </thead>
         {foreach $supInfo as $supInfo_name}
         <tr>
           <td>{$supInfo_name['sup_code']}</td>
           <td>{$supInfo_name['sup_name']}</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>{$supInfo_name['tech_score']}</td>
+          <td>{$supInfo_name['supply_risk']}</td>
+          <td>{$supInfo_name['quali_level']}</td>
+          <!--<td>{$supInfo_name['sup_name']}</td>-->
         </tr>
         {/foreach}
 

@@ -90,7 +90,7 @@ class Supporter extends BaseController{
                 'code' => $v['code'],
                 'name' => $v['name'],
                 'type_name' => $v['type_name'],
-                'tech_score' => $v['tech_score'],//技术分
+                'tech_score' => atwMoney($v['tech_score'],false) == 0 ? '' : atwMoney($v['tech_score'],false),//技术分
                 'arv_rate' => $v['arv_rate'],
                 'pass_rate' => $v['pass_rate'],
                 'quali_score' => $v['qlf_score'],//质量分getQualiScore

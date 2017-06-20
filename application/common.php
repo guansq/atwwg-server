@@ -396,15 +396,18 @@ function atwMoney($num,$ispre = true){
 function initPerVal($num,$isMul = true,$ispre = ''){
     if($isMul){
         if($ispre == ''){
-            return $num = empty($num) ? '' : ($num*100).'%';
+            return $num = empty($num) ? '' : (number_format($num*100, 2)).'%';
         }else{
-            return $num = empty($num) ? '' : ($num*100);
+            return $num = empty($num) ? '' : (number_format($num*100, 2));
         }
     }else{
         return $num = empty($num) ? '' : intval($num)/100;
     }
 }
 
+function keepdecimal($num){
+    return number_format($num, 2);
+}
 /*
  * 发送信息
  */

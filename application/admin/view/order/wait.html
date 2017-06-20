@@ -312,7 +312,7 @@
                 $('#order_id_'+n.id).parent().next().next().next().next().next().next().next().next().html(n.url);
               })*/
 
-            /* 左则菜单处理 */
+            /* 左则菜单处理
             var $menu = $('[data-menu-node="m-2-90"]').eq(0);
             if ($menu.size() > 0) {
               $('.framework-container').addClass('framework-sidebar-full');
@@ -324,8 +324,9 @@
             }
             $.form.open('order/index',{},function(){
               layer.alert('下单成功');
-            },true,'下单成功');
-
+            },true,'下单成功');*/
+            $.form.reload();
+            layer.alert('下单成功');
           }else{
             layer.alert(res.msg);
           }

@@ -380,10 +380,14 @@ function atwDate($time){
 /*
  * 金钱的处理-->统一后两位小数点
  */
-function atwMoney($num){
+function atwMoney($num,$ispre = true){
     $num = $num > 0 ? $num : 0;
     $formattedNum = number_format($num, 2);
-    return '¥'.$formattedNum;
+    if($ispre){
+        return '¥'.$formattedNum;
+    }else{
+        return $formattedNum;
+    }
 }
 
 /*

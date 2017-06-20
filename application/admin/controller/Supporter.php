@@ -287,7 +287,7 @@ class Supporter extends BaseController{
         $sup_id = intval(input('param.id'));
         $logicSupInfo = Model('Supporter','logic');
         $sup_info = $logicSupInfo->getOneSupInfo($sup_id);//联合查询得到相关信息
-        $sup_info['tech_score'] = $sup_info['tech_score'];//技术分getTechScore
+        $sup_info['tech_score'] = atwMoney($sup_info['tech_score'],false);//技术分getTechScore
         if(key_exists($sup_info['risk_level'],self::RISKLEVEL)){
             $sup_info['supply_risk'] = self::RISKLEVEL[$sup_info['risk_level']];//供应风险
         }else{

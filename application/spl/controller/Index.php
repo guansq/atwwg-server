@@ -63,15 +63,18 @@ class Index extends Base{
             $this->assign('verify', true);
             return $this->_form('SystemUser', 'user/pass');
         } else {
+            $useLogic = model('BaseLogic','logic');
             $data = $this->request->post();
             if ($data['password'] !== $data['repassword']) {
                 $this->error('两次输入的密码不一致，请重新输入！');
             }
             $user = Db::name('SystemUser')->where('id', session('spl_user.id'))->find();
-            if (md5($data['oldpassword']) !== $user['password']) {
+            $oldpassword = $useLogic->generatePwd($data['oldpassword'],$user['salt']);
+            if ($oldpassword !== $user['password']) {
                 $this->error('旧密码验证失败，请重新输入！');
             }
-            if (DataService::save('SystemUser', ['id' => session('spl_user.id'), 'password' => md5($data['password'])])) {
+            $newpassword = $useLogic->generatePwd($data['password'],$user['salt']);
+            if (DataService::save('SystemUser', ['id' => session('spl_user.id'), 'password' => $newpassword])) {
                 $this->success('密码修改成功，下次请使用新密码登录！', '');
             } else {
                 $this->error('密码修改失败，请稍候再试！');

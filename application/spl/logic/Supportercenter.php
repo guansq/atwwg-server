@@ -165,6 +165,6 @@ class Supportercenter extends BaseLogic{
      * 得到区间时间的质量合格率
      */
     public function getAvgPassRate($where,$startTime,$endTime){
-        return tendModel::where($where)->where('sync_date','between',[$startTime,$endTime])->avg('pp_rate');//sync_date
+        return tendModel::where($where)->where('sync_date','between',[$startTime,$endTime])->avg('pass_rate');//sync_date
     }
 }

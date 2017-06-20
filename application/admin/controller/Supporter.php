@@ -327,7 +327,16 @@ class Supporter extends BaseController{
                     $where = [
                         'code' => input('param.sup_code')
                     ];
-                    $logicSupInfo->updateTechScore($where);
+
+                    //得到日期时间
+                    $condition = [
+                        'sup_code' => input('param.sup_code'),
+                        'code' => input('param.code')
+                    ];
+                    $endTime = $logicSupInfo->getEndTime($condition);
+                    if(time()< $endTime){
+                        $logicSupInfo->updateTechScore($where);//未过期状态才更新分
+                    }
                 }
             }
             return json(['code'=>2000,'data'=>[],'msg'=>'成功']);

@@ -138,19 +138,20 @@ class Material extends BaseController{
     }
 
     public function updataU9Info(){//同步
-        $itemInfo = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/syncItem'));//同步物料
+        /*$itemInfo = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/syncItem'));//同步物料
         $supItemInfo = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/syncSupItem'));//物料-供应商交叉表
         $supInfo = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/syncSupplier'));//同步供应商
         $prInfo = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/syncPr'));//请购单pr
-        $prToIo = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/prToInquiry'));//PR生成IO询价单
-        //同步所有接口syncAll
-        return json([
+        $prToIo = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/prToInquiry'));//PR生成IO询价单*/
+        $resAll = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/syncAll'));//同步所有接口syncAll
+        return json($resAll);
+        /*return json([
             'itemInfo' => $itemInfo,
             'supItemInfo' => $supItemInfo,
             'supInfo' => $supInfo,
             'prInfo' => $prInfo,
             'prToIo' => $prToIo,
-        ]);
+        ]);*/
     }
 
     /*

@@ -9,7 +9,7 @@ namespace app\spl\logic;
 
 use app\common\model\SupplierInfo as supModel;
 use app\common\model\SupplierQualification as qualiModel;
-
+use app\common\model\SupplierTendency as tendModel;
 class Supportercenter extends BaseLogic{
 
     /*
@@ -154,4 +154,17 @@ class Supportercenter extends BaseLogic{
         return qualiModel::where('term_end','<',$time)->where('sup_code',$sup_code)->where('status','agree')->count();
     }
 
+    /*
+     * 得到区间时间的平均到达率
+     */
+    public function getAvgArvRate($where,$startTime,$endTime){
+        return tendModel::where($where)->where('sync_date','between',[$startTime,$endTime])->avg('arv_rate');//sync_date
+    }
+
+    /*
+     * 得到区间时间的质量合格率
+     */
+    public function getAvgPassRate($where,$startTime,$endTime){
+        return tendModel::where($where)->where('sync_date','between',[$startTime,$endTime])->avg('pp_rate');//sync_date
+    }
 }

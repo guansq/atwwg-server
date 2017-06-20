@@ -143,6 +143,7 @@ class Material extends BaseController{
         $supInfo = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/syncSupplier'));//同步供应商
         $prInfo = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/syncPr'));//请购单pr
         $prToIo = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/prToInquiry'));//PR生成IO询价单
+        //同步所有接口syncAll
         return json([
             'itemInfo' => $itemInfo,
             'supItemInfo' => $supItemInfo,

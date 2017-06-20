@@ -43,8 +43,7 @@ class Showmsg extends Base{
             'status' => 'atw_sure'
         ];
         $atwSureNum = $itemLogic->getInitPoNum($where);
-        //未处理异常订单
-        //dump(getReceDateArr(date('m')));
+
         $this->assign('waitQuoteNum',$waitQuoteNum);
         $this->assign('poItemNum',$poItemNum);
         $this->assign('pastSuppNum',$pastSuppNum);
@@ -54,6 +53,43 @@ class Showmsg extends Base{
         return view();
     }
 
+    /*
+     * 得到交货及时率以及质量合格率
+     */
+    public function getCharData(){
+        $sup_code = session('spl_user.sup_code');
+        $receMonthArr = getReceDateArr(date('m'));
+        $suppLogic = model('Supportercenter','logic');
+        $where = [
+            'sup_code' => $sup_code,
+        ];
+        $monArr = [];
+        //$valArr = [];
+        $avgArvArr = [];
+        $avgPassArr = [];
+        foreach($receMonthArr as $k => $v){
+            $startTime = strtotime($v);
+            $endTime = getEndMonthTime($v);
+            $monArr[$k] = date('Y-m',strtotime($v));
+
+            $avgArvVal = $suppLogic->getAvgArvRate($where,$startTime,$endTime);//到达率
+            $avgArvVal = initPerVal($avgArvVal, true, false)*1;
+            $avgArvArr[$k] = $avgArvVal;
+
+            $avgPassVal = $suppLogic->getAvgPassRate($where,$startTime,$endTime);//合格率
+            $avgPassVal = initPerVal($avgPassVal, true, false)*1;//转化百分比
+            $avgPassArr[$k] = $avgPassVal;
+        }
+        if(empty($monArr) || empty($avgArvArr) || empty($avgPassArr)){
+            return json(['code' => 6000,'msg' => '抱歉，暂无数据', 'data'=> []]);
+        }
+        $data = [
+            'monthList' => array_reverse($monArr),
+            'avgArvList' => array_reverse($avgArvArr),
+            'avgPassList' => array_reverse($avgPassArr),
+        ];
+        return json(['code' => 2000,'msg' => '成功', 'data'=> $data]);
+    }
     public function del(){
 
     }

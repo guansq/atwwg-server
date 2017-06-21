@@ -13,35 +13,35 @@
 <main class="main">
   <div class="mt_box">
     <div class="inquiry_box">
-      <form class="form-inline">
-        <input type="text" class="form-control" id="code" placeholder="供应商编码">
-        <input type="text" class="form-control" id="name" placeholder="供应商名称">
-        <select class="form-control" id="type_name">
+      <form action='{:url("$classuri/index")}' onsubmit="return false" class="form-inline  animated form-search" method="get">
+        <input type="text" class="form-control" value="{$Think.get.code|default=''}" id="code" name="code" placeholder="供应商编码">
+        <input type="text" class="form-control" value="{$Think.get.name|default=''}" id="name" name="name" placeholder="供应商名称">
+        <select class="form-control" id="type_name" name="type_name">
           {volist name="typeInfo" id="vo"}
           {if $vo.type_name eq ''}
-          <option value="">供应商分类</option>
+          <option value="" {if $Think.get.type_name eq ''}selected{/if}>供应商分类</option>
           {else /}
-          <option value="{$vo.type_name}">{$vo.type_name}</option>
+          <option value="{$vo.type_name}" {if $Think.get.type_name eq $vo.type_name}selected{/if}>{$vo.type_name}</option>
           {/if}
           {/volist}
         </select>
-        <select class="form-control" id="status">
-          <option value="">状态</option>
-          <option value="uncheck">待审核</option>
-          <option value="normal">正常</option>
-          <option value="forbid">禁用</option>
+        <select class="form-control" id="status" name="status">
+          <option value="" {if $Think.get.status eq ''}selected{/if}>状态</option>
+          <option value="uncheck" {if $Think.get.status eq 'uncheck'}selected{/if}>待审核</option>
+          <option value="normal" {if $Think.get.status eq 'normal'}selected{/if}>正常</option>
+          <option value="forbid" {if $Think.get.status eq 'forbid'}selected{/if}>禁用</option>
         </select>
-        <select class="form-control" id="pay_way_status">
-          <option value="">付款方式审核</option>
-          <option value="uncheck">待审核</option>
-          <option value="pass">不需要审核</option>
+        <select class="form-control" id="pay_way_status" name="pay_way_status">
+          <option value="" {if $Think.get.pay_way_status eq ''}selected{/if}>付款方式审核</option>
+          <option value="uncheck" {if $Think.get.pay_way_status eq 'uncheck'}selected{/if}>待审核</option>
+          <option value="pass" {if $Think.get.pass eq 'uncheck'}selected{/if}>不需要审核</option>
         </select>
         <!--<select class="form-control">
           <option>供应商资质审核</option>
           <option>待审核</option>
           <option>不需要审核</option>
         </select>-->
-        <button type="button" id="searchVal" class="btn btn-info">查询</button>
+        <button type="submit" id="searchVal" class="btn btn-info">查询</button>
       </form>
     </div>
     <div class="mt_table">
@@ -259,7 +259,7 @@ $("#excel_out").click(function(){
 })
 $("#searchVal").on('click', function () {
   //console.log(orderTables);
-  supporterTable.ajax.reload();
+  //supporterTable.ajax.reload();
 })
 
 </script>

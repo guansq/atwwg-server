@@ -12,23 +12,23 @@
 <main class="main">
   <div class="mt_box">
     <div class="inquiry_box">
-      <form class="form-inline">
-        <select id="status" class="form-control">
-          <option value="">全部</option>
-          <option value="init">待询价</option>
-          <option value="hang">挂起</option>
-          <option value="inquiry">询价中</option>
-          <option value="quoted">待评标</option>
-          <option value="flow">流标</option>
-          <option value="winbid">中标</option>
-          <option value="order">已下单</option>
-          <option value="close">关闭</option>
+      <form action='{:url("$classuri/index")}' class="form-inline animated form-search" onsubmit="return false" method="get">
+        <select id="status" name="status" class="form-control">
+          <option value="" {if $Think.get.status eq ''}selected{/if}>全部</option>
+          <option value="init" {if $Think.get.status eq 'init'}selected{/if}>待询价</option>
+          <option value="hang" {if $Think.get.status eq 'hang'}selected{/if}>挂起</option>
+          <option value="inquiry" {if $Think.get.status eq 'inquiry'}selected{/if}>询价中</option>
+          <option value="quoted" {if $Think.get.status eq 'quoted'}selected{/if}>待评标</option>
+          <option value="flow" {if $Think.get.status eq 'flow'}selected{/if}>流标</option>
+          <option value="winbid" {if $Think.get.status eq 'winbid'}selected{/if}>中标</option>
+          <option value="order" {if $Think.get.status eq 'order'}selected{/if}>已下单</option>
+          <option value="close" {if $Think.get.status eq 'close'}selected{/if}>关闭</option>
         </select>
         <span>询价日期</span>
-        <input type="text" id="start_time" class="date_time form-control w20b">
+        <input type="text" id="start_time" value="{$Think.get.start_time}" name="start_time" class="date_time form-control w20b">
         到
-        <input type="text" id="end_time" class="date_time form-control w20b">
-        <button type="button" class="btn btn-info" id="searchVal">查询</button>
+        <input type="text" id="end_time" value="{$Think.get.end_time}" name="end_time" class="date_time form-control w20b">
+        <button type="submit" class="btn btn-info" id="searchVal">查询</button>
       </form>
     </div>
     <div class="mt_table">
@@ -105,7 +105,7 @@
       layer.alert('询价开始日期不能大于结束日期');
       return;
     }
-    ioTable.ajax.reload();
+    //ioTable.ajax.reload();
   });
 
   //立即评标

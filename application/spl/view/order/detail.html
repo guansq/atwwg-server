@@ -23,7 +23,10 @@
       <p>订单合同签订日期：{$codeInfo.contract_time}</p>
     </div>
     <div class="center" >
-      合同影像：<a href='{:url("$classuri/downContract")}?id={$codeInfo.id}' target="_blank">下载合同模板</a>
+      合同影像：
+      {in name="codeInfo.status" value="init,sup_sure"}
+        <a href='{:url("$classuri/downContract")}?id={$codeInfo.id}' target="_blank">下载合同模板</a>
+      {/in}
       <span id="ImageList">
         {if $imgInfos|@count neq 0 }
         {volist name='imgInfos' id='pimgInfos'}

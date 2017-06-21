@@ -262,6 +262,7 @@ class Order extends BaseController{
                 $poData = [
                     //'order_code' => $res['result']['DocNo'],
                     'status' => 'executing',
+                    'contract_time' => time(),
                     'update_at' => time()
                 ];
                 $res = $poLogic->saveStatus($where, $poData);//订单写入数据库

@@ -267,9 +267,9 @@ class Order extends BaseController{
                 $res = $poLogic->saveStatus($where, $poData);//订单写入数据库
 
                 if($res !== false){
-                    return json(['code' => 2000, 'msg' => '合同审核通过，U9已生成订单', 'data' => []]);
+                    return json(['code' => 2000, 'msg' => '合同审核通过', 'data' => []]);
                 }else{
-                    return json(['code' => 2000, 'msg' => '合同审核通过，U9生成订单失败', 'data' => []]);
+                    return json(['code' => 2000, 'msg' => '合同审核通过', 'data' => []]);
                 }
             }
             return json(['code' => 2000, 'msg' => $status[$param['action']], 'data' => []]);

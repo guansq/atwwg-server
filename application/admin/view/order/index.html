@@ -14,10 +14,10 @@
 <main class="main">
   <div class="mt_box">
     <div class="inquiry_box">
-      <form class="form-inline">
-        <input type="text" id="order_code" class="form-control" placeholder="订单编号">
-        <input type="text" id="sup_name" class="form-control" placeholder="供应商名称">
-        <button type="button" id="searchVal" class="btn btn-info">查询</button>
+      <form class="form-inline animated form-search" action='{:url("$classuri/index")}' onsubmit="return false" method="get">
+        <input type="text" id="order_code" name="order_code" value="{$Think.get.order_code}" class="form-control" placeholder="订单编号">
+        <input type="text" id="sup_name" name="sup_name" value="{$Think.get.sup_name}" class="form-control" placeholder="供应商名称">
+        <button type="submit" id="searchVal" class="btn btn-info">查询</button>
       </form>
     </div>
     <div class="order_table">
@@ -178,7 +178,7 @@
 
     $("#searchVal").on('click', function(){
       //console.log(orderTables);
-      orderTables.ajax.reload();
+      //orderTables.ajax.reload();
     })
 
   })

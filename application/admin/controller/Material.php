@@ -109,17 +109,18 @@ class Material extends BaseController{
         //关联供应商
         $supInfo = $logicItemInfo->getRelationSup($code);
         $this->assign('title',$this->title);
-        $this->assign('supInfo',$supInfo);//
-        foreach($supInfo as $v){
-            $supInfo['tech_score'] = atwMoney($v['tech_score'],false);
+
+        foreach($supInfo as $k=> $v){
+            $supInfo[$k]['tech_score'] = atwMoney($v['tech_score'],false);
             if(key_exists($v['risk_level'],self::RISKLEVEL)){
-                $supInfo['supply_risk'] = self::RISKLEVEL[$v['risk_level']];//供应风险
+                $supInfo[$k]['supply_risk'] = self::RISKLEVEL[$v['risk_level']];//供应风险
             }else{
-                $supInfo['supply_risk'] = $v['risk_level'];
+                $supInfo[$k]['supply_risk'] = $v['risk_level'];
             }
-            $sup_info['quali_level'] = getQualiLevel($v['code']);//信用等级 getQualiLevel
+            $supInfo[$k]['quali_level'] = getQualiLevel($v['sup_code']);//信用等级 getQualiLevel
         }
         //var_dump($supInfo);
+        $this->assign('supInfo',$supInfo);
         return view();
     }
         /*

@@ -12,16 +12,16 @@
   <div class="mt_box">
     <div class="inquiry_box">
       <form class="form-inline animated form-search" action='{:url("$classuri/index")}' onsubmit="return false" method="get">
-        <input type="text" class="form-control" id="main_name" placeholder="主分类">
-        <input type="text" class="form-control" id="name" placeholder="物料描述">
-        <input type="text" class="form-control" id="code" placeholder="料号">
+        <input type="text" class="form-control" value="{$Think.get.main_name|default=''}" name="main_name" id="main_name" placeholder="主分类">
+        <input type="text" class="form-control" value="{$Think.get.name|default=''}" name="name" id="name" placeholder="物料描述">
+        <input type="text" class="form-control" value="{$Think.get.code|default=''}" id="code" name="code" placeholder="料号">
         <!--<input type="text" class="form-control" id="pur_attr" placeholder="物料采购属性">-->
         <select class="form-control" name="update_cnt" id="update_cnt">
-          <option value="1">全部</option>
-          <option value="2">已编辑</option>
-          <option value="3">未编辑</option>
+          <option value="1" {if $Think.get.update_cnt eq 1}selected{/if} >全部</option>
+          <option value="2" {if $Think.get.update_cnt eq 2}selected{/if}>已编辑</option>
+          <option value="3" {if $Think.get.update_cnt eq 3}selected{/if}>未编辑</option>
         </select>
-        <button type="button" id="searchVal" class="btn btn-info">查询</button>
+        <button id="searchVal11" type="submit" class="btn btn-info">查询</button>
       </form>
 
     </div>
@@ -198,7 +198,7 @@
 
   $("#searchVal").on('click', function () {
     //console.log(orderTables);
-    itemTable.ajax.reload();
+    //itemTable.ajax.reload();
   })
   //弹出条形码弹框的点击事件
   $("#example .barcode").click(function(e){

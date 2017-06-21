@@ -75,7 +75,7 @@ class Item extends Baselogic{
      * 得到物料关联的供应商
      */
     public function getRelationSup($item_code){
-        $list = model('U9SupItem')->where("item_code","$item_code")->select();
+        $list = model('U9SupItem')->alias('a')->field('a.*,b.tech_score,b.risk_level,b.risk_level')->join('supplier_info b','a.sup_code = b.code','LEFT')->where("item_code","$item_code")->select();
         //echo $this->getLastSql();
         if($list){
             //echo '111111';

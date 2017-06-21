@@ -221,4 +221,11 @@ class Supporter extends BaseLogic{
     public function getEndTime($where){
         return qualiModel::where($where)->where('status','agree')->value('term_end');
     }
+    /*
+     * 得到未审核的商家数量
+     */
+    public function getUncheckedNum($where){
+        return qualiModel::where($where)->count();
+        //echo $this->getLastSql();//return
+    }
 }

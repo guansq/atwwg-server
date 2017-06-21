@@ -118,7 +118,6 @@
 <script>
 //群发送消息
 function sendAllMsg(){
-  $.msg.loading();
   var chekVal = ''
   $("input[name='checkinfo']:checked").each(function () {
       chekVal += this.value+'|';//通过|来
@@ -127,6 +126,7 @@ function sendAllMsg(){
     layer.alert('抱歉，没有选中数据');
     return;
   }
+  $.msg.loading();
   chekVal = chekVal.substr(0,chekVal.length-1);//截掉最后|
   url = "{:url('Enquiryorder/sendAllMsg')}";
   data = {

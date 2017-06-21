@@ -14,6 +14,9 @@ use app\common\model\PoRecord;
 use TCPDF;
 
 class Order extends BaseLogic{
+
+    protected $table = 'atw_po';
+
     /*
      * 得到订单列表
      */
@@ -151,6 +154,25 @@ class Order extends BaseLogic{
      * @param $po
      */
     public function downContract($po){
+
+        $supInfo = model('SupplierInfo')->findByCode($po['sup_code']);
+        if(empty($supInfo)){
+            return $this->error('无效的sup_code='.$po['sup_code']);
+        }
+        $piList = model('PoItem', 'logic')->getListByPoId($po['id']);
+        if(count($piList) == 0){
+            return $this->error('没有PI,po.id='.$po['id']);
+        }
+
+        $orgName = getSysconf('org_name','苏州安特威阀门有限公司');
+        $orgAddress = getSysconf('org_address','苏州吴江汾湖开发区越秀路988号');
+        $orgTel = getSysconf('org_tel','0512-82880588');
+        $orgFax = getSysconf('org_fax','0512-82079059');
+        $orgBankDeposit = getSysconf('org_bank_deposit','中国农业银行吴江汾湖支行');
+        $orgBankAccount = getSysconf('org_bank_account','10543701040015106');
+        $orgTaxNo = getSysconf('org_tax_no','913205096829757874');
+
+        //dd($supInfo->toJson());
         // create new PDF document
         $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         // set document information
@@ -228,7 +250,7 @@ menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
     margin: 0;
     padding: 0;
-    border: 0;
+    border: none;
     vertical-align: baseline;
 }
 /* HTML5 display-role reset for older browsers */
@@ -239,8 +261,9 @@ footer, header, hgroup, menu, nav, section {
 body {
     line-height: 1;
 }
-ol, ul {
+ol, ul , li {
     list-style: none;
+    list-style-type:none;
 }
 blockquote, q {
     quotes: none;
@@ -254,129 +277,165 @@ table {
     border-collapse: collapse;
     border-spacing: 0;
 }
+tr, th, td{
+  border: 1px solid #000000;
+}
 
-/*================================================签订电子合同======================================*/
-.agreement-form  .title{
+tr>th{
+  text-align: center;
+}
+
+.border-none tr, .border-none th,.border-none td{
+  border: none;
+}
+
+.content-center{
+  text-align: center;
+}
+.content-left{
+  text-align: left;
+}
+.content-right{
+  text-align: right;
+}
+
+.text-small{
+  font-size: 0.8em;
+}
+.agreement-form .title{
     font-size: 1em;
     font-weight: bold;
     text-align: center;
+    line-height: 1em;
 }
+.agreement-form .order-code{
+  text-align: right;
+}
+
+.agreement-form .top{
+}
+ 
 </style>
 </head>
 
 <body>
-    <div class="atv-main">
-        <div class="agreement-form ">
-                <div class="title">采购合同</div>
-                <div class="sm">
-                    <div class="rig">合同编号：<span class="drag-in">[系统带入（ERP生成）]</span></div>
-                </div>
-                <div class="sm">
-                    <div class="rig">签订时间：<span class="drag-in">[系统带入]</span>年<span class="drag-in">[系统带入]</span>月<span class="drag-in">[系统带入]</span>日</div>
-                </div>
-                <div class="buyer">买方：<span class="drag-in">[系统带入]</span></div>
-                <div class="seller">卖方：苏州安特威阀门有限公司</div>
-                <div class="content">
-                    经过双方友好协商，依据《中华人民共和国合同法》及其他相关法律规定，
-                    买卖双方同意签订以下合同条款，以便双方共同遵守、履行合同。
-                </div>
-                <div class="details-of-contract ">
-                    <div class="name">一、供货明细：</div>
-                    <table>
-                        <thead>
-                        <tr>
-                            <td>序号</td>
-                            <td>名称</td>
-                            <td>位号</td>
-                            <td>型号</td>
-                            <td>单价</td>
-                            <td>数量</td>
-                            <td>小计</td>
-                            <td>备注</td>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td><span class="drag-in">[系统带入]</span></td>
-                            <td></td>
-                            <td><span class="drag-in">[系统带入]</span></td>
-                            <td><span class="drag-in">[系统带入]</span></td>
-                            <td><span class="drag-in">[系统带入]</span></td>
-                            <td><span class="drag-in">[系统带入]</span></td>
-                            <td><span class="drag-in">[系统带入]</span></td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td><span class="drag-in">[系统带入]</span></td>
-                            <td></td>
-                            <td><span class="drag-in">[系统带入]</span></td>
-                            <td><span class="drag-in">[系统带入]</span></td>
-                            <td><span class="drag-in">[系统带入]</span></td>
-                            <td><span class="drag-in">[系统带入]</span></td>
-                            <td><span class="drag-in">[系统带入]</span></td>
-                        </tr>
-                        </tbody>
-                        <tfoot>
-                        <tr>
-                            <td></td>
-                            <td colspan="4">合计（RMB）<span class="drag-in">[系统带入]</span>元整</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        </tfoot>
-                    </table>
-                    <div class="name">二、运输</div>
-                    <p>由卖方负责运输货物(陆运)运费由卖方承担</p>
-                    <div class="name">三、交货期限、交货地点：</div>
-                    <p>合同生效之日起签订<span class="drag-in">[系统带入]</span>天发货。</p>
-                    <p>合同生效： 合同签订之日起</p>
-                    <div class="name">四、货款金额及结算方式：</div>
-                    <p>合同总价为： <span class="drag-in">[系统带入]</span> 元整( <span class="drag-in">[系统带入]</span>元整)，该总价含17%增值税.</p>
-                    <p>货款结算方式：全款发货。</p>
-                    <p>付款方式 ： 现金支付。</p>
-                    <div class="name">五、质量保证、检验：</div>
-                    <p>1. 产品必须符合现行国家标准、行业标准或双方约定的标准。</p>
-                    <p>2. 质保期：安装使用12个月或发货后18个月内，以先到者为准。</p>
-                    <div class="name">六、不可抗力：</div>
-                    <p>在合同执行期间，如发生地震、洪灾、暴动等不可抗力因素致使合同不能正常履行，一方应及时通知对方，并在15天内提供政府机关或相应部门出具的证明材料，双方可以协商解除合同或其他相关事宜。</p>
-                    <div class="name">七、争议解决方式：</div>
-                    <p>凡因本合同的效力、履行、解释等发生的一切争议，双方可先行友好解决，协商不成时，可向买方所在地相应级别的人民法院提起诉讼。</p>
-                    <div class="name">八、生效及其他：</div>
-                    <p> 1. 本合同自双方签字并盖章之日起生效，一式  贰 份，买方执 壹 份、卖方执  壹 份，本合同传真件有效，涂改无效。</p>
-                    <p>2. 如有未尽事宜由双方共同协商，签订补充协议，补充协议与本合同具有同等法律效力；</p>
-                    <p>3.本合同附件技术协议与合同同样具备法律效力。</p>
-                </div>
-                <div class="conclude-and-sign">
-                    <div class="left">
-                        <p>买方</p>
-                        <ul>
-                            <li><span>名称：</span><input type="text"></li>
-                            <li><span>地址：</span><input type="text"></li>
-                            <li><span>签约代表：</span><input type="text"></li>
-                            <li><span>签订日期：</span><input type="text"></li>
-                            <li><span>开户行：</span><input type="text"></li>
-                            <li><span>开户账号：</span><input type="text"></li>
-                            <li><span>税号：</span><input type="text"></li>
-                            <li><span>联系人：</span><input type="text"></li>
-                        </ul>
-                    </div>
-                    <div class="right">
-                        <p>卖方</p>
-                        <ul>
-                            <li><span>名称：</span>苏州安特威阀门有限公司 </li>
-                            <li><span>地址：</span>江苏省吴江汾湖经济开发区越秀路988号 </li>
-                            <li><span>签约代表：</span><input type="text"></li>
-                            <li><span>签订日期：</span><input type="text"></li>
-                            <li><span>开户行：</span>中国农业银行吴江汾湖支行</li>
-                            <li><span>开户账号：</span>10543701040015106</li>
-                            <li><span>税号：</span>913205096829757874</li>
-                            <li><span>联系人：</span><input type="text"></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+  <div class="agreement-form">  
+    <div class="title">采购订单</div>
+      <p class="order-code">订单编号：{$po['order_code']}</p>
+      <div class="top">
+        <table class="border-none" width="100%">
+          <tr >
+            <td width="12%">买 方：</td>
+            <td width="38%">$orgName</td>
+            <td width="12%">卖 方：</td>
+            <td width="38%">$supInfo[name]</td>
+          </tr>
+          <tr >
+            <td >地 址：</td>
+            <td >$orgAddress</td>
+            <td >地 址：</td>
+            <td >$supInfo[address]</td>
+          </tr>
+          <tr >
+            <td>电 话：</td>
+            <td>$orgTel</td>
+            <td>电 话：</td>
+            <td>$supInfo[mobile]</td>
+          </tr>
+          <tr>
+            <td>传 真：</td>
+            <td>$orgFax</td>
+            <td>传 真：</td>
+            <td>$supInfo[fax]</td>
+          </tr>
+          <tr>
+            <td>开户银行：</td>
+            <td>$orgBankDeposit</td>
+            <td>开户银行：</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>账 号：</td>
+            <td>$orgBankAccount</td>
+            <td>账 号：</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>税 号：</td>
+            <td>$orgTaxNo</td>
+            <td>税 号：</td>
+            <td></td>
+          </tr>
+          <div>本订单有买卖双方订立，根据订单规定条款，双方同意按下述条款和条件签署订单：</div>
+        </table>
+      </div>
+        
+      <div>
+        <div>1、订单文件：</div>
+        <div>本订单所附下列文件是构成合同不可分割的部分</div>
+        <div>2、订单明细（以下价格已经包含17%增值税、运输费用及其他所有税费）：</div>
+        <table class="text-small">
+            <thead>
+            <tr>
+                <th width="20">行号</th>
+                <th>料号</th>
+                <th>物料名称</th>
+                <th>项目</th>
+                <th>交期</th>
+                <th>数量</th>
+                <th>单位</th>
+                <th>单价</th>
+                <th>金额</th>
+            </tr>
+            </thead>
+            <tbody>
+EOD;
+        $po['price_total'] = 0;
+        foreach($piList as $pi){
+            $confirmDate = date('Y-m-d', $pi['sup_confirm_date']);
+            $price = number_format($pi['price'], 2);
+            $subTotal = number_format($pi['price_num']*$pi['price'], 2);
+            $po['price_total'] += $pi['price_num']*$pi['price'];
+            $html .= "<tr>
+                <td width=\"20\" class=\"content-center\">1</td>
+                <td>$pi[item_code]</td>
+                <td>$pi[item_name]</td>
+                <td>$pi[pro_no]</td>
+                <td>$confirmDate</td>
+                <td class=\"content-right\">$pi[price_num]</td>
+                <td class=\"content-center\">$pi[price_uom]</td>
+                <td class=\"content-right\">$price</td>
+                <td class=\"content-right\">$subTotal</td>
+            </tr>";
+        }
+        $yuan = numbToCnYuan($po['price_total']);
+        $po['price_total'] = number_format( $po['price_total'], 2);
+        $html .= <<<EOD
+            </tbody>
+            <tfoot>
+            <tr>
+                <td class="content-center"colspan="2">合计:</td>
+                <td class="content-right" colspan="6">$yuan</td>
+                <td class="content-right">$po[price_total] </td>
+            </tr>
+            </tfoot>
+        </table>
+        <div>3、付款条件：$supInfo[pay_way]</div>
+        <div>4、卖方产品质量保证：
+          <ul>
+            <li>a.卖方需要提供产品合格证书，产品质量符合我厂要求，质保期从使用之日起一年，或发货之日起18个月，如在质保期内发生质量问题问题，卖方接受无条件退货，并承担相应损失；</li>
+            <li>b.按买方图纸要求和材料采购规范《ATW/GF-CLCGGF-2015》生产、检验；</li>
+            <li>c.涉及铸造、锻造和热处理的原材料类产品出货需在材料和产品标注“炉号”、材质；</li>
+          </ul>
+        </div>
+        <div>5、产品的交货单位、交货方法、运输方式、到达地点（包括专用线、码头）
+          <ul>
+            <li>a.产品的收货单位：{$orgName}；</li>
+            <li>b.按买方图纸要求和材料采购规范《ATW/GF-CLCGGF-2015》生产、检验；</li>
+            <li>c.涉及铸造、锻造和热处理的原材料类产品出货需在材料和产品标注“炉号”、材质；</li>
+          </ul>
+        </div>
+      </div>
     </div>
 </body>
 </html>

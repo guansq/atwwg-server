@@ -31,4 +31,11 @@ class SupplierInfo extends BaseModel{
     public function getSupCodeBySupId($supId){
         return $this->where('sup_id',"$supId")->value('code');
     }
+
+    /*
+     * 得到supCode
+     */
+    public function findByCode($code){
+        return $this->where('code',$code)->find();
+    }
 }

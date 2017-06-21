@@ -40,7 +40,7 @@ class Order extends BaseController{
         //dump($requestInfo);die;
         $where = [];
         // 应用搜索条件
-        foreach(['order_code', 'pr_code'] as $key){
+        foreach(['order_code', 'sup_name'] as $key){
             if(isset($get[$key]) && $get[$key] !== ''){
                 $where[$key] = ['like', "%{$get[$key]}%"];
             }

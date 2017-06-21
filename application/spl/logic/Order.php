@@ -164,13 +164,17 @@ class Order extends BaseLogic{
             return $this->error('没有PI,po.id='.$po['id']);
         }
 
-        $orgName = getSysconf('org_name','苏州安特威阀门有限公司');
-        $orgAddress = getSysconf('org_address','苏州吴江汾湖开发区越秀路988号');
-        $orgTel = getSysconf('org_tel','0512-82880588');
-        $orgFax = getSysconf('org_fax','0512-82079059');
-        $orgBankDeposit = getSysconf('org_bank_deposit','中国农业银行吴江汾湖支行');
-        $orgBankAccount = getSysconf('org_bank_account','10543701040015106');
-        $orgTaxNo = getSysconf('org_tax_no','913205096829757874');
+        $orgName = getSysconf('org_name', '苏州安特威阀门有限公司');
+        $orgAddress = getSysconf('org_address', '苏州吴江汾湖开发区越秀路988号');
+        $orgTel = getSysconf('org_tel', '0512-82880588');
+        $orgFax = getSysconf('org_fax', '0512-82079059');
+        $orgBankDeposit = getSysconf('org_bank_deposit', '中国农业银行吴江汾湖支行');
+        $orgBankAccount = getSysconf('org_bank_account', '10543701040015106');
+        $orgTaxNo = getSysconf('org_tax_no', '913205096829757874');
+        $orgReceiveAddress = getSysconf('org_receive_address', '苏州吴江汾湖开发区越秀路988号');
+        $orgReceiver = getSysconf('org_receiver', '沈斌');
+        $orgReceiverMobile = getSysconf('org_receiver_mobile', '13962546667');
+        $today = date('Y-m-d', time());
 
         //dd($supInfo->toJson());
         // create new PDF document
@@ -182,55 +186,20 @@ class Order extends BaseLogic{
         $pdf->SetSubject('安特威采购合同');
         $pdf->SetKeywords('安特威,采购合同');
 
-        // set default header data
-        //$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 001', PDF_HEADER_STRING, array(0,64,255), array(0,64,128));
-        //$pdf->setFooterData(array(0, 64, 0), array(0, 64, 128));
 
         // set header and footer fonts
         $fontFamly = 'cid0cs';
         $pdf->setHeaderFont([$fontFamly, '', 5]);
         $pdf->setFooterFont([$fontFamly, '', 6]);
 
-        // set default monospaced font
-        // $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-
-        // set margins
-        // $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
-        //$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
-        // $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
-
+        $pdf->SetMargins(10, 10, 10);
         // set auto page breaks
-        //$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
 
-        // set image scale factor
-        //$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-
-        // ---------------------------------------------------------
-
-        // set default font subsetting mode
-        //$pdf->setFontSubsetting(true);
-
-        // Set font
-        // dejavusans is a UTF-8 Unicode font, if you only need to
-        // print standard ASCII chars, you can use core fonts like
-        // helvetica or times to reduce file size.
-        //$pdf->SetFont('dejavusans', '', 14, '', true);
         $pdf->setfont($fontFamly);
         // Add a page
-        // This method has several options, check the source code documentation for more information.
         $pdf->AddPage();
 
-        // set text shadow effect
-        /*$pdf->setTextShadow(array(
-            'enabled' => true,
-            'depth_w' => 0.2,
-            'depth_h' => 0.2,
-            'color' => array(196, 196, 196),
-            'opacity' => 1,
-            'blend_mode' => 'Normal'
-        ));*/
-
-        // Set some content to print
         $html = <<<EOD
 <!DOCTYPE html>
 <html> 
@@ -302,6 +271,10 @@ tr>th{
 .text-small{
   font-size: 0.8em;
 }
+
+.agreement-form div , .agreement-form ul{
+}
+
 .agreement-form .title{
     font-size: 1em;
     font-weight: bold;
@@ -314,7 +287,6 @@ tr>th{
 
 .agreement-form .top{
 }
- 
 </style>
 </head>
 
@@ -370,16 +342,14 @@ tr>th{
         </table>
       </div>
         
-      <div>
-        <div>1、订单文件：</div>
-        <div>本订单所附下列文件是构成合同不可分割的部分</div>
+        <div>1、订单文件：<br>本订单所附下列文件是构成合同不可分割的部分</div>
         <div>2、订单明细（以下价格已经包含17%增值税、运输费用及其他所有税费）：</div>
-        <table class="text-small">
-            <thead>
-            <tr>
+        <table class="text-small" style="width: 100%">
+            <thead >
+            <tr >
                 <th width="20">行号</th>
                 <th>料号</th>
-                <th>物料名称</th>
+                <th width="100">物料名称</th>
                 <th>项目</th>
                 <th>交期</th>
                 <th>数量</th>
@@ -399,7 +369,7 @@ EOD;
             $html .= "<tr>
                 <td width=\"20\" class=\"content-center\">1</td>
                 <td>$pi[item_code]</td>
-                <td>$pi[item_name]</td>
+                <td width=\"100\">$pi[item_name]</td>
                 <td>$pi[pro_no]</td>
                 <td>$confirmDate</td>
                 <td class=\"content-right\">$pi[price_num]</td>
@@ -409,7 +379,7 @@ EOD;
             </tr>";
         }
         $yuan = numbToCnYuan($po['price_total']);
-        $po['price_total'] = number_format( $po['price_total'], 2);
+        $po['price_total'] = number_format($po['price_total'], 2);
         $html .= <<<EOD
             </tbody>
             <tfoot>
@@ -421,21 +391,38 @@ EOD;
             </tfoot>
         </table>
         <div>3、付款条件：$supInfo[pay_way]</div>
-        <div>4、卖方产品质量保证：
-          <ul>
-            <li>a.卖方需要提供产品合格证书，产品质量符合我厂要求，质保期从使用之日起一年，或发货之日起18个月，如在质保期内发生质量问题问题，卖方接受无条件退货，并承担相应损失；</li>
-            <li>b.按买方图纸要求和材料采购规范《ATW/GF-CLCGGF-2015》生产、检验；</li>
-            <li>c.涉及铸造、锻造和热处理的原材料类产品出货需在材料和产品标注“炉号”、材质；</li>
-          </ul>
+        <div>4、卖方产品质量保证： 
+          <div style="padding-left: 10px">
+            a.卖方需要提供产品合格证书，产品质量符合我厂要求，质保期从使用之日起一年，或发货之日起18个月，如在质保期内发生质量问题问题，卖方接受无条件退货，并承担相应损失；<br>
+            b.按买方图纸要求和材料采购规范《ATW/GF-CLCGGF-2015》生产、检验；<br>
+            c.涉及铸造、锻造和热处理的原材料类产品出货需在材料和产品标注“炉号”、材质； 
+          </div>
         </div>
         <div>5、产品的交货单位、交货方法、运输方式、到达地点（包括专用线、码头）
-          <ul>
-            <li>a.产品的收货单位：{$orgName}；</li>
-            <li>b.按买方图纸要求和材料采购规范《ATW/GF-CLCGGF-2015》生产、检验；</li>
-            <li>c.涉及铸造、锻造和热处理的原材料类产品出货需在材料和产品标注“炉号”、材质；</li>
-          </ul>
+          <div style="padding-left: 3em; ">
+            a.产品的收货单位：{$orgName}；<br>
+            b.包装、交货方法：卖方承担货物最终运达到买方到货地点之间的所有运费，并提供坚固、适合长途运输的包装；<br>
+            c.运输方式：快递，送货上门；<br>
+            d.到货地点和接货单位（或接货人）：{$orgReceiveAddress}，{$orgReceiver}，{$orgReceiverMobile};
+          </div>
         </div>
-      </div>
+        <div>6、订单生效：本订单应在双方授权代表签字盖章后立即生效。</div>
+        <div>7、此订单其他未尽条款按照买卖双方签订的合同条款执行。</div>
+       <div></div>
+       <table class="border-none" width="100%">
+         <tr >
+           <td width="50%">买 方：$orgName</td>
+           <td width="50%">卖 方：$supInfo[name]</td>
+         </tr>
+         <tr >
+           <td width="50%">法定代表人或负责人：</td>
+           <td width="50%">法定代表人或负责人：</td>
+         </tr>
+         <tr >
+           <td width="50%">日期：$today</td>
+           <td width="50%">日期：</td>
+         </tr>
+       </table>
     </div>
 </body>
 </html>
@@ -443,8 +430,8 @@ EOD;
 
         // Print text using writeHTMLCell()
         //$html = iconv('gb2312','utf-8',$html);
-        $pdf->writeHTML($html);
-
+        //$pdf->writeHTML($html);
+        $pdf->writeHTML($html, true, false, true, false, '');
         // ---------------------------------------------------------
 
         // Close and output PDF document

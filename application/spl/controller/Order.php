@@ -8,8 +8,6 @@
 
 namespace app\spl\controller;
 
-use think\Request;
-
 class Order extends Base{
     protected $title = '采购订单';
 
@@ -97,7 +95,7 @@ class Order extends Base{
             'finish' => '结束'
         );
         $this->assign('orderstatus', $orderStatus);
-        $this->assign('title',$this->title);
+        $this->assign('title', $this->title);
         return view();
     }
 
@@ -228,10 +226,12 @@ class Order extends Base{
     public function downContract(){
         $id = input('id');
         $poLogic = model('Order', 'logic');
-        $po = $poLogic->find($id);
+        $sup_code = session('spl_user')['sup_code'];
+        $po = $poLogic->where('sup_code', $sup_code)->where('id', $id)->find();
         if(empty($po)){
-            $this->error('无效的id='.$id,'');
+            $this->error('无效的id='.$id, '');
         }
-        return   $poLogic->downContract($po);
+
+        return $poLogic->downContract($po);
     }
 }

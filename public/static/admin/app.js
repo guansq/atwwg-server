@@ -47,6 +47,7 @@ require.config({
         'jquery.masonry': ['../plugs/jquery/masonry.min'],
         'jquery.dataTables': ['http://cdn.datatables.net/1.10.15/js/jquery.dataTables.min'],
         'cityselect':['../plugs/cityselect/cityselect'],
+        'select2':['../plugs/select2/js/select2'],
         'icheck': ['http://cdn.bootcss.com/iCheck/1.0.2/icheck.min'],
         'echarts':['http://cdn.bootcss.com/echarts/3.5.4/echarts.min'],
         'dataTables.bootstrap': ['//cdn.datatables.net/plug-ins/28e7751dbec/integration/bootstrap/3/dataTables.bootstrap']

@@ -44,6 +44,7 @@ class Chart extends BaseController{
             }
         }
         $suppLogic = model('Supporter','logic');
+        $allSup = $suppLogic->getSupNameAndCode();
         $avgPassArr = [];
         $monthArr = [];
         foreach($monArr as $k => $v){
@@ -61,6 +62,7 @@ class Chart extends BaseController{
         //dump(getMonthBetweenTime(strtotime('2015-06-01'),strtotime('2017-06-01')));
         $this->assign('avgPassArr',json_encode(array_reverse($avgPassArr)));
         $this->assign('monthArr',json_encode(array_reverse($monthArr)));
+        $this->assign('allSupArr',$allSup);
         $this->assign('title',$this->title);
         return view();
     }
@@ -87,6 +89,8 @@ class Chart extends BaseController{
         }
         $suppLogic = model('Supporter','logic');
         //$avgPassArr = [];
+        $allSup = $suppLogic->getSupNameAndCode();
+        //dump($allSup);
         $avgArvArr = [];
         $monthArr = [];
         foreach($monArr as $k => $v){
@@ -98,8 +102,16 @@ class Chart extends BaseController{
             $avgArvVal = initPerVal($avgArvVal, true, false)*1;//转化百分比
             $avgArvArr[$k] = $avgArvVal;
         }
+        //dump($allSup);
+        /*$allSupArr = [];
+        foreach($allSup as $k => $v){
+            $allSupArr[$k]['id'] = $v['code'];
+            $allSupArr[$k]['text'] = $v['name'];
+        }*/
         $this->assign('avgArvArr',json_encode(array_reverse($avgArvArr)));
         $this->assign('monthArr',json_encode(array_reverse($monthArr)));
+        //$this->assign('allSup',json_encode($allSupArr));
+        $this->assign('allSupArr',$allSup);
         $this->assign('title',$this->title);
         return view();
     }

@@ -274,18 +274,26 @@
 {block name="script"}
 <script src="/static/admin/supporter/edit.js"/>
 <script>
+  //企业资质审核
   function changeStauts(sup_code,code,status){
-    layer.confirm('确认该操作吗？', {
+    /*layer.confirm('确认该操作吗？', {
       btn: ['提交','取消'], //按钮
       shade: false //不显示遮罩
-    }, function(index){
+    }, function(index){  //layer.close(index);  });*/
+    var prompt = layer.prompt({
+      btn: ['确定', '取消'],
+      formType: 2,
+      value: '',
+      title: '说明'
+    }, function (value) {
+      layer.close(prompt);
       url = '{:url("Supporter/changeQualiStatus")}';
       data = {
         'sup_code' : sup_code,
         'code' : code,
+        'remark' : value,
         'status' : status
       };
-      layer.close(index);
       layer.load();
       //console.log(data);
       $.post(url,data,function(res){
@@ -297,10 +305,15 @@
           layer.alert('更改失败');
         }
       });
-      //$("#form 的 id").submit();
-
+      return;
+    }, function (value) {
+      // 审核不通过
+      //vm.review(app, 'rejected', value);
+      layer.close(prompt);
+      return;
     });
   }
+
   function changePayWayStatus(code,status){
     layer.confirm('确认该操作吗？', {
       btn: ['提交','取消'], //按钮
@@ -327,5 +340,42 @@
 
     });
   }
+  layer.prompt = function (options, yes, cancel) {
+    options = options || {};
+    if (typeof options === 'function') yes = options;
+    var prompt, content = options.formType == 2 ? '<textarea class="layui-layer-input">' + (options.value || '') + '</textarea>' : function () {
+          return '<input type="' + (options.formType == 1 ? 'password' : 'text') + '" class="layui-layer-input" value="' + (options.value || '') + '">';
+        }();
+    return layer.open($.extend({
+      btn: ['确定', '取消'],
+      content: content,
+      //skin: 'layui-layer-prompt' + skin('prompt'),
+      success: function (layero) {
+        prompt = layero.find('.layui-layer-input');
+        prompt.focus();
+      },
+      btn1: function (index) {
+        var value = prompt.val();
+        if (value.length > (options.maxlength || 500)) {
+          layer.tips('最多输入' + (options.maxlength || 500) + '个字数', prompt, {tips: 1});
+        } else {
+          yes && yes(value, index, prompt);
+        }
+      },
+      btn2: function (index) {
+        var value = prompt.val();
+        //必填判断
+        /*if (value === '') {
+          prompt.focus();
+        } else*/
+        if (value.length > (options.maxlength || 500)) {
+          layer.tips('最多输入' + (options.maxlength || 500) + '个字数', prompt, {tips: 1});
+        } else {
+          cancel && cancel(value, index, prompt);
+        }
+      },
+    }, options));
+  };
+
 </script>
 {/block}

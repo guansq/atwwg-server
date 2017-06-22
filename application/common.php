@@ -3,6 +3,7 @@
 use service\DataService;
 use think\Db;
 use think\Validate;
+use service\HttpService;
 
 /**
  * 打印输出数据到文件
@@ -599,4 +600,57 @@ function setSysconf($name, $value = '', $group = 'app', $remark = ''){
         return $logic->update($data, ['name' => $name]);
     }
 
+}
+
+/*
+ * 发送短信
+ */
+function sendSMS($phone,$content){
+    $sendData = [
+        'mobile' => $phone,
+        'rt_appkey' => 'atw_wg',
+        'text' => $content,
+    ];
+    HttpService::curl(getenv('APP_API_MSG').'SendSms/sendText',$sendData);//sendSms($data)
+}
+
+/*
+ * 发送邮件
+ */
+function sendMail($to,$title,$content){
+    $sendData = [
+        'rt_appkey' => 'atw_wg',
+        'fromName' => '安特威物供平台',//发送人名
+        'to' => $to,
+        'subject' => $title,
+        'html' => $content,
+        'from' => 'tan3250204@sina.com',//平台的邮件头
+    ];
+    HttpService::curl(getenv('APP_API_MSG').'SendEmail/sendHtml',$sendData);
+}
+
+/*
+ * 推送信息
+ */
+function pushInfo($token,$title,$content){
+    $sendData = [
+        "platform" => "all",
+        "rt_appkey" => "atw_wg",
+        "alert" => $title,
+        "regIds" => $token,
+        //"platform" => "all",
+        "androidNotification" => [
+            "alert" => $title,
+            "title" => $content,
+            "builder_id" => "builder_id",
+            "priority" => 0,
+            "style" => 0,
+            "alert_type" => -1,
+            "extras" => [
+                "0" => "RuiTu",
+                "key" => "value"
+            ]
+        ]
+    ];
+    HttpService::curl(getenv('APP_API_MSG').'push',$sendData);
 }

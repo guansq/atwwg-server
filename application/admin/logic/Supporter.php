@@ -123,7 +123,7 @@ class Supporter extends BaseLogic{
     }
 
     /*
-     * 检查sup_id是否存在
+     * 得到sup_id是否存在
      */
     public function getSupId($id){
         return supModel::where('id',$id)->value('sup_id');
@@ -245,5 +245,16 @@ class Supporter extends BaseLogic{
      */
     public function subOneExceed($where){
         return supModel::where($where)->setDec('qlf_check_count',1);
+    }
+
+    /*
+     * 通过sup_code 得到所需发送的phone mail token
+     */
+    public function getSupSendInfo($where){
+        $info = supModel::field('a.phone,a.email,u.push_token')->alias('a')->join('system_user u','a.sup_id=u.id','LEFT')->where($where)->find();
+        if($info){
+            $info = $info->toArray();
+        }
+        return $info;
     }
 }

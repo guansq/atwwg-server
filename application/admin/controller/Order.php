@@ -17,6 +17,11 @@ class Order extends BaseController{
     protected $table = 'SystemPo';
     protected $title = '订单管理';
 
+    const MSGPASSTITLE = '合同审核通过';
+    const MSGREFUSETITLE = '合同审核拒绝';
+    const MSGPASSCONTENT = '合同审核通过';
+    const MSGREFUSECONTENT = '合同审核拒绝';
+
     /*
      * 待下订单列表
      */
@@ -266,6 +271,7 @@ class Order extends BaseController{
                     'update_at' => time()
                 ];
                 $res = $poLogic->saveStatus($where, $poData);//订单写入数据库
+                //发消息
 
                 if($res !== false){
                     return json(['code' => 2000, 'msg' => '合同审核通过', 'data' => []]);

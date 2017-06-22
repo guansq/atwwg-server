@@ -23,6 +23,10 @@ class Supporter extends BaseController{
         '2' => '中',
         '3' => '高',
     ];
+    const MSGPASSTITLE = '恭喜，您的资质审核通过';
+    const MSGREFUSETITLE = '抱歉，您的资质审核没有通过';
+    const MSGPASSCONTENT = '恭喜，您的资质审核通过';
+    const MSGREFUSECONTENT = '抱歉，您的资质审核没有通过';
     public function index(){
         $this->assign('title',$this->title);
         //得到供应商分类
@@ -317,10 +321,34 @@ class Supporter extends BaseController{
         ];
         $data = [
             'status' => input('param.status'),
+            'remark' => input('param.remark')
         ];
+        $sendInfo = $logicSupInfo->getSupSendInfo(['code'=>input('param.sup_code')]);
+        //dump($sendInfo);die;
         $scoreArr = ['iso90001','ts_lic','api_lic','ped_lic'];//加分组
         $result = $logicSupInfo->changeQualiStatus($where,$data);
+        $logicSystemUser = Model('SystemUser','logic');
         if($result !== false){
+            $remark = input('param.remark');
+            if(input('param.status') == 'agree'){
+                $title = self::MSGPASSTITLE;
+                $content = $remark != '' ? self::MSGPASSCONTENT.'通过原因如下：'.$remark : self::MSGPASSCONTENT;
+            }
+            if(input('param.status') == 'refuse'){
+                $title = self::MSGREFUSETITLE;
+                $content = $remark != '' ? self::MSGREFUSECONTENT.'拒绝原因如下：'.$remark : self::MSGREFUSECONTENT;
+            }
+            if($sendInfo['phone']){ //发送消息
+                //sendSMS('18451847701',$content);
+                sendSMS($sendInfo['phone'],$content);
+            }
+            if($sendInfo['email']){ //发送邮件
+                //sendMail('94600115@qq.com',$title,$content);
+                sendSMS($sendInfo['email'],$content);
+            }
+            if($sendInfo['push_token']){ //发送token
+                pushInfo($sendInfo['push_token'],$title,$content);
+            }
             //审核数量 -1
             $logicSupInfo->subOneExceed(['code'=>input('param.sup_code')]);
             if(in_array(input('param.code'),$scoreArr)){

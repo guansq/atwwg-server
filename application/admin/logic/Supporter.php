@@ -239,4 +239,11 @@ class Supporter extends BaseLogic{
         }
         return $list;
     }
+
+    /*
+     *资质审核数量-1
+     */
+    public function subOneExceed($where){
+        return supModel::where($where)->setDec('qlf_check_count',1);
+    }
 }

@@ -167,4 +167,12 @@ class Supportercenter extends BaseLogic{
     public function getAvgPassRate($where,$startTime,$endTime){
         return tendModel::where($where)->where('sync_date','between',[$startTime,$endTime])->avg('pass_rate');//sync_date
     }
+
+    /*
+     *资质审核数量+1
+     */
+    public function addOneExceed($where){
+        return supModel::where($where)->setInc('qlf_check_count',1);
+        //echo $this->getLastSql();die;
+    }
 }

@@ -87,8 +87,8 @@
       {/notempty}
       {if $poInfo['status'] eq 'upload_contract'}
       <section class="other_box_se1">
-        <button class="layui-btn" onclick="verifyOrder({$poInfo['id']},'contract_pass',this)">合同审核通过</button>
-        <button class="layui-btn" onclick="verifyOrder({$poInfo['id']},'contract_pass',this)">拒绝该合同</button>
+        <button class="layui-btn" onclick="verifyOrder({$poInfo['id']},{$poInfo['sup_code']},'contract_pass',this)">合同审核通过</button>
+        <button class="layui-btn" onclick="verifyOrder({$poInfo['id']},{$poInfo['sup_code']},'contract_pass',this)">拒绝该合同</button>
       </section>
       {elseif $poInfo['status'] eq 'contract_pass' /}
       <p class="h2">合同已审核通过
@@ -117,22 +117,26 @@
 {block name="script"}
 <script>
 
-
-  function verifyOrder(id, action, dom){
-    layer.confirm('确认该操作吗？', {
-      btn:['提交', '取消'], //按钮
-      shade:false //不显示遮罩
-    }, function(index){
+  function verifyOrder(id, sup_code, action, dom){
+    var prompt = layer.prompt({
+      btn: ['确定', '取消'],
+      formType: 2,
+      value: '',
+      title: '说明'
+    }, function (value) {
+      layer.close(prompt);
       url = '{:url("Order/verifyStatus")}';
       data = {
         'id':id,
+        'sup_code':sup_code,
+        'remark':value,
         'action':action
       };
       layer.close(index);
       layer.load();
       $.post(url, data, function(res){
         layer.closeAll();
-        console.log(res);
+        //console.log(res);
         if(res.code == 2000){
           layer.alert('更改成功');
           $(dom).parent().html('<p class="h2">' + res.msg + '</p>');
@@ -143,10 +147,11 @@
           });
         }
       });
-      //$("#form 的 id").submit();
-
+    }, function (value) {
+      // 审核不通过
+      layer.close(prompt);
+      return;
     });
-    //console.log(dom);
   }
 
   function placeOrder(id){
@@ -168,5 +173,41 @@
       layer.closeAll();
     });
   }
+  layer.prompt = function (options, yes, cancel) {
+    options = options || {};
+    if (typeof options === 'function') yes = options;
+    var prompt, content = options.formType == 2 ? '<textarea class="layui-layer-input">' + (options.value || '') + '</textarea>' : function () {
+          return '<input type="' + (options.formType == 1 ? 'password' : 'text') + '" class="layui-layer-input" value="' + (options.value || '') + '">';
+        }();
+    return layer.open($.extend({
+      btn: ['确定', '取消'],
+      content: content,
+      //skin: 'layui-layer-prompt' + skin('prompt'),
+      success: function (layero) {
+        prompt = layero.find('.layui-layer-input');
+        prompt.focus();
+      },
+      btn1: function (index) {
+        var value = prompt.val();
+        if (value.length > (options.maxlength || 500)) {
+          layer.tips('最多输入' + (options.maxlength || 500) + '个字数', prompt, {tips: 1});
+        } else {
+          yes && yes(value, index, prompt);
+        }
+      },
+      btn2: function (index) {
+        var value = prompt.val();
+        //必填判断
+        /*if (value === '') {
+         prompt.focus();
+         } else*/
+        if (value.length > (options.maxlength || 500)) {
+          layer.tips('最多输入' + (options.maxlength || 500) + '个字数', prompt, {tips: 1});
+        } else {
+          cancel && cancel(value, index, prompt);
+        }
+      },
+    }, options));
+  };
 </script>
 {/block}

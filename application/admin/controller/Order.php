@@ -246,13 +246,16 @@ class Order extends BaseController{
 
     public function verifyStatus(){
         $poLogic = model('Po', 'logic');
+        $logicSupInfo = Model('Supporter','logic');
         $param = input('param.');
         $piData = [
             'status' => $param['action']
         ];
         $where = [
             'id' => $param['id'],
+            'remark' => input('param.remark')
         ];
+
         $status = [
             'atw_sure' => '待供应商确定订单',
             'contract_pass' => '合同已审核通过',
@@ -260,8 +263,34 @@ class Order extends BaseController{
 
         ];
         $res = $poLogic->saveStatus($where, $piData);
+
         //$res = true;
         if($res !== false){
+            $remark = input('param.remark');
+            if($param['action'] == 'contract_pass' || $param['action'] == 'contract_refuse'){
+
+                if($param['action'] == 'contract_pass'){
+                    $title = self::MSGPASSTITLE;
+                    $content = $remark != '' ? self::MSGPASSCONTENT.'通过原因如下：'.$remark : self::MSGPASSCONTENT;
+                }
+                if($param['action'] == 'contract_refuse'){
+                    $title = self::MSGREFUSETITLE;
+                    $content = $remark != '' ? self::MSGREFUSECONTENT.'拒绝原因如下：'.$remark : self::MSGREFUSECONTENT;
+                }
+                $sendInfo = $logicSupInfo->getSupSendInfo(['code'=>input('param.sup_code')]);
+                //通过sup_code得到发送信息
+                if($sendInfo['phone']){ //发送消息
+                    //sendSMS('18451847701',$content);
+                    sendSMS($sendInfo['phone'],$content);
+                }
+                if($sendInfo['email']){ //发送邮件
+                    //sendMail('94600115@qq.com',$title,$content);
+                    sendSMS($sendInfo['email'],$content);
+                }
+                if($sendInfo['push_token']){ //发送token
+                    pushInfo($sendInfo['push_token'],$title,$content);
+                }
+            }
             if($param['action'] == 'contract_pass'){//已审核通过---》执行同步U9订单
 
                 $poData = [

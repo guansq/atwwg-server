@@ -59,15 +59,15 @@ class Offer extends Base{
                     }
                 }
             }
-            if(!empty($data['quote_begintime']) && !empty($data['quote_endtime'])){
-                $where['quote_date'] = array(
+            if(!empty($data['contract_begintime']) && !empty($data['contract_endtime'])){
+                $where['contract_time'] = array(
                     'between',
-                    array(strtotime($data['quote_begintime']), strtotime($data['quote_endtime']))
+                    array(strtotime($data['contract_begintime']), strtotime($data['contract_endtime']))
                 );
-            }elseif(!empty($data['quote_begintime'])){
-                $where['quote_date'] = array('egt', strtotime($data['quote_begintime']));
-            }elseif(!empty($data['quote_endtime'])){
-                $where['quote_date'] = array('elt', strtotime($data['quote_endtime']));
+            }elseif(!empty($data['contract_begintime'])){
+                $where['contract_time'] = array('egt', strtotime($data['contract_begintime']));
+            }elseif(!empty($data['contract_endtime'])){
+                $where['contract_time'] = array('elt', strtotime($data['contract_endtime']));
             }
         }
         $list = $offerLogic->getOfferInfo($sup_code, $where);
@@ -83,7 +83,7 @@ class Offer extends Base{
             $list[$k]['promise_date'] = empty($v['promise_date']) ? '' : date('Y-m-d', $v['promise_date']);
             $list[$k]['create_at'] = empty($v['create_at']) ? '--' : date('Y-m-d', $v['create_at']);
             $list[$k]['quote_date'] = empty($v['quote_date']) ? '--' : date('Y-m-d', $v['quote_date']);
-            $list[$k]['quote_endtime'] = empty($v['quote_endtime']) ? '--' : date('Y-m-d', $v['quote_endtime']);
+            $list[$k]['contract_time'] = empty($v['contract_time']) ? '--' : date('Y-m-d', $v['contract_time']);
             $list[$k]['req_date'] = empty($v['req_date']) ? '--' : date('Y-m-d', $v['req_date']);
             $list[$k]['total_price'] = number_format($v['price_num']*$v['quote_price'],2);
             $list[$k]['quote_price'] = empty($v['quote_price']) ? '0.00' :number_format( $v['quote_price'],2);
@@ -153,7 +153,7 @@ class Offer extends Base{
                 ->setCellValue('D'.$num, $v['price_uom'])
                 ->setCellValue('E'.$num, $v['tc_uom'])
                 ->setCellValue('F'.$num, date('Y-m-d H:i:s', $v['quote_date']))
-                ->setCellValue('G'.$num, date('Y-m-d H:i:s', $v['quote_endtime']))
+                ->setCellValue('G'.$num, date('Y-m-d H:i:s', $v['contract_endtime']))
                 ->setCellValue('H'.$num, date('Y-m-d H:i:s', $v['req_date']))
                 ->setCellValue('I'.$num, date('Y-m-d', $v['req_date']))
                 ->setCellValue('J'.$num, $v['quote_price'])

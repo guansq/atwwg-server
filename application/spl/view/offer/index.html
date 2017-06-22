@@ -18,8 +18,8 @@
           <option value="{$key}">{$pstatus}</option>
         {/volist}
       </select></span>
-      <span>询价时间： <input id="quote_begintime" name="quote_begintime"  class="laydate-icon"  value="">  到
-      <input   value="" id="quote_endtime"name="quote_endtime"  class="laydate-icon">
+      <span>合同签订日期： <input id="contract_begintime" name="contract_begintime"  class="laydate-icon"  value="">  到
+      <input   value="" id="contract_endtime"name="contract_endtime"  class="laydate-icon">
     </span>
       <button class="btn btn-primary " type="button" id="searchVal">查询</button>
     </form>
@@ -96,8 +96,8 @@
           "type": "POST",
           "data": function (parameter) {
             parameter.status = $("#status").val();
-            parameter.quote_begintime = $("#quote_begintime").val();
-            parameter.quote_endtime = $("#quote_endtime").val();
+            parameter.contract_begintime = $("#contract_begintime").val();
+            parameter.contract_endtime = $("#contract_endtime").val();
           }
         },
         "pageLength": 10,
@@ -116,7 +116,7 @@
           { "data": "price_uom" },
           { "data": "tc_uom" },
           { "data": "create_at" },
-          { "data": "quote_endtime" },
+          { "data": "contract_time" },
           { "data": "req_date" },
           { "data": "promise_date" },
           { "data": "quote_price" },

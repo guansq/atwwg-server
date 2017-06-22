@@ -339,10 +339,12 @@ class Supporter extends BaseController{
                 $content = $remark != '' ? self::MSGREFUSECONTENT.'拒绝原因如下：'.$remark : self::MSGREFUSECONTENT;
             }
             if($sendInfo['phone']){ //发送消息
-                sendSMS('18451847701',$content);
+                //sendSMS('18451847701',$content);
+                sendSMS($sendInfo['phone'],$content);
             }
             if($sendInfo['email']){ //发送邮件
-                sendMail('94600115@qq.com',$title,$content);
+                //sendMail('94600115@qq.com',$title,$content);
+                sendSMS($sendInfo['email'],$content);
             }
             if($sendInfo['push_token']){ //发送token
                 pushInfo($sendInfo['push_token'],$title,$content);

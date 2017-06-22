@@ -27,15 +27,15 @@ class Order extends Base{
                     $where[$key] = $data[$key];
                 }
             }
-            if(!empty($data['quote_begintime']) && !empty($data['quote_endtime'])){
-                $where['create_at'] = array(
+            if(!empty($data['contract_begintime']) && !empty($data['contract_endtime'])){
+                $where['contract_time'] = array(
                     'between',
-                    array(strtotime($data['quote_begintime']), strtotime($data['quote_endtime']))
+                    array(strtotime($data['contract_begintime']), strtotime($data['contract_endtime']))
                 );
-            }elseif(!empty($data['quote_begintime'])){
-                $where['create_at'] = array('egt', strtotime($data['quote_begintime']));
-            }elseif(!empty($data['quote_endtime'])){
-                $where['create_at'] = array('elt', strtotime($data['quote_endtime']));
+            }elseif(!empty($data['contract_begintime'])){
+                $where['contract_time'] = array('egt', strtotime($data['contract_begintime']));
+            }elseif(!empty($data['contract_endtime'])){
+                $where['contract_time'] = array('elt', strtotime($data['contract_endtime']));
             }
         }
         $list = $offerLogic->getPolist($where);

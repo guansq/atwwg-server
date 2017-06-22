@@ -16,7 +16,7 @@
         {volist name='orderstatus' id='pstatus'}
           <option value="{$key}">{$pstatus}</option>
         {/volist}</select></span>
-    <span>询价时间：<input class="laydate-icon" type="text"  id="quote_begintime">到<input class="laydate-icon"  id="quote_endtime" type="text"></span>
+    <span>合同签订日期：<input class="laydate-icon" type="text"  id="contract_begintime">到<input class="laydate-icon"  id="contract_endtime" type="text"></span>
     <button class="btn btn-primary" id="searchVal"  type="button">查询</button>
     </form>
   </div>
@@ -73,8 +73,8 @@
           "type": "POST",
           "data": function (parameter) {
             parameter.status = $("#status").val();
-            parameter.quote_begintime = $("#quote_begintime").val();
-            parameter.quote_endtime = $("#quote_endtime").val();
+            parameter.contract_begintime = $("#contract_begintime").val();
+            parameter.contract_endtime = $("#contract_endtime").val();
           }
         },
         "pageLength": 10,

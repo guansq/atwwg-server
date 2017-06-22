@@ -253,7 +253,7 @@ class Material extends BaseController{
             {
                 $data = [];
                 $data['id'] = intval($objPHPExcel->getActiveSheet()->getCell("A".$currentRow)->getValue());//获取A列的值
-                $data['code'] = $objPHPExcel->getActiveSheet()->getCell("B".$currentRow)->getValue();//获取B列的值
+                $code = $data['code'] = $objPHPExcel->getActiveSheet()->getCell("B".$currentRow)->getValue();//获取B列的值
                 $dataInfo = [];
                 $dataInfo['name'] = intval($objPHPExcel->getActiveSheet()->getCell("C".$currentRow)->getValue());//获取C列的值
                 $dataInfo['main_name'] = $objPHPExcel->getActiveSheet()->getCell("D".$currentRow)->getValue();//获取D列的值
@@ -279,10 +279,10 @@ class Material extends BaseController{
                             'tech_weight' => $dataInfo['tech_weight'],
                             'business_weight' => $dataInfo['business_weight'],
                             'standard_date' => $dataInfo['standard_date'],
+                            'code' =>  $code
                         ];
                         $logicItemInfo->updateByCode($data['code'],$data);
                         $logicItemInfo->setIncUpdate($data['code']);
-                        //futurescale
                     }
                 }
             }

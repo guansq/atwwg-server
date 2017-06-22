@@ -10,9 +10,15 @@
   <div class="mt_box">
 
     <div class="inquiry_box">
-      <form  action='{:url("$classuri/qualified")}' class="form-inline animated form-search" onsubmit="return false" method="get">
+      <form  action='{:url("$classuri/time")}' class="form-inline animated form-search" onsubmit="return false" method="get">
         <label>供应商名称</label>
-        <input type="text" name="sup_name" value="{$Think.get.sup_name|default=''}" placeholder="供应商名称" class="minw form-control">
+        <select name="sup_name" class="js-select form-control">
+          <option value="">请选择</option>
+          {volist name="allSupArr" id="vo"}
+          <option value="{$vo.name}" {if $Think.get.sup_name eq $vo.name}selected{/if}>{$vo.name}</option>
+          {/volist}
+        </select>
+        <!--<input type="text" name="sup_name" value="{$Think.get.sup_name|default=''}" placeholder="供应商名称" class="minw form-control">-->
         <span>日期</span>
         <input type="text" name="start_time" value="{$Think.get.start_time|default=''}" class="date_time form-control w20b">
         到
@@ -30,7 +36,7 @@
 
 {block name="script"}
 <script>
-  require(["echarts","laydate"],function(echarts){
+  require(["echarts","laydate","select2"],function(echarts){
 
     var myChart = echarts.init(document.getElementById('report-echarts'));
 
@@ -99,6 +105,17 @@
         istoday : true,
         issure : true
       });
+    });
+
+    $(".js-select").select2({
+      tags: false, //是否可以自定义tag
+      createSearchChoice:function(term, data) {
+        if ($(data).filter(function() {
+              return this.text.localeCompare(term)===0;
+            }).length===0)
+        {return {id:term, text:term};}
+      },
+      multiple: false,
     });
   });
 </script>

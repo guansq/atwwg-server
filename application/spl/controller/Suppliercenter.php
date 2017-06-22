@@ -135,6 +135,10 @@ class Suppliercenter extends Base{
             $result = $logicSupInfo->updatesupplierqualification($sup_code,$src,$code,$begintime,$endtime);
         }
         if($result){
+            $where = [
+                'code' => $sup_code
+            ];
+            $logicSupInfo->addOneExceed($where);
             return json(['code'=>2000,'msg'=>'成功','data'=>[]]);
         }else{
             return json(['code'=>4000,'msg'=>'更新失败','data'=>[]]);
@@ -197,7 +201,12 @@ class Suppliercenter extends Base{
                      $result = $logicSupInfo->updatesupplierqualification($sup_code,$src,$code,$begintime,$endtime);
                 }
             }
-            $result !== false ? $this->success('恭喜，保存成功哦！', '') : $this->error('保存失败，请稍候再试！');
+            if($result !== false){
+                $logicSupInfo->addOneExceed(['code'=>"$sup_code"]);
+                $this->success('恭喜，保存成功哦！', '');
+            }else{
+                $this->error('保存失败，请稍候再试！');
+            }
         }else{
             $code = input('code');
             $begintime =empty(input('begintime'))?'':input('begintime');

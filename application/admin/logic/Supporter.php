@@ -228,4 +228,22 @@ class Supporter extends BaseLogic{
         return qualiModel::where($where)->count();
         //echo $this->getLastSql();//return
     }
+
+    /*
+     * 得到所有的供应商code 以及供应商名称
+     */
+    public function getSupNameAndCode(){
+        $list = supModel::field('code,name')->where('code','neq','')->select();
+        if($list){
+            $list = collection($list)->toArray();
+        }
+        return $list;
+    }
+
+    /*
+     *资质审核数量-1
+     */
+    public function subOneExceed($where){
+        return supModel::where($where)->setDec('qlf_check_count',1);
+    }
 }

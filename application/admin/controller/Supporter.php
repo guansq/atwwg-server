@@ -321,6 +321,8 @@ class Supporter extends BaseController{
         $scoreArr = ['iso90001','ts_lic','api_lic','ped_lic'];//加分组
         $result = $logicSupInfo->changeQualiStatus($where,$data);
         if($result !== false){
+            //审核数量 -1
+            $logicSupInfo->subOneExceed(['code'=>input('param.sup_code')]);
             if(in_array(input('param.code'),$scoreArr)){
                 if($data['status'] == 'agree'){
                     //更新tech_score

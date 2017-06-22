@@ -48,7 +48,7 @@ class Showmsg extends BaseController{
         $showArr = [];
         $revData = input('param.');
         //dump($revData);
-
+        //echo url('enquiryorder/index',array('status'=>'init'));
         //显示最近7天的运营信息
         $defultShow = [strtotime("-1 day"),strtotime("-2 day"),strtotime("-3 day"),strtotime("-4 day"),strtotime("-5 day"),strtotime("-6 day"),strtotime("-7 day")];
         if(isset($revData['startTime']) && isset($revData['endTime'])){
@@ -75,7 +75,7 @@ class Showmsg extends BaseController{
             //未处理请购单数量 init
             $where = [
                 'update_at'=>['between',"$startTime,$endTime"],
-                'status'=>'init'
+                'status'=>'hang'//init
             ];
 
             $showArr[$k]['unfinishPrnum'] = $prLogic->getNumByWhere($where);
@@ -95,7 +95,7 @@ class Showmsg extends BaseController{
             $where = [];
             $where = [
                 'update_at'=>['between',"$startTime,$endTime"],
-                'status'=>['in',['hang','close']]
+                'status'=>['in',['close']]//$v['pur_attr']
             ];
             $showArr[$k]['failPrNum'] = $prLogic->getNumByWhere($where);
             //echo date('Y-m-d',$v).'<br>';

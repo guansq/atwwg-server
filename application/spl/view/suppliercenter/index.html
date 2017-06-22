@@ -109,12 +109,20 @@
         {else}
         <td>
           <span class="clickenlarge">
-            <img class="" src="{$supqualilist[$key]['img_src']}" alt="">
+            <input type="hidden" name="src-{$key}" onchange="$('#img-{$key}').attr('src', this.value)" value="" class="layui-input">
+            <img  id="img-{$key}" name="img-{$key}" src="{$supqualilist[$key]['img_src']}"/>
           </span>
-        <p>证件有效期 <input type="text" class="laydate-icon" value="{$supqualilist[$key]['term_start']}" class="begintime" name="begintime"><input type="text" value="{$supqualilist[$key]['term_end']}" class="laydate-icon" class="endtime" name="endtime"></p>
+          <a class="btn btn-link" data-file="one" data-field="src-{$key}">上传图片</a>
+        <p>
+          证件有效期
+          <input type="text" class="laydate-icon" value="{$supqualilist[$key]['term_start']}" class="begintime" name="begintime">
+          <input type="text" value="{$supqualilist[$key]['term_end']}" class="laydate-icon" class="endtime" name="endtime">
+        </p>
        </td>
         <td >{$supqualilist[$key]['status']}</td>
-        <td class="btn2"><button class="btn btn-primary submitbtn" disabled="true">提交</button></td>
+        <td class="btn2">
+          <button class="btn btn-primary submitbtn" >提交</button>
+        </td>
        {/if}
       </tr>
       {/volist}
@@ -185,7 +193,8 @@
       layer.alert('请先确定图片是否上传和时间是否选择');
       return ;
     }
-    layer.confirm('确定提交申请', {
+    var alertMsg = '提交后需要重新审核，审核期间相应的资质分会清零，将影响您的竞标，审核通过后将增加相应的资质分。\n 确定提交吗？';
+    layer.confirm(alertMsg, {
       btn: ['确定','取消']
     }, function(index){
       layer.close(index);
@@ -205,7 +214,7 @@
         'success' : function(obj){
           layer.closeAll();
           if(obj.code == 2000){
-            location.reload();
+            $.form.reload();
           }else{
             layer.alert(obj.msg);
           }

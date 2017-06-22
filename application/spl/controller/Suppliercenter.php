@@ -138,7 +138,7 @@ class Suppliercenter extends Base{
             $where = [
                 'code' => $sup_code
             ];
-            $logicSupInfo->addOneExceed($where);
+            //$logicSupInfo->addOneExceed($where);
             return json(['code'=>2000,'msg'=>'成功','data'=>[]]);
         }else{
             return json(['code'=>4000,'msg'=>'更新失败','data'=>[]]);
@@ -202,7 +202,7 @@ class Suppliercenter extends Base{
                 }
             }
             if($result !== false){
-                $logicSupInfo->addOneExceed(['code'=>"$sup_code"]);
+                //$logicSupInfo->addOneExceed(['code'=>"$sup_code"]);
                 $this->success('恭喜，保存成功哦！', '');
             }else{
                 $this->error('保存失败，请稍候再试！');

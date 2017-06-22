@@ -75,7 +75,7 @@ class Showmsg extends BaseController{
             //未处理请购单数量 init
             $where = [
                 'update_at'=>['between',"$startTime,$endTime"],
-                'status'=>'init'
+                'status'=>'hang'//init
             ];
 
             $showArr[$k]['unfinishPrnum'] = $prLogic->getNumByWhere($where);
@@ -95,7 +95,7 @@ class Showmsg extends BaseController{
             $where = [];
             $where = [
                 'update_at'=>['between',"$startTime,$endTime"],
-                'status'=>['in',['hang','close']]
+                'status'=>['in',['close']]//$v['pur_attr']
             ];
             $showArr[$k]['failPrNum'] = $prLogic->getNumByWhere($where);
             //echo date('Y-m-d',$v).'<br>';

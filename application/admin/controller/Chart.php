@@ -34,7 +34,7 @@ class Chart extends BaseController{
             $stTime = strtotime($get['start_time']);
             $etTime = strtotime($get['end_time']);
             if($etTime - $stTime > $monTime){
-                $monArr = getMonthBetweenTime($stTime,$etTime);//满足一个月
+                $monArr = array_reverse(getMonthBetweenTime($stTime,$etTime));//满足一个月
             }
         }
         if(isset($get['sup_name']) && $get['sup_name'] !== ''){
@@ -43,6 +43,7 @@ class Chart extends BaseController{
                 $where = ['sup_code'=>$sup_code];
             }
         }
+
         $suppLogic = model('Supporter','logic');
         $allSup = $suppLogic->getSupNameAndCode();
         $avgPassArr = [];
@@ -78,7 +79,7 @@ class Chart extends BaseController{
             $stTime = strtotime($get['start_time']);
             $etTime = strtotime($get['end_time']);
             if($etTime - $stTime > $monTime){
-                $monArr = getMonthBetweenTime($stTime,$etTime);//满足一个月
+                $monArr = array_reverse(getMonthBetweenTime($stTime,$etTime));//满足一个月
             }
         }
         if(isset($get['sup_name']) && $get['sup_name'] !== ''){

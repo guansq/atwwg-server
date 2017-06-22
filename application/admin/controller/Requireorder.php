@@ -17,7 +17,10 @@ use PHPExcel;
 class Requireorder extends BaseController{
     protected $table = 'SystemArea';
     protected $title = '请购单管理';
-
+    const PURATTR = [
+        'tech' => '技术型',
+        'compete' => '竞争型'
+    ];
     public function index(){
         //echo '111111111';die;
         $this->assign('title',$this->title);
@@ -162,7 +165,7 @@ class Requireorder extends BaseController{
                 'price_num' => $v['price_num'],//计价数量
                 'req_date' => date('Y-m-d',$v['req_date']),//交期
                 'status' => key_exists($v['status'],$status) ? $status[$v['status']] : $v['status'],//状态 init=初始 hang=挂起 inquiry=询价中 close = 关闭
-                'pur_attr' => $v['pur_attr'],//物料采购属性
+                'pur_attr' => key_exists($v['pur_attr'],self::PURATTR) ? self::PURATTR[$v['pur_attr']]:$v['pur_attr'],//物料采购属性
                 'is_appoint_sup' => $v['is_appoint_sup'],//是否指定供应商
                 'inquiry_way' => $inquiry,//询价方式
                 'check_status' => $v['check_status'],//主管审批
@@ -345,7 +348,7 @@ class Requireorder extends BaseController{
                 'price_num' => $v['price_num'],//计价数量
                 'req_date' => date('Y-m-d',$v['req_date']),//交期
                 'status' => key_exists($v['status'],$status) ? $status[$v['status']] : $v['status'],//状态 init=初始 hang=挂起 inquiry=询价中 close = 关闭
-                'pur_attr' => $v['pur_attr'],//物料采购属性
+                'pur_attr' => key_exists($v['pur_attr'],self::PURATTR) ? self::PURATTR[$v['pur_attr']]:$v['pur_attr'],//物料采购属性
                 'is_appoint_sup' => $v['is_appoint_sup'] == 1 ? '是' : '否',//是否指定供应商   1是 0否
                 'inquiry_way' => key_exists($v['inquiry_way'],$inquiry_way) ? $inquiry_way[$v['inquiry_way']] : $v['inquiry_way'],//询价方式
                 'check_status' => key_exists($v['check_status'],$checkStatus) ? $checkStatus[$v['check_status']] : $v['check_status'],//主管审批
@@ -383,7 +386,7 @@ class Requireorder extends BaseController{
                 ->setCellValue('I'.$num,$v['price_num'])
                 ->setCellValue('J'.$num,$v['req_date'])
                 ->setCellValue('K'.$num,$v['status'])
-                ->setCellValue('L'.$num,$v['pur_attr'])
+                ->setCellValue('L'.$num,key_exists($v['pur_attr'],self::PURATTR) ? self::PURATTR[$v['pur_attr']]:$v['pur_attr'])
                 ->setCellValue('M'.$num,$v['is_appoint_sup'])
                 ->setCellValue('N'.$num,$v['inquiry_way'])
                 ->setCellValue('O'.$num,$v['check_status']);

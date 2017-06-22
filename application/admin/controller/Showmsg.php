@@ -48,7 +48,7 @@ class Showmsg extends BaseController{
         $showArr = [];
         $revData = input('param.');
         //dump($revData);
-
+        //echo url('enquiryorder/index',array('status'=>'init'));
         //显示最近7天的运营信息
         $defultShow = [strtotime("-1 day"),strtotime("-2 day"),strtotime("-3 day"),strtotime("-4 day"),strtotime("-5 day"),strtotime("-6 day"),strtotime("-7 day")];
         if(isset($revData['startTime']) && isset($revData['endTime'])){

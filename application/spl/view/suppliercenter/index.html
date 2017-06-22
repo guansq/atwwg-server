@@ -119,7 +119,10 @@
           <input type="text" value="{$supqualilist[$key]['term_end']}" class="laydate-icon" class="endtime" name="endtime">
         </p>
        </td>
-        <td >{$supqualilist[$key]['status']}</td>
+        <td >
+          {$supqualilist[$key]['statusStr']} <br>
+          {eq name="supqualilist[$key]['status']" value="refuse"} 原因：{$supqualilist[$key]['remark']} {/eq}
+        </td>
         <td class="btn2">
           <button class="btn btn-primary submitbtn" >提交</button>
         </td>

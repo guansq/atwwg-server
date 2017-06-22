@@ -131,7 +131,7 @@ class Material extends BaseController{
         $logicItemInfo = Model('Item','logic');
         $code = $data['code'];
         $data = array(
-            //'pur_attr'=> $data['purattr'],//采购属性去掉
+            'pur_attr'=> $data['purattr'],//采购属性去掉
             'future_scale'=> initPerVal($data['futurescale'],false),
             'price_weight'=> initPerVal($data['priceweight'],false),
             'tech_weight'=> initPerVal($data['techweight'],false),

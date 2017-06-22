@@ -67,31 +67,7 @@
           </div>
         </div>
         </fieldset>
-        <!--<div class="form-group">
-          <label class="col-sm-1 control-label">物料属性可选</label>
-          <div class="col-sm-5">
-            <select class="form-control" name="purattr">
-              {if $itemInfo.pur_attr eq '技术型'}
-              <option value="技术型"  selected = "selected">技术型</option>
-              {else}
-              <option value="技术型"  >技术型</option>
 
-              {/if}
-              {if $itemInfo.pur_attr eq '单一资源型'}
-              <option value="单一资源型"  selected = "selected">单一资源型</option>
-              {else}
-              <option value="单一资源型"  >单一资源型</option>
-
-              {/if}
-              {if $itemInfo.pur_attr eq '充分竞争型'}
-              <option value="充分竞争型"  selected = "selected">充分竞争型</option>
-              {else}
-              <option  value="充分竞争型" >充分竞争型</option>
-
-              {/if}
-            </select>
-          </div>
-        </div>-->
         <div class="form-group">
           <label class="col-sm-1 control-label">是否需要停顿</label>
           <div class="col-sm-5">
@@ -111,6 +87,24 @@
             {/if}
 
             <span class="ver_sub">否</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-1 control-label">采购属性</label>
+          <div class="col-sm-5">
+            <select class="form-control" name="purattr">
+              {if $itemInfo.pur_attr eq 'compete'}
+              <option value="compete"  selected = "selected">充分竞争型</option>
+              {else}
+              <option  value="compete" >充分竞争型</option>
+              {/if}
+
+              {if $itemInfo.pur_attr eq 'tech'}
+              <option value="tech"  selected = "selected">技术型</option>
+              {else}
+              <option value="tech"  >技术型</option>
+              {/if}
+            </select>
           </div>
         </div>
         <div class="form-group">

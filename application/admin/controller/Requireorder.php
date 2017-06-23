@@ -255,7 +255,7 @@ class Requireorder extends BaseController{
             $sendInfo['item_code'] = $prInfo['item_code'];
             $sendInfo['price'] = $data['point_price'];
             $sendInfo['price_num'] = $prInfo['price_num'];
-            $sendInfo['req_date'] = $prInfo['pr_date'];
+            $sendInfo['req_date'] = $prInfo['req_date'];//需求日期
             $sendInfo['sup_confirm_date'] = $data['point_date'];
             $sendInfo['tax_rate'] = $prInfo['tax_rate'];
             $sendInfo['tc_uom'] = $prInfo['tc_uom'];

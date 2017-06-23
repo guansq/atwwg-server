@@ -683,7 +683,7 @@ function placeOrder($itemInfo){
         'OrderPriceTC' => $itemInfo['price'],//采购单价
         'OrderTotalTC' => $itemInfo['price']*$itemInfo['price_num'],//采购总金额
         'ReqQty' => $itemInfo['price_num'],//采购数量
-        'RequireDate' => $itemInfo['req_date'],//请购时间
+        'RequireDate' => $itemInfo['req_date'],//请购时间-需求日期
         'SupConfirmDate' => $itemInfo['sup_confirm_date'],//供应商供货日期
         'TaxRate' => $itemInfo['tax_rate']*100,//税率
         'TradeUOM' => $itemInfo['tc_uom'],//交易单位
@@ -694,7 +694,7 @@ function placeOrder($itemInfo){
     ];
 
     $sendData['lines'] = $lines;
-//    dd($sendData);
+    //dd($sendData);
     //exit(json_encode($sendData));
     $httpRet = HttpService::curl(getenv('APP_API_U9').'index/po', $sendData);
     $res = json_decode($httpRet, true);//成功回写数据库

@@ -295,7 +295,6 @@
   })
   var flag=0;
   $(".submitbt").click(function () {
-    layer.load();
     $('input[name="listcheck"]:checked').each(function(){
       flag = 1;
       appoint_sup_code = $(this).attr('data-sup_code');
@@ -311,6 +310,7 @@
       alert('选中一个才能提交');
       return;
     }
+    layer.load();
     var sendObj ={
       'is_appoint_sup' :   1,
       'appoint_sup_code' : appoint_sup_code ,

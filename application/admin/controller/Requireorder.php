@@ -288,7 +288,7 @@ class Requireorder extends BaseController{
             $poData = [
                 //'pr_code' => $itemInfo['pr_code'],
                 'order_code' => $docNo,
-                'sup_code' => $prInfo['appoint_sup_code'],
+                'sup_code' => $data['appoint_sup_code'],
                 'doc_date' => $now,
                 'is_include_tax' => 1,      //是否含税
                 'status' => 'init',
@@ -302,8 +302,8 @@ class Requireorder extends BaseController{
                 'po_code' => $docNo,
                 'item_code' => $prInfo['item_code'],
                 'item_name' => $prInfo['item_name'],
-                'sup_code' => $prInfo['appoint_sup_code'],
-                'sup_name' => $prInfo['appoint_sup_name'],
+                'sup_code' => $data['appoint_sup_code'],
+                'sup_name' => $data['appoint_sup_name'],
                 'price_num' => $prInfo['price_num'],
                 'price_uom' => $prInfo['price_uom'],
                 'tc_num' => $prInfo['tc_num'],

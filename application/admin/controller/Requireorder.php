@@ -296,8 +296,8 @@ class Requireorder extends BaseController{
             $po_id = $poLogic->insertOrGetId($poData);
             //生成poItem
             $poItemData = [
-                'po_id' => $prInfo['id'],
-                'po_code' => $po_id,
+                'po_id' => $po_id,
+                'po_code' => $docNo,
                 'item_code' => $prInfo['item_code'],
                 'item_name' => $prInfo['item_name'],
                 'sup_code' => $prInfo['appoint_sup_code'],
@@ -307,6 +307,7 @@ class Requireorder extends BaseController{
                 'tc_num' => $prInfo['tc_num'],
                 'tc_uom' => $prInfo['tc_uom'],
                 'pr_code' => $prInfo['pr_code'],
+                'pr_id' => $prInfo['id'],
                 'pr_ln' => $prInfo['pr_ln'],
                 'sup_confirm_date' => $data['point_date'],
                 'req_date' => $prInfo['req_date'],

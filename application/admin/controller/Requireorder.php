@@ -248,6 +248,7 @@ class Requireorder extends BaseController{
             'item_code' => $data['item_code'],
         ];
         $data['point_date'] = strtotime($data['point_date']);
+        $item_id = $data['item_id'];
         //得到pr_info
         $prInfo = $logicPrInfo->getPrInfo(['id'=>$data['item_id']]);
         $sendInfo = [];
@@ -317,7 +318,6 @@ class Requireorder extends BaseController{
                 'update_at' => $now,
                 'status' => 'init',
             ];
-            $po_id = $poLogic->insertOrGetId($poData);//保存po表
             if($po_id === false){
                 return json(['code'=>6000,'msg'=>'生成订单失败','data'=>['sup_name' => $data['appoint_sup_name']]]);
             }
@@ -327,9 +327,8 @@ class Requireorder extends BaseController{
                 return json(['code'=>6000,'msg'=>'生成未下单订单失败','data'=>['sup_name' => $data['appoint_sup_name']]]);
             }
             //if($res){}
-            $data = ['status'=>'close'];
-            $where = ['id'=>$data['item_id']];
-            $ret = $logicPrInfo->updatePr($where,$data);
+            $where = ['id'=>$item_id];
+            $ret = $logicPrInfo->updatePr($where,['status'=>'close']);
             if($ret === false){
                 return json(['code'=>6000,'msg'=>'状态关闭失败','data'=>['sup_name' => $data['appoint_sup_name']]]);
             }

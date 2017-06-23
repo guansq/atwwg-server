@@ -695,16 +695,9 @@ function placeOrder($itemInfo){
 
     $sendData['lines'] = $lines;
     //dd($sendData);
-    //exit(json_encode($sendData));
     $httpRet = HttpService::curl(getenv('APP_API_U9').'index/po', $sendData);
     $res = json_decode($httpRet, true);//成功回写数据库
     //dump($res);
     return ['code'=>$res['code'],'msg'=>$res['msg'],'data'=>$res['result']];
-    /*if($res['code'] != 2000){
-        return false;//调用失败
-        //returnjson(6000,'调用U9接口异常',$res);
-    }
-    return $res['result']['DocNo'];*/
-    //dump($res['result']);die;
-    //return ['code'=>2000,'msg'=>'','data'=>['DocNo'=>$res['result']['DocNo']]];
+
 }

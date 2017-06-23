@@ -122,4 +122,16 @@ class RequireOrder extends BaseLogic{
     function getNumByWhere($where){
         return prModel::where($where)->count();
     }
+    /*
+     * 得到通过pr_id得到一条pr记录
+     */
+    function getPrInfo($where){
+        return prModel::where($where)->find();
+    }
+    /*
+     * 改变pr_status
+     */
+    function updatePr($where,$data){
+        return PrModel::where($where)->update($data);
+    }
 }

@@ -39,11 +39,11 @@
             <option value="1">是</option>
             <option value="0">否</option>
           </select>
-          <select class="form-control" id="check_status">
+          <!--<select class="form-control" id="check_status">
             <option value="">审批状态</option>
             <option value="agree">已审批</option>
             <option value="refuse">已拒绝</option>
-          </select>
+          </select>-->
           <button type="button" class="btn btn-info" id="searchVal">查询</button>
         </div>
       </form>
@@ -71,7 +71,7 @@
               <th>物料采购属性</th>
               <th>是否指定供应商</th>
               <th>询价方式</th>
-              <th>主管审批</th>
+              <!--<th>主管审批</th>-->
             </tr>
           </thead>
           <tbody>
@@ -105,8 +105,8 @@
       </tr>
     </table>
     <section>
-      <span class="col_red mr_15 fs_13">选择指定供应商后提交申请，等待采购主管审核通过，审核信息可以在消息中心看到</span>
-      <button type="button" class="btn btn-primary fr resetbt">重置</button>
+      <!--<span class="col_red mr_15 fs_13">选择指定供应商后提交申请，等待采购主管审核通过，审核信息可以在消息中心看到</span>-->
+      <!--<button type="button" class="btn btn-primary fr resetbt">重置</button>-->
       <button type="button" class="btn btn-primary fr mr_15 submitbt">提交</button>
     </section>
   </div>
@@ -193,7 +193,7 @@
           parameter.pur_attr = $('#pur_attr').val();
           parameter.status = $('#status').val();
           parameter.is_appoint_sup = $('#is_appoint_sup').val();
-          parameter.check_status = $('#check_status').val();
+          //parameter.check_status = $('#check_status').val();
         }
       },
       "pageLength": 10,
@@ -212,7 +212,7 @@
         { "data": "pur_attr" },
         { "data": "is_appoint_sup" },
         { "data": "inquiry_way" },
-        { "data": "check_status" },
+        //{ "data": "check_status" },
       ],
       "drawCallback": function( settings ) {
         is_appoint_sup =1;
@@ -272,13 +272,18 @@
 //            status = '禁用';
 //            diabled = 'disabled="true"';
 //          }
-          tmphtml +=  '<tr><td><input class="listcheck" name="listcheck" type="checkbox" '+diabled+' data-pr_id="'+item_id+'" value="'+resDate[i]["item_code"]+'" data-pr_code="'+resDate[i]["pr_code"]+'"data-sup_code="'+resDate[i]["sup_code"]+'"></td><td>'+resDate[i]["sup_code"]+'</td><td>'+resDate[i]["sup_name"]+'</td><td>'+status+'</td></tr>';
+          tmphtml +=  '<tr><td>' +
+              '<input class="listcheck" name="listcheck" type="checkbox" '+diabled+' data-pr_id="'+item_id+'" value="'+resDate[i]["item_code"]+'" data-pr_code="'+resDate[i]["pr_code"]+'"data-sup_code="'+resDate[i]["sup_code"]+'"></td>' +
+              '<td>'+resDate[i]["sup_code"]+'</td><td>'+resDate[i]["sup_name"]+'</td>' +
+              '<td><input type="text" class="form-control" id="point_price_'+item_id+'" placeholder="价格"></td>' +
+              '<td><input type="text" class="form-control date_time" id="point_date_'+item_id+'" placeholder="格式为2000-10-03"></td><td>'+status+'</td></tr>';
         }
         $(".listcheck").click(function () {
           $("[name='listcheck']").removeAttr("checked");//取消全选
           $(this).attr("checked",'true');
         });
-        $(".barcode_box table").html( "<thead><tr><th>选择</th><th>供应商编码</th><th>供应商名称</th><th>状态</th></tr></thead>"+tmphtml);
+        $(".barcode_box table").html( "<thead><tr><th>选择</th><th>供应商编码</th><th>供应商名称</th><th>价格</th><th>交期</th><th>状态</th></tr></thead>"+tmphtml);
+        initTimePicker();
       }else{
         alert('暂无供应商可以选择');
       }
@@ -294,6 +299,7 @@
     $('input[name="listcheck"]:checked').each(function(){
       flag = 1;
       appoint_sup_code = $(this).attr('data-sup_code');
+      item_id = $(this).attr('data-pr_id');
       pr_code   = $(this).attr('data-pr_code');
       pr_id   = $(this).attr('data-pr_id');
       item_code = $(this).val();
@@ -305,22 +311,24 @@
       alert('选中一个才能提交');
       return;
     }
-    //console.log(item_code);return;
     var sendObj ={
       'is_appoint_sup' :   1,
       'appoint_sup_code' : appoint_sup_code ,
       'appoint_sup_name':appoint_sup_name,
       'item_code':item_code,
+      'item_id':item_id,
+      'point_price':$('#point_price_'+item_id).val(),
+      'point_date':$('#point_date_'+item_id).val(),
       'pr_code':pr_code
     };
     $.post("{:url('Requireorder/savePr')}",sendObj,function(res){
       if(res.code == 2000){
         $(".barcode_box").css("display","none");
         $("input[data-pr_id^="+pr_id+"]") .parent().next().html(res.data.sup_name)
-        var str = '<a href="javascript:;" onclick="checkStatus(\'agree\','+pr_id+')">通过</a>&nbsp;&nbsp;<a href="javascript:;" onclick="checkStatus(\'refuse\','+pr_id+')">拒绝</a>';
-        $("input[data-pr_id^="+pr_id+"]") .parent().next().next().html(str)
+        //var str = '<a href="javascript:;" onclick="checkStatus(\'agree\','+pr_id+')">通过</a>&nbsp;&nbsp;<a href="javascript:;" onclick="checkStatus(\'refuse\','+pr_id+')">拒绝</a>';
+        //$("input[data-pr_id^="+pr_id+"]") .parent().next().next().html(str)
       }else{
-        alert("请求失败");
+        layer.alert(res.msg);
       }
     });
   })

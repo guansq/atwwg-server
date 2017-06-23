@@ -514,6 +514,7 @@ class Order extends BaseController{
                 //'pr_code' => $itemInfo['pr_code'],
                 'order_code' => $res['data']['DocNo'],
                 'sup_code' => $sup_code,
+                'doc_date' => $now,
                 'is_include_tax' => 1,      //是否含税
                 'status' => 'init',
                 'create_at' => $now,

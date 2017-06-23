@@ -297,7 +297,7 @@ class Supporter extends BaseController{
         }else{
             $sup_info['supply_risk'] = $sup_info['risk_level'];
         }
-        $sup_info['quali_level'] = getQualiLevel($sup_info['code']);//信用等级 getQualiLevel
+        $sup_info['quali_level'] = getQualiLevel($sup_info['credit_total']);//信用等级 getQualiLevel
         $sup_info['quali_score'] = $sup_info['qlf_score'];//资质评分 getQualiScore
         //dump($sup_info);
         //echo $busnessArr = ['营业执照','税务登记证','组织代码证','ISO90001','TS认证','PED0','API','CE','SIL','其他'];

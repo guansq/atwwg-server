@@ -364,8 +364,17 @@ function getSupplyRisk($code){
  *   一般	85分＜95分
  *   差	≤85分
  */
-function getQualiLevel($code){
-    return '优秀';
+function getQualiLevel($score){
+    if($score>=98){
+        return '优';
+    }
+    if($score>=95){
+        return '良';
+    }
+    if($score>=85){
+        return '一般';
+    }
+    return '差';
 }
 
 /*

@@ -117,7 +117,7 @@ class Material extends BaseController{
             }else{
                 $supInfo[$k]['supply_risk'] = $v['risk_level'];
             }
-            $supInfo[$k]['quali_level'] = getQualiLevel($v['sup_code']);//信用等级 getQualiLevel
+            $supInfo[$k]['quali_level'] = getQualiLevel($v['credit_total']);//信用等级 getQualiLevel
         }
         //var_dump($supInfo);
         $this->assign('supInfo',$supInfo);

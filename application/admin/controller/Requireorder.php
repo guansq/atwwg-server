@@ -249,6 +249,8 @@ class Requireorder extends BaseController{
         ];
         $data['point_date'] = strtotime($data['point_date']);
         $item_id = $data['item_id'];
+        $sup_code = $data['appoint_sup_code'];
+        $sup_name = $data['appoint_sup_name'];
         //得到pr_info
         $prInfo = $logicPrInfo->getPrInfo(['id'=>$data['item_id']]);
         $sendInfo = [];
@@ -319,6 +321,7 @@ class Requireorder extends BaseController{
                 'update_at' => $now,
                 'status' => 'placeorder',
             ];
+            //dd($poItemData);
             if($po_id === false){
                 return json(['code'=>6000,'msg'=>'生成订单失败','data'=>['sup_name' => $data['appoint_sup_name']]]);
             }

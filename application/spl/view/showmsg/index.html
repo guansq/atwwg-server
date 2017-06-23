@@ -11,11 +11,11 @@
 <main class="main">
 
   <ul class="atw-list">
-    <li>待报价<span>{$waitQuoteNum}</span></li>
-    <li>订单逾期警告<span>{$poItemNum}</span></li>
-    <li>资质过期提醒<span>{$pastSuppNum}</span></li>
-    <li>新订单<span>{$initPoNum}</span></li>
-    <li>合同未回传<span>{$atwSureNum}</span></li>
+    <a data-open="/offer/index"><li>待报价<span>{$waitQuoteNum}</span></li></a>
+    <a data-open="/order/index"><li>订单逾期警告<span>{$poItemNum}</span></li></a>
+    <a data-open="/suppliercenter/index"><li>资质过期提醒<span>{$pastSuppNum}</span></li></a>
+    <a data-open="/order/index"><li>新订单<span>{$initPoNum}</span></li></a>
+    <a data-open="/suppliercenter/index"><li>合同未回传<span>{$atwSureNum}</span></li></a>
   </ul>
   <div class="atw-title">近一年交货及时率和质量合格率统计</div>
   <!-- 为ECharts准备一个具备大小（宽高）的Dom -->

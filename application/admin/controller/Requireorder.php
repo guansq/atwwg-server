@@ -247,7 +247,7 @@ class Requireorder extends BaseController{
             'pr_code' => $data['pr_code'],
             'item_code' => $data['item_code'],
         ];
-
+        $data['point_date'] = strtotime($data['point_date']);
         //得到pr_info
         $prInfo = $logicPrInfo->getPrInfo(['id'=>$data['item_id']]);
         $sendInfo = [];

@@ -109,6 +109,7 @@ class Offer extends Base{
             'quote_price' => ($data['quote_price']),
             'remark' => $data['remark'],
             'status' => 'quoted',//改变已报价
+            'read_at' => time(),//记录阅读时间
         ];
         $list = $offerLogic->updateData($key, $dataArr);
         //dump($list);die;

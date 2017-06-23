@@ -180,6 +180,6 @@ class Po extends BaseLogic{
      * 保存poItem
      */
     public function savePoItem($data){
-        return $res = poItemModel::save($data);
+        return $res = poItemModel::create($data);
     }
 }

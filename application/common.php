@@ -678,32 +678,26 @@ function placeOrder($itemInfo){
     $sendData['supplierCode'] = $itemInfo['sup_code'];//供应商代码
     $lines = [];
     //foreach($itemInfo as $k => $v){}
-        $lines[0] = [
-            'ItemCode' => $itemInfo['item_code'],//料品号
-            'OrderPriceTC' => $itemInfo['price'],//采购单价
-            'OrderTotalTC' => $itemInfo['price']*$itemInfo['price_num'],//采购总金额
-            'ReqQty' => $itemInfo['price_num'],//采购数量
-            'RequireDate' => $itemInfo['req_date'],//请购时间
-            'SupConfirmDate' => $itemInfo['sup_confirm_date'],//供应商供货日期
-            'TaxRate' => $itemInfo['tax_rate']*100,//税率
-            'TradeUOM' => $itemInfo['tc_uom'],//交易单位
-            'ValuationQty' => $itemInfo['tc_num'],//
-            'ValuationUnit' => $itemInfo['price_uom'],//
-            'srcDocPRLineNo' => $itemInfo['pr_ln'],
-            'srcDocPRNo' => $itemInfo['pr_code']
-        ];
+    $lines[0] = [
+        'ItemCode' => $itemInfo['item_code'],//料品号
+        'OrderPriceTC' => $itemInfo['price'],//采购单价
+        'OrderTotalTC' => $itemInfo['price']*$itemInfo['price_num'],//采购总金额
+        'ReqQty' => $itemInfo['price_num'],//采购数量
+        'RequireDate' => $itemInfo['req_date'],//请购时间-需求日期
+        'SupConfirmDate' => $itemInfo['sup_confirm_date'],//供应商供货日期
+        'TaxRate' => $itemInfo['tax_rate']*100,//税率
+        'TradeUOM' => $itemInfo['tc_uom'],//交易单位
+        'ValuationQty' => $itemInfo['tc_num'],//
+        'ValuationUnit' => $itemInfo['price_uom'],//
+        'srcDocPRLineNo' => $itemInfo['pr_ln'],
+        'srcDocPRNo' => $itemInfo['pr_code']
+    ];
 
     $sendData['lines'] = $lines;
-    //exit(json_encode($sendData));
+    //dd($sendData);
     $httpRet = HttpService::curl(getenv('APP_API_U9').'index/po', $sendData);
     $res = json_decode($httpRet, true);//成功回写数据库
     //dump($res);
     return ['code'=>$res['code'],'msg'=>$res['msg'],'data'=>$res['result']];
-    /*if($res['code'] != 2000){
-        return false;//调用失败
-        //returnjson(6000,'调用U9接口异常',$res);
-    }
-    return $res['result']['DocNo'];*/
-    //dump($res['result']);die;
-    //return ['code'=>2000,'msg'=>'','data'=>['DocNo'=>$res['result']['DocNo']]];
+
 }

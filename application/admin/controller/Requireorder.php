@@ -247,7 +247,10 @@ class Requireorder extends BaseController{
             'pr_code' => $data['pr_code'],
             'item_code' => $data['item_code'],
         ];
-
+        $data['point_date'] = strtotime($data['point_date']);
+        $item_id = $data['item_id'];
+        $sup_code = $data['appoint_sup_code'];
+        $sup_name = $data['appoint_sup_name'];
         //得到pr_info
         $prInfo = $logicPrInfo->getPrInfo(['id'=>$data['item_id']]);
         $sendInfo = [];
@@ -255,7 +258,7 @@ class Requireorder extends BaseController{
             $sendInfo['item_code'] = $prInfo['item_code'];
             $sendInfo['price'] = $data['point_price'];
             $sendInfo['price_num'] = $prInfo['price_num'];
-            $sendInfo['req_date'] = $prInfo['pr_date'];
+            $sendInfo['req_date'] = $prInfo['req_date'];//需求日期
             $sendInfo['sup_confirm_date'] = $data['point_date'];
             $sendInfo['tax_rate'] = $prInfo['tax_rate'];
             $sendInfo['tc_uom'] = $prInfo['tc_uom'];
@@ -286,6 +289,7 @@ class Requireorder extends BaseController{
                 //'pr_code' => $itemInfo['pr_code'],
                 'order_code' => $docNo,
                 'sup_code' => $prInfo['appoint_sup_code'],
+                'doc_date' => $now,
                 'is_include_tax' => 1,      //是否含税
                 'status' => 'init',
                 'create_at' => $now,
@@ -294,8 +298,8 @@ class Requireorder extends BaseController{
             $po_id = $poLogic->insertOrGetId($poData);
             //生成poItem
             $poItemData = [
-                'po_id' => $prInfo['id'],
-                'po_code' => $po_id,
+                'po_id' => $po_id,
+                'po_code' => $docNo,
                 'item_code' => $prInfo['item_code'],
                 'item_name' => $prInfo['item_name'],
                 'sup_code' => $prInfo['appoint_sup_code'],
@@ -305,6 +309,7 @@ class Requireorder extends BaseController{
                 'tc_num' => $prInfo['tc_num'],
                 'tc_uom' => $prInfo['tc_uom'],
                 'pr_code' => $prInfo['pr_code'],
+                'pr_id' => $prInfo['id'],
                 'pr_ln' => $prInfo['pr_ln'],
                 'sup_confirm_date' => $data['point_date'],
                 'req_date' => $prInfo['req_date'],
@@ -314,9 +319,9 @@ class Requireorder extends BaseController{
                 'tax_rate' => $prInfo['tax_rate'],
                 'create_at' => $now,
                 'update_at' => $now,
-                'status' => 'init',
+                'status' => 'placeorder',
             ];
-            $po_id = $poLogic->insertOrGetId($poData);//保存po表
+            //dd($poItemData);
             if($po_id === false){
                 return json(['code'=>6000,'msg'=>'生成订单失败','data'=>['sup_name' => $data['appoint_sup_name']]]);
             }
@@ -326,11 +331,10 @@ class Requireorder extends BaseController{
                 return json(['code'=>6000,'msg'=>'生成未下单订单失败','data'=>['sup_name' => $data['appoint_sup_name']]]);
             }
             //if($res){}
-            $data = ['status'=>'close'];
-            $where = ['id'=>$data['item_id']];
-            $ret = $logicPrInfo->updatePr($where,$data);
+            $where = ['id'=>$item_id];
+            $ret = $logicPrInfo->updatePr($where,['status'=>'order']);
             if($ret === false){
-                return json(['code'=>6000,'msg'=>'状态关闭失败','data'=>['sup_name' => $data['appoint_sup_name']]]);
+                return json(['code'=>6000,'msg'=>'更改下单状态失败','data'=>['sup_name' => $data['appoint_sup_name']]]);
             }
         }
         return json(['code'=>2000,'msg'=>'成功','data'=>['sup_name' => $data['appoint_sup_name']]]);

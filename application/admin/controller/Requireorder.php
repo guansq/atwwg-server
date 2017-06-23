@@ -317,7 +317,7 @@ class Requireorder extends BaseController{
                 'tax_rate' => $prInfo['tax_rate'],
                 'create_at' => $now,
                 'update_at' => $now,
-                'status' => 'init',
+                'status' => 'placeorder',
             ];
             if($po_id === false){
                 return json(['code'=>6000,'msg'=>'生成订单失败','data'=>['sup_name' => $data['appoint_sup_name']]]);
@@ -329,9 +329,9 @@ class Requireorder extends BaseController{
             }
             //if($res){}
             $where = ['id'=>$item_id];
-            $ret = $logicPrInfo->updatePr($where,['status'=>'close']);
+            $ret = $logicPrInfo->updatePr($where,['status'=>'order']);
             if($ret === false){
-                return json(['code'=>6000,'msg'=>'状态关闭失败','data'=>['sup_name' => $data['appoint_sup_name']]]);
+                return json(['code'=>6000,'msg'=>'更改下单状态失败','data'=>['sup_name' => $data['appoint_sup_name']]]);
             }
         }
         return json(['code'=>2000,'msg'=>'成功','data'=>['sup_name' => $data['appoint_sup_name']]]);

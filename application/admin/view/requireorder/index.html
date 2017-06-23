@@ -295,7 +295,7 @@
   })
   var flag=0;
   $(".submitbt").click(function () {
-
+    layer.load();
     $('input[name="listcheck"]:checked').each(function(){
       flag = 1;
       appoint_sup_code = $(this).attr('data-sup_code');
@@ -322,11 +322,13 @@
       'pr_code':pr_code
     };
     $.post("{:url('Requireorder/savePr')}",sendObj,function(res){
+      layer.closeAll();
       if(res.code == 2000){
         $(".barcode_box").css("display","none");
         $("input[data-pr_id^="+pr_id+"]") .parent().next().html(res.data.sup_name)
         //var str = '<a href="javascript:;" onclick="checkStatus(\'agree\','+pr_id+')">通过</a>&nbsp;&nbsp;<a href="javascript:;" onclick="checkStatus(\'refuse\','+pr_id+')">拒绝</a>';
         //$("input[data-pr_id^="+pr_id+"]") .parent().next().next().html(str)
+        $.form.reload();
       }else{
         layer.alert(res.msg);
       }

@@ -247,15 +247,97 @@ class Requireorder extends BaseController{
             'pr_code' => $data['pr_code'],
             'item_code' => $data['item_code'],
         ];
+
+        //得到pr_info
+        $prInfo = $logicPrInfo->getPrInfo(['id'=>$data['item_id']]);
+        $sendInfo = [];
+        if($prInfo){
+            $sendInfo['item_code'] = $prInfo['item_code'];
+            $sendInfo['price'] = $data['point_price'];
+            $sendInfo['price_num'] = $prInfo['price_num'];
+            $sendInfo['req_date'] = $prInfo['pr_date'];
+            $sendInfo['sup_confirm_date'] = $data['point_date'];
+            $sendInfo['tax_rate'] = $prInfo['tax_rate'];
+            $sendInfo['tc_uom'] = $prInfo['tc_uom'];
+            $sendInfo['tc_num'] = $prInfo['tc_num'];
+            $sendInfo['price_uom'] = $prInfo['price_uom'];
+            $sendInfo['pr_ln'] = $prInfo['pr_ln'];
+            $sendInfo['pr_code'] = $prInfo['pr_code'];
+            $sendInfo['sup_code'] = $data['appoint_sup_code'];
+        }
+        $ret = placeOrder($sendInfo);//生成PO表 生成PO ITEM表
+        if($ret['code'] != 2000){
+            $msg = $ret['msg'].'：'.$ret['data']['Message'];
+            return json(['code'=>$ret['code'],'msg'=>$msg,'data'=>[]]);
+
+        }
+
         $result = $logicPrInfo->updateByPrCode($where,$dataArr);
         if (false === $result) {
             return json(['code'=>4000,'msg'=>'指定供应商状态失败','data'=>[]]);
         }
-        //重新计算价格
 
+        $docNo = $ret['data']['DocNo'];//生成PO表 生成PO ITEM表
+        if($docNo){
+            $poLogic = model('Po', 'logic');
+            $now = time();
+            //生成一条po记录
+            $poData = [
+                //'pr_code' => $itemInfo['pr_code'],
+                'order_code' => $docNo,
+                'sup_code' => $prInfo['appoint_sup_code'],
+                'is_include_tax' => 1,      //是否含税
+                'status' => 'init',
+                'create_at' => $now,
+                'update_at' => $now,
+            ];
+            $po_id = $poLogic->insertOrGetId($poData);
+            //生成poItem
+            $poItemData = [
+                'po_id' => $prInfo['id'],
+                'po_code' => $po_id,
+                'item_code' => $prInfo['item_code'],
+                'item_name' => $prInfo['item_name'],
+                'sup_code' => $prInfo['appoint_sup_code'],
+                'sup_name' => $prInfo['appoint_sup_name'],
+                'price_num' => $prInfo['price_num'],
+                'price_uom' => $prInfo['price_uom'],
+                'tc_num' => $prInfo['tc_num'],
+                'tc_uom' => $prInfo['tc_uom'],
+                'pr_code' => $prInfo['pr_code'],
+                'pr_ln' => $prInfo['pr_ln'],
+                'sup_confirm_date' => $data['point_date'],
+                'req_date' => $prInfo['req_date'],
+                'price' => $data['point_price'],
+                'tax_price' => $data['point_price']+($prInfo['tax_rate']*$data['point_price']),//
+                'amount' => $data['point_price']*$prInfo['price_num'],
+                'tax_rate' => $prInfo['tax_rate'],
+                'create_at' => $now,
+                'update_at' => $now,
+                'status' => 'init',
+            ];
+            $po_id = $poLogic->insertOrGetId($poData);//保存po表
+            if($po_id === false){
+                return json(['code'=>6000,'msg'=>'生成订单失败','data'=>['sup_name' => $data['appoint_sup_name']]]);
+            }
+            //if($po_id){}
+            $res = $poLogic->savePoItem($poItemData);
+            if($res === false){
+                return json(['code'=>6000,'msg'=>'生成未下单订单失败','data'=>['sup_name' => $data['appoint_sup_name']]]);
+            }
+            //if($res){}
+            $data = ['status'=>'close'];
+            $where = ['id'=>$data['item_id']];
+            $ret = $logicPrInfo->updatePr($where,$data);
+            if($ret === false){
+                return json(['code'=>6000,'msg'=>'状态关闭失败','data'=>['sup_name' => $data['appoint_sup_name']]]);
+            }
+        }
         return json(['code'=>2000,'msg'=>'成功','data'=>['sup_name' => $data['appoint_sup_name']]]);
         //is_appoint_sup 1 //appoint_sup_code //appoint_sup_name
     }
+
+
 
     /*
      * 审批指定供应商状态

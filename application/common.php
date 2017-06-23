@@ -663,3 +663,47 @@ function pushInfo($token,$title,$content){
     ];
     HttpService::curl(getenv('APP_API_MSG').'push',$sendData);
 }
+
+/*
+ * 内部创建U9订单
+ */
+function placeOrder($itemInfo){
+
+    $sendData = [];
+    $sendData['DocDate'] = time();//单价日期
+    $sendData['DocTypeCode'] = 'PO01';//单据类型
+    $sendData['TCCode'] = 'C001';//币种编码
+    $sendData['bizType'] = '316';//U9参数
+    $sendData['isPriceIncludeTax'] = 1;//是否含税
+    $sendData['supplierCode'] = $itemInfo['sup_code'];//供应商代码
+    $lines = [];
+    //foreach($itemInfo as $k => $v){}
+        $lines[0] = [
+            'ItemCode' => $itemInfo['item_code'],//料品号
+            'OrderPriceTC' => $itemInfo['price'],//采购单价
+            'OrderTotalTC' => $itemInfo['price']*$itemInfo['price_num'],//采购总金额
+            'ReqQty' => $itemInfo['price_num'],//采购数量
+            'RequireDate' => $itemInfo['req_date'],//请购时间
+            'SupConfirmDate' => $itemInfo['sup_confirm_date'],//供应商供货日期
+            'TaxRate' => $itemInfo['tax_rate']*100,//税率
+            'TradeUOM' => $itemInfo['tc_uom'],//交易单位
+            'ValuationQty' => $itemInfo['tc_num'],//
+            'ValuationUnit' => $itemInfo['price_uom'],//
+            'srcDocPRLineNo' => $itemInfo['pr_ln'],
+            'srcDocPRNo' => $itemInfo['pr_code']
+        ];
+
+    $sendData['lines'] = $lines;
+    //exit(json_encode($sendData));
+    $httpRet = HttpService::curl(getenv('APP_API_U9').'index/po', $sendData);
+    $res = json_decode($httpRet, true);//成功回写数据库
+    //dump($res);
+    return ['code'=>$res['code'],'msg'=>$res['msg'],'data'=>$res['result']];
+    /*if($res['code'] != 2000){
+        return false;//调用失败
+        //returnjson(6000,'调用U9接口异常',$res);
+    }
+    return $res['result']['DocNo'];*/
+    //dump($res['result']);die;
+    //return ['code'=>2000,'msg'=>'','data'=>['DocNo'=>$res['result']['DocNo']]];
+}

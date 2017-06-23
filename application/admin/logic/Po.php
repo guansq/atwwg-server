@@ -175,4 +175,11 @@ class Po extends BaseLogic{
         }
         return $list;
     }
+
+    /*
+     * 保存poItem
+     */
+    public function savePoItem($data){
+        return $res = poItemModel::save($data);
+    }
 }

@@ -132,7 +132,8 @@
         'remark':value,
         'action':action
       };
-      layer.close(index);
+      //layer.close(index);
+      layer.closeAll();
       layer.load();
       $.post(url, data, function(res){
         layer.closeAll();

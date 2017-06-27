@@ -87,8 +87,8 @@
       {/notempty}
       {if $poInfo['status'] eq 'upload_contract'}
       <section class="other_box_se1">
-        <button class="layui-btn" onclick="verifyOrder({$poInfo['id']},\"{$poInfo['sup_code']}\",'contract_pass',this)">合同审核通过</button>
-        <button class="layui-btn" onclick="verifyOrder({$poInfo['id']},\"{$poInfo['sup_code']}\",'contract_pass',this)">拒绝该合同</button>
+        <button class="layui-btn" onclick="verifyOrder({$poInfo['id']},'{$poInfo['sup_code']}','contract_pass',this)">合同审核通过</button>
+        <button class="layui-btn" onclick="verifyOrder({$poInfo['id']},'{$poInfo['sup_code']}','contract_pass',this)">拒绝该合同</button>
       </section>
       {elseif $poInfo['status'] eq 'contract_pass' /}
       <p class="h2">合同已审核通过

@@ -249,11 +249,12 @@ class Order extends BaseController{
         $logicSupInfo = Model('Supporter','logic');
         $param = input('param.');
         $piData = [
-            'status' => $param['action']
+            'status' => $param['action'],
+            'remark' => input('param.remark')
         ];
         $where = [
             'id' => $param['id'],
-            'remark' => input('param.remark')
+
         ];
 
         $status = [

@@ -47,6 +47,7 @@ class Enquiryorder extends BaseController{
             $where['pr.status'] = $get['status'];
         }
         $list = $logicIoInfo->getIoList($start,$length,$where);
+        $totalNum = $logicIoInfo->getListNum($where);
         $returnArr = [];
 
         foreach($list as $k => $v){
@@ -102,7 +103,7 @@ class Enquiryorder extends BaseController{
 
         }
 
-        $info = ['draw'=>time(),'recordsTotal'=>$logicIoInfo->getListNum($where),'recordsFiltered'=>$logicIoInfo->getListNum($where),'data'=>$returnArr];
+        $info = ['draw'=>time(),'recordsTotal'=>$totalNum,'recordsFiltered'=>$totalNum,'data'=>$returnArr];
 
         return json($info);
     }
@@ -413,4 +414,66 @@ class Enquiryorder extends BaseController{
         exit($contents);
     }
 
+    /**
+     * Author: WILL<314112362@qq.com>
+     * Describe:根据询价 单下采购单
+     */
+    public function placePurchOrderFromIo(){
+        $now = time();
+        $io_id = input('param.io_id');
+        //通过io_id得到io信息
+        $ioLogic = model('Io','logic');
+        $io = $ioLogic->getIoRecord(['id'=>$io_id]);
+        /*$poData = [
+            'pr_code' => $io['pr_code'],
+            'sup_code' => $io['sup_code'],
+            'is_include_tax' => 1,      //是否含税
+            'status' => 'init',
+            'create_at' => $now,
+            'update_at' => $now,
+        ];
+        $poId = $this->insertGetId($poData);
+        if(!$poId){
+            return resultArray(5000);
+        };*/
+        $poItemData = [
+            'po_id' => null,
+            'item_code' => $io['item_code'],
+            'item_name' => $io['item_name'],
+            'sup_code' => $io['sup_code'],
+            'sup_name' => $io['sup_name'],
+            'price_num' => $io['price_num'],
+            'price_uom' => $io['price_uom'],
+            'tc_num' => $io['tc_num'],
+            'tc_uom' => $io['tc_uom'],
+            'pr_id' => $io['pr_id'],
+            'pr_code' => $io['pr_code'],
+            'pr_ln' => $io['pr_ln'],
+            'sup_confirm_date' => $io['promise_date'],
+            'req_date' => $io['req_date'],
+            'price' => $io['quote_price'],
+            'tax_price' => round($io['quote_price']*(1 + floatval($io['tax_rate'])), 2),
+            'amount' => round($io['quote_price']*(1 /*+ floatval($io['tax_rate'])*/)*$io['price_num'], 2),
+            'tax_rate' => $io['tax_rate'],
+            'winbid_time' => $now
+        ];
+        model('Po','logic')->savePoItem($poItemData);//保存pi表
+        //更改pr表状态为待下单wait
+        model('RequireOrder','logic')->updatePr(['id'=>$io['pr_id']],['status'=>'wait']);
+        //更改io表状态为中标winbid
+        model('Io','logic')->updateIo(['id'=>$io_id],['status'=>'winbid','']);
+        return resultArray(2000);
+
+    }
+
+    /**
+     * Author: WILL<314112362@qq.com>
+     * Describe: 中标更新
+     * @param $io
+     */
+    private function updateWinbid($io, $isSingle = false){
+        $this->where(['pr_id' => $io['pr_id']])->update(['status' => 'close']);
+        $status = $isSingle ? 'winbid_uncheck' : 'winbid'; //单一资源要进行人工审批
+        $this->where(['id' => $io['id']])->update(['status' => $status, 'winbid_date' => time()]);
+    }
 }

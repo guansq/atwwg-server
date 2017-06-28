@@ -70,7 +70,8 @@ class Io extends BaseLogic{
         if(!empty($where)){
             $count = $count->where($where);
         }
-        $count = $count->select();
+        $count = $count->count();
+        //echo $this->getLastSql();die;
         //$count = IoModel::alias('a')->field('a.*,b.desc')->join('item b','a.item_code=b.code','LEFT')->group('pr_code,item_code')->count();
         return $count;
     }
@@ -136,5 +137,23 @@ class Io extends BaseLogic{
             $list = $list->toArray();
         }
         return $list;
+    }
+
+    /*
+     * 得到一条Io记录
+     */
+    function getIoRecord($where){
+        $info = IoModel::where($where)->find();
+        if($info){
+            $info  = $info->toArray();
+        }
+        return $info;
+    }
+
+    /*
+     * 更新Io
+     */
+    function updateIo($where,$data){
+        return IoModel::where($where)->update($data);
     }
 }

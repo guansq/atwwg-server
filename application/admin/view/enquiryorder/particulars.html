@@ -101,8 +101,8 @@
             <button type="button" class="btn btn-info" onclick="sendOneMsg('{$vo.id}');">发消息</button>
             {else /}
               {if $vo['status'] eq 'winbid_uncheck'}
-                <button class="layui-btn">通过</button>
-                <button class="layui-btn">拒绝</button>
+                <button class="layui-btn" onclick="passAndCreateIo('{$vo.id}');">通过</button>
+                <button class="layui-btn" onclick="refuseAndClear('{$vo.id}');">拒绝</button>
               {else /}
                 {$vo['statusStr']}
               {/if}
@@ -162,6 +162,42 @@ function sendAllMsg(){
         layer.alert('发送成功');
       }
     });
+  }
+  //通过并生成IO
+  function passAndCreateIo($ioId){
+      $.msg.loading();
+      if($ioId == ''){
+          layer.alert('抱歉，请重试');
+          return;
+      }
+      url = "{:url('Enquiryorder/placePurchOrderFromIo')}";
+      data = {
+          'io_id' : $ioId
+      }
+      $.post(url,data,function(res){
+          $.msg.close();
+          if(res.code == 2000){
+              layer.alert('发送成功');
+          }
+      });
+  }
+  //拒绝并清空PR状态 清空IO字段
+  function refuseAndClear($ioId){
+      $.msg.loading();
+      if($ioId == ''){
+          layer.alert('抱歉，请重试');
+          return;
+      }
+      url = "{:url('Enquiryorder/sendOneMsg')}";
+      data = {
+          'io_id' : $ioId
+      }
+      $.post(url,data,function(res){
+          $.msg.close();
+          if(res.code == 2000){
+              layer.alert('发送成功');
+          }
+      });
   }
 </script>
 {/block}

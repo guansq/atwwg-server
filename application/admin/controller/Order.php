@@ -170,6 +170,7 @@ class Order extends BaseController{
 
             $returnInfo[$k]['sup_name'] = $v['sup_name'];
             $returnInfo[$k]['item_code'] = $v['item_code'];
+            $returnInfo[$k]['item_name'] = $v['item_name'];
             $returnInfo[$k]['winbid_time'] = atwDate($v['winbid_time']);
             $returnInfo[$k]['req_date'] = atwDate($v['req_date']);//要求交期
             $returnInfo[$k]['sup_confirm_date'] = atwDate($v['sup_confirm_date']);//承诺交期

@@ -508,7 +508,8 @@ class Requireorder extends BaseController{
             'id' => $pr_id
         ];
         $data = [
-            'status' => 'init'
+            'status' => 'init',
+            'is_force_inquiry' => 1
         ];
         $RequireLogic->updatePr($where,$data);
         $resAll = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/prToInquiry'));//prToInquiry

@@ -527,15 +527,20 @@ class Order extends BaseController{
             $list = [];
             foreach($idArr as $k=>$v){
                 $list[$k] = ['id'=>$v,'po_id'=>$po_id,'po_code'=>$res['data']['DocNo'],'update_at' => $now,'status'=>'placeorder'];
+
             }
             /*foreach($idArr as $k=>$v){
                 $data[$k] = ['id'=>$v,'po_id'=>$po_id,'po_code'=>$res['data']['DocNo'],'create_at'=>date('Y-m-d',$now)];
             }*/
             $res = $poLogic->updateAllPoid($list);
             $data = $list;
+            //更改PR表status状态为已下单
+            $prLogic = model('RequireOrder','logic');
+            foreach($itemInfo as $k=> $v){
+                $prLogic->updatePr(['id'=>$v['pr_id']],['status'=>'order']);
+            }
             //发消息通过$sup_code $sup_name得到$sup_id
             $sup_id = $supLogic->getSupIdVal(['code'=> $sup_code]);
-
             if(empty($sup_id)){
                 return json(['code'=>5000,'msg'=>"下订单成功，消息发送失败。 code:$sup_code 未绑定账号。",'data'=>$data]);
             }

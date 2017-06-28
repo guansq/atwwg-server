@@ -137,6 +137,7 @@
           $('td', row).eq(7).html(tmpstr);
           tmpstr ='￥<input type="text" style="width:80%;float:right" name="quote_price" lay-verify="required|float" value="'+data.quote_price+'"'+data.showinfo+' placeholder="请输入单价">';
           $('td', row).eq(8).html(tmpstr);
+          $('td', row).eq(8).attr('id','price_'+data.id);
           $('td', row).eq(9).attr('id','total_price_'+data.id);
           $('td', row).eq(9).html( '￥'+$('td', row).eq(9).html())
           $('td', row).eq(9).addClass('active');

@@ -20,7 +20,8 @@ class Requireorder extends BaseController{
     protected $title = '请购单管理';
     const PURATTR = [
         'tech' => '技术型',
-        'compete' => '竞争型'
+        'compete' => '竞争型',
+        'single' => '单一资源型'
     ];
     public function index(){
         //echo '111111111';die;
@@ -139,10 +140,11 @@ class Requireorder extends BaseController{
                 if($is_appoint_sup == 1){
                     $v['is_appoint_sup'] = '<input style="margin-right: 15px;" type="checkbox" data-pr_id="'.$v['id'].'" data-pr_code="'.
                     $v['pr_code'].'" data-item_code="'.$v['item_code'].'" checked class="ver_top" checked value="1">指定';//有指定的时候
+                    $v['is_appoint_sup'] .= '<p id="cancel'.$v['id'].'"></p>';
                 }else{
                     $v['is_appoint_sup'] = '<input style="margin-right: 15px;" type="checkbox" data-pr_id="'.$v['id'].'" data-pr_code="'.
                         $v['pr_code'].'" data-item_code="'.$v['item_code'].'" class="ver_top" value="0">指定';//没有指定的时候
-                    $v['is_appoint_sup'] .= '<br><a href="javascript:cancelPoint('.$v['id'].');">取消指定</a>';
+                    $v['is_appoint_sup'] .= '<p id="cancel'.$v['id'].'"><a href="javascript:cancelPoint('.$v['id'].');">取消指定</a></p>';
                 }
             }else{//订单非挂起 和  非指定
                 $v['is_appoint_sup'] = '';

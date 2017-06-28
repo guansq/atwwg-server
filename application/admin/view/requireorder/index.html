@@ -220,29 +220,37 @@
           var _this =$(this);
           var is_appoint_sup;
 
-          Global.item_code = $(this).attr("data-item_code");
-          Global.pr_code = $(this).attr("data-pr_code");
-          var newhtml ="<a onclick=\"bomb_box(event,'"+$(this).attr("data-pr_code")+"','"+ $(this).attr("data-item_code")+"','"+ $(this).attr("data-pr_id")+"');\" class='select_sell' data-url='{:url(\"Requireorder/showSelectSup\")}/pr_code/"+Global.pr_code+"/item_code/"+Global.item_code+"'>选择供应商</a>";
+          var item_code = $(this).attr('data-item_code');
+          var pr_code = $(this).attr('data-pr_code');
+          var pr_id = $(this).attr("data-pr_id");
+          var newhtml ="<a onclick=\"bomb_box(event,'"+pr_code+"','"+ item_code+"','"+ pr_id+"');\" class='select_sell' data-url='{:url(\"Requireorder/showSelectSup\")}/pr_code/"+pr_code+"/item_code/"+item_code+"'>选择供应商</a>";
 
           if($(this).is(':checked')){
-            _this.parent().next().html(newhtml);
             is_appoint_sup =1;
           }else{
             is_appoint_sup =0;
-            _this.parent().next().html("自动询价");
-            _this.parent().next().next().html("");
           }
           var sendObj ={
-            'pr_code' :  $(this).attr("data-pr_code"),
+            'pr_code' :  pr_code,
             'is_appoint_sup' : is_appoint_sup,
-            'item_code' : $(this).attr("data-item_code")
+            'item_code' : item_code
           };
+          layer.load();
           $.post("{:url('Requireorder/changeInquiType')}",sendObj,function(res){
+            layer.closeAll();
             if(res.code == 2000){
               if(is_appoint_sup == 1){
                 _this.parent().prev().prev().html("挂起");
+                _this.parent().next().html(newhtml);
+                $('#cancel'+pr_id).html('');
+                //var str = check_html+'<a href="javascript:cancelPoint('+pr_id+');">取消指定</a>';
+                //_this.parent().html(check_html);
               }else{
                 _this.parent().prev().prev().html("待询价");
+                _this.parent().next().html("自动询价");
+                _this.parent().next().next().html("");
+                var str = '<a href="javascript:cancelPoint('+pr_id+');">取消指定</a>';
+                $('#cancel'+pr_id).html(str);
               }
               //$.form.reload();
             }else{

@@ -100,7 +100,12 @@
             {if $commonInfo['status_desc'] eq '询价中'}
             <button type="button" class="btn btn-info" onclick="sendOneMsg('{$vo.id}');">发消息</button>
             {else /}
-            {$vo['statusStr']}
+              {if $vo['status'] eq 'winbid_uncheck'}
+                <button class="layui-btn">通过</button>
+                <button class="layui-btn">拒绝</button>
+              {else /}
+                {$vo['statusStr']}
+              {/if}
             {/if}
           </td>
 

@@ -13,6 +13,7 @@ use service\DataService;
 use think\Db;
 use PHPExcel_IOFactory;
 use PHPExcel;
+use service\HttpService;
 
 class Requireorder extends BaseController{
     protected $table = 'SystemArea';
@@ -140,6 +141,7 @@ class Requireorder extends BaseController{
                 }else{
                     $v['is_appoint_sup'] = '<input style="margin-right: 15px;" type="checkbox" data-pr_id="'.$v['id'].'" data-pr_code="'.
                         $v['pr_code'].'" data-item_code="'.$v['item_code'].'" class="ver_top" value="0">指定';//没有指定的时候
+                    $v['is_appoint_sup'] .= '<br><a href="javascript:cancelPoint('.$v['id'].');">取消指定</a>';
                 }
             }else{//订单非挂起 和  非指定
                 $v['is_appoint_sup'] = '';
@@ -488,5 +490,22 @@ class Requireorder extends BaseController{
         header("Content-Disposition: attachment; filename=".$file_name);
         exit($contents);
     }
+    /*
+     * 取消审核
+     */
+    public function cancelPoint(){
+        $RequireLogic = model('RequireOrder','logic');
 
+        //更改当前状态为init
+        $pr_id = input('get.pr_id');
+        $where = [
+            'id' => $pr_id
+        ];
+        $data = [
+            'status' => 'init'
+        ];
+        $RequireLogic->updatePr($where,$data);
+        $resAll = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/prToInquiry'));//prToInquiry
+        return json($resAll);
+    }
 }

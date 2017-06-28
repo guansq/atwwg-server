@@ -401,5 +401,17 @@
       //console.log(str);
     });
   })
+  /*
+  新增取消指定供应商
+   */
+  function cancelPoint(pr_id){
+      layer.load(1,{
+          shade: [0.1,"#fff"]
+      });
+      $.get("{:url('Requireorder/cancelPoint')}",{'pr_id':pr_id},function(){
+          layer.closeAll();
+          $.form.reload();
+      });
+  }
 </script>
 {/block}

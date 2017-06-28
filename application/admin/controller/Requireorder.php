@@ -71,7 +71,8 @@ class Requireorder extends BaseController{
             'assign' => '指定供应商',
             'exclusive' => '独家采购',
             'compete' => '充分竞争',
-            'have_price' => '有价格'
+            'have_price' => '有价格',
+            'no_sup' => '无匹配供应商'
         ];
         //dump($list);die;
         foreach($list as $k => $v){
@@ -425,7 +426,8 @@ class Requireorder extends BaseController{
             'assign' => '指定供应商',
             'exclusive' => '独家采购',
             'compete' => '充分竞争',
-            'have_price' => '有价格'
+            'have_price' => '有价格',
+            'no_sup' => '无匹配供应商'
         ];
         foreach($list as $k => $v){
             $returnArr[] = [

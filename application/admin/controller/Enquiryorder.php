@@ -87,6 +87,7 @@ class Enquiryorder extends BaseController{
                 'io_code' => $v['io_code'],//询价单号
                 'pr_code' => $v['pr_code'],//请购单号
                 'item_code' => $v['item_code'],//料号
+                'item_name' => $v['item_name'],//物料描述
                 'desc' => $v['desc'],//物料描述
                 'pro_no' => $v['pro_no'],//项目号
                 'tc_uom' => $v['tc_uom'],//交易单位
@@ -461,19 +462,23 @@ class Enquiryorder extends BaseController{
         //更改pr表状态为待下单wait
         model('RequireOrder','logic')->updatePr(['id'=>$io['pr_id']],['status'=>'wait']);
         //更改io表状态为中标winbid
-        model('Io','logic')->updateIo(['id'=>$io_id],['status'=>'winbid','']);
-        return resultArray(2000);
-
+        model('Io','logic')->updateIo(['id'=>$io_id],['status'=>'winbid','winbid_date'=>time()]);
+        return json(['code'=>2000,'msg'=>'成功','data'=>[]]);
     }
 
-    /**
-     * Author: WILL<314112362@qq.com>
-     * Describe: 中标更新
-     * @param $io
-     */
-    private function updateWinbid($io, $isSingle = false){
-        $this->where(['pr_id' => $io['pr_id']])->update(['status' => 'close']);
-        $status = $isSingle ? 'winbid_uncheck' : 'winbid'; //单一资源要进行人工审批
-        $this->where(['id' => $io['id']])->update(['status' => $status, 'winbid_date' => time()]);
+    public function refuseAndClear(){
+        $io_id = input('param.io_id');
+        $clearInfo = [
+            'promise_date' => '',
+            'quote_price' => '',
+            'quote_date' => '',
+            'remark' => '',
+            'winbid_date' => '',
+            'status' => 'init'
+        ];
+        //更改io表状态为中标winbid
+        model('Io','logic')->updateIo(['id'=>$io_id],$clearInfo);
+        return json(['code'=>2000,'msg'=>'成功','data'=>[]]);
     }
+
 }

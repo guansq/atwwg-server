@@ -177,7 +177,7 @@ function sendAllMsg(){
       $.post(url,data,function(res){
           $.msg.close();
           if(res.code == 2000){
-              layer.alert('发送成功');
+              $.form.reload();
           }
       });
   }
@@ -188,14 +188,14 @@ function sendAllMsg(){
           layer.alert('抱歉，请重试');
           return;
       }
-      url = "{:url('Enquiryorder/sendOneMsg')}";
+      url = "{:url('Enquiryorder/refuseAndClear')}";
       data = {
           'io_id' : $ioId
       }
       $.post(url,data,function(res){
           $.msg.close();
           if(res.code == 2000){
-              layer.alert('发送成功');
+              $.form.reload();
           }
       });
   }

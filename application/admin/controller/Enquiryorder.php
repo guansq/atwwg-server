@@ -490,7 +490,7 @@ class Enquiryorder extends BaseController
             'winbid_date' => '',
             'status' => 'init'
         ];
-        $io = model('Io', 'logic')->find($io_id);
+        $io = model('Io', 'logic')->where('id',$io_id)->find();
         if (empty($io)) {
             return json(['code' => 4000, 'msg' => '无效的ioId=' . $io_id, 'data' => []]);
         }

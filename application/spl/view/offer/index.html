@@ -33,6 +33,7 @@
     <table class="table table-bordered" id="example">
       <thead>
       <tr class="active">
+        <td>物料编号</td>
         <td>物料名称</td>
         <td>采购数量</td>
         <td>交易单位</td>
@@ -41,27 +42,13 @@
         <td>报价截止日期</td>
         <td>要求交期</td>
         <td>可供货日期</td>
-        <td>单价</td>
+        <td>含税单价</td>
         <td>总价</td>
         <td>备注</td>
         <td>提交报价</td>
       </tr>
       </thead>
       <tbody>
-      <tr >
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td class="active"></td>
-        <td></td>
-        <td></td>
-      </tr>
       </tbody>
     </table>
   </div>
@@ -111,6 +98,7 @@
         },
 
         "columns": [
+          { "data": "item_code"},
           { "data": "item_name" },
           { "data": "price_num" },
           { "data": "price_uom" },
@@ -126,29 +114,30 @@
         ],
         "createdRow": function ( row, data, index ) {
           $('td', row).eq(0).html($('td', row).eq(0).html()+'<input type="hidden" name="id" value="'+data.id+'">');
+          $('td', row).eq(2).attr('id','num_'+data.id);
           if(!data.create_at){
-            $('td', row).eq(4).html('--');
+            $('td', row).eq(5).html('--');
           }
           var tmpstr='';
           if(data.promise_date == null || data.promise_date == ''){
-            $('td', row).eq(7).html('');
+            $('td', row).eq(8).html('');
           }
-          tmpstr = '<input onclick="laydate({})"  class="laydate-icon" type="text" name="req_date" lay-verify="required" value="'+$('td', row).eq(7).html()+'" '+data.showinfo+'>';
-          $('td', row).eq(7).html(tmpstr);
-          tmpstr ='￥<input type="text" style="width:80%;float:right" name="quote_price" lay-verify="required|float" value="'+data.quote_price+'"'+data.showinfo+' placeholder="请输入单价">';
+          tmpstr = '<input onclick="laydate({})"  class="laydate-icon" type="text" name="req_date" lay-verify="required" value="'+$('td', row).eq(8).html()+'" '+data.showinfo+'>';
           $('td', row).eq(8).html(tmpstr);
-          $('td', row).eq(8).attr('id','price_'+data.id);
-          $('td', row).eq(9).attr('id','total_price_'+data.id);
-          $('td', row).eq(9).html( '￥'+$('td', row).eq(9).html())
-          $('td', row).eq(9).addClass('active');
+          tmpstr ='￥<input type="text" id="price_'+data.id+'" class="price" style="width:80%;float:right" data-id="'+data.id+'" name="quote_price" lay-verify="required|float" value="'+data.quote_price+'"'+data.showinfo+' placeholder="请输入单价">';
+          $('td', row).eq(9).html(tmpstr);
+          //$('td', row).eq(9).attr('id','price_'+data.id);
+          $('td', row).eq(10).attr('id','total_price_'+data.id);
+          $('td', row).eq(10).html( '￥'+$('td', row).eq(10).html())
+          $('td', row).eq(10).addClass('active');
           tmpstr ='<input type="text" value="'+data.remark+'" name="remark" '+data.showinfo+'>';
-          $('td', row).eq(10).html(tmpstr);
+          $('td', row).eq(11).html(tmpstr);
           if(data.showinfo == ''){
             tmpstr ='<button data-io-id="'+data.id+'" class="btn btn-primary"  '+data.showinfo+'lay-submit="" lay-filter="sub">提交报价</button>';
           }else{
             tmpstr ='<span>'+data.statusStr+'</span>';
           }
-          $('td', row).eq(11).html(tmpstr);
+          $('td', row).eq(12).html(tmpstr);
           // console.log(row);
           $(row).attr('id','io-'+data.id);
           $(row).addClass("layui-form");
@@ -158,6 +147,16 @@
 
         },
         "drawCallback": function( settings ) {
+            $('.price').bind("input propertychange",function(){
+                var id = $(this).attr('data-id');
+                var num = $('#num_'+id).html();
+                var price = $(this).val();
+                var total_price = num*price;
+                total_price = parseFloat(total_price).toFixed(2);
+                $('#total_price_'+id).html('¥'+total_price);
+                //console.log(total_price);
+                //console.log($(this).val());//打印输入框字符长度
+            });
         },
       });
     }

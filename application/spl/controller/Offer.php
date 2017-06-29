@@ -16,8 +16,8 @@ class Offer extends Base{
     const STATUS_ARR = [
         'init' => '未报价',
         'quoted' => '已报价',
-        'winbid_uncheck' => '中标但是需要审核',
-        'winbid_checked' => '中标已经审核',
+        'winbid_uncheck' => '待审核',
+        'winbid_checked' => '已审核',
         'winbid' => '中标',
         'giveupbid' => '弃标',
         'close' => '已关闭'
@@ -96,6 +96,7 @@ class Offer extends Base{
 
     //修改包价
     public function savePrice(){
+        $now =time();
         $data = input('param.');
         $result = $this->validate($data, 'Offer');
         if($result !== true){
@@ -103,13 +104,24 @@ class Offer extends Base{
         }
         $offerLogic = model('Offer', 'logic');
         $key = $data['id'];
+        $status =  'quoted';
+
+        // 如果是单一资源的物料 则 状态改为 要审核
+
+        $io = $offerLogic->where('id',$key)->find();
+        if (empty($io)){
+            return json(['code' => 4001, 'msg' => '无效的ioId='.$key, 'data' => []]);
+        }
+        $total = $offerLogic->where('pr_id', $io['pr_id'])->count(); // 询价总数
+        $status = $total == 1? 'winbid_uncheck':'quoted';
+
         $dataArr = [
-            'quote_date' => time(),
+            'quote_date' => $now,
             'promise_date' => strtotime($data['req_date']),
             'quote_price' => ($data['quote_price']),
             'remark' => $data['remark'],
-            'status' => 'quoted',//改变已报价
-            'read_at' => time(),//记录阅读时间
+            'status' =>$status,//改变 状态
+            'read_at' =>$now,//记录阅读时间
         ];
         $list = $offerLogic->updateData($key, $dataArr);
         //dump($list);die;
@@ -118,7 +130,7 @@ class Offer extends Base{
             $total_price = number_format($info['price_num']*$info['quote_price'],2);
             //dump($offerLogic->toArray());die;
             // 如果请购单的 供应商已经全部报完价了，则该状态为 已报价
-            model('Offer','logic')->updatePrStatusById($key);
+            $offerLogic->updatePrStatusById($key);
             return json(['code' => 2000, 'msg' => '成功', 'data' => ['total_price' => $total_price]]);
         }else{
             return json(['code' => 4000, 'msg' => '更新失败', 'data' => []]);

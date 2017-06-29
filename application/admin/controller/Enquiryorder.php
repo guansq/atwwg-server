@@ -78,6 +78,7 @@ class Enquiryorder extends BaseController{
                 'quoted' => '待评标',
                 'flow' => '流标',
                 'winbid' => '已评标',
+                'wait' => '待下单',
                 'order' => '已下单',
                 'close' => '关闭'
             ];

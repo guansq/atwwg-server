@@ -469,7 +469,9 @@ class Enquiryorder extends BaseController
             'tax_price' => round($io['quote_price'] * (1 + floatval($io['tax_rate'])), 2),
             'amount' => round($io['quote_price'] * (1 /*+ floatval($io['tax_rate'])*/) * $io['price_num'], 2),
             'tax_rate' => $io['tax_rate'],
-            'winbid_time' => $now
+            'winbid_time' => $now,
+            'create_at' => $now,
+            'update_at' => $now
         ];
         model('Po', 'logic')->savePoItem($poItemData);//保存pi表
         //更改pr表状态为待下单wait

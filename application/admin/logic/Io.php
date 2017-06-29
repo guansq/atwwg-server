@@ -12,7 +12,7 @@ use app\common\model\Io as IoModel;
 
 class Io extends BaseLogic{
 
-
+    protected $table = 'atw_io';
     const STATUS_ARR = [
         'init' => '未报价',
         'quoted' => '已报价',

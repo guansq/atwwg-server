@@ -62,7 +62,7 @@ class Io extends BaseLogic{
         return $list;
     }
 
-    function getListNum($where){
+    function getListNum($where = []){
         $count = IoModel::alias('a')
             ->field('a.id')
             ->join('item b', 'a.item_code=b.code', 'LEFT')

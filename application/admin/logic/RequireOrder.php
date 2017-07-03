@@ -62,7 +62,7 @@ class RequireOrder extends BaseLogic{
     /*
      * 得到列表数量
      */
-     function getListNum($where){
+     function getListNum($where = []){
          if(!empty($where)){
              if(key_exists('status',$where)){
                  $count = prModel::alias('a')->field('a.*,b.desc,b.pur_attr')->join('item b','a.item_code=b.code','LEFT')->where($where)->count();

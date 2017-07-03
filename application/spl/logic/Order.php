@@ -269,7 +269,7 @@ tr>th{
 }
 
 .text-small{
-  font-size: 0.8em;
+  font-size: 0.9em;
 }
 
 .agreement-form div , .agreement-form ul{
@@ -324,19 +324,19 @@ tr>th{
             <td>开户银行：</td>
             <td>$orgBankDeposit</td>
             <td>开户银行：</td>
-            <td></td>
+            <td>$supInfo[bank_name]</td>
           </tr>
           <tr>
             <td>账 号：</td>
             <td>$orgBankAccount</td>
             <td>账 号：</td>
-            <td></td>
+            <td>$supInfo[bank_account_code]</td>
           </tr>
           <tr>
             <td>税 号：</td>
             <td>$orgTaxNo</td>
             <td>税 号：</td>
-            <td></td>
+            <td>$supInfo[state_tax_code]</td>
           </tr>
           <div>本订单由买卖双方订立，根据订单规定条款，双方同意按下述条款和条件签署订单：</div>
         </table>
@@ -347,34 +347,35 @@ tr>th{
         <table class="text-small" style="width: 100%">
             <thead >
             <tr >
-                <th width="20">行号</th>
-                <th>料号</th>
-                <th width="100">物料名称</th>
-                <th>项目</th>
-                <th>交期</th>
-                <th>数量</th>
-                <th>单位</th>
-                <th>单价</th>
+                <th width="26">行号</th>
+                <th width="70">料号</th>
+                <th width="180">物料名称</th>
+                <th width="60">项目</th>
+                <th width="65">交期</th>
+                <th width="26">数量</th>
+                <th width="26">单位</th>
+                <th width="40">单价</th>
                 <th>金额</th>
             </tr>
             </thead>
             <tbody>
 EOD;
         $po['price_total'] = 0;
-        foreach($piList as $pi){
+        foreach($piList as $i => $pi){
             $confirmDate = date('Y-m-d', $pi['sup_confirm_date']);
             $price = number_format($pi['price'], 2);
             $subTotal = number_format($pi['price_num']*$pi['price'], 2);
             $po['price_total'] += $pi['price_num']*$pi['price'];
+            $ln = $i+1;
             $html .= "<tr>
-                <td width=\"20\" class=\"content-center\">1</td>
-                <td>$pi[item_code]</td>
-                <td width=\"100\">$pi[item_name]</td>
-                <td>$pi[pro_no]</td>
-                <td>$confirmDate</td>
-                <td class=\"content-right\">$pi[price_num]</td>
-                <td class=\"content-center\">$pi[price_uom]</td>
-                <td class=\"content-right\">$price</td>
+                <td width=\"26\" class=\"content-center\">$ln</td>
+                <td width=\"70\">$pi[item_code]</td>
+                <td width=\"180\">$pi[item_name]</td>
+                <td width=\"60\">$pi[pro_no]</td>
+                <td width=\"65\">$confirmDate</td>
+                <td width=\"26\" class=\"content-right\">$pi[price_num]</td>
+                <td width=\"26\" class=\"content-center\">$pi[price_uom]</td>
+                <td width=\"40\" class=\"content-right\">$price</td>
                 <td class=\"content-right\">$subTotal</td>
             </tr>";
         }

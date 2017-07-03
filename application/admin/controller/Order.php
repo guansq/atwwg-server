@@ -27,6 +27,10 @@ class Order extends BaseController{
      */
     public function wait(){
         $this->title = '待下订单';
+        $poLogic = model('Po', 'logic');
+        $allNums = $poLogic->getPoItemCount();
+        $this->assign('allNums',$allNums);
+        //echo $allNums;
         $this->assign('title', $this->title);
         return view();
     }
@@ -35,6 +39,10 @@ class Order extends BaseController{
      */
     public function index(){
         $this->title = '采购订单';
+        $poLogic = model('Po', 'logic');
+        $allNums = $poLogic->getPoCount();
+        $this->assign('allNums',$allNums);
+        //echo $allNums;
         $this->assign('title', $this->title);
         return view();
     }

@@ -26,7 +26,10 @@ class Material extends BaseController{
     ];
     public function index(){
         //得到全部INFO
-
+        $logicItemInfo = Model('Item','logic');
+        $allNums = $logicItemInfo->getListNum();
+        $this->assign('allNums',$allNums);
+        //echo $allNums;
         $this->assign('title',$this->title);
         return view();
     }

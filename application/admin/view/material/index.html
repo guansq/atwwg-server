@@ -30,6 +30,7 @@
         <button type="button" id="synchronization_btn" class="btn btn-info" style="margin-right: 15px;">立即同步ERP</button>
         <button type="button" id="excel_in" data-modal='{:url("$classuri/add")}' class="btn btn-info" style="margin-right: 15px;">导入Excel</button>
         <button type="button" id="excel_out" class="btn btn-info" style="margin-right: 15px;">导出Excel</button>
+        <!--<span style="margin-right: 25px;" class="layui-nav-item">*当前总记录数{$allNums}条</span>-->
         <span style="margin-right: 25px;" class="col_red">*当前未编辑的记录有<b id="num"></b>条</span>
       </div>
       <div>
@@ -88,7 +89,7 @@
   function initPage(){
       itemTable = $('#example').DataTable({
       //paging: false, 设置是否分页
-      "info": false,  //去除左下角的信息
+      "info": true,  //去除左下角的信息
       "lengthChange": false, //是否允许用户改变表格每页显示的记录数
       "ordering": false, //是否允许Datatables开启排序
       "searching": false,  //是否允许Datatables开启本地搜索
@@ -98,7 +99,8 @@
           "sPrevious": "上页",
           "sNext": "下页",
           "sLast": "末页"
-        }
+        },
+        "info" : "当前总记录数_TOTAL_条"
       },
       "processing": true,
       "serverSide": true,

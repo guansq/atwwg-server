@@ -26,6 +26,8 @@
         <input type="text" id="start_time" value="{$Think.get.start_time}" name="start_time" class="date_time form-control w20b">
         到
         <input type="text" id="end_time" value="{$Think.get.end_time}" name="end_time" class="date_time form-control w20b">
+        <span>料号</span>
+        <input type="text" id="item_code" value="{$Think.get.item_code}" name="item_code" class="form-control w20b">
         <button type="submit" class="btn btn-info" id="searchVal">查询</button>
       </form>
     </div>
@@ -33,6 +35,7 @@
       <div class="pb_15">
         <button type="button" id="quickbid" class="btn btn-info" style="margin-right: 15px;">立即评标</button>
         <button type="button" id="excel_out" class="btn btn-info" style="margin-right: 15px;">导出Excel</button>
+        <!--<span style="margin-right: 25px;" class="layui-nav-item">*当前总记录数{$allNums}条</span>-->
       </div>
       <div>
         <table id="example" class="display table table-bordered" cellspacing="0" width="100%">
@@ -169,7 +172,7 @@
   function initTable(){
     ioTable = $('#example').DataTable({
       //paging: false, 设置是否分页
-      "info": false,  //去除左下角的信息
+      "info": true,  //去除左下角的信息
       "lengthChange": false, //是否允许用户改变表格每页显示的记录数
       "ordering": false, //是否允许Datatables开启排序
       "searching": false,  //是否允许Datatables开启本地搜索
@@ -179,7 +182,8 @@
           "sPrevious": "上页",
           "sNext": "下页",
           "sLast": "末页"
-        }
+        },
+        "info" : "当前总记录数_TOTAL_条"
       },
       "processing": true,
       "serverSide": true,
@@ -190,6 +194,7 @@
           parameter.status = $('#status').val();
           parameter.start_time = $('#start_time').val();
           parameter.end_time = $('#end_time').val();
+          parameter.item_code = $('#item_code').val();
         }
       },
       "pageLength": 10,
@@ -244,7 +249,8 @@
       var status = $('#status').val();
       var start_time = $('#start_time').val();
       var end_time = $('#end_time').val();
-      var str = "{:url('Enquiryorder/exportExcel')}"+'?status='+status+'&start_time='+start_time+'&end_time='+end_time;
+      var item_code = $('#item_code').val();
+      var str = "{:url('Enquiryorder/exportExcel')}"+'?status='+status+'&start_time='+start_time+'&end_time='+end_time+'&item_code='+item_code;
       window.open(str);
       //console.log(str);
     });

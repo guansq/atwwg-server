@@ -12,7 +12,7 @@ use app\common\model\Io as IoModel;
 
 class Io extends BaseLogic{
 
-
+    protected $table = 'atw_io';
     const STATUS_ARR = [
         'init' => '未报价',
         'quoted' => '已报价',
@@ -30,6 +30,7 @@ class Io extends BaseLogic{
             ->join('item b', 'a.item_code=b.code', 'LEFT')
             ->join('u9_pr pr', 'pr.id = a.pr_id', 'LEFT')
             ->limit("$start,$length")
+            ->order('a.update_at desc')
             ->group('pr_id');
         if(!empty($where)){
             $list = $list->where($where);
@@ -61,7 +62,7 @@ class Io extends BaseLogic{
         return $list;
     }
 
-    function getListNum($where){
+    function getListNum($where = []){
         $count = IoModel::alias('a')
             ->field('a.id')
             ->join('item b', 'a.item_code=b.code', 'LEFT')

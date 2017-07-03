@@ -51,6 +51,9 @@ class Enquiryorder extends BaseController
         if (isset($get['status']) && $get['status'] !== '') {
             $where['pr.status'] = $get['status'];
         }
+        if (isset($get['item_code']) && $get['item_code'] !== '') {
+            $where['pr.item_code'] = ['like', "%{$get['item_code']}%"];
+        }
         $list = $logicIoInfo->getIoList($start, $length, $where);
         $totalNum = $logicIoInfo->getListNum($where);
         $returnArr = [];

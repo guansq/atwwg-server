@@ -27,6 +27,14 @@ class Po extends BaseLogic{
     }
 
     /*
+     * 得到poList的数量
+     */
+    public function getPoCount(){
+        $count = poModel::count();
+        return $count;
+    }
+
+    /*
      * 得到单个列表信息
      */
     function getPoInfo($id){
@@ -98,6 +106,14 @@ class Po extends BaseLogic{
             $list = collection($list)->toArray();
         }
         return $list;
+    }
+
+    /*
+     * 得到poItemList的数量
+     */
+    public function getPoItemCount(){
+        $count = poItemModel::where('status','init')->count();
+        return $count;
     }
     /*
     * 得到订单生成日期

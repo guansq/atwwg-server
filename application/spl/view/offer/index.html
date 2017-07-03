@@ -4,54 +4,55 @@
 
 {/block}
 {block name="style"}
-<link rel="stylesheet" href="//cdn.datatables.net/plug-ins/28e7751dbec/integration/bootstrap/3/dataTables.bootstrap.css">
+<link rel="stylesheet"
+      href="//cdn.datatables.net/plug-ins/28e7751dbec/integration/bootstrap/3/dataTables.bootstrap.css">
 {/block}
 {block name="content"}
 
 <main class="main">
 
-  <div class="atw-inquiry">
-    <form class="form-inline">
+    <div class="atw-inquiry">
+        <form class="form-inline">
        <span>状态: <select name="status" id="status">
         <option value="all">全部</option>
         {volist name='status' id='pstatus'}
           <option value="{$key}">{$pstatus}</option>
         {/volist}
       </select></span>
-      <span>询价时间： <input id="quote_begintime" name="quote_begintime"  class="laydate-icon"  value="">  到
-      <input   value="" id="quote_endtime"name="quote_endtime"  class="laydate-icon">
+            <span>询价时间： <input id="quote_begintime" name="quote_begintime" class="laydate-icon" value="">  到
+      <input value="" id="quote_endtime" name="quote_endtime" class="laydate-icon">
     </span>
-      <button class="btn btn-primary " type="button" id="searchVal">查询</button>
-    </form>
-  </div>
-  <div class="atw-qcent-btn">
-    <button class="btn btn-warning" id="excel_out">导出询价单</button>
+            <button class="btn btn-primary " type="button" id="searchVal">查询</button>
+        </form>
+    </div>
+    <div class="atw-qcent-btn">
+        <button class="btn btn-warning" id="excel_out">导出询价单</button>
 
-    <button class="btn btn-warning" id="excel_in1"  data-modal='{:url("$classuri/add")}'>导入报价单</button>
-  </div>
-  <div class="table-responsive">
-    <table class="table table-bordered" id="example">
-      <thead>
-      <tr class="active">
-        <td>物料编号</td>
-        <td>物料名称</td>
-        <td>采购数量</td>
-        <td>交易单位</td>
-        <td>计价单位</td>
-        <td>询价时间</td>
-        <td>报价截止日期</td>
-        <td>要求交期</td>
-        <td>可供货日期</td>
-        <td>含税单价</td>
-        <td>总价</td>
-        <td>备注</td>
-        <td>提交报价</td>
-      </tr>
-      </thead>
-      <tbody>
-      </tbody>
-    </table>
-  </div>
+        <button class="btn btn-warning" id="excel_in1" data-modal='{:url("$classuri/add")}'>导入报价单</button>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered" id="example">
+            <thead>
+            <tr class="active">
+                <td>物料编号</td>
+                <td>物料名称</td>
+                <td>采购数量</td>
+                <td>交易单位</td>
+                <td>计价单位</td>
+                <td>询价时间</td>
+                <td>报价截止日期</td>
+                <td>要求交期</td>
+                <td>可供货日期</td>
+                <td>含税单价</td>
+                <td>总价</td>
+                <td>备注</td>
+                <td>提交报价</td>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
 </main>
 
 {/block}
@@ -60,185 +61,187 @@
 <script src="/static/spl/offer/index.js"></script>
 
 <script>
-  var orderTables;
-  require(["jquery.dataTables","icheck"],function(){
-    require(["dataTables.bootstrap"],function(){
-      $(document).ready(function(){
-        initPage();
-      });
-    })
-
-    function initPage(){
-      // datatable
-      orderTables = $('#example').DataTable({
-        //"paging": false, //设置是否分页
-        "info": false,  //去除左下角的信息
-        "lengthChange": false, //是否允许用户改变表格每页显示的记录数
-        "ordering": false, //是否允许Datatables开启排序
-        "searching": false,  //是否允许Datatables开启本地搜索
-        "processing": true,
-        //"serverSide": true,
-        "ajax": {
-          "url": '{:url("Offer/getOrderList")}',
-          "type": "POST",
-          "data": function (parameter) {
-            parameter.status = $("#status").val();
-            parameter.quote_begintime = $("#quote_begintime").val();
-            parameter.quote_endtime = $("#quote_endtime").val();
-          }
-        },
-        "pageLength": 10,
-        language: {
-          "oPaginate": {
-            "sFirst": "首页",
-            "sPrevious": "上页",
-            "sNext": "下页",
-            "sLast": "末页"
-          },
-        },
-
-        "columns": [
-          { "data": "item_code"},
-          { "data": "item_name" },
-          { "data": "price_num" },
-          { "data": "price_uom" },
-          { "data": "tc_uom" },
-          { "data": "create_at" },
-          { "data": "quote_endtime" },
-          { "data": "req_date" },
-          { "data": "promise_date" },
-          { "data": "quote_price" },
-          { "data": "total_price" },
-          { "data": "remark" },
-          { "data": "showinfo" },
-        ],
-        "createdRow": function ( row, data, index ) {
-          $('td', row).eq(0).html($('td', row).eq(0).html()+'<input type="hidden" name="id" value="'+data.id+'">');
-          $('td', row).eq(2).attr('id','num_'+data.id);
-          if(!data.create_at){
-            $('td', row).eq(5).html('--');
-          }
-          var tmpstr='';
-          if(data.promise_date == null || data.promise_date == ''){
-            $('td', row).eq(8).html('');
-          }
-          tmpstr = '<input onclick="laydate({})"  class="laydate-icon" type="text" name="req_date" lay-verify="required" value="'+$('td', row).eq(8).html()+'" '+data.showinfo+'>';
-          $('td', row).eq(8).html(tmpstr);
-          tmpstr ='￥<input type="text" id="price_'+data.id+'" class="price" style="width:80%;float:right" data-id="'+data.id+'" name="quote_price" lay-verify="required|float" value="'+data.quote_price+'"'+data.showinfo+' placeholder="请输入单价">';
-          $('td', row).eq(9).html(tmpstr);
-          //$('td', row).eq(9).attr('id','price_'+data.id);
-          $('td', row).eq(10).attr('id','total_price_'+data.id);
-          $('td', row).eq(10).html( '￥'+$('td', row).eq(10).html())
-          $('td', row).eq(10).addClass('active');
-          tmpstr ='<input type="text" value="'+data.remark+'" name="remark" '+data.showinfo+'>';
-          $('td', row).eq(11).html(tmpstr);
-          if(data.showinfo == ''){
-            tmpstr ='<button data-io-id="'+data.id+'" class="btn btn-primary"  '+data.showinfo+'lay-submit="" lay-filter="sub">提交报价</button>';
-          }else{
-            tmpstr ='<span>'+data.statusStr+'</span>';
-          }
-          $('td', row).eq(12).html(tmpstr);
-          // console.log(row);
-          $(row).attr('id','io-'+data.id);
-          $(row).addClass("layui-form");
-          //console.log(data.status.indexOf('winbid'));
-          $(row).addClass( data.status && data.status.indexOf('winbid')>=0?'success':'');
-          $(row).addClass( data.status && data.status.indexOf('winbid')>=0?'success':'');
-
-        },
-        "drawCallback": function( settings ) {
-            $('.price').bind("input propertychange",function(){
-                var id = $(this).attr('data-id');
-                var num = $('#num_'+id).html();
-                var price = $(this).val();
-                var total_price = num*price;
-                total_price = parseFloat(total_price).toFixed(2);
-                $('#total_price_'+id).html('¥'+total_price);
-                //console.log(total_price);
-                //console.log($(this).val());//打印输入框字符长度
+    var orderTables;
+    require(["jquery.dataTables", "icheck"], function () {
+        require(["dataTables.bootstrap"], function () {
+            $(document).ready(function () {
+                initPage();
             });
-        },
-      });
-    }
-  })
-  $("#searchVal").on('click', function () {
-    //console.log(orderTables);
-    orderTables.ajax.reload();
-  })
+        })
+
+        function initPage() {
+            // datatable
+            orderTables = $('#example').DataTable({
+                //"paging": false, //设置是否分页
+                "info": false,  //去除左下角的信息
+                "lengthChange": false, //是否允许用户改变表格每页显示的记录数
+                "ordering": false, //是否允许Datatables开启排序
+                "searching": false,  //是否允许Datatables开启本地搜索
+                "processing": true,
+                //"serverSide": true,
+                "ajax": {
+                    "url": '{:url("Offer/getOrderList")}',
+                    "type": "POST",
+                    "data": function (parameter) {
+                        parameter.status = $("#status").val();
+                        parameter.quote_begintime = $("#quote_begintime").val();
+                        parameter.quote_endtime = $("#quote_endtime").val();
+                    }
+                },
+                "pageLength": 10,
+                language: {
+                    "oPaginate": {
+                        "sFirst": "首页",
+                        "sPrevious": "上页",
+                        "sNext": "下页",
+                        "sLast": "末页"
+                    },
+                },
+
+                "columns": [
+                    {"data": "item_code"},
+                    {"data": "item_name"},
+                    {"data": "price_num"},
+                    {"data": "price_uom"},
+                    {"data": "tc_uom"},
+                    {"data": "create_at"},
+                    {"data": "quote_endtime"},
+                    {"data": "req_date"},
+                    {"data": "promise_date"},
+                    {"data": "quote_price"},
+                    {"data": "total_price"},
+                    {"data": "remark"},
+                    {"data": "showinfo"},
+                ],
+                "createdRow": function (row, data, index) {
+                    $('td', row).eq(0).html($('td', row).eq(0).html() + '<input type="hidden" name="id" value="' + data.id + '">');
+                    $('td', row).eq(1).attr('style','text-align: left;');
+                    $('td', row).eq(2).attr('id', 'num_' + data.id);
+                    $('td', row).eq(2).attr('style','text-align: right;');
+                    if (!data.create_at) {
+                        $('td', row).eq(5).html('--');
+                    }
+                    var tmpstr = '';
+                    if (data.promise_date == null || data.promise_date == '') {
+                        $('td', row).eq(8).html('');
+                    }
+                    tmpstr = '<input onclick="laydate({ min: laydate.now()})"  class="laydate-icon" type="text" name="req_date" lay-verify="required" value="' + $('td', row).eq(8).html() + '" ' + data.showinfo + '>';
+                    $('td', row).eq(8).html(tmpstr);
+                    tmpstr = '￥<input type="text" id="price_' + data.id + '" class="price" style="width:80%;float:right;   text-align: right;" data-id="' + data.id + '" name="quote_price" lay-verify="required|float" value="' + data.quote_price + '"' + data.showinfo + ' placeholder="请输入单价">';
+                    $('td', row).eq(9).html(tmpstr);
+                    //$('td', row).eq(9).attr('id','price_'+data.id);
+                    $('td', row).eq(10).attr('id', 'total_price_' + data.id);
+                    $('td', row).eq(10).html('￥' + $('td', row).eq(10).html())
+                    $('td', row).eq(10).addClass('active');
+                    tmpstr = '<input type="text" value="' + data.remark + '" name="remark" ' + data.showinfo + '>';
+                    $('td', row).eq(11).html(tmpstr);
+                    if (data.showinfo == '') {
+                        tmpstr = '<button data-io-id="' + data.id + '" class="btn btn-primary"  ' + data.showinfo + 'lay-submit="" lay-filter="sub">提交报价</button>';
+                    } else {
+                        tmpstr = '<span>' + data.statusStr + '</span>';
+                    }
+                    $('td', row).eq(12).html(tmpstr);
+                    // console.log(row);
+                    $(row).attr('id', 'io-' + data.id);
+                    $(row).addClass("layui-form");
+                    //console.log(data.status.indexOf('winbid'));
+                    $(row).addClass(data.status && data.status.indexOf('winbid') >= 0 ? 'success' : '');
+                    $(row).addClass(data.status && data.status.indexOf('winbid') >= 0 ? 'success' : '');
+
+                },
+                "drawCallback": function (settings) {
+                    $('.price').bind("input propertychange", function () {
+                        var id = $(this).attr('data-id');
+                        var num = $('#num_' + id).html();
+                        var price = $(this).val();
+                        var total_price = num * price;
+                        total_price = parseFloat(total_price).toFixed(2);
+                        $('#total_price_' + id).html('¥' + total_price);
+                        //console.log(total_price);
+                        //console.log($(this).val());//打印输入框字符长度
+                    });
+                },
+            });
+        }
+    })
+    $("#searchVal").on('click', function () {
+        //console.log(orderTables);
+        orderTables.ajax.reload();
+    })
 </script>
 
 <script>
-  //导入Excel
-  $("#excel_in").click(function(){
-    layer.confirm('<a style="color: #333;">导入前请点击下载最新报价信息</a>', {
-      btn: ['确定导入','取消导入']
-    }, function(index){
-      layer.close(index);
-    });
-  })
-  //导出
-  $("#excel_out").click(function(){
-    //console.log(1);
-    layer.confirm('是否进行导出', {
-      btn: ['确定导出','取消导出']
-    }, function(index){
-      layer.close(index);
-      window.open("{:url('Offer/exportExcel')}");
-    });
-  })
-  layui.use('form', function(){
-    form = layui.form();
-    //console.log(form);
-    form.on('submit(sub)', function(data){
-      layer.confirm('确认提交报价吗？', {
-        btn: ['提交','取消'], //按钮
-        shade: false //不显示遮罩
-      }, function(index){
-        //console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
-        //console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
-        layer.load();
-        $.ajax({
-          'url' : '{:url("$classuri/savePrice")}',
-          'type' : 'POST',
-          //'dataType' : 'html',
-          'data' : data.field,
-          'complete' : function(){
-            //layer.closeAll();
-          },
-          'success' : function(obj){
-            layer.closeAll();
-            if(obj.code == 2000){
-              $("tr[id^=io-"+data.field.id+"]").find($('input[name="quote_price"]')).attr("disabled",true);
-              $("tr[id^=io-"+data.field.id+"]").find($('input[name="remark"]')).attr("disabled",true);
-              $("tr[id^=io-"+data.field.id+"]").find($('input[name="req_date"]')).attr("disabled",true);
-              var quote_price = $("tr[id^=io-"+data.field.id+"]").find($('input[name="quote_price"]')).val();
-              quote_price = parseFloat(quote_price).toFixed(2);
-              $("tr[id^=io-"+data.field.id+"]").find($('input[name="quote_price"]')).val(quote_price);
-              str = 'total_price_'+data.field.id;
-              $("#"+str).text('￥'+obj.data.total_price);
-              $(data.elem).attr("disabled",true);
-            }else{
-              layer.alert(obj.msg);
-            }
-            //console.log(obj);
-          },
-          'error' : function(){
-            layer.closeAll();
-            layer.alert('请求失败');
-          }
+    //导入Excel
+    $("#excel_in").click(function () {
+        layer.confirm('<a style="color: #333;">导入前请点击下载最新报价信息</a>', {
+            btn: ['确定导入', '取消导入']
+        }, function (index) {
+            layer.close(index);
         });
-      });
+    })
+    //导出
+    $("#excel_out").click(function () {
+        //console.log(1);
+        layer.confirm('是否进行导出', {
+            btn: ['确定导出', '取消导出']
+        }, function (index) {
+            layer.close(index);
+            window.open("{:url('Offer/exportExcel')}");
+        });
+    })
+    layui.use('form', function () {
+        form = layui.form();
+        //console.log(form);
+        form.on('submit(sub)', function (data) {
+            layer.confirm('确认提交报价吗？', {
+                btn: ['提交', '取消'], //按钮
+                shade: false //不显示遮罩
+            }, function (index) {
+                //console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
+                //console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+                layer.load();
+                $.ajax({
+                    'url': '{:url("$classuri/savePrice")}',
+                    'type': 'POST',
+                    //'dataType' : 'html',
+                    'data': data.field,
+                    'complete': function () {
+                        //layer.closeAll();
+                    },
+                    'success': function (obj) {
+                        layer.closeAll();
+                        if (obj.code == 2000) {
+                            $("tr[id^=io-" + data.field.id + "]").find($('input[name="quote_price"]')).attr("disabled", true);
+                            $("tr[id^=io-" + data.field.id + "]").find($('input[name="remark"]')).attr("disabled", true);
+                            $("tr[id^=io-" + data.field.id + "]").find($('input[name="req_date"]')).attr("disabled", true);
+                            var quote_price = $("tr[id^=io-" + data.field.id + "]").find($('input[name="quote_price"]')).val();
+                            quote_price = parseFloat(quote_price).toFixed(2);
+                            $("tr[id^=io-" + data.field.id + "]").find($('input[name="quote_price"]')).val(quote_price);
+                            str = 'total_price_' + data.field.id;
+                            $("#" + str).text('￥' + obj.data.total_price);
+                            $(data.elem).attr("disabled", true);
+                        } else {
+                            layer.alert(obj.msg);
+                        }
+                        //console.log(obj);
+                    },
+                    'error': function () {
+                        layer.closeAll();
+                        layer.alert('请求失败');
+                    }
+                });
+            });
 
-      return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+        //各种基于事件的操作，下面会有进一步介绍
     });
-    //各种基于事件的操作，下面会有进一步介绍
-  });
-  function subQuote(id){
+    function subQuote(id) {
 
-    //console.log(id);
-  }
+        //console.log(id);
+    }
 
-  //$('tr[id^=io-]')
-  //$('tr[id^=io-2]').find($('input[name="quote_price"]')).val(11111111111)
+    //$('tr[id^=io-]')
+    //$('tr[id^=io-2]').find($('input[name="quote_price"]')).val(11111111111)
 </script>
 {/block}

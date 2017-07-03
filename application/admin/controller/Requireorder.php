@@ -26,6 +26,10 @@ class Requireorder extends BaseController{
     public function index(){
         //echo '111111111';die;
         $this->assign('title',$this->title);
+        $logicPrInfo = Model('RequireOrder','logic');
+        $allNums = $logicPrInfo->getListNum();
+        $this->assign('allNums',$allNums);
+        //echo $allNums;
         return view();
     }
 

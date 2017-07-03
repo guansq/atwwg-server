@@ -28,6 +28,10 @@ class Enquiryorder extends BaseController
         $statusArr = [
 
         ];
+        $logicIoInfo = Model('Io', 'logic');
+        $allNums = $logicIoInfo->getListNum();
+        $this->assign('allNums',$allNums);
+        //echo $allNums;
         $this->assign('title', $this->title);
         $this->assign('statusArr', $statusArr);
         return view();

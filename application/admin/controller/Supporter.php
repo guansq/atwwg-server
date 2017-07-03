@@ -32,7 +32,9 @@ class Supporter extends BaseController{
         //得到供应商分类
         $logicSupInfo = Model('Supporter','logic');
         $typeInfo = $logicSupInfo->getTypeInfo();
-        //dump($typeInfo);
+        $allNums = $logicSupInfo->getListNum();
+        //echo $allNums;
+        $this->assign('allNums',$allNums);
         $this->assign('typeInfo',$typeInfo);
         return view();
     }

@@ -62,7 +62,7 @@ class Order extends Base{
                 foreach($itemInfo as $vv){
                     $vv['arv_goods_num'] = $vv['arv_goods_num'] == '' ? 0 : $vv['arv_goods_num'];
                     $vv['pro_goods_num'] = $vv['pro_goods_num'] == '' ? 0 : $vv['pro_goods_num'];
-                    $exec_desc .= '物料名称：'.$vv['item_name'].'; '.'到货数量：'.$vv['arv_goods_num'].'; 未到货数量：'.$vv['pro_goods_num'].'<br>';
+                    $exec_desc .= '物料名称：'.$vv['item_name'].'; '.'已送货数量：'.$vv['arv_goods_num'].'; 未送货数量：'.$vv['pro_goods_num'].'<br>';
                 }
                 $returnInfo[$k]['exec_desc'] = $exec_desc;
             }else{

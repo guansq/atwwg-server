@@ -404,9 +404,9 @@
       var pur_attr = $('#pur_attr').val();
       var status = $('#status').val();
       var is_appoint_sup = $('#is_appoint_sup').val();
-      var check_status = $('#check_status').val();
+      //var check_status = $('#check_status').val();+'&check_status='+check_status
       var str = "{:url('Requireorder/exportExcel')}"+'?pr_code='+pr_code+'&pr_date='+pr_date+'&item_code='+item_code+'&item_name='+item_name
-          +'&pro_no='+pro_no+'&pur_attr='+pur_attr+'&status='+status+'&is_appoint_sup='+is_appoint_sup+'&check_status='+check_status;
+          +'&pro_no='+pro_no+'&pur_attr='+pur_attr+'&status='+status+'&is_appoint_sup='+is_appoint_sup;
       window.open(str);
       //console.log(str);
     });

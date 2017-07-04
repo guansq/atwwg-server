@@ -433,6 +433,7 @@ class Requireorder extends BaseController{
             'have_price' => '有价格',
             'no_sup' => '无匹配供应商'
         ];
+        $returnArr = [];
         foreach($list as $k => $v){
             $returnArr[] = [
                 'pr_code' => $v['pr_code'],//请购单号
@@ -453,6 +454,7 @@ class Requireorder extends BaseController{
             ];
 
         }
+        //dump($returnArr);die;
         $list = $returnArr;
         //dump($list);die;
         $PHPExcel = new PHPExcel(); //实例化PHPExcel类，类似于在桌面上新建一个Excel表格

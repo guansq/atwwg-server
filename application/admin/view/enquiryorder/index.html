@@ -19,6 +19,7 @@
           <option value="quoted" {if $Think.get.status eq 'quoted'}selected{/if}>待评标</option>
           <option value="flow" {if $Think.get.status eq 'flow'}selected{/if}>流标</option>
           <option value="winbid" {if $Think.get.status eq 'winbid'}selected{/if}>已评标</option>
+          <option value="wait" {if $Think.get.status eq 'wait'}selected{/if}>待下单</option>
           <option value="order" {if $Think.get.status eq 'order'}selected{/if}>已下单</option>
           <option value="close" {if $Think.get.status eq 'close'}selected{/if}>关闭</option>
         </select>

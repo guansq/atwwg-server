@@ -17,10 +17,8 @@
         <input type="text" class="form-control" value="{$Think.get.code|default=''}" id="code" name="code" placeholder="供应商编码">
         <input type="text" class="form-control" value="{$Think.get.name|default=''}" id="name" name="name" placeholder="供应商名称">
         <select class="form-control" id="type_name" name="type_name">
+          <option value="" >供应商分类</option>
           {volist name="typeInfo" id="vo"}
-          {if $vo.type_name eq ''}
-          <option value="" {if $Think.get.type_name eq ''}selected{/if}>供应商分类</option>
-          {else /}
           <option value="{$vo.type_name}" {if $Think.get.type_name eq $vo.type_name}selected{/if}>{$vo.type_name}</option>
           {/if}
           {/volist}

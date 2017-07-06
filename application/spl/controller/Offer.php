@@ -20,7 +20,7 @@ class Offer extends Base{
         'winbid_checked' => '已审核',
         'winbid' => '中标',
         'giveupbid' => '弃标',
-        'close' => '已关闭'
+        'close' => '未中标'
     ];
 
     public function index(){
@@ -30,9 +30,9 @@ class Offer extends Base{
             'quoted' => '已报价',
 //            'winbid_uncheck' => '中标但是需要审核',
 //            'winbid_checked' => '中标已经审核',
-//            'winbid' => '中标',
+            'winbid' => '中标',
 //            'giveupbid' => '弃标',
-//            'close' => '已关闭'
+            'close' => '未中标'
         ];
         $this->assign('status', $status);
         $this->assign('title',$this->title);
@@ -53,7 +53,7 @@ class Offer extends Base{
                         continue;
                     }
                     if($data[$key] == 'quoted'){
-                        $where[$key] = ['in',['quoted','winbid_uncheck','winbid_checked','winbid','giveupbid','close']];
+                        $where[$key] = ['in',['quoted','winbid_uncheck','winbid_checked']];
                     }else{
                         $where[$key] = $data[$key];
                     }
@@ -73,7 +73,7 @@ class Offer extends Base{
         $list = $offerLogic->getOfferInfo($sup_code, $where);
         //状态init=未报价  quoted=已报价  winbid=中标 giveupbid=弃标  close=已关闭
         foreach($list as $k => $v){
-            if(in_array($v['status'], ['init'])){
+            if(in_array($v['status'], ['init','quoted'])){
                 $list[$k]['showinfo'] = '';
             }else{
                 $list[$k]['showinfo'] = 'disabled';

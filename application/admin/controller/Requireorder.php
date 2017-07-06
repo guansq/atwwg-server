@@ -531,10 +531,8 @@ class Requireorder extends BaseController{
         $RequireLogic = model('RequireOrder','logic');
 
         //更改当前状态为init
-        $pr_id = input('get.id');
-        $where = [
-            'id' => $pr_id
-        ];
+        $prId = input('get.id');
+        $where = $prId == 'all'?['inquiry_way' => 'no_sup','status'=>'flow']: ['id' => $prId];
         $data = [
             'status' => 'init',
             'is_force_inquiry' => 1

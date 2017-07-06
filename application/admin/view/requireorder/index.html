@@ -53,6 +53,7 @@
       <div class="pb_15">
         <!--<button type="button" id="synchronization_btn" class="btn btn-info" style="margin-right: 15px;">立即同步ERP</button>-->
         <button type="button" id="excel_out" class="btn btn-info" style="margin-right: 15px;">导出Excel</button>
+        <button type="button" id="btn_reinquiry" class="btn btn-info" style="margin-right: 15px;">无供应商重新询价</button>
         <!--<span style="margin-right: 25px;" class="layui-nav-item">*当前总记录数{$allNums}条</span>-->
       </div>
       <div>
@@ -218,7 +219,7 @@
           "data":"inquiry_way",
           "render":function(data, type, row, meta){
             if(data == '无匹配供应商'){
-              return '<span>'+data+'</span><a href="javascript:reInquiry('+row.id+');">重新询价</a>';
+              return '<span>'+data+'</span><a href="javascript:reInquiry('+row.id+');"> 重新询价</a>';
             }
             return data;
           }
@@ -432,7 +433,12 @@
       $.form.reload();
     });
   }
-
+  
+  
+  $("#btn_reinquiry").click(function(){
+    return reInquiry('all');
+  });
+  
   function reInquiry(prId){
     if(!prId){
       return false;

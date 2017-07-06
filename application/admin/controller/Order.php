@@ -473,7 +473,7 @@ class Order extends BaseController{
         $httpRet = HttpService::curl(getenv('APP_API_U9').'index/po', $sendData);
         $res = json_decode($httpRet, true);//成功回写数据库
         if($res['code'] != 2000){
-            returnjson(6000,'调用U9接口异常',$res);
+            returnjson($res);
         }
         //dump($res['result']);die;
         return ['code'=>2000,'msg'=>'','data'=>['DocNo'=>$res['result']['DocNo']]];

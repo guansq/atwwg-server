@@ -332,7 +332,7 @@
             $.form.reload();
             layer.alert('下单成功');
           }else{
-            layer.alert(res.msg);
+            layer.alert(res.msg+'<br/> 异常原因：'+res.result.Message);
           }
           //layer.alert(res.msg);
         });

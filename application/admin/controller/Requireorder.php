@@ -162,8 +162,8 @@ class Requireorder extends BaseController{
                     $inquiry = $v['inquiry_way'];
                 }
             }
-
             $returnArr[] = [
+                'id' => $v['id'],//请购单id
                 'pr_code' => $v['pr_code'],//请购单号
                 'pr_date' => date('Y-m-d',$v['pr_date']),//请购日期
                 'item_code' => $v['item_code'],//料号
@@ -519,6 +519,26 @@ class Requireorder extends BaseController{
         ];
         $RequireLogic->updatePr($where,$data);
         $resAll = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/prToInquiry'));//prToInquiry
+        return json($resAll);
+    }
+
+    /*
+     * 重新询价
+     */
+    public function reInquiry(){
+        $RequireLogic = model('RequireOrder','logic');
+
+        //更改当前状态为init
+        $pr_id = input('get.id');
+        $where = [
+            'id' => $pr_id
+        ];
+        $data = [
+            'status' => 'init',
+            'is_force_inquiry' => 1
+        ];
+        $RequireLogic->updatePr($where,$data);
+        $resAll = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/syncAll'));//prToInquiry
         return json($resAll);
     }
 }

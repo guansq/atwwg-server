@@ -57,23 +57,23 @@
       <div>
         <table id="example" class="display table table-bordered" cellspacing="0" width="100%">
           <thead>
-            <tr>
-              <th>请购单号</th>
-              <th>请购日期</th>
-              <th>料号</th>
-              <th>物料描述</th>
-              <th>项目号</th>
-              <th>交易单位</th>
-              <th>交易单位数量</th>
-              <th>计价单位</th>
-              <th>计价单位数量</th>
-              <th>交期</th>
-              <th>状态</th>
-              <th>物料采购属性</th>
-              <th>是否指定供应商</th>
-              <th>询价方式</th>
-              <!--<th>主管审批</th>-->
-            </tr>
+          <tr>
+            <th>请购单号</th>
+            <th>请购日期</th>
+            <th>料号</th>
+            <th>物料描述</th>
+            <th>项目号</th>
+            <th>交易单位</th>
+            <th>交易单位数量</th>
+            <th>计价单位</th>
+            <th>计价单位数量</th>
+            <th>交期</th>
+            <th>状态</th>
+            <th>物料采购属性</th>
+            <th>是否指定供应商</th>
+            <th>询价方式</th>
+            <!--<th>主管审批</th>-->
+          </tr>
           </thead>
           <tbody>
 
@@ -85,7 +85,7 @@
 </main>
 <div class="barcode_box" style="">
   <div class="bomb_table">
-    <p><i  class="close_box"></i></p>
+    <p><i class="close_box"></i></p>
     <h5>根据物流可选属性筛选出可选供应商</h5>
     <table class="table table-bordered">
       <thead>
@@ -123,18 +123,18 @@
    * Created by Administrator on 2017/5/11.
    */
   var prTable;
-  require(["jquery.dataTables","laydate"],function(){
-    require(["dataTables.bootstrap"],function(){
+  require(["jquery.dataTables", "laydate"], function(){
+    require(["dataTables.bootstrap"], function(){
       $(document).ready(function(){
         initPage();
         initTimePicker();
-        $.fn.dataTable.ext.errMode = 'none';
+
       });
     })
   });
   Global = {
-    'item_code' : '',
-    'pr_code' : ''
+    'item_code':'',
+    'pr_code':''
   };
 
   function initTimePicker(){
@@ -156,37 +156,37 @@
        * issure - 是否显示确认按钮
        */
       laydate({
-        format : "YYYY-MM-DD",
-        istime : true,
-        isclear : true,
-        istoday : true,
-        issure : true
+        format:"YYYY-MM-DD",
+        istime:true,
+        isclear:true,
+        istoday:true,
+        issure:true
       });
     });
   }
   function initPage(){
-
+    $.fn.dataTable.ext.errMode = 'none';
     prTable = $('#example').DataTable({
       //paging: false, //设置是否分页
-      "info": true,  //去除左下角的信息
-      "lengthChange": false, //是否允许用户改变表格每页显示的记录数
-      "ordering": false, //是否允许Datatables开启排序
-      "searching": false,  //是否允许Datatables开启本地搜索
-      language: {
-        "oPaginate": {
-          "sFirst": "首页",
-          "sPrevious": "上页",
-          "sNext": "下页",
-          "sLast": "末页"
+      "info":true,  //去除左下角的信息
+      "lengthChange":false, //是否允许用户改变表格每页显示的记录数
+      "ordering":false, //是否允许Datatables开启排序
+      "searching":false,  //是否允许Datatables开启本地搜索
+      language:{
+        "oPaginate":{
+          "sFirst":"首页",
+          "sPrevious":"上页",
+          "sNext":"下页",
+          "sLast":"末页"
         },
-        "info" : "当前总记录数_TOTAL_条"
+        "info":"当前总记录数_TOTAL_条"
       },
-      "processing": true,
-      "serverSide": true,
-      "ajax": {
-        "url": '{:url("Requireorder/getPrList")}',
-        "type": "POST",
-        "data": function(parameter){
+      "processing":true,
+      "serverSide":true,
+      "ajax":{
+        "url":'{:url("Requireorder/getPrList")}',
+        "type":"POST",
+        "data":function(parameter){
           parameter.pr_code = $('#pr_code').val();
           parameter.pr_date = $('#pr_date').val();
           parameter.item_code = $('#item_code').val();
@@ -198,61 +198,69 @@
           //parameter.check_status = $('#check_status').val();
         }
       },
-      "pageLength": 10,
-      "columns": [
-        { "data": "pr_code" },
-        { "data": "pr_date" },
-        { "data": "item_code" },
-        { "data": "desc" },
-        { "data": "pro_no" },
-        { "data": "tc_uom" },
-        { "data": "tc_num" },
-        { "data": "price_uom" },
-        { "data": "price_num" },
-        { "data": "req_date" },
-        { "data": "status" },
-        { "data": "pur_attr" },
-        { "data": "is_appoint_sup" },
-        { "data": "inquiry_way" },
+      "pageLength":10,
+      "columns":[
+        {"data":"pr_code"},
+        {"data":"pr_date"},
+        {"data":"item_code"},
+        {"data":"desc"},
+        {"data":"pro_no"},
+        {"data":"tc_uom"},
+        {"data":"tc_num"},
+        {"data":"price_uom"},
+        {"data":"price_num"},
+        {"data":"req_date"},
+        {"data":"status"},
+        {"data":"pur_attr"},
+        {"data":"is_appoint_sup"},
+        {
+          "data":"inquiry_way",
+          "render":function(data, type, row, meta){
+            if(data == '无匹配供应商'){
+              return '<span>'+data+'</span><a href="javascript:reInquiry('+row.id+');">重新询价</a>';
+            }
+            return data;
+          }
+        },
         //{ "data": "check_status" },
       ],
-      "drawCallback": function( settings ) {
-        is_appoint_sup =1;
+      "drawCallback":function(settings){
+        is_appoint_sup = 1;
         $("#example input").click(function(){
-          var _this =$(this);
+          var _this = $(this);
           var is_appoint_sup;
 
           var item_code = $(this).attr('data-item_code');
           var pr_code = $(this).attr('data-pr_code');
           var pr_id = $(this).attr("data-pr_id");
-          var newhtml ="<a onclick=\"bomb_box(event,'"+pr_code+"','"+ item_code+"','"+ pr_id+"');\" class='select_sell' data-url='{:url(\"Requireorder/showSelectSup\")}/pr_code/"+pr_code+"/item_code/"+item_code+"'>选择供应商</a>";
+          var newhtml = "<a onclick=\"bomb_box(event,'" + pr_code + "','" + item_code + "','" + pr_id + "');\" class='select_sell' data-url='{:url(\"Requireorder/showSelectSup\")}/pr_code/" + pr_code + "/item_code/" + item_code + "'>选择供应商</a>";
 
           if($(this).is(':checked')){
-            is_appoint_sup =1;
+            is_appoint_sup = 1;
           }else{
-            is_appoint_sup =0;
+            is_appoint_sup = 0;
           }
-          var sendObj ={
-            'pr_code' :  pr_code,
-            'is_appoint_sup' : is_appoint_sup,
-            'item_code' : item_code
+          var sendObj = {
+            'pr_code':pr_code,
+            'is_appoint_sup':is_appoint_sup,
+            'item_code':item_code
           };
           layer.load();
-          $.post("{:url('Requireorder/changeInquiType')}",sendObj,function(res){
+          $.post("{:url('Requireorder/changeInquiType')}", sendObj, function(res){
             layer.closeAll();
             if(res.code == 2000){
               if(is_appoint_sup == 1){
                 _this.parent().prev().prev().html("挂起");
                 _this.parent().next().html(newhtml);
-                $('#cancel'+pr_id).html('');
+                $('#cancel' + pr_id).html('');
                 //var str = check_html+'<a href="javascript:cancelPoint('+pr_id+');">取消指定</a>';
                 //_this.parent().html(check_html);
               }else{
                 _this.parent().prev().prev().html("待询价");
                 _this.parent().next().html("自动询价");
                 _this.parent().next().next().html("");
-                var str = '<a href="javascript:cancelPoint('+pr_id+');">取消指定</a>';
-                $('#cancel'+pr_id).html(str);
+                var str = '<a href="javascript:cancelPoint(' + pr_id + ');">取消指定</a>';
+                $('#cancel' + pr_id).html(str);
               }
               //$.form.reload();
             }else{
@@ -265,34 +273,34 @@
   }
   // 打开弹框
 
-  function bomb_box(event,pr_code,item_code,item_id){
+  function bomb_box(event, pr_code, item_code, item_id){
     //event.preventDefault();
-    $.post("{:url('Requireorder/showSelectSup')}",{pr_code:pr_code,item_code:item_code},function(resDate){
-      if(resDate.length >0){
-        $(".barcode_box").css("display","block");
-        var tmphtml='';
-        for (var i=0; i<resDate.length; i++){
+    $.post("{:url('Requireorder/showSelectSup')}", {pr_code:pr_code, item_code:item_code}, function(resDate){
+      if(resDate.length > 0){
+        $(".barcode_box").css("display", "block");
+        var tmphtml = '';
+        for(var i = 0; i < resDate.length; i++){
           console.log(resDate[i]);
           var status = 0;
           var diabled = '';
           status = '正常';
-//          if(resDate[i]['status']==1){
-//            status = '正常';
-//          }else{
-//            status = '禁用';
-//            diabled = 'disabled="true"';
-//          }
-          tmphtml +=  '<tr><td>' +
-              '<input class="listcheck" name="listcheck" type="checkbox" '+diabled+' data-pr_id="'+item_id+'" value="'+resDate[i]["item_code"]+'" data-pr_code="'+resDate[i]["pr_code"]+'"data-sup_code="'+resDate[i]["sup_code"]+'"></td>' +
-              '<td>'+resDate[i]["sup_code"]+'</td><td>'+resDate[i]["sup_name"]+'</td>' +
-              '<td><input type="text" class="form-control" id="point_price_'+item_id+'" placeholder="价格"></td>' +
-              '<td><input type="text" class="form-control date_time" id="point_date_'+item_id+'" placeholder="格式为2000-10-03"></td><td>'+status+'</td></tr>';
+          //          if(resDate[i]['status']==1){
+          //            status = '正常';
+          //          }else{
+          //            status = '禁用';
+          //            diabled = 'disabled="true"';
+          //          }
+          tmphtml += '<tr><td>' +
+              '<input class="listcheck" name="listcheck" type="checkbox" ' + diabled + ' data-pr_id="' + item_id + '" value="' + resDate[i]["item_code"] + '" data-pr_code="' + resDate[i]["pr_code"] + '"data-sup_code="' + resDate[i]["sup_code"] + '"></td>' +
+              '<td>' + resDate[i]["sup_code"] + '</td><td>' + resDate[i]["sup_name"] + '</td>' +
+              '<td><input type="text" class="form-control" id="point_price_' + item_id + '" placeholder="价格"></td>' +
+              '<td><input type="text" class="form-control date_time" id="point_date_' + item_id + '" placeholder="格式为2000-10-03"></td><td>' + status + '</td></tr>';
         }
-        $(".listcheck").click(function () {
+        $(".listcheck").click(function(){
           $("[name='listcheck']").removeAttr("checked");//取消全选
-          $(this).attr("checked",'true');
+          $(this).attr("checked", 'true');
         });
-        $(".barcode_box table").html( "<thead><tr><th>选择</th><th>供应商编码</th><th>供应商名称</th><th>价格</th><th>交期</th><th>状态</th></tr></thead>"+tmphtml);
+        $(".barcode_box table").html("<thead><tr><th>选择</th><th>供应商编码</th><th>供应商名称</th><th>价格</th><th>交期</th><th>状态</th></tr></thead>" + tmphtml);
         initTimePicker();
       }else{
         alert('暂无供应商可以选择');
@@ -300,42 +308,42 @@
     })
   }
 
-  $(".resetbt").click(function () {
+  $(".resetbt").click(function(){
     $("[name='listcheck']").removeAttr("checked");//取消全选
   })
-  var flag=0;
-  $(".submitbt").click(function () {
+  var flag = 0;
+  $(".submitbt").click(function(){
     $('input[name="listcheck"]:checked').each(function(){
       flag = 1;
       appoint_sup_code = $(this).attr('data-sup_code');
       item_id = $(this).attr('data-pr_id');
-      pr_code   = $(this).attr('data-pr_code');
-      pr_id   = $(this).attr('data-pr_id');
+      pr_code = $(this).attr('data-pr_code');
+      pr_id = $(this).attr('data-pr_id');
       item_code = $(this).val();
-      appoint_sup_name=  $(this).parent().next().next().html();
+      appoint_sup_name = $(this).parent().next().next().html();
 
     });
 
-    if(flag != 1) {
+    if(flag != 1){
       alert('选中一个才能提交');
       return;
     }
     layer.load();
-    var sendObj ={
-      'is_appoint_sup' :   1,
-      'appoint_sup_code' : appoint_sup_code ,
+    var sendObj = {
+      'is_appoint_sup':1,
+      'appoint_sup_code':appoint_sup_code,
       'appoint_sup_name':appoint_sup_name,
       'item_code':item_code,
       'item_id':item_id,
-      'point_price':$('#point_price_'+item_id).val(),
-      'point_date':$('#point_date_'+item_id).val(),
+      'point_price':$('#point_price_' + item_id).val(),
+      'point_date':$('#point_date_' + item_id).val(),
       'pr_code':pr_code
     };
-    $.post("{:url('Requireorder/savePr')}",sendObj,function(res){
+    $.post("{:url('Requireorder/savePr')}", sendObj, function(res){
       layer.closeAll();
       if(res.code == 2000){
-        $(".barcode_box").css("display","none");
-        $("input[data-pr_id^="+pr_id+"]") .parent().next().html(res.data.sup_name)
+        $(".barcode_box").css("display", "none");
+        $("input[data-pr_id^=" + pr_id + "]").parent().next().html(res.data.sup_name)
         //var str = '<a href="javascript:;" onclick="checkStatus(\'agree\','+pr_id+')">通过</a>&nbsp;&nbsp;<a href="javascript:;" onclick="checkStatus(\'refuse\','+pr_id+')">拒绝</a>';
         //$("input[data-pr_id^="+pr_id+"]") .parent().next().next().html(str)
         $.form.reload();
@@ -344,45 +352,45 @@
       }
     });
   })
-  function checkStatus(status,id){
+  function checkStatus(status, id){
     var url = "{:URL('Requireorder/checkStatus')}";
 
-    layer.confirm("你确定该操作吗？",{
-      bth: ['确定','取消']
-    },function(index){
+    layer.confirm("你确定该操作吗？", {
+      bth:['确定', '取消']
+    }, function(index){
       layer.close(index);
       layer.load();
       data = {
-        'check_status' : status,
-        'id' : id,
+        'check_status':status,
+        'id':id,
       }
-      $.post(url,data,function(res){
+      $.post(url, data, function(res){
         layer.closeAll();
         if(res.code == '2000'){
-          $("input[data-pr_id^="+id+"]").parent().next().next().html(res.data.check_status)
+          $("input[data-pr_id^=" + id + "]").parent().next().next().html(res.data.check_status)
           if(status == 'agree'){
-            $("input[data-pr_id^="+id+"]").parent().prev().prev().html('待询价')
+            $("input[data-pr_id^=" + id + "]").parent().prev().prev().html('待询价')
           }else{
-            var pr_dom = $("input[data-pr_id^="+id+"]");
+            var pr_dom = $("input[data-pr_id^=" + id + "]");
             var pr_code = pr_dom.attr('data-pr_code');
             var item_code = pr_dom.attr('data-item_code');
-            str = '<a class="select_sell" href="javascript:void(0);" onclick="bomb_box(event,'+pr_code+','+item_code+','+id+');"' +
-                ' data-url="{:url(\'requireorder/selectSup\',array(\'pr_code\'=>'+pr_code+',\'item_code\'=>'+item_code+'))}">选择供应商</a>';
-            $("input[data-pr_id^="+id+"]").parent().next().html(str)
-            $("input[data-pr_id^="+id+"]").parent().prev().prev().html('指定')
+            str = '<a class="select_sell" href="javascript:void(0);" onclick="bomb_box(event,' + pr_code + ',' + item_code + ',' + id + ');"' +
+                ' data-url="{:url(\'requireorder/selectSup\',array(\'pr_code\'=>' + pr_code + ',\'item_code\'=>' + item_code + '))}">选择供应商</a>';
+            $("input[data-pr_id^=" + id + "]").parent().next().html(str)
+            $("input[data-pr_id^=" + id + "]").parent().prev().prev().html('指定')
           }
         }else{
           layer.alert('操作失败');
         }
-//        console.log(status);
-//        console.log(id);
+        //        console.log(status);
+        //        console.log(id);
       })
     });
 
   }
   // 关闭条形码的弹出框
   $(".close_box").click(function(){
-    $(".barcode_box").css("display","none");
+    $(".barcode_box").css("display", "none");
   });
   $('#searchVal').click(function(){
     prTable.ajax.reload();
@@ -392,7 +400,7 @@
   $("#excel_out").click(function(){
     //console.log(1);
     layer.confirm('是否进行导出', {
-      btn: ['确定导出','取消导出']
+      btn:['确定导出', '取消导出']
     }, function(index){
       layer.close(index);
       //添加额外的参数传给服务器
@@ -405,23 +413,36 @@
       var status = $('#status').val();
       var is_appoint_sup = $('#is_appoint_sup').val();
       //var check_status = $('#check_status').val();+'&check_status='+check_status
-      var str = "{:url('Requireorder/exportExcel')}"+'?pr_code='+pr_code+'&pr_date='+pr_date+'&item_code='+item_code+'&item_name='+item_name
-          +'&pro_no='+pro_no+'&pur_attr='+pur_attr+'&status='+status+'&is_appoint_sup='+is_appoint_sup;
+      var str = "{:url('Requireorder/exportExcel')}" + '?pr_code=' + pr_code + '&pr_date=' + pr_date + '&item_code=' + item_code + '&item_name=' + item_name
+          + '&pro_no=' + pro_no + '&pur_attr=' + pur_attr + '&status=' + status + '&is_appoint_sup=' + is_appoint_sup;
       window.open(str);
       //console.log(str);
     });
   })
   /*
-  新增取消指定供应商
+   新增取消指定供应商
    */
   function cancelPoint(pr_id){
-      layer.load(1,{
-          shade: [0.1,"#fff"]
-      });
-      $.get("{:url('Requireorder/cancelPoint')}",{'pr_id':pr_id},function(){
-          layer.closeAll();
-          $.form.reload();
-      });
+    layer.load(1, {
+      shade:[0.1, "#fff"]
+    });
+    $.get("{:url('Requireorder/cancelPoint')}", {'pr_id':pr_id}, function(){
+      layer.closeAll();
+      $.form.reload();
+    });
+  }
+
+  function reInquiry(prId){
+    if(!prId){
+      return false;
+    }
+    layer.load(1, {
+      shade:[0.1, "#fff"]
+    });
+    $.get("{:url('Requireorder/reInquiry')}", {'id':prId}, function(){
+      layer.closeAll();
+      $.form.reload();
+    });
   }
 </script>
 {/block}

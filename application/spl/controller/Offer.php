@@ -86,7 +86,7 @@ class Offer extends Base{
             $list[$k]['quote_endtime'] = empty($v['quote_endtime']) ? '--' : date('Y-m-d', $v['quote_endtime']);
             $list[$k]['req_date'] = empty($v['req_date']) ? '--' : date('Y-m-d', $v['req_date']);
             $list[$k]['total_price'] = number_format($v['price_num']*$v['quote_price'],2);
-            $list[$k]['quote_price'] = empty($v['quote_price']) ? '0.00' :number_format( $v['quote_price'],2);
+            $list[$k]['quote_price'] = empty($v['quote_price']) ? '' :number_format( $v['quote_price'],2);
             $list[$k]['remark'] = empty($v['remark']) ? '' : $v['remark'];
         }
         //dump($returnInfo);

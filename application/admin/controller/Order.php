@@ -17,9 +17,9 @@ class Order extends BaseController{
     protected $table = 'SystemPo';
     protected $title = '订单管理';
 
-    const MSGPASSTITLE = '合同审核通过';
-    const MSGREFUSETITLE = '合同审核拒绝';
-    const MSGPASSCONTENT = '合同审核通过';
+    const MSGPASSTITLE     = '合同审核通过';
+    const MSGREFUSETITLE   = '合同审核拒绝';
+    const MSGPASSCONTENT   = '合同审核通过';
     const MSGREFUSECONTENT = '合同审核拒绝';
 
     /*
@@ -29,11 +29,12 @@ class Order extends BaseController{
         $this->title = '待下订单';
         $poLogic = model('Po', 'logic');
         $allNums = $poLogic->getPoItemCount();
-        $this->assign('allNums',$allNums);
+        $this->assign('allNums', $allNums);
         //echo $allNums;
         $this->assign('title', $this->title);
         return view();
     }
+
     /*
      * 采购订单列表
      */
@@ -41,7 +42,7 @@ class Order extends BaseController{
         $this->title = '采购订单';
         $poLogic = model('Po', 'logic');
         $allNums = $poLogic->getPoCount();
-        $this->assign('allNums',$allNums);
+        $this->assign('allNums', $allNums);
         //echo $allNums;
         $this->assign('title', $this->title);
         return view();
@@ -147,7 +148,7 @@ class Order extends BaseController{
         foreach(['item_code', 'pr_code', 'sup_name', 'req_date'] as $key){
             if(isset($get[$key]) && $get[$key] !== ''){
                 if($key == 'req_date'){
-                    $where[$key] = ['between',[$get['req_date'],$get['req_date']+86399]];
+                    $where[$key] = ['between', [$get['req_date'], $get['req_date'] + 86399]];
                 }else{
                     $where[$key] = ['like', "%{$get[$key]}%"];
                 }
@@ -243,7 +244,7 @@ class Order extends BaseController{
         $id = input('get.id');
         //得到item详情
         $poLogic = model('Po', 'logic');
-        $poItemInfo  = $poLogic->getPoItem($id);
+        $poItemInfo = $poLogic->getPoItem($id);
         //添加pr_date
         $prLogic = model('RequireOrder', 'logic');
         $where = ['pr_code' => $poItemInfo['pr_code']];
@@ -255,7 +256,7 @@ class Order extends BaseController{
 
     public function verifyStatus(){
         $poLogic = model('Po', 'logic');
-        $logicSupInfo = Model('Supporter','logic');
+        $logicSupInfo = Model('Supporter', 'logic');
         $param = input('param.');
         $piData = [
             'status' => $param['action'],
@@ -287,18 +288,18 @@ class Order extends BaseController{
                     $title = self::MSGREFUSETITLE;
                     $content = $remark != '' ? self::MSGREFUSECONTENT.'拒绝原因如下：'.$remark : self::MSGREFUSECONTENT;
                 }
-                $sendInfo = $logicSupInfo->getSupSendInfo(['code'=>input('param.sup_code')]);
+                $sendInfo = $logicSupInfo->getSupSendInfo(['code' => input('param.sup_code')]);
                 //通过sup_code得到发送信息
                 if($sendInfo['phone']){ //发送消息
                     //sendSMS('18451847701',$content);
-                    sendSMS($sendInfo['phone'],$content);
+                    sendSMS($sendInfo['phone'], $content);
                 }
                 if($sendInfo['email']){ //发送邮件
                     //sendMail('94600115@qq.com',$title,$content);
-                    sendSMS($sendInfo['email'],$content);
+                    sendSMS($sendInfo['email'], $content);
                 }
                 if($sendInfo['push_token']){ //发送token
-                    pushInfo($sendInfo['push_token'],$title,$content);
+                    pushInfo($sendInfo['push_token'], $title, $content);
                 }
             }
             if($param['action'] == 'contract_pass'){//已审核通过---》执行同步U9订单
@@ -325,7 +326,6 @@ class Order extends BaseController{
     }
 
 
-
     /*
      * 导出excel
      */
@@ -340,7 +340,7 @@ class Order extends BaseController{
         foreach(['item_code', 'pr_code', 'sup_name', 'req_date'] as $key){
             if(isset($get[$key]) && $get[$key] !== ''){
                 if($key == 'req_date'){
-                    $where[$key] = ['between',[$get['req_date'],$get['req_date']+86399]];
+                    $where[$key] = ['between', [$get['req_date'], $get['req_date'] + 86399]];
                 }else{
                     $where[$key] = ['like', "%{$get[$key]}%"];
                 }
@@ -438,12 +438,10 @@ class Order extends BaseController{
     }
 
 
-
     /*
      * 内部创建U9订单
      */
     public function placeOrderAll($itemInfo){
-
         $sendData = [];
         $sendData['DocDate'] = time();//单价日期
         $sendData['DocTypeCode'] = 'PO01';//单据类型
@@ -476,7 +474,7 @@ class Order extends BaseController{
             returnjson($res);
         }
         //dump($res['result']);die;
-        return ['code'=>2000,'msg'=>'','data'=>['DocNo'=>$res['result']['DocNo']]];
+        return ['code' => 2000, 'msg' => '', 'data' => $res['result']];
     }
 
     /*
@@ -484,35 +482,35 @@ class Order extends BaseController{
      */
     public function placeOrderByPoItem(){
         $ids = input('param.ids');
-        $idArr = explode('|',$ids);
+        $idArr = explode('|', $ids);
         $poLogic = model('Po', 'logic');
-        $supLogic = model('Supporter','logic');
+        $supLogic = model('Supporter', 'logic');
         $supCodeInfo = [];
         if(!empty($ids)){
             $poArr = [];
-            foreach($idArr as $k=>$v){
-                $po_id = $poLogic->getPoId(['id'=>$v]);//判断id是否存在po_id有存在返回不能合并订单操作
+            foreach($idArr as $k => $v){
+                $po_id = $poLogic->getPoId(['id' => $v]);//判断id是否存在po_id有存在返回不能合并订单操作
                 if($po_id){
                     $poArr[$k] = $po_id;
                 }
-                $supInfo = $poLogic->getSupInfo(['id'=>$v]);//通过id获取sup_code sup_name
+                $supInfo = $poLogic->getSupInfo(['id' => $v]);//通过id获取sup_code sup_name
                 $supCodeInfo[$supInfo['sup_code']] = $supInfo['sup_name'];
             }
         }
 
         if(!empty($poArr)){
-            return json(['code'=>4000,'msg'=>'抱歉，您选择的采购订单中已经存在下单后的订单状态','data'=>[]]);
+            return json(['code' => 4000, 'msg' => '抱歉，您选择的采购订单中已经存在下单后的订单状态', 'data' => []]);
         }
         if(count($supCodeInfo) != 1){
-            return json(['code'=>4000,'msg'=>'抱歉，您选择的采购订单中包含多家供应商或采购订单中供应商已不存在','data'=>[]]);
+            return json(['code' => 4000, 'msg' => '抱歉，您选择的采购订单中包含多家供应商或采购订单中供应商已不存在', 'data' => []]);
         }
-        foreach($supCodeInfo as $k=>$v){
+        foreach($supCodeInfo as $k => $v){
             $sup_code = $k;
             $sup_name = $v;
         }
         $now = time();
         //进行生成订单
-        $idWhere = str_replace('|',',',$ids);
+        $idWhere = str_replace('|', ',', $ids);
         $itemInfo = $poLogic->getPoItemByIds($idWhere);//单个子订单信息
         $res = $this->placeOrderAll($itemInfo);//内部生成订单
         //dump($res);die;
@@ -533,8 +531,15 @@ class Order extends BaseController{
             $po_id = $poLogic->insertOrGetId($poData);
             //生成关联关系
             $list = [];
-            foreach($idArr as $k=>$v){
-                $list[$k] = ['id'=>$v,'po_id'=>$po_id,'po_code'=>$res['data']['DocNo'],'update_at' => $now,'status'=>'placeorder'];
+            foreach($itemInfo as $pi){
+                $list[] = [
+                    'id' => $pi['id'],
+                    'po_id' => $po_id,
+                    'po_code' => $res['data']['DocNo'],
+                    'po_ln' => $poLogic->matePoLn($res['data']['rtnLines'],$pi),
+                    'update_at' => $now,
+                    'status' => 'placeorder'
+                ];
 
             }
             /*foreach($idArr as $k=>$v){
@@ -543,19 +548,19 @@ class Order extends BaseController{
             $res = $poLogic->updateAllPoid($list);
             $data = $list;
             //更改PR表status状态为已下单
-            $prLogic = model('RequireOrder','logic');
-            foreach($itemInfo as $k=> $v){
-                $prLogic->updatePr(['id'=>$v['pr_id']],['status'=>'order']);
+            $prLogic = model('RequireOrder', 'logic');
+            foreach($itemInfo as $k => $v){
+                $prLogic->updatePr(['id' => $v['pr_id']], ['status' => 'order']);
             }
             //发消息通过$sup_code $sup_name得到$sup_id
-            $sup_id = $supLogic->getSupIdVal(['code'=> $sup_code]);
+            $sup_id = $supLogic->getSupIdVal(['code' => $sup_code]);
             if(empty($sup_id)){
-                return json(['code'=>5000,'msg'=>"下订单成功，消息发送失败。 code:$sup_code 未绑定账号。",'data'=>$data]);
+                return json(['code' => 5000, 'msg' => "下订单成功，消息发送失败。 code:$sup_code 未绑定账号。", 'data' => $data]);
             }
-            sendMsg($sup_id,'安特威订单','您有新的订单，请注意查收。');//发送消息
-            return json(['code'=>2000,'msg'=>'下订单成功','data'=>$data]);
+            sendMsg($sup_id, '安特威订单', '您有新的订单，请注意查收。');//发送消息
+            return json(['code' => 2000, 'msg' => '下订单成功', 'data' => $data]);
         }
-        return json(['code'=>6000,'msg'=>'下订单失败','data'=>$data]);
+        return json(['code' => 6000, 'msg' => '下订单失败', 'data' => $data]);
     }
 
     /*

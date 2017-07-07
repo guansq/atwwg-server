@@ -53,7 +53,15 @@ class Enquiryorder extends BaseController
             ];
         }
         if (isset($get['status']) && $get['status'] !== '') {
-            $where['pr.status'] = $get['status'];
+            if($get['status'] == 'quoted'){
+                $where['pr.status'] = 'quoted';
+                $where['pr.inquiry_way'] = 'compete';
+            }elseif($get['status'] == 'uncheck'){
+                $where['pr.status'] = 'quoted';
+                $where['pr.inquiry_way'] = 'exclusive';
+            }else{
+                $where['pr.status'] = $get['status'];
+            }
         }
         if (isset($get['item_code']) && $get['item_code'] !== '') {
             $where['pr.item_code'] = ['like', "%{$get['item_code']}%"];
@@ -61,6 +69,17 @@ class Enquiryorder extends BaseController
         $list = $logicIoInfo->getIoList($start, $length, $where);
         $totalNum = $logicIoInfo->getListNum($where);
         $returnArr = [];
+        $statusArr = [
+            'init' => '待询价',
+            'hang' => '挂起',
+            'inquiry' => '询价中',
+            'quoted' => '待评标',
+            'flow' => '流标',
+            'winbid' => '已评标',
+            'wait' => '待下单',
+            'order' => '已下单',
+            'close' => '关闭'
+        ];
 
         foreach ($list as $k => $v) {
             //得到全部的询价单 by pr_code item_code
@@ -83,19 +102,14 @@ class Enquiryorder extends BaseController
             }else{
                 $status_desc = '已报价';
             }*/
-            $statusArr = [
-                'init' => '待询价',
-                'hang' => '挂起',
-                'inquiry' => '询价中',
-                'quoted' => '待评标',
-                'flow' => '流标',
-                'winbid' => '已评标',
-                'wait' => '待下单',
-                'order' => '已下单',
-                'close' => '关闭'
-            ];
-            $prStatus = $prLogic->getPrStatus(['id' => $v['pr_id']]);
-            $status_desc = key_exists($prStatus, $statusArr) ? $statusArr[$prStatus] : $prStatus;
+
+            $status_desc = key_exists($v['pr_status'], $statusArr) ? $statusArr[$v['pr_status']] : $v['pr_status'];
+            if($v['pr_status'] == 'quoted' && $v['inquiry_way'] == 'compete'){
+                $status_desc = '待评标';
+            }elseif($v['pr_status'] == 'quoted' && $v['inquiry_way'] == 'exclusive'){
+                $status_desc = '待审核';
+            }
+
             $returnArr[] = [
                 'io_code' => $v['io_code'],//询价单号
                 'pr_code' => $v['pr_code'],//请购单号
@@ -336,10 +350,29 @@ class Enquiryorder extends BaseController
             ];
         }
         if (isset($get['status']) && $get['status'] !== '') {
-            $where['pr.status'] = $get['status'];
+            if($get['status'] == 'quoted'){
+                $where['pr.status'] = 'quoted';
+                $where['pr.inquiry_way'] = 'compete';
+            }elseif($get['status'] == 'uncheck'){
+                $where['pr.status'] = 'quoted';
+                $where['pr.inquiry_way'] = 'exclusive';
+            }else{
+                $where['pr.status'] = $get['status'];
+            }
         }
         $list = $logicIoInfo->getIoAllList($where);
         $returnArr = [];
+        $statusArr = [
+            'init' => '待询价',
+            'hang' => '挂起',
+            'inquiry' => '询价中',
+            'quoted' => '待评标',
+            'flow' => '流标',
+            'winbid' => '已评标',
+            'wait' => '待下单',
+            'order' => '已下单',
+            'close' => '关闭'
+        ];
 
         foreach ($list as $k => $v) {
             //得到全部的询价单 by pr_code item_code
@@ -362,18 +395,13 @@ class Enquiryorder extends BaseController
             }else{
                 $status_desc = '已报价';
             }*/
-            $statusArr = [
-                'init' => '待询价',
-                'hang' => '挂起',
-                'inquiry' => '询价中',
-                'quoted' => '待评标',
-                'flow' => '流标',
-                'winbid' => '已评标',
-                'order' => '已下单',
-                'close' => '关闭'
-            ];
-            $prStatus = $prLogic->getPrStatus(['id' => $v['pr_id']]);
-            $status_desc = $statusArr[$prStatus];
+
+            $status_desc = key_exists($v['pr_status'], $statusArr) ? $statusArr[$v['pr_status']] : $v['pr_status'];
+            if($v['pr_status'] == 'quoted' && $v['inquiry_way'] == 'compete'){
+                $status_desc = '待评标';
+            }elseif($v['pr_status'] == 'quoted' && $v['inquiry_way'] == 'exclusive'){
+                $status_desc = '待审核';
+            }
             $returnArr[] = [
                 'io_code' => $v['io_code'],//询价单号
                 'pr_code' => $v['pr_code'],//请购单号

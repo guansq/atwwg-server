@@ -17,6 +17,7 @@
           <option value="" {if $Think.get.status eq ''}selected{/if}>全部</option>
           <option value="inquiry" {if $Think.get.status eq 'inquiry'}selected{/if}>询价中</option>
           <option value="quoted" {if $Think.get.status eq 'quoted'}selected{/if}>待评标</option>
+          <option value="uncheck" {if $Think.get.status eq 'uncheck'}selected{/if}>待审核</option>
           <option value="flow" {if $Think.get.status eq 'flow'}selected{/if}>流标</option>
           <option value="winbid" {if $Think.get.status eq 'winbid'}selected{/if}>已评标</option>
           <option value="wait" {if $Think.get.status eq 'wait'}selected{/if}>待下单</option>

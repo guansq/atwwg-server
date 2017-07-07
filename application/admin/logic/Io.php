@@ -26,7 +26,7 @@ class Io extends BaseLogic{
     function getIoList($start, $length, $where){
         //->join('u9_pr c','a.pr_code=c.pr_code','LEFT'),c.pro_no
         $list = IoModel::alias('a')
-            ->field('a.*,b.desc,pr.pro_no,pr.status as pr_status')
+            ->field('a.*,b.desc,pr.pro_no,pr.status as pr_status,pr.inquiry_way')
             ->join('item b', 'a.item_code=b.code', 'LEFT')
             ->join('u9_pr pr', 'pr.id = a.pr_id', 'LEFT')
             ->limit("$start,$length")
@@ -48,7 +48,7 @@ class Io extends BaseLogic{
     function getIoAllList($where){
         //->join('u9_pr c','a.pr_code=c.pr_code','LEFT'),c.pro_no
         $list = IoModel::alias('a')
-            ->field('a.*,b.desc,pr.pro_no,pr.status as pr_status')
+            ->field('a.*,b.desc,pr.pro_no,pr.status as pr_status ,pr.inquiry_way')
             ->join('item b', 'a.item_code=b.code', 'LEFT')
             ->join('u9_pr pr', 'pr.id = a.pr_id', 'LEFT')
             ->group('pr_id');

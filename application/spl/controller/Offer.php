@@ -73,7 +73,7 @@ class Offer extends Base{
         $list = $offerLogic->getOfferInfo($sup_code, $where);
         //状态init=未报价  quoted=已报价  winbid=中标 giveupbid=弃标  close=已关闭
         foreach($list as $k => $v){
-            if(in_array($v['status'], ['init','quoted'])){
+            if(in_array($v['status'], ['init','quoted','winbid_uncheck'])){
                 $list[$k]['showinfo'] = '';
             }else{
                 $list[$k]['showinfo'] = 'disabled';

@@ -66,9 +66,6 @@ class Order extends BaseLogic{
     //获取某条订单状态
     function getOrderListOneInfo($id){
         $list = Po::where(['id' => $id])->select();
-        if($list){
-            $list = collection($list)->toArray();
-        }
         return $list;
     }
 
@@ -100,15 +97,14 @@ class Order extends BaseLogic{
     function getOrderDetailInfo($po_id, $item_code = ''){
         if(!empty($po_id)){
             if(empty($item_code)){
-                $list = PoItem::where(['po_id' => $po_id])->select();
+                $list = PoItem::where(['po_id' => $po_id])->field('*, "" AS pro_no ')->select();
             }else{
-                $list = PoItem::where(['po_id' => $po_id, 'item_code' => $item_code])->select();
+                $list = PoItem::where(['po_id' => $po_id, 'item_code' => $item_code])->field('*, "" AS pro_no ')->select();
             }
-            //echo $this->getLastSql();//die;
-            if($list){
-                $list = collection($list)->toArray();
-                return $list;
+            foreach($list as &$pi){
+                $pi['pro_no'] = model('PR','logic')->where('id',$pi->pr_id)->value('pro_no');
             }
+            return $list;
         }
         return false;
     }
@@ -366,7 +362,7 @@ EOD;
             $price = number_format($pi['price'], 2);
             $subTotal = number_format($pi['price_num']*$pi['price'], 2);
             $po['price_total'] += $pi['price_num']*$pi['price'];
-            $ln = $i+1;
+            $ln = $i + 1;
             $html .= "<tr>
                 <td width=\"26\" class=\"content-center\">$ln</td>
                 <td width=\"70\">$pi[item_code]</td>

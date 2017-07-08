@@ -19,6 +19,7 @@ class Offer extends Base{
         'winbid_uncheck' => '待审核',
         'winbid_checked' => '已审核',
         'winbid' => '中标',
+        'wait' => '待下单',
         'giveupbid' => '弃标',
         'close' => '未中标'
     ];
@@ -31,6 +32,7 @@ class Offer extends Base{
 //            'winbid_uncheck' => '中标但是需要审核',
 //            'winbid_checked' => '中标已经审核',
             'winbid' => '中标',
+            'wait' => '待下单',
 //            'giveupbid' => '弃标',
             'close' => '未中标'
         ];
@@ -80,6 +82,7 @@ class Offer extends Base{
             }
             $list[$k]['statusStr'] = self::STATUS_ARR[$v['status']];
             $list[$k]['status'] = $v['status'];
+            $list[$k]['pro_no'] = $v['pro_no'];
             $list[$k]['promise_date'] = empty($v['promise_date']) ? '' : date('Y-m-d', $v['promise_date']);
             $list[$k]['create_at'] = empty($v['create_at']) ? '--' : date('Y-m-d', $v['create_at']);
             $list[$k]['quote_date'] = empty($v['quote_date']) ? '--' : date('Y-m-d', $v['quote_date']);

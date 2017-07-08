@@ -103,11 +103,11 @@ class Order extends Base{
         $pr_id = input('id');
         //$pr_code = '1111222';
         $offerLogic = model('Order', 'logic');
-        $detail = $offerLogic->getOrderDetailInfo($pr_id);
+        $piList = $offerLogic->getOrderDetailInfo($pr_id);
 
-        foreach($detail as $key => $item){
+        foreach($piList as $key => $item){
             $result = $offerLogic->getOrderRecordInfo($item['id']);
-            $detail[$key]['times'] = (!empty($result) ? count($result) : 0);
+            $piList[$key]['times'] = (!empty($result) ? count($result) : 0);
         }
         $codeInfo = $offerLogic->getOrderListOneInfo($pr_id);
         $contractable = in_array($codeInfo[0]['status'], array('sup_sure', 'upload_contract')) ? '1' : '0';
@@ -125,7 +125,7 @@ class Order extends Base{
         $this->assign('statusButton', $statusButton);
         $this->assign('imgInfos', $imgInfos);
         // var_dump($detail);
-        $this->assign('list', $detail);
+        $this->assign('list', $piList);
         if(empty($codeInfo[0]['order_code'])){
             $codeInfo[0]['order_code'] = '--';
         }

@@ -36,6 +36,7 @@
       <tr class="active">
         <td>物料编号</td>
         <td>物料名称</td>
+        <td>项目号</td>
         <td>需求数量</td>
         <td>交易单位</td>
         <td>计价单位</td>
@@ -72,6 +73,7 @@
 
     function initPage(){
       // datatable
+      $.fn.dataTable.ext.errMode = 'none'; // 关闭报错信息
       orderTables = $('#example').DataTable({
         //"paging": false, //设置是否分页
         "info":true,  //去除左下角的信息
@@ -103,6 +105,7 @@
         "columns":[
           {"data":"item_code"},
           {"data":"item_name"},
+          {"data":"pro_no"},
           {"data":"price_num"},
           {"data":"price_uom"},
           {"data":"tc_uom"},
@@ -119,39 +122,39 @@
         "createdRow":function(row, data, index){
           $('td', row).eq(0).html($('td', row).eq(0).html() + '<input type="hidden" name="id" value="' + data.id + '">');
           $('td', row).eq(1).attr('style', 'text-align: left;');
-          $('td', row).eq(2).attr('id', 'num_' + data.id);
-          $('td', row).eq(2).attr('style', 'text-align: right;');
+          $('td', row).eq(3).attr('id', 'num_' + data.id);
+          $('td', row).eq(3).attr('style', 'text-align: right;');
           if(!data.create_at){
-            $('td', row).eq(5).html('--');
+            $('td', row).eq(6).html('--');
           }
           var tmpstr = '';
           if(data.promise_date == null || data.promise_date == ''){
-            $('td', row).eq(8).html('');
+            $('td', row).eq(9).html('');
           }
           tmpstr = '<input onclick="laydate({ min: laydate.now()})"  class="laydate-icon" type="text" name="req_date" lay-verify="required" value="' + $('td', row)
-                  .eq(8)
+                  .eq(9)
                   .html() + '" ' + data.showinfo + '>';
-          $('td', row).eq(8).html(tmpstr);
-          tmpstr = '￥<input type="text" id="price_' + data.id + '" class="price" style="width:80%;float:right;   text-align: right;" data-id="' + data.id + '" name="quote_price" lay-verify="required|float" value="' + data.quote_price + '"' + data.showinfo + ' placeholder="请输入单价">';
           $('td', row).eq(9).html(tmpstr);
+          tmpstr = '￥<input type="text" id="price_' + data.id + '" class="price" style="width:80%;float:right;   text-align: right;" data-id="' + data.id + '" name="quote_price" lay-verify="required|float" value="' + data.quote_price + '"' + data.showinfo + ' placeholder="请输入单价">';
+          $('td', row).eq(10).html(tmpstr);
           //$('td', row).eq(9).attr('id','price_'+data.id);
-          $('td', row).eq(10).attr('id', 'total_price_' + data.id);
-          $('td', row).eq(10).html('￥' + $('td', row).eq(10).html())
-          $('td', row).eq(10).addClass('active');
+          $('td', row).eq(11).attr('id', 'total_price_' + data.id);
+          $('td', row).eq(11).html('￥' + $('td', row).eq(11).html())
+          $('td', row).eq(11).addClass('active');
           tmpstr = '<input type="text" value="' + data.remark + '" name="remark" ' + data.showinfo + '>';
-          $('td', row).eq(11).html(tmpstr);
+          $('td', row).eq(12).html(tmpstr);
           if(data.showinfo == ''){
             tmpstr = '<button data-io-id="' + data.id + '" class="btn btn-primary"  ' + data.showinfo + 'lay-submit="" lay-filter="sub">提交报价</button>';
           }else{
             tmpstr = '<span> </span>';
           }
-          $('td', row).eq(12).html(tmpstr);
+          $('td', row).eq(13).html(tmpstr);
           // console.log(row);
           $(row).attr('id', 'io-' + data.id);
           $(row).addClass("layui-form");
           //console.log(data.status.indexOf('winbid'));
           $(row).addClass(data.status && data.status.indexOf('winbid') >= 0 ? 'success' : '');
-          $(row).addClass(data.status && data.status.indexOf('winbid') >= 0 ? 'success' : '');
+          $(row).addClass(data.status && data.status.indexOf('wait') >= 0 ? 'success' : '');
 
         },
         "drawCallback":function(settings){

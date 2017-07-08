@@ -17,7 +17,10 @@
  0. crontab -e
 
     ```
-    0 3 * * * /usr/bin/php /home/wwwroot/atwwg.api.antiwearvalve.com/cron/syncAll.php
-    0 15 * * * /usr/bin/php /home/wwwroot/atwwg.api.antiwearvalve.com/cron/evaluateBid.php
+0 3 * * * /usr/bin/php /home/wwwroot/atwwg.api.antiwearvalve.com/cron/syncAll.php
+0 15 * * * /usr/bin/php /home/wwwroot/atwwg.api.antiwearvalve.com/cron/evaluateBid.php
+0 2 * * * find /home/wwwroot/atw.u9api.antiwearvalve.com/runtime -type f -mtime +30 -exec rm -rf {} \;
+0 2 * * * find /home/wwwroot/atwwg.api.antiwearvalve.com/runtime -type f -mtime +30 -exec rm -rf {} \;
+0 2 * * * find /home/wwwroot/atwwg.server.antiwearvalve.com/runtime -type f -mtime +30 -exec rm -rf {} \;
     ```
 

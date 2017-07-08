@@ -172,6 +172,7 @@ class Order extends BaseController{
             $returnInfo[$k]['po_id'] = $v['po_id'];//合并订单编号
 
             //$returnInfo[$k]['po_code'] = '';//U9生成订单编号
+            $returnInfo[$k]['pro_no'] = $v['pro_no'];//U9生成订单编号
 
             $returnInfo[$k]['pr_code'] = $v['pr_code'];//请购单编号
             $returnInfo[$k]['pr_date'] = atwDate($poLogic->getPrDate($v['pr_code']));

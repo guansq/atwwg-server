@@ -105,12 +105,12 @@ class Po extends BaseLogic{
      */
     public function getPoItemList($where){
         if(empty($where)){
-            $list = poItemModel::where('status', 'init')->order('update_at DESC')->select();
+            $list = poItemModel::where('status', 'init')->order('update_at DESC')->field('*, "" AS pro_no ')->select();
         }else{
-            $list = poItemModel::where($where)->where('status', 'init')->order('update_at DESC')->select();
+            $list = poItemModel::where($where)->where('status', 'init')->order('update_at DESC')->field('*, "" AS pro_no ')->select();
         }
-        if($list){
-            $list = collection($list)->toArray();
+        foreach($list as &$pi){
+            $pi['pro_no'] = model('RequireOrder','logic')->where('id',$pi->pr_id)->column('pro_no');
         }
         return $list;
     }

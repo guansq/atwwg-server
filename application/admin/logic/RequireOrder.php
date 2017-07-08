@@ -10,7 +10,7 @@ namespace app\admin\logic;
 use app\common\model\U9Pr as prModel;
 
 class RequireOrder extends BaseLogic{
-
+    protected $table ='atw_u9_pr';
     /*
      * 得到请购单信息
      */

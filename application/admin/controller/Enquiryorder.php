@@ -8,51 +8,44 @@
 
 namespace app\admin\controller;
 
-use controller\BasicAdmin;
-use service\LogService;
-use service\DataService;
-use service\HttpService;
-use think\Db;
-use PHPExcel_IOFactory;
 use PHPExcel;
+use PHPExcel_IOFactory;
+use service\HttpService;
 
-class Enquiryorder extends BaseController
-{
+class Enquiryorder extends BaseController{
     protected $table = 'Io';
     protected $title = '询价单管理';
-    const MSGTITLE = '新的报价单';
+    const MSGTITLE   = '新的报价单';
     const MSGCONTENT = '您有新的报价单，请尽快查收';
 
-    public function index()
-    {
+    public function index(){
         $statusArr = [
 
         ];
         $logicIoInfo = Model('Io', 'logic');
         $allNums = $logicIoInfo->getListNum();
-        $this->assign('allNums',$allNums);
+        $this->assign('allNums', $allNums);
         //echo $allNums;
         $this->assign('title', $this->title);
         $this->assign('statusArr', $statusArr);
         return view();
     }
 
-    public function getInquiryList()
-    {
+    public function getInquiryList(){
         $start = input('start') == '' ? 0 : input('start');
         $length = input('length') == '' ? 10 : input('length');
         $logicIoInfo = Model('Io', 'logic');
         $prLogic = Model('RequireOrder', 'logic');
         $get = input('param.');
         $where = [];
-        if ((isset($get['start_time']) && $get['start_time'] !== '') && (isset($get['end_time']) && $get['end_time'] !== '')) {
+        if((isset($get['start_time']) && $get['start_time'] !== '') && (isset($get['end_time']) && $get['end_time'] !== '')){
             $get['start_time'] = strtotime($get['start_time']);
-            $get['end_time'] = strtotime($get['end_time']) + 24 * 60 * 60;
+            $get['end_time'] = strtotime($get['end_time']) + 24*60*60;
             $where = [
                 'a.create_at' => ['between', [$get['start_time'], $get['end_time']]]
             ];
         }
-        if (isset($get['status']) && $get['status'] !== '') {
+        if(isset($get['status']) && $get['status'] !== ''){
             if($get['status'] == 'quoted'){
                 $where['pr.status'] = 'quoted';
                 $where['pr.inquiry_way'] = 'compete';
@@ -63,8 +56,15 @@ class Enquiryorder extends BaseController
                 $where['pr.status'] = $get['status'];
             }
         }
-        if (isset($get['item_code']) && $get['item_code'] !== '') {
+        if(isset($get['item_code']) && $get['item_code'] !== ''){
             $where['pr.item_code'] = ['like', "%{$get['item_code']}%"];
+        }
+        if(isset($get['item_name']) && $get['item_name'] !== ''){
+            $where['pr.item_name'] = ['like', "%{$get['item_name']}%"];
+        }
+
+        if(isset($get['pr_code']) && $get['pr_code'] !== ''){
+            $where['pr.pr_code'] = ['like', "%{$get['pr_code']}%"];
         }
         $list = $logicIoInfo->getIoList($start, $length, $where);
         $totalNum = $logicIoInfo->getListNum($where);
@@ -81,7 +81,7 @@ class Enquiryorder extends BaseController
             'close' => '关闭'
         ];
 
-        foreach ($list as $k => $v) {
+        foreach($list as $k => $v){
             //得到全部的询价单 by pr_code item_code
             $where = [
                 //'pr_code' => $v['pr_code'],
@@ -111,22 +111,38 @@ class Enquiryorder extends BaseController
             }
 
             $returnArr[] = [
-                'io_code' => $v['io_code'],//询价单号
-                'pr_code' => $v['pr_code'],//请购单号
-                'item_code' => $v['item_code'],//料号
-                'item_name' => $v['item_name'],//物料描述
-                'desc' => $v['desc'],//物料描述
-                'pro_no' => $v['pro_no'],//项目号
-                'tc_uom' => $v['tc_uom'],//交易单位
-                'tc_num' => $v['tc_num'],//交易数量
-                'price_uom' => $v['price_uom'],//计价单位
-                'price_num' => $v['price_num'],//计价数量
-                'req_date' => date('Y-m-d', $v['req_date']),//交期
-                'quote_date' => date('Y-m-d', $v['create_at']),//询价日期
-                'quote_endtime' => date('Y-m-d', $v['quote_endtime']),//报价截止日期
-                'price_status' => $quotedIo . '/' . $allIo,//报价状态
-                'status' => $status_desc,//状态 init=初始 hang=挂起 inquiry=询价中 close = 关闭
-                'pur_attr' => '<a class="" href="javascript:void(0);" data-open="/enquiryorder/particulars/io_code/' . $v['io_code'] . '">详情</a>',//详情
+                'io_code' => $v['io_code'],
+                //询价单号
+                'pr_code' => $v['pr_code'],
+                //请购单号
+                'item_code' => $v['item_code'],
+                //料号
+                'item_name' => $v['item_name'],
+                //物料描述
+                'desc' => $v['desc'],
+                //物料描述
+                'pro_no' => $v['pro_no'],
+                //项目号
+                'tc_uom' => $v['tc_uom'],
+                //交易单位
+                'tc_num' => $v['tc_num'],
+                //交易数量
+                'price_uom' => $v['price_uom'],
+                //计价单位
+                'price_num' => $v['price_num'],
+                //计价数量
+                'req_date' => date('Y-m-d', $v['req_date']),
+                //交期
+                'quote_date' => date('Y-m-d', $v['create_at']),
+                //询价日期
+                'quote_endtime' => date('Y-m-d', $v['quote_endtime']),
+                //报价截止日期
+                'price_status' => $quotedIo.'/'.$allIo,
+                //报价状态
+                'status' => $status_desc,
+                //状态 init=初始 hang=挂起 inquiry=询价中 close = 关闭
+                'pur_attr' => '<a class="" href="javascript:void(0);" data-open="/enquiryorder/particulars/io_code/'.$v['io_code'].'">详情</a>',
+                //详情
             ];
 
         }
@@ -139,16 +155,15 @@ class Enquiryorder extends BaseController
     /*
      * 发送选中的全部消息
      */
-    public function sendAllMsg()
-    {
+    public function sendAllMsg(){
         $allId = input('param.io_id');
-        if ($allId == '') {
+        if($allId == ''){
             return json(['code' => 4000, 'msg' => '请传入询价ID', 'data' => []]);
         }
         $ids = explode('|', $allId);
         $logicIoInfo = Model('Io', 'logic');
         $logicSystemUser = Model('SystemUser', 'logic');
-        foreach ($ids as $k => $v) {
+        foreach($ids as $k => $v){
             $where = ['a.id' => $v];
             $info = $logicIoInfo->getSupId($where);//通过IOid获取supid->
             $sendInfo = [
@@ -156,14 +171,14 @@ class Enquiryorder extends BaseController
                 'phone' => '',
                 'token' => ''
             ];
-            if ($info) {
+            if($info){
                 $sendInfo['email'] = $info['email'];
                 $sendInfo['phone'] = $info['phone'];
                 $where = ['id' => $info['sup_id']];//获取token条件
                 $sendInfo['token'] = $logicSystemUser->getPushToken($where);
             }
             sendMsg($info['sup_id'], self::MSGTITLE, self::MSGCONTENT);//发送消息
-            if (!empty($sendInfo['email'])) {
+            if(!empty($sendInfo['email'])){
                 $sendData = [
                     'rt_appkey' => 'atw_wg',
                     'fromName' => '安特威物供平台',//发送人名
@@ -172,18 +187,18 @@ class Enquiryorder extends BaseController
                     'html' => self::MSGCONTENT,
                     'from' => 'tan3250204@sina.com',//平台的邮件头
                 ];
-                HttpService::curl(getenv('APP_API_MSG') . 'SendEmail/sendHtml', $sendData);
+                HttpService::curl(getenv('APP_API_MSG').'SendEmail/sendHtml', $sendData);
             }
-            if (!empty($sendInfo['phone'])) {
+            if(!empty($sendInfo['phone'])){
                 $sendData = [
                     'mobile' => $sendInfo['phone'],
                     'rt_appkey' => 'atw_wg',
                     'text' => self::MSGCONTENT,
                 ];
-                HttpService::curl(getenv('APP_API_MSG') . 'SendSms/sendText', $sendData);//sendSms($data)
+                HttpService::curl(getenv('APP_API_MSG').'SendSms/sendText', $sendData);//sendSms($data)
             }
             //echo $sendInfo['token'];
-            if (!empty($sendInfo['token'])) {
+            if(!empty($sendInfo['token'])){
                 $sendData = [
                     "platform" => "all",
                     "rt_appkey" => "atw_wg",
@@ -204,15 +219,14 @@ class Enquiryorder extends BaseController
                     ]/**/
                 ];
                 //dump($sendData);
-                HttpService::curl(getenv('APP_API_MSG') . 'push', $sendData);
+                HttpService::curl(getenv('APP_API_MSG').'push', $sendData);
             }
 
         }
         return json(['code' => 2000, 'smg' => '发送成功', 'data' => []]);
     }
 
-    public function sendOneMsg()
-    {
+    public function sendOneMsg(){
         $ioId = input('param.io_id');
         $logicIoInfo = Model('Io', 'logic');
         $logicSystemUser = Model('SystemUser', 'logic');
@@ -223,14 +237,14 @@ class Enquiryorder extends BaseController
             'phone' => '',
             'token' => ''
         ];
-        if ($info) {
+        if($info){
             $sendInfo['email'] = $info['email'];
             $sendInfo['phone'] = $info['phone'];
             $where = ['id' => $info['sup_id']];//获取token条件
             $sendInfo['token'] = $logicSystemUser->getPushToken($where);
         }
         sendMsg($info['sup_id'], self::MSGTITLE, self::MSGCONTENT);//发送消息
-        if (!empty($sendInfo['email'])) {
+        if(!empty($sendInfo['email'])){
             $sendData = [
                 'rt_appkey' => 'atw_wg',
                 'fromName' => '安特威物供平台',//发送人名
@@ -239,18 +253,18 @@ class Enquiryorder extends BaseController
                 'html' => self::MSGCONTENT,
                 'from' => 'tan3250204@sina.com',//平台的邮件头
             ];
-            HttpService::curl(getenv('APP_API_MSG') . 'SendEmail/sendHtml', $sendData);
+            HttpService::curl(getenv('APP_API_MSG').'SendEmail/sendHtml', $sendData);
         }
-        if (!empty($sendInfo['phone'])) {
+        if(!empty($sendInfo['phone'])){
             $sendData = [
                 'mobile' => $sendInfo['phone'],
                 'rt_appkey' => 'atw_wg',
                 'text' => self::MSGCONTENT,
             ];
-            HttpService::curl(getenv('APP_API_MSG') . 'SendSms/sendText', $sendData);//sendSms($data)
+            HttpService::curl(getenv('APP_API_MSG').'SendSms/sendText', $sendData);//sendSms($data)
         }
         //echo $sendInfo['token'];
-        if (!empty($sendInfo['token'])) {
+        if(!empty($sendInfo['token'])){
             $sendData = [
                 "platform" => "all",
                 "rt_appkey" => "atw_wg",
@@ -270,13 +284,12 @@ class Enquiryorder extends BaseController
                     ]
                 ]
             ];
-            HttpService::curl(getenv('APP_API_MSG') . 'push', $sendData);
+            HttpService::curl(getenv('APP_API_MSG').'push', $sendData);
         }
         return json(['code' => 2000, 'smg' => '发送成功', 'data' => []]);
     }
 
-    public function particulars()
-    {
+    public function particulars(){
         //列出所有的询价单
         //$commonInfo = ;
         $this->assign('title', $this->title);
@@ -316,7 +329,7 @@ class Enquiryorder extends BaseController
         $prStatus = $prLogic->getPrStatus(['id' => $prId]);
         $status_desc = $statusArr[$prStatus];
 
-        $commonInfo['price_status'] = $quotedIo . '/' . $allIo;//报价状态
+        $commonInfo['price_status'] = $quotedIo.'/'.$allIo;//报价状态
         $commonInfo['status_desc'] = $status_desc;//状态
         $this->assign('ioInfo', $info);
         $this->assign('commonInfo', $commonInfo);
@@ -327,29 +340,27 @@ class Enquiryorder extends BaseController
     /*
      * 立即评标
      */
-    public function quickbid()
-    {
-        $info = json_decode(HttpService::curl(getenv('APP_API_HOME') . '/u9api/evaluateBid'));
+    public function quickbid(){
+        $info = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/evaluateBid'));
         return json($info);
     }
 
     /*
      * 导出excel
      */
-    function exportExcel()
-    {
+    function exportExcel(){
         $logicIoInfo = Model('Io', 'logic');
         $prLogic = Model('RequireOrder', 'logic');
         $get = input('param.');
         $where = [];
-        if ((isset($get['start_time']) && $get['start_time'] !== '') && (isset($get['end_time']) && $get['end_time'] !== '')) {
+        if((isset($get['start_time']) && $get['start_time'] !== '') && (isset($get['end_time']) && $get['end_time'] !== '')){
             $get['start_time'] = strtotime($get['start_time']);
-            $get['end_time'] = strtotime($get['end_time']) + 24 * 60 * 60;
+            $get['end_time'] = strtotime($get['end_time']) + 24*60*60;
             $where = [
                 'a.create_at' => ['between', [$get['start_time'], $get['end_time']]]
             ];
         }
-        if (isset($get['status']) && $get['status'] !== '') {
+        if(isset($get['status']) && $get['status'] !== ''){
             if($get['status'] == 'quoted'){
                 $where['pr.status'] = 'quoted';
                 $where['pr.inquiry_way'] = 'compete';
@@ -374,7 +385,7 @@ class Enquiryorder extends BaseController
             'close' => '关闭'
         ];
 
-        foreach ($list as $k => $v) {
+        foreach($list as $k => $v){
             //得到全部的询价单 by pr_code item_code
             $where = [
                 //'pr_code' => $v['pr_code'],
@@ -415,14 +426,14 @@ class Enquiryorder extends BaseController
                 'req_date' => date('Y-m-d', $v['req_date']),//交期
                 'quote_date' => date('Y-m-d', $v['create_at']),//询价日期
                 'quote_endtime' => date('Y-m-d', $v['quote_endtime']),//报价截止日期
-                'price_status' => $quotedIo . '/' . $allIo,//报价状态
+                'price_status' => $quotedIo.'/'.$allIo,//报价状态
                 'status' => $status_desc,//状态 init=初始 hang=挂起 inquiry=询价中 close = 关闭
             ];
 
         }
 
         $list = $returnArr;
-        $path = ROOT_PATH . 'public' . DS . 'upload' . DS;
+        $path = ROOT_PATH.'public'.DS.'upload'.DS;
         //dump($list);die;
         $PHPExcel = new PHPExcel(); //实例化PHPExcel类，类似于在桌面上新建一个Excel表格
         $PHPSheet = $PHPExcel->getActiveSheet(); //获得当前活动sheet的操作对象
@@ -439,26 +450,29 @@ class Enquiryorder extends BaseController
         $PHPSheet->setCellValue('J1', '报价状态');
         $PHPSheet->setCellValue('K1', '状态');
         $num = 1;
-        foreach ($list as $k => $v) {
+        foreach($list as $k => $v){
             $num = $num + 1;
-            $PHPSheet->setCellValue('A' . $num, $v['io_code'])->setCellValue('B' . $num, $v['pr_code'])
-                ->setCellValue('C' . $num, $v['item_code'])->setCellValue('D' . $num, $v['tc_uom'])
-                ->setCellValue('E' . $num, $v['price_uom'])->setCellValue('F' . $num, $v['price_num'])
-                ->setCellValue('G' . $num, $v['req_date'])
-                ->setCellValue('H' . $num, $v['quote_date'])
-                ->setCellValue('I' . $num, $v['quote_endtime'])
-                ->setCellValue('J' . $num, $v['price_status'])
-                ->setCellValue('K' . $num, $v['status']);
+            $PHPSheet->setCellValue('A'.$num, $v['io_code'])
+                ->setCellValue('B'.$num, $v['pr_code'])
+                ->setCellValue('C'.$num, $v['item_code'])
+                ->setCellValue('D'.$num, $v['tc_uom'])
+                ->setCellValue('E'.$num, $v['price_uom'])
+                ->setCellValue('F'.$num, $v['price_num'])
+                ->setCellValue('G'.$num, $v['req_date'])
+                ->setCellValue('H'.$num, $v['quote_date'])
+                ->setCellValue('I'.$num, $v['quote_endtime'])
+                ->setCellValue('J'.$num, $v['price_status'])
+                ->setCellValue('K'.$num, $v['status']);
         }
         $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel, 'Excel2007');//按照指定格式生成Excel文件，'Excel2007’表示生成2007版本的xlsx，
-        $PHPWriter->save($path . '/ioList.xlsx'); //表示在$path路径下面生成ioList.xlsx文件
+        $PHPWriter->save($path.'/ioList.xlsx'); //表示在$path路径下面生成ioList.xlsx文件
         $file_name = "ioList.xlsx";
-        $contents = file_get_contents($path . '/ioList.xlsx');
-        $file_size = filesize($path . '/ioList.xlsx');
+        $contents = file_get_contents($path.'/ioList.xlsx');
+        $file_size = filesize($path.'/ioList.xlsx');
         header("Content-type: application/octet-stream;charset=utf-8");
         header("Accept-Ranges: bytes");
         header("Accept-Length: $file_size");
-        header("Content-Disposition: attachment; filename=" . $file_name);
+        header("Content-Disposition: attachment; filename=".$file_name);
         exit($contents);
     }
 
@@ -466,8 +480,7 @@ class Enquiryorder extends BaseController
      * Author: WILL<314112362@qq.com>
      * Describe:根据询价 单下采购单
      */
-    public function placePurchOrderFromIo()
-    {
+    public function placePurchOrderFromIo(){
         $now = time();
         $io_id = input('param.io_id');
         //通过io_id得到io信息
@@ -501,8 +514,8 @@ class Enquiryorder extends BaseController
             'sup_confirm_date' => $io['promise_date'],
             'req_date' => $io['req_date'],
             'price' => $io['quote_price'],
-            'tax_price' => round($io['quote_price'] * (1 + floatval($io['tax_rate'])), 2),
-            'amount' => round($io['quote_price'] * (1 /*+ floatval($io['tax_rate'])*/) * $io['price_num'], 2),
+            'tax_price' => round($io['quote_price']*(1 + floatval($io['tax_rate'])), 2),
+            'amount' => round($io['quote_price']*(1 /*+ floatval($io['tax_rate'])*/)*$io['price_num'], 2),
             'tax_rate' => $io['tax_rate'],
             'winbid_time' => $now,
             'create_at' => $now,
@@ -516,8 +529,7 @@ class Enquiryorder extends BaseController
         return json(['code' => 2000, 'msg' => '成功', 'data' => []]);
     }
 
-    public function refuseAndClear()
-    {
+    public function refuseAndClear(){
         $io_id = input('param.io_id');
         $clearInfo = [
             'promise_date' => '',
@@ -527,9 +539,9 @@ class Enquiryorder extends BaseController
             'winbid_date' => '',
             'status' => 'init'
         ];
-        $io = model('Io', 'logic')->where('id',$io_id)->find();
-        if (empty($io)) {
-            return json(['code' => 4000, 'msg' => '无效的ioId=' . $io_id, 'data' => []]);
+        $io = model('Io', 'logic')->where('id', $io_id)->find();
+        if(empty($io)){
+            return json(['code' => 4000, 'msg' => '无效的ioId='.$io_id, 'data' => []]);
         }
         //更改io表状态为中标init
         model('Io', 'logic')->updateIo(['id' => $io_id], $clearInfo);

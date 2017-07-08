@@ -24,12 +24,15 @@
           <option value="order" {if $Think.get.status eq 'order'}selected{/if}>已下单</option>
           <option value="close" {if $Think.get.status eq 'close'}selected{/if}>关闭</option>
         </select>
-        <span>询价日期</span>
-        <input type="text" id="start_time" value="{$Think.get.start_time}" name="start_time" class="date_time form-control w20b">
-        到
-        <input type="text" id="end_time" value="{$Think.get.end_time}" name="end_time" class="date_time form-control w20b">
-        <span>料号</span>
-        <input type="text" id="item_code" value="{$Think.get.item_code}" name="item_code" class="form-control w20b">
+        <span>询价日期:</span>
+        <input type="text" id="start_time" value="{$Think.get.start_time}" name="start_time" class="date_time form-control">至
+        <input type="text" id="end_time" value="{$Think.get.end_time}" name="end_time" class="date_time form-control">
+        <span>请购单号:</span>
+        <input type="text" id="pr_code" value="{$Think.get.pr_code}" name="pr_code" class="form-control">
+        <span>料号:</span>
+        <input type="text" id="item_code" value="{$Think.get.item_code}" name="item_code" class="form-control">
+        <span>物料描述:</span>
+        <input type="text" id="item_name" value="{$Think.get.item_name}" name="item_name" class="form-control">
         <button type="submit" class="btn btn-info" id="searchVal">查询</button>
       </form>
     </div>
@@ -197,6 +200,8 @@
           parameter.start_time = $('#start_time').val();
           parameter.end_time = $('#end_time').val();
           parameter.item_code = $('#item_code').val();
+          parameter.pr_code = $('#pr_code').val();
+          parameter.item_name = $('#item_name').val();
         }
       },
       "pageLength": 10,

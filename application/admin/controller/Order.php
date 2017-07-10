@@ -532,12 +532,13 @@ class Order extends BaseController{
             $po_id = $poLogic->insertOrGetId($poData);
             //生成关联关系
             $list = [];
+            $rtnPoLine = empty($res['data']['rtnLines']['rtnPoLine'])?[]:$res['data']['rtnLines']['rtnPoLine'];
             foreach($itemInfo as $pi){
                 $list[] = [
                     'id' => $pi['id'],
                     'po_id' => $po_id,
                     'po_code' => $res['data']['DocNo'],
-                    'po_ln' => $poLogic->matePoLn($res['data']['rtnLines'],$pi),
+                    'po_ln' => $poLogic->matePoLn($rtnPoLine,$pi),
                     'update_at' => $now,
                     'status' => 'placeorder'
                 ];

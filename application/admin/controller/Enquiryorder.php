@@ -534,7 +534,7 @@ class Enquiryorder extends BaseController{
         $clearInfo = [
             'promise_date' => '',
             'quote_price' => '',
-            'quote_date' => '',
+            'quote_date' => null,
             'remark' => '',
             'winbid_date' => '',
             'status' => 'init'

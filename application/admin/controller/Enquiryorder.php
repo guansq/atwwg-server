@@ -326,8 +326,15 @@ class Enquiryorder extends BaseController{
             'order' => '已下单',
             'close' => '关闭'
         ];
-        $prStatus = $prLogic->getPrStatus(['id' => $prId]);
-        $status_desc = $statusArr[$prStatus];
+        $pr = $prLogic->where('id',$prId)->find();
+        $status_desc = $statusArr[$pr['status']];
+
+        if($pr['status'] == 'quoted' && $pr['inquiry_way'] == 'compete'){
+            $status_desc = '待评标';
+        }elseif($pr['status'] == 'quoted' && $pr['inquiry_way'] == 'exclusive'){
+            $status_desc = '待审核';
+        }
+
 
         $commonInfo['price_status'] = $quotedIo.'/'.$allIo;//报价状态
         $commonInfo['status_desc'] = $status_desc;//状态
@@ -478,7 +485,7 @@ class Enquiryorder extends BaseController{
 
     /**
      * Author: WILL<314112362@qq.com>
-     * Describe:根据询价 单下采购单
+     * Describe: 单一资源审核通过 根据询价 单下采购单
      */
     public function placePurchOrderFromIo(){
         $now = time();
@@ -525,7 +532,7 @@ class Enquiryorder extends BaseController{
         //更改pr表状态为待下单wait
         model('RequireOrder', 'logic')->updatePr(['id' => $io['pr_id']], ['status' => 'wait']);
         //更改io表状态为中标winbid
-        model('Io', 'logic')->updateIo(['id' => $io_id], ['status' => 'winbid', 'winbid_date' => time()]);
+        model('Io', 'logic')->updateIo(['id' => $io_id], ['status' => 'wait', 'winbid_date' => time()]);
         return json(['code' => 2000, 'msg' => '成功', 'data' => []]);
     }
 

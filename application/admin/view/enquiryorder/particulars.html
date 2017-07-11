@@ -53,10 +53,10 @@
         <tr>
           <td class="col-sm-2 tex_r">状态</td>
           <td class="col-sm-4">{$commonInfo['status_desc']}</td>
-<!--          <td class="col-sm-2 tex_r">责任采购</td>
-          <td class="col-sm-4">
-            <select class="form-control  input-sm"></select>
-          </td>-->
+          <!--          <td class="col-sm-2 tex_r">责任采购</td>
+                    <td class="col-sm-4">
+                      <select class="form-control  input-sm"></select>
+                    </td>-->
         </tr>
       </table>
     </div>
@@ -64,8 +64,8 @@
       <div class="pb_15">
         {if $commonInfo['status_desc'] eq '询价中'}
         <button type="button" class="btn btn-info" style="margin-right: 15px;" onclick="sendAllMsg();">发消息</button>
-        {/if}
         <span class="col_red">*提醒未报价供应商报价</span>
+        {/if}
       </div>
       <table class="table table-bordered">
         <thead>
@@ -100,12 +100,12 @@
             {if $commonInfo['status_desc'] eq '询价中'}
             <button type="button" class="btn btn-info" onclick="sendOneMsg('{$vo.id}');">发消息</button>
             {else /}
-              {if $vo['status'] eq 'winbid_uncheck'}
-                <button class="layui-btn" onclick="passAndCreateIo('{$vo.id}');">通过</button>
-                <button class="layui-btn" onclick="refuseAndClear('{$vo.id}');">拒绝</button>
-              {else /}
-                {$vo['statusStr']}
-              {/if}
+            {if $vo['status'] eq 'winbid_uncheck'}
+            <button class="layui-btn" onclick="passAndCreateIo('{$vo.id}');">通过</button>
+            <button class="layui-btn" onclick="refuseAndClear('{$vo.id}');">拒绝</button>
+            {else /}
+            {$vo['statusStr']}
+            {/if}
             {/if}
           </td>
 
@@ -121,31 +121,31 @@
 {block name="script"}
 <script src="/static/admin/enquiryorder/particulars.js"></script>
 <script>
-//群发送消息
-function sendAllMsg(){
-  var chekVal = ''
-  $("input[name='checkinfo']:checked").each(function () {
-      chekVal += this.value+'|';//通过|来
-  });
-  if(chekVal == ''){
-    layer.alert('抱歉，没有选中数据');
-    return;
-  }
-  $.msg.loading();
-  chekVal = chekVal.substr(0,chekVal.length-1);//截掉最后|
-  url = "{:url('Enquiryorder/sendAllMsg')}";
-  data = {
-    'io_id' : chekVal
-  }
-  $.post(url,data,function(res){
-    $.msg.close();
-    if(res.code == 2000){
-      layer.alert('发送成功');
+  //群发送消息
+  function sendAllMsg(){
+    var chekVal = ''
+    $("input[name='checkinfo']:checked").each(function(){
+      chekVal += this.value + '|';//通过|来
+    });
+    if(chekVal == ''){
+      layer.alert('抱歉，没有选中数据');
+      return;
     }
-  });
-  //console.log(chekVal);
-}
-//单发消息
+    $.msg.loading();
+    chekVal = chekVal.substr(0, chekVal.length - 1);//截掉最后|
+    url = "{:url('Enquiryorder/sendAllMsg')}";
+    data = {
+      'io_id':chekVal
+    }
+    $.post(url, data, function(res){
+      $.msg.close();
+      if(res.code == 2000){
+        layer.alert('发送成功');
+      }
+    });
+    //console.log(chekVal);
+  }
+  //单发消息
   function sendOneMsg($ioId){
     $.msg.loading();
     if($ioId == ''){
@@ -154,9 +154,9 @@ function sendAllMsg(){
     }
     url = "{:url('Enquiryorder/sendOneMsg')}";
     data = {
-      'io_id' : $ioId
+      'io_id':$ioId
     }
-    $.post(url,data,function(res){
+    $.post(url, data, function(res){
       $.msg.close();
       if(res.code == 2000){
         layer.alert('发送成功');
@@ -165,39 +165,39 @@ function sendAllMsg(){
   }
   //通过并生成IO
   function passAndCreateIo($ioId){
-      $.msg.loading();
-      if($ioId == ''){
-          layer.alert('抱歉，请重试');
-          return;
+    $.msg.loading();
+    if($ioId == ''){
+      layer.alert('抱歉，请重试');
+      return;
+    }
+    url = "{:url('Enquiryorder/placePurchOrderFromIo')}";
+    data = {
+      'io_id':$ioId
+    }
+    $.post(url, data, function(res){
+      $.msg.close();
+      if(res.code == 2000){
+        $.form.reload();
       }
-      url = "{:url('Enquiryorder/placePurchOrderFromIo')}";
-      data = {
-          'io_id' : $ioId
-      }
-      $.post(url,data,function(res){
-          $.msg.close();
-          if(res.code == 2000){
-              $.form.reload();
-          }
-      });
+    });
   }
   //拒绝并清空PR状态 清空IO字段
   function refuseAndClear($ioId){
-      $.msg.loading();
-      if($ioId == ''){
-          layer.alert('抱歉，请重试');
-          return;
+    $.msg.loading();
+    if($ioId == ''){
+      layer.alert('抱歉，请重试');
+      return;
+    }
+    url = "{:url('Enquiryorder/refuseAndClear')}";
+    data = {
+      'io_id':$ioId
+    }
+    $.post(url, data, function(res){
+      $.msg.close();
+      if(res.code == 2000){
+        $.form.reload();
       }
-      url = "{:url('Enquiryorder/refuseAndClear')}";
-      data = {
-          'io_id' : $ioId
-      }
-      $.post(url,data,function(res){
-          $.msg.close();
-          if(res.code == 2000){
-              $.form.reload();
-          }
-      });
+    });
   }
 </script>
 {/block}

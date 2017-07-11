@@ -29,12 +29,9 @@ class Offer extends Base{
         $status = [
             'init' => '未报价',
             'quoted' => '已报价',
-//            'winbid_uncheck' => '中标但是需要审核',
-//            'winbid_checked' => '中标已经审核',
             'winbid' => '中标',
-            'wait' => '待下单',
-//            'giveupbid' => '弃标',
-            'close' => '未中标'
+            'losebid' => '未中标',
+            'un_tender' => '未投标',
         ];
         $this->assign('status', $status);
         $this->assign('title',$this->title);

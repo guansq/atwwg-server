@@ -16,11 +16,11 @@ class Io extends BaseLogic{
     const STATUS_ARR = [
         'init' => '未报价',
         'quoted' => '已报价',
-        'winbid_uncheck' => '中标但是需要审核',
-        'winbid_checked' => '中标已经审核',
+        'winbid_uncheck' => '待审核',
+        'wait' => '待下单',
         'winbid' => '中标',
-        'giveupbid' => '弃标',
-        'close' => '已关闭',
+        'losebid' => '未中标',
+        'un_tender' => '未投标',
     ];
 
     function getIoList($start, $length, $where){

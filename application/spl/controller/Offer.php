@@ -16,12 +16,12 @@ class Offer extends Base{
     const STATUS_ARR = [
         'init' => '未报价',
         'quoted' => '已报价',
-        'winbid_uncheck' => '待审核',
-        'winbid_checked' => '已审核',
         'winbid' => '中标',
+        'losebid' => '未中标',
+        'winbid_uncheck' => '待审核',
         'wait' => '待下单',
-        'giveupbid' => '弃标',
-        'close' => '未中标'
+        'un_tender' => '未投标',
+        'close' => '关闭', //废弃
     ];
 
     public function index(){

@@ -13,10 +13,14 @@ class PR extends Model{
     protected $table = 'atw_u9_pr';
 
     protected $STATUS_ARR = [
-        'init' => '初始',
+        'init' => '待询价',
         'hang' => '挂起',
         'inquiry' => '询价中',
+        'quoted' => '待评标',
         'flow' => '流标',
+        'winbid' => '中标',
+        'wait' => '待下单',
+        'order' => '已下单',
         'close' => '关闭',
     ];
     /**

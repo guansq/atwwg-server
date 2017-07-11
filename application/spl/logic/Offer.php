@@ -17,8 +17,11 @@ class Offer extends BaseLogic{
         'init' => '未报价',
         'quoted' => '已报价',
         'winbid' => '中标',
-        'giveupbid' => '弃标',
-        'close' => ' 关闭',
+        'losebid' => '未中标',
+        'winbid_uncheck' => '待审核',
+        'wait' => '待下单',
+        'un_tender' => '未投标',
+        'close' => '关闭', //废弃
     ];
 
     //获得报价中心列表

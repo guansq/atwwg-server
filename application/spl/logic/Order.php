@@ -11,6 +11,7 @@ namespace app\spl\logic;
 use app\common\model\Po;
 use app\common\model\PoItem;
 use app\common\model\PoRecord;
+use service\HttpService;
 use TCPDF;
 
 class Order extends BaseLogic{
@@ -76,15 +77,28 @@ class Order extends BaseLogic{
     }
 
     //更新交期时间
-    function updateSupconfirmdate($id, $supconfirmdate, $supconfirmdate){
+    function updateSupconfirmdate($id, $supconfirmdate){
         $list = PoItem::where(['id' => $id])->update([
-            'sup_confirm_date' => $supconfirmdate,
             'update_at' => time(),
             'sup_update_date' => $supconfirmdate
             //'status' => 'uncheck'//改成未审核
         ]);
 
         return $list;
+    }
+    //调用u9 接口 更新交期时间
+    function updateU9Supconfirmdate($pi,$supconfirmdate){
+        if(empty($pi['po_ln']) || empty($supconfirmdate) ){
+            return resultArray(4001,'订单行号和交期不能为空。');
+        }
+        $reqData = [
+            'DocNo'=>$pi['po_code'],
+            'DocLineNo'=>$pi['po_ln'],
+            'DeliveryDate'=>$supconfirmdate,
+        ];
+        $httpRet = HttpService::post(getenv('APP_API_U9').'/index/updatePODeliveryDate',$reqData);
+        return json_decode($httpRet,true);
+
     }
 
     //更新合同图片

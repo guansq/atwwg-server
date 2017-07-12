@@ -113,7 +113,7 @@ class Order extends Base{
         $contractable = in_array($codeInfo[0]['status'], array('sup_sure', 'upload_contract')) ? '1' : '0';
         $cancelable = in_array($codeInfo[0]['status'], array('init', 'atw_sure')) ? '1' : '0';
         $confirmorderable = in_array($codeInfo[0]['status'], array('init', 'atw_sure')) ? '1' : '0';
-        $confirmable = in_array($codeInfo[0]['status'], array('init', 'sup_edit', 'atw_sure')) ? '1' : '0';
+        $confirmable = !in_array($codeInfo[0]['status'], ['sup_cance', 'finish']) ? '1' : '0';
         $statusButton = array(
             'contractable' => $contractable,
             'cancelable' => $cancelable,
@@ -160,37 +160,49 @@ class Order extends Base{
         }
     }
 
+    /**
+     * Author: WILL<314112362@qq.com>
+     * Time: ${DAY}
+     * Describe: 供应商修改交期
+     * @return \think\response\Json
+     */
     public function updateSupconfirmdate(){
         $id = input('id');
-        $po_id = input('po_id');
         $supconfirmdate = strtotime(input('supconfirmdate'));
-        $item_code = input("item_code");
         $orderLogic = model('Order', 'logic');
         $poRecLogic = model('PoRecord', 'logic');
-        $detailInfo = $orderLogic->getOrderDetailInfo($po_id);
+        $pi = model('PoItem','logic')->find($id);
         //var_dump($detailInfo);
-
-        if(empty($detailInfo)){
-            return json(['code' => 4000, 'msg' => '获取消息失败', 'data' => []]);
+        if(empty($pi)){
+            return json(['code' => 4004, 'msg' => '获取消息失败', 'data' => []]);
         }
-
         $times = $poRecLogic->countByPiId($id);
         if($times > 3){
             returnJson(4010, '修改次数已经超过三次');
         }
+
+        $u9Ret = $orderLogic->updateU9Supconfirmdate($pi,$supconfirmdate);
+        if($u9Ret['code'] != 2000){
+            return returnJson($u9Ret);
+        }
+
+        if(empty($u9Ret['result']['IsSuccess'])){
+            return returnJson(6000);
+        }
+
         $data = [
             'pi_id' => $id,
             'create_at' => time(),
             'update_at' => time(),
-            'promise_date' => $detailInfo[0]['sup_confirm_date'],
+            'promise_date' => $pi['sup_confirm_date'],
             'seq' => $times + 1
         ];
         if(!$poRecLogic->data($data)->save()){
             return json(['code' => 5000, 'msg' => '保存po_record 失败', 'data' => []]);
         }
 
-        $detail = $orderLogic->updateSupconfirmdate($id, $supconfirmdate, $supconfirmdate);
-        $detailPo = $orderLogic->updateStatus($detailInfo[0]['po_id'], 'sup_edit');
+        $detail = $orderLogic->updateSupconfirmdate($id, $supconfirmdate);
+        //$detailPo = $orderLogic->updateStatus($pi['po_id'], 'sup_edit');
         if($detail){
             return json(['code' => 2000, 'msg' => '成功', 'data' => []]);
         }else{

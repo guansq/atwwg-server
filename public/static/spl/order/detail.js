@@ -26,7 +26,8 @@ require(["laydate"],function(){
       //istime : true,
       isclear : true,
       istoday : true,
-      issure : true
+      issure : true,
+      min: laydate.now()
     });
   });
 });

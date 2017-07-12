@@ -90,6 +90,11 @@ class Showmsg extends Base{
         ];
         return json(['code' => 2000,'msg' => '成功', 'data'=> $data]);
     }
+
+    public function updateLog(){
+        return view();
+    }
+
     public function del(){
 
     }

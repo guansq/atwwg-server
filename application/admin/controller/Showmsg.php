@@ -105,6 +105,11 @@ class Showmsg extends BaseController{
         return view();
     }
 
+    public function updateLog(){
+        return view();
+    }
+
+
     public function del(){
 
     }

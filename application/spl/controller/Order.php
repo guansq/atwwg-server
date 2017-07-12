@@ -187,9 +187,9 @@ class Order extends Base{
             return returnJson($u9Ret);
         }
 
-        if(empty($u9Ret['result']['IsSuccess'])){
-            return returnJson(6000);
-        }
+//        if(empty($u9Ret['result']['IsSuccess'])){
+//            return returnJson(6000);
+//        }
 
         $data = [
             'pi_id' => $id,
@@ -201,7 +201,9 @@ class Order extends Base{
         if(!$poRecLogic->data($data)->save()){
             return json(['code' => 5000, 'msg' => '保存po_record 失败', 'data' => []]);
         }
-
+        //记录修改次数
+        $sup_code = session('spl_user')['sup_code'];
+        model('SupplierInfo','logic')->where('code',$sup_code)->setInc('readjust_count');
         $detail = $orderLogic->updateSupconfirmdate($id, $supconfirmdate);
         //$detailPo = $orderLogic->updateStatus($pi['po_id'], 'sup_edit');
         if($detail){

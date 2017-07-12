@@ -1,0 +1,40 @@
+{extend name='extra@admin/content' /}
+
+{block name="style"}
+<link rel="stylesheet" href="//cdn.datatables.net/plug-ins/28e7751dbec/integration/bootstrap/3/dataTables.bootstrap.css">
+{/block}
+{block name="button"}
+{/block}
+{block name="content"}
+<main class="main">
+    <div class="rd_table">
+      <div class="ibox-title">
+        <h5>V 0.0.10</h5>
+      </div>
+      <table id="example" class="cell-border table table-bordered" width="100%" cellspacing="0" style="margin-bottom: 20px;">
+        <thead>
+        <tr>
+          <th width="200">更新日期</th>
+          <th>更新内容</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>2017-7-12</td>
+          <td>询价的筛选功能增加物料描述、请购单号。</td>
+        </tr>
+        <tr>
+          <td>2017-7-12</td>
+          <td>修复BUG:0单价的直接跳到未下单里面了。</td>
+        </tr>
+        <tr>
+          <td>2017-7-11</td>
+          <td>请购单、询价单、采购未下单、采购已下单详情 显示项目号。</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+</main>
+{/block}
+{block name="script"}
+{/block}

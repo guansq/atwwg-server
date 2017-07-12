@@ -105,9 +105,10 @@ class Order extends Base{
         $offerLogic = model('Order', 'logic');
         $piList = $offerLogic->getOrderDetailInfo($pr_id);
 
-        foreach($piList as $key => $item){
+        foreach($piList as $key => &$item){
             $result = $offerLogic->getOrderRecordInfo($item['id']);
             $piList[$key]['times'] = (!empty($result) ? count($result) : 0);
+            $item['sup_update_date_str'] = empty($item['sup_update_date']) ? '' : date('Y-m-d', $item['sup_update_date']);
         }
         $codeInfo = $offerLogic->getOrderListOneInfo($pr_id);
         $contractable = in_array($codeInfo[0]['status'], array('sup_sure', 'upload_contract')) ? '1' : '0';
@@ -171,7 +172,7 @@ class Order extends Base{
         $supconfirmdate = strtotime(input('supconfirmdate'));
         $orderLogic = model('Order', 'logic');
         $poRecLogic = model('PoRecord', 'logic');
-        $pi = model('PoItem','logic')->find($id);
+        $pi = model('PoItem', 'logic')->find($id);
         //var_dump($detailInfo);
         if(empty($pi)){
             return json(['code' => 4004, 'msg' => '获取消息失败', 'data' => []]);
@@ -181,7 +182,7 @@ class Order extends Base{
             returnJson(4010, '修改次数已经超过三次');
         }
 
-        $u9Ret = $orderLogic->updateU9Supconfirmdate($pi,$supconfirmdate);
+        $u9Ret = $orderLogic->updateU9Supconfirmdate($pi, $supconfirmdate);
         if($u9Ret['code'] != 2000){
             return returnJson($u9Ret);
         }

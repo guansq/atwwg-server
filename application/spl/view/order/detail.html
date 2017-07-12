@@ -79,7 +79,7 @@
         <td name="showdate">{$plist.req_date|atwDate}</td>
         <td name="showdate">{$plist.sup_confirm_date|atwDate}</td>
         <td >
-          <input type="text" class="laydate-icon" name="confirmdate" {if $statusButton.confirmable eq 0 || $plist.times egt 3}disabled="true"{/if} >
+          <input type="text" class="laydate-icon" name="confirmdate"  value="{$plist.sup_update_date_str}" {if $statusButton.confirmable eq 0 || $plist.times egt 3}disabled="true"{/if}  >
           <button name="confirmdatesubmit" class="btn btn-primary confirmdatesubmit" value="{$plist.id}" data-item_code="{$plist.item_code}" {if $statusButton.confirmable eq 0 || $plist.times egt 3}disabled="true"{/if}>提交</button>
         </td>
         <td>{$plist.times|0}</td>
@@ -214,14 +214,11 @@
         },
         'success' : function(obj){
           layer.closeAll();
-          if(obj.code == 2000){
-
-            ($("tr[id^=po-"+item_code+"]").find($('td[name="showdate"]'))).html(supconfirmdate);
-            ($("tr[id^=po-"+item_code+"]").find($('button[name="confirmdatesubmit"]'))).attr("disabled",true);
-
-          }else{
+          if(obj.code != 2000){
             layer.alert(obj.msg);
+            return false;
           }
+          $.form.reload();
           //console.log(obj);
         },
         'error' : function(){

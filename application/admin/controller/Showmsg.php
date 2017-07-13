@@ -31,14 +31,18 @@ class Showmsg extends BaseController{
 
         //供应商资质过期
         $suppLogic = model('Supporter','logic');
-        $pastSuppNum = $suppLogic->getPastSuppNum($current_time);
+        $pastSuppNum = $suppLogic->countPastSupNum();
         //供应商资质待审核
-        $unCheckNum = $suppLogic->getUncheckedNum(['status'=>'']);
+        $unCheckNum = $suppLogic->countQlfUnchecked();
         $this->assign('pastSuppNum',$pastSuppNum);
         $this->assign('unCheckNum',$unCheckNum);
         //流拍询价数量
         $giveupNum = $ioLogic->getGiveupNum();
         $this->assign('giveupNum',$giveupNum);
+
+        //高信用風險供应商数量
+        $creditRiskCount = $suppLogic->countCreditRisk();
+        $this->assign('creditRiskCount',$creditRiskCount);
         //运营情况一览表
         $messLogic = model('AskReply','logic');
         $msgNum = $messLogic->getAskUnreadNum();

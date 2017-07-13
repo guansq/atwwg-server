@@ -11,4 +11,7 @@ use think\Model;
 
 class SupplierInfo extends Model{
 
+    public function findByCode($code){
+        return $this->where(['code' => $code])->find();
+    }
 }

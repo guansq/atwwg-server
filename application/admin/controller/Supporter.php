@@ -67,6 +67,7 @@ class Supporter extends BaseController{
         $logicSupInfo = Model('Supporter','logic');
         $start = input('start');
         $length = input('length');
+        $tag = input('tag');
         $get = input('param.');
         //dump($requestInfo);die;
         $where = [];
@@ -75,6 +76,19 @@ class Supporter extends BaseController{
             if (isset($get[$key]) && $get[$key] !== '') {
                 $where[$key] = ['like',"%{$get[$key]}%"];
             }
+        }
+        //资质过期的
+        if(!empty($tag) && $tag=='qlf_exceed'){
+            $where['qlf_exceed_count']= ['>' ,0];
+        }
+        //资质待审核的
+        if(!empty($tag) && $tag=='qlf_uncheck'){
+            $where['qlf_check_count']= ['>' ,0];
+        }
+
+        //高信用风险的
+        if(!empty($tag) && $tag=='credit_risk'){
+            $where['credit_total']= ['<=' ,85];
         }
         $list = $logicSupInfo->getListInfo($start,$length,$where);//分页
         $returnArr = [];

@@ -14,6 +14,7 @@
   <div class="mt_box">
     <div class="inquiry_box">
       <form action='{:url("$classuri/index")}' onsubmit="return false" class="form-inline  animated form-search" method="get">
+        <input type="hidden" value="{$Think.get.tag|default=''}" id="tag_hid" name="tag" >
         <input type="text" class="form-control" value="{$Think.get.code|default=''}" id="code" name="code" placeholder="供应商编码">
         <input type="text" class="form-control" value="{$Think.get.name|default=''}" id="name" name="name" placeholder="供应商名称">
         <select class="form-control" id="type_name" name="type_name">
@@ -142,6 +143,7 @@ function initPage(){
         parameter.name = $("#name").val();
         parameter.type_name = $("#type_name").val();
         parameter.status = $("#status").val();
+        parameter.tag = $("#tag_hid").val();
         parameter.pay_way_status = $("#pay_way_status").val();
       }
     },

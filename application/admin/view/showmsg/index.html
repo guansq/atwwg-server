@@ -25,11 +25,11 @@
           <span>订单逾期警告</span>
           <i>{$poItemNum}</i>
         </li></a>
-        <a data-open="/supporter/index"><li style="background: #842c98;">
+        <a data-open="/supporter/index?tag=qlf_exceed"><li style="background: #842c98;">
           <span>供应商资质过期</span>
           <i>{$pastSuppNum}</i>
         </li></a>
-        <a data-open="/supporter/index"><li style="background: #6cd96c;">
+        <a data-open="/supporter/index?tag=qlf_uncheck"><li style="background: #6cd96c;">
           <span>供应商资质待审核</span>
           <i>{$unCheckNum}</i>
         </li></a>
@@ -38,9 +38,9 @@
           <span>流拍询价数量</span>
           <i>{$giveupNum}</i>
         </li></a>
-        <a data-open="/supporter/index"> <li style="background: red;">
-          <span>信用风险数量</span>
-          <i>{$giveupNum}</i>
+        <a data-open="/supporter/index?tag=credit_risk"> <li style="background: red;">
+          <span>高信用风险数量</span>
+          <i>{$creditRiskCount}</i>
         </li></a>
       </ul>
     </section>

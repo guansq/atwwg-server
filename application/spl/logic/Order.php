@@ -144,7 +144,7 @@ class Order extends BaseLogic{
      * 得到即将过期的订单数量
      */
     function getPoItemNum($sup_code){
-        return poItemModel::alias('pi')
+        return PoItem::alias('pi')
             ->join('po po', 'pi.po_id = po.id')
             ->where('po.status', 'NOT IN', [
                 'finish',

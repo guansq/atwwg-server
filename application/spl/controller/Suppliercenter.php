@@ -8,6 +8,7 @@
 
 namespace app\spl\controller;
 
+use app\spl\logic\Supportercenter;
 use service\DataService;
 
 class Suppliercenter extends Base{
@@ -112,8 +113,10 @@ class Suppliercenter extends Base{
 
     //上传资格证书
     public function uploadSupInfo(){
+        $now = time();
         $data = input('param.');
-        $logicSupInfo = Model('Supportercenter', 'logic');
+        $supLogic = Model('SupplierInfo', 'logic');
+        $supQlflogic = Model('Supportercenter', 'logic');
         $sup_code = session('spl_user')['sup_code'];
         $begintime = strtotime($data['begintime']);
         $endtime = strtotime($data['endtime']);
@@ -133,9 +136,9 @@ class Suppliercenter extends Base{
             'bam_lic' => 'BAM',
             'other' => '其他'
         ];
-        $queryQuali = $logicSupInfo->querysupplierqualification($sup_code, $code);
+        $queryQuali = $supQlflogic->querysupplierqualification($sup_code, $code);
         if(empty($queryQuali)){
-            $sup_info = $logicSupInfo->getOneSupInfo($sup_code);//联合查询得到相关信息
+            $sup_info = $supQlflogic->getOneSupInfo($sup_code);//联合查询得到相关信息
             //var_dump($sup_info);
             $result = DataService::save('supplier_qualification', [
                 'code' => $code,
@@ -150,8 +153,31 @@ class Suppliercenter extends Base{
                 'name' => $qualilist[$code]
             ]);
         }else{
-            $result = $logicSupInfo->updatesupplierqualification($sup_code, $src, $code, $begintime, $endtime);
+            $result = $supQlflogic->updatesupplierqualification($sup_code, $src, $code, $begintime, $endtime);
         }
+
+        $sup = $supLogic->where('code', $sup_code)->find();
+        $sup->qlf_check_count = model('SupplierQualification')
+            ->where(['sup_code' => $sup_code,'status'=>''])
+            ->count();
+        //如果影响资质分  则重新计算
+        if(in_array($code, Supportercenter::ADD_SCORE_QLF)){
+            $qlfCount = $supQlflogic->where('code', 'IN', Supportercenter::ADD_SCORE_QLF)
+                ->where('term_end', '>=', $now)
+                ->where('status', 'agree')
+                ->count();
+            $sup->qlf_score = $qlfCount*5;
+            $sup->tech_score = $sup->arv_rate*20 + $sup->pass_rate*60 + $qlfCount*5*0.4;
+        }
+
+        // 更新过期数量
+        $sup->qlf_exceed_count = $supQlflogic
+            ->where('sup_code' ,$sup_code)
+            ->where('term_end' ,'<=', $now)
+            ->count();
+        $sup->update_at = $now;
+        $sup->save();
+
         if($result){
             $where = [
                 'code' => $sup_code

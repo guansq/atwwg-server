@@ -12,6 +12,7 @@ use app\common\model\SupplierQualification as qualiModel;
 use app\common\model\SupplierTendency as tendModel;
 class Supporter extends BaseLogic{
 
+    protected $table ='atw_supplier_info';
     /*
      * 得到U9供应商数据
      */
@@ -172,7 +173,16 @@ class Supporter extends BaseLogic{
      * 得到供应商资质过期数量
      */
     public function getPastSuppNum($time){
-        return qualiModel::where('term_end','<',$time)->where('status','agree')->count();
+        return qualiModel::where('term_end','<',$time)
+            //->where('status','agree')
+            ->count();
+    }
+
+    /*
+     * 得到资质过期 的 供应商 数量
+     */
+    public function countPastSupNum(){
+        return $this->where('qlf_exceed_count','>',0)->count();
     }
 
     /*
@@ -224,8 +234,16 @@ class Supporter extends BaseLogic{
     /*
      * 得到未审核的商家数量
      */
-    public function getUncheckedNum($where){
-        return qualiModel::where($where)->count();
+    public function countQlfUnchecked(){
+        return $this->where('qlf_check_count','>',0)->count();
+        //echo $this->getLastSql();//return
+    }
+
+    /*
+     * 統計高信用風險供应商数量
+     */
+    public function countCreditRisk(){
+        return $this->where('credit_total','<=',85)->count();
         //echo $this->getLastSql();//return
     }
 

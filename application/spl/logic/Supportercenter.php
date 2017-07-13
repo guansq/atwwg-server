@@ -151,29 +151,6 @@ class Supportercenter extends BaseLogic{
             'term_end' => $endtime,
             'img_src' => $src
         ]);
-        $supModel = new  supModel();
-        $sup = $supModel->where('code', $sup_code)->find();
-        $sup->qlf_check_count = model('SupplierQualification')
-            ->where(['sup_code' => $sup_code,'status'=>''])
-            ->count();
-        //如果影响资质分  则重新计算
-        if(in_array($code, self::ADD_SCORE_QLF)){
-            $qlfCount = $this->where('code', 'IN', self::ADD_SCORE_QLF)
-                ->where('term_end', '>=', $now)
-                ->where('status', 'agree')
-                ->count();
-            $sup->qlf_score = $qlfCount*5;
-            $sup->tech_score = $sup->arv_rate*20 + $sup->pass_rate*60 + $qlfCount*5*0.4;
-        }
-
-        // 更新过期数量
-        $sup->qlf_exceed_count = model('SupplierQualification')
-            ->where('sup_code' ,$sup_code)
-            ->where('term_end' ,'<=', $now)
-            ->count();
-
-        $sup->update_at = $now;
-        $sup->save();
         return $list;
     }
 
@@ -202,7 +179,7 @@ class Supportercenter extends BaseLogic{
     public function getPastSuppNum($time, $sup_code){
         return qualiModel::where('term_end', '<', $time)
             ->where('sup_code', $sup_code)
-            ->where('status', 'agree')
+            //->where('status', 'agree')
             ->count();
     }
 

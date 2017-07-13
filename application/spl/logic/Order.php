@@ -144,11 +144,16 @@ class Order extends BaseLogic{
      * 得到即将过期的订单数量
      */
     function getPoItemNum($sup_code){
-        return PoItem::alias('a')
-            ->join('po b', 'a.po_id = b.id')
-            ->where('b.status', 'in', ['executing'])
+        return poItemModel::alias('pi')
+            ->join('po po', 'pi.po_id = po.id')
+            ->where('po.status', 'NOT IN', [
+                'finish',
+                'sup_cancel'
+            ])
             ->where('pro_goods_num', '>', 0)
-            ->where('a.sup_code', $sup_code)
+            ->where('pi.sup_code', $sup_code)
+            ->where('pi.sup_confirm_date', '<', time())
+            ->group('po.id')
             ->count();//得到执行中的订单，和订单未到货数量>0
     }
 
@@ -494,7 +499,7 @@ EOD;
         // Close and output PDF document
         // This method has several options, check the source code documentation for more information.
         //$pdf->Output("$po[order_code].pdf" ); //'D'
-        $pdf->Output("$po[order_code].pdf",'D'); //'D'
+        $pdf->Output("$po[order_code].pdf", 'D'); //'D'
         exit();
 
     }

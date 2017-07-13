@@ -15,6 +15,7 @@
   <div class="mt_box">
     <div class="inquiry_box">
       <form class="form-inline animated form-search" action='{:url("$classuri/index")}' onsubmit="return false" method="get">
+        <input type="hidden" id="status_ipt" name="status" value="{$Think.get.status}">
         <input type="text" id="order_code" name="order_code" value="{$Think.get.order_code}" class="form-control" placeholder="订单编号">
         <input type="text" id="sup_name" name="sup_name" value="{$Think.get.sup_name}" class="form-control" placeholder="供应商名称">
         <button type="submit" id="searchVal" class="btn btn-info">查询</button>
@@ -32,9 +33,9 @@
         <table id="example" class="display table table-bordered" cellspacing="0" width="100%">
           <thead>
           <tr>
-            <th>
-              <input type="checkbox" class="all">
-            </th>
+            <!--<th>-->
+              <!--<input type="checkbox" class="all">-->
+            <!--</th>-->
             <th>订单编号</th>
             <th>下单日期</th>
             <th>供应商名称</th>
@@ -65,7 +66,7 @@
       $(document).ready(function(){
         initPage();
         initEvent();
-        $.fn.dataTable.ext.errMode = 'none';
+
       });
     })
 
@@ -78,6 +79,7 @@
       });
 
       // datatable
+      $.fn.dataTable.ext.errMode = 'none';
       orderTables = $('#example').DataTable({
         //"paging": false, //设置是否分页
         "info":true,  //去除左下角的信息
@@ -94,9 +96,10 @@
             parameter.order_code = $("#order_code").val();
             parameter.pr_code = $("#pr_code").val();
             parameter.sup_name = $("#sup_name").val();
+            parameter.status = $("#status_ipt").val();
           }
         },
-        "columnDefs":[
+        /*"columnDefs":[
           {
             "targets":0,
             "data":null,
@@ -104,15 +107,15 @@
               return '<input type="checkbox" id="order_id_'+data+'" class="check" value="' + data + '">';
             }
           },
-          /*{
+         {
             "targets":8,
             "render":function(data){
               var url = '{:url(\'order/detailed\')}?id=' + data;//data
               return '<a class="detail" data-open="' + url + '">详情</a>';
               //return url;
             }
-          }*/
-        ],
+          }
+        ],*/
         "pageLength":10,
         language:{
           "oPaginate":{
@@ -124,7 +127,7 @@
           "info" : "当前总记录数_TOTAL_条"
         },
         "columns":[
-          {"data":"checked"},
+          /*{"data":"checked"},*/
           {"data":"order_code"},
           {"data":"create_at"},
           {"data":"sup_name"},

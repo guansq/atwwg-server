@@ -49,6 +49,7 @@ class Order extends BaseController{
     }
 
     public function getOrderList(){
+        $now = time();
         $poLogic = model('Po', 'logic');
         $get = input('param.');
         //dump($requestInfo);die;
@@ -58,6 +59,12 @@ class Order extends BaseController{
             if(isset($get[$key]) && $get[$key] !== ''){
                 $where[$key] = ['like', "%{$get[$key]}%"];
             }
+        }
+        //逾期状态
+        $isCheckExceed = false;
+        if(!empty($get['status']) && $get['status'] == 'exceed'){
+            $where['status'] = ['NOT IN' , ['finish', 'sup_cancel']];
+            $isCheckExceed = true;
         }
         $list = $poLogic->getPolist($where);
         $returnInfo = [];
@@ -76,57 +83,66 @@ class Order extends BaseController{
         ];
 
         foreach($list as $k => $v){
-            $returnInfo[$k]['checked'] = $v['id'];
+
             $exec_desc = '';
-            if(!empty($itemInfo = $poLogic->getPoItemInfo($v['id']))){
-                foreach($itemInfo as $vv){
-                    $vv['arv_goods_num'] = $vv['arv_goods_num'] == '' ? 0 : $vv['arv_goods_num'];
-                    $vv['pro_goods_num'] = $vv['pro_goods_num'] == '' ? 0 : $vv['pro_goods_num'];
-                    $exec_desc .= '物料名称：'.$vv['item_name'].'; '.'到货数量：'.$vv['arv_goods_num'].'; 未到货数量：'.$vv['pro_goods_num'].'; 可供货交期：'.date('Y-m-d', $vv['sup_confirm_date']).'<br>';
-                }
-                $returnInfo[$k]['exec_desc'] = $exec_desc;
-            }else{
-                $returnInfo[$k]['exec_desc'] = '';
+            $itemInfo = $poLogic->getPoItemInfo($v['id']);
+
+            $hasExceed = false;
+            foreach($itemInfo as $vv){
+                $vv['arv_goods_num'] = $vv['arv_goods_num'] == '' ? 0 : $vv['arv_goods_num'];
+                $vv['pro_goods_num'] = $vv['pro_goods_num'] == '' ? 0 : $vv['pro_goods_num'];
+                $exec_desc .= '物料名称：'.$vv['item_name'].'; '.'到货数量：'.$vv['arv_goods_num'].'; 未到货数量：'.$vv['pro_goods_num'].'; 可供货交期：'.date('Y-m-d', $vv['sup_confirm_date']).'<br>';
+                // 是否有逾期物料
+                $hasExceed = $hasExceed || (($vv['sup_confirm_date'] < $now) && ($vv['pro_goods_num'] > 0) && !in_array($vv['status'], [
+                            'finish',
+                            'sup_cancel'
+                        ]));
             }
-            $returnInfo[$k]['order_code'] = $v['order_code'];
-            //$returnInfo[$k]['pr_code'] = $v['pr_code'];
-            //$returnInfo[$k]['pr_date'] = atwDate($poLogic->getPrDate($v['pr_code']));
-            $returnInfo[$k]['create_at'] = atwDate($v['create_at']);
-            $returnInfo[$k]['sup_name'] = $poLogic->getSupName($v['sup_code']);
-            $returnInfo[$k]['status'] = empty($v['u9_status']) ? $status[$v['status']] : $v['u9_status'];
+
+            if((!$hasExceed) && $isCheckExceed){
+                continue;
+            }
+            $statusStr = '';
             switch($v['status']){
                 case 'init'://初始
                     $action = [];
-                    $returnInfo[$k]['status'] = '待供应商确定订单';
+                    $statusStr = '待供应商确定订单';
                     break;
                 case 'sup_cancel'://供应商取消
                     $action = [];
-                    $returnInfo[$k]['status'] = '供应商取消了订单';
+                    $statusStr = '供应商取消了订单';
                     break;
                 case 'sup_edit'://供应商修改
-                    $returnInfo[$k]['status'] = '<a href="javascript:;" onclick="verifyOrder('.$v['id'].',\'atw_sure\',this);">供应商修改交期，请确认</a>';
+                    $statusStr = '<a href="javascript:;" onclick="verifyOrder('.$v['id'].',\'atw_sure\',this);">供应商修改交期，请确认</a>';
                     break;
                 case 'atw_sure'://安特威确定 以及init
-                    $returnInfo[$k]['status'] = '待供应商确定订单';
+                    $statusStr = '待供应商确定订单';
                     break;
                 case 'sup_sure'://供应商确定/待上传合同
-                    $returnInfo[$k]['status'] = '供应商确定/待上传合同';
+                    $statusStr = '供应商确定/待上传合同';
                     break;
                 case 'upload_contract'://供应商已经上传合同
-                    $returnInfo[$k]['status'] = '合同待审核';
+                    $statusStr = '合同待审核';
                     /*$returnInfo[$k]['status'] = '<a href="javascript:;" onclick="verifyOrder('.$v['id'].',\'contract_pass\',this);">合同审核通过</a>
                                                  <a href="javascript:;" onclick="verifyOrder('.$v['id'].',\'contract_refuse\',this);">拒绝该合同</a>';*/
                     break;
                 case 'contract_pass'://合同审核通过
-                    $returnInfo[$k]['status'] = '合同审核通过';
+                    $statusStr = '合同审核通过';
                     break;
                 case 'contract_refuse'://合同审核拒绝
-                    $returnInfo[$k]['status'] = '合同已被拒绝';
+                    $statusStr = '合同已被拒绝';
                     break;
             }
 
-            //$returnInfo[$k]['detail'] = $v['id'];
-            $returnInfo[$k]['detail'] = '<a class="detail" data-open="'.url('order/detailed').'?id='.$v['id'].'">详情</a>';//下单后的合并订单详情,['id'=>$v['po_id']]
+            $returnInfo[] = [
+                'detail' => '<a class="detail" data-open="'.url('order/detailed').'?id='.$v['id'].'">详情</a>',
+                'exec_desc' => $exec_desc,
+                'checked' => $v['id'],
+                'order_code' => $v['order_code'],
+                'create_at' => atwDate($v['create_at']),
+                'sup_name' => $poLogic->getSupName($v['sup_code']),
+                'status' => empty($v['u9_status']) ? $statusStr : $v['u9_status']
+            ];
         }
         //dump($returnInfo);
         $info = ['draw' => time(), 'data' => $returnInfo, 'extData' => [],];
@@ -532,13 +548,13 @@ class Order extends BaseController{
             $po_id = $poLogic->insertOrGetId($poData);
             //生成关联关系
             $list = [];
-            $rtnPoLine = empty($res['data']['rtnLines']['rtnPoLine'])?[]:$res['data']['rtnLines']['rtnPoLine'];
+            $rtnPoLine = empty($res['data']['rtnLines']['rtnPoLine']) ? [] : $res['data']['rtnLines']['rtnPoLine'];
             foreach($itemInfo as $pi){
                 $list[] = [
                     'id' => $pi['id'],
                     'po_id' => $po_id,
                     'po_code' => $res['data']['DocNo'],
-                    'po_ln' => $poLogic->matePoLn($rtnPoLine,$pi),
+                    'po_ln' => $poLogic->matePoLn($rtnPoLine, $pi),
                     'update_at' => $now,
                     'status' => 'placeorder'
                 ];

@@ -55,7 +55,7 @@ class Po extends BaseLogic{
     function getPoItemInfo($po_id){
         $list = poItemModel::where('po_id', $po_id)->field('*, "" AS pro_no ')->select();
         foreach($list as &$pi){
-            $pi['pro_no'] = model('RequireOrder','logic')->where('id',$pi->pr_id)->value('pro_no');
+            $pi['pro_no'] = model('RequireOrder', 'logic')->where('id', $pi->pr_id)->value('pro_no');
         }
         return $list;
     }
@@ -64,12 +64,17 @@ class Po extends BaseLogic{
      * 得到即将过期的订单数量
      */
     function getPoItemNum(){
-        return poItemModel::alias('pi')
+        $count = poItemModel::alias('pi')
             ->join('po po', 'pi.po_id = po.id')
-            ->where('po.status', 'NOT IN', ['init','finish','sup_cancel'])
-            ->where('pro_goods_num', '>', 0)
+            ->where('po.status', 'NOT IN', [
+                'finish',
+                'sup_cancel'
+            ])
+            ->where('pi.pro_goods_num', '>', 0)
+            ->where('pi.sup_confirm_date', '<', time())
             ->group('po.id')
             ->count();//得到执行中的订单，和订单未到货数量>0
+        return $count;
     }
 
     /*
@@ -108,10 +113,14 @@ class Po extends BaseLogic{
         if(empty($where)){
             $list = poItemModel::where('status', 'init')->order('update_at DESC')->field('*, "" AS pro_no ')->select();
         }else{
-            $list = poItemModel::where($where)->where('status', 'init')->order('update_at DESC')->field('*, "" AS pro_no ')->select();
+            $list = poItemModel::where($where)
+                ->where('status', 'init')
+                ->order('update_at DESC')
+                ->field('*, "" AS pro_no ')
+                ->select();
         }
         foreach($list as &$pi){
-            $pi['pro_no'] = model('RequireOrder','logic')->where('id',$pi->pr_id)->value('pro_no');
+            $pi['pro_no'] = model('RequireOrder', 'logic')->where('id', $pi->pr_id)->value('pro_no');
         }
         return $list;
     }
@@ -220,7 +229,7 @@ class Po extends BaseLogic{
             if(!is_numeric($k)){
                 $v = $rtnLines;
             }
-            if($v['srcDocNo']==$pi['pr_code'] && $v['srcLineNo'] ==$pi['pr_ln'] ){
+            if($v['srcDocNo'] == $pi['pr_code'] && $v['srcLineNo'] == $pi['pr_ln']){
                 return $v['LineNo'];
             }
             if(!is_numeric($k)){

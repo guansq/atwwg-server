@@ -191,4 +191,18 @@ class RequireOrder extends BaseLogic{
     function getUnQuoteNum(){
         return $this->where('status', 'IN' ,['init','hang'])->count();
     }
+
+    /**
+     * 统计流标的请购单
+     */
+    function countFlow(){
+        $count = model('Io','logic')->alias('a')
+            ->field('a.id')
+            ->join('item b', 'a.item_code=b.code', 'LEFT')
+            ->join('u9_pr pr', 'pr.id = a.pr_id', 'LEFT')
+            ->where('pr.status','flow')
+            ->group('pr_id')
+            ->count();
+        return $count;
+    }
 }

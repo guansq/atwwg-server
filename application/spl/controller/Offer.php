@@ -33,8 +33,10 @@ class Offer extends Base{
             'losebid' => '未中标',
             'un_tender' => '未投标',
         ];
+        $queryStatus = input('tag') == 'un_quote'?'init':'';
         $this->assign('status', $status);
-        $this->assign('title',$this->title);
+        $this->assign('queryStatus', $queryStatus);
+        $this->assign('title', $this->title);
         return view();
     }
 
@@ -43,19 +45,22 @@ class Offer extends Base{
         $offerLogic = model('Offer', 'logic');
         $where = [];//'status' => 'init'
         $data = input('param.');
-        //        var_dump( $data);
+
         // 应用搜索条件
         if(!empty($data)){
-            foreach(['status'] as $key){
+            foreach(['status', 'tag'] as $key){
                 if(isset($data[$key]) && $data[$key] !== ''){
                     if($key == 'status' && $data[$key] == 'all'){
                         continue;
                     }
                     if($data[$key] == 'quoted'){
-                        $where[$key] = ['in',['quoted','winbid_uncheck','winbid_checked']];
+                        $where[$key] = ['in', ['quoted', 'winbid_uncheck', 'winbid_checked']];
                     }else{
                         $where[$key] = $data[$key];
                     }
+                }
+                if($key = 'tag' && isset($data[$key]) && $data[$key] = 'un_quote'){
+                    $where['status'] = 'init';
                 }
             }
             if(!empty($data['quote_begintime']) && !empty($data['quote_endtime'])){
@@ -72,7 +77,7 @@ class Offer extends Base{
         $list = $offerLogic->getOfferInfo($sup_code, $where);
         //状态init=未报价  quoted=已报价  winbid=中标 giveupbid=弃标  close=已关闭
         foreach($list as $k => $v){
-            if(in_array($v['status'], ['init','quoted','winbid_uncheck'])){
+            if(in_array($v['status'], ['init', 'quoted', 'winbid_uncheck'])){
                 $list[$k]['showinfo'] = '';
             }else{
                 $list[$k]['showinfo'] = 'disabled';
@@ -85,8 +90,8 @@ class Offer extends Base{
             $list[$k]['quote_date'] = empty($v['quote_date']) ? '--' : date('Y-m-d', $v['quote_date']);
             $list[$k]['quote_endtime'] = empty($v['quote_endtime']) ? '--' : date('Y-m-d', $v['quote_endtime']);
             $list[$k]['req_date'] = empty($v['req_date']) ? '--' : date('Y-m-d', $v['req_date']);
-            $list[$k]['total_price'] = number_format($v['price_num']*$v['quote_price'],2);
-            $list[$k]['quote_price'] = empty($v['quote_price']) ? '' :number_format( $v['quote_price'],2);
+            $list[$k]['total_price'] = number_format($v['price_num']*$v['quote_price'], 2);
+            $list[$k]['quote_price'] = empty($v['quote_price']) ? '' : number_format($v['quote_price'], 2);
             $list[$k]['remark'] = empty($v['remark']) ? '' : $v['remark'];
         }
         //dump($returnInfo);
@@ -96,7 +101,7 @@ class Offer extends Base{
 
     //修改包价
     public function savePrice(){
-        $now =time();
+        $now = time();
         $data = input('param.');
         $result = $this->validate($data, 'Offer');
         if($result !== true){
@@ -104,30 +109,30 @@ class Offer extends Base{
         }
         $offerLogic = model('Offer', 'logic');
         $key = $data['id'];
-        $status =  'quoted';
+        $status = 'quoted';
 
         // 如果是单一资源的物料 则 状态改为 要审核
 
-        $io = $offerLogic->where('id',$key)->find();
-        if (empty($io)){
+        $io = $offerLogic->where('id', $key)->find();
+        if(empty($io)){
             return json(['code' => 4001, 'msg' => '无效的ioId='.$key, 'data' => []]);
         }
         $total = $offerLogic->where('pr_id', $io['pr_id'])->count(); // 询价总数
-        $status = $total == 1? 'winbid_uncheck':'quoted';
+        $status = $total == 1 ? 'winbid_uncheck' : 'quoted';
 
         $dataArr = [
             'quote_date' => $now,
             'promise_date' => strtotime($data['req_date']),
             'quote_price' => ($data['quote_price']),
             'remark' => $data['remark'],
-            'status' =>$status,//改变 状态
-            'read_at' =>$now,//记录阅读时间
+            'status' => $status,//改变 状态
+            'read_at' => $now,//记录阅读时间
         ];
         $list = $offerLogic->updateData($key, $dataArr);
         //dump($list);die;
         if($list !== false){
             $info = $offerLogic->getOneById($key);
-            $total_price = number_format($info['price_num']*$info['quote_price'],2);
+            $total_price = number_format($info['price_num']*$info['quote_price'], 2);
             //dump($offerLogic->toArray());die;
             // 如果请购单的 供应商已经全部报完价了，则该状态为 已报价
             $offerLogic->updatePrStatusById($key);
@@ -198,12 +203,12 @@ class Offer extends Base{
         //dump(parse_url($path));die;
         //$path = ROOT_PATH.'public'.DS.'static'.DS.'upload'.DS.'0863affda05d2d00'.DS.'149660d0799f13c5.xlsx';
         //$path = ROOT_PATH.'public'.DS.'static'.DS.'upload'.DS.'0863affda05d2d00'.DS.'0527123222.xlsx';
-        if ($path) {
+        if($path){
             $urlInfo = parse_url($path);
             $pathArr = explode('/', $urlInfo['path']);
             //dump($pathArr);die;
             //$path = ROOT_PATH.'public'.DS.'upload'.DS.$info->getFilename();
-            $path = ROOT_PATH . 'public' . DS . 'static' . DS . 'upload' . DS . $pathArr[3] . DS . $pathArr[4];
+            $path = ROOT_PATH.'public'.DS.'static'.DS.'upload'.DS.$pathArr[3].DS.$pathArr[4];
             $logicSupInfo = Model('Offer', 'logic');
             $fileType = PHPExcel_IOFactory::identify($path);//自动获取文件的类型提供给phpexcel用
             $objReader = PHPExcel_IOFactory::createReader($fileType);//获取文件读取操作对象
@@ -212,29 +217,29 @@ class Offer extends Base{
             $currentSheet = $objPHPExcel->getSheet(0);
             $allColumn = $currentSheet->getHighestColumn();
             $allRow = $currentSheet->getHighestRow();
-            for ($currentRow = 2; $currentRow <= $allRow; $currentRow++) {
+            for($currentRow = 2; $currentRow <= $allRow; $currentRow++){
                 $data = [];
-                $data['id'] = intval($objPHPExcel->getActiveSheet()->getCell("A" . $currentRow)->getValue());//获取A列的值
-                $data['req_date'] = $objPHPExcel->getActiveSheet()->getCell("I" . $currentRow)->getValue();//获取H列的值
-                $data['quote_price'] = $objPHPExcel->getActiveSheet()->getCell("J" . $currentRow)->getValue();//获取J列的值
-                $data['remark'] = $objPHPExcel->getActiveSheet()->getCell("L" . $currentRow)->getValue();//获取L列的值
+                $data['id'] = intval($objPHPExcel->getActiveSheet()->getCell("A".$currentRow)->getValue());//获取A列的值
+                $data['req_date'] = $objPHPExcel->getActiveSheet()->getCell("I".$currentRow)->getValue();//获取H列的值
+                $data['quote_price'] = $objPHPExcel->getActiveSheet()->getCell("J".$currentRow)->getValue();//获取J列的值
+                $data['remark'] = $objPHPExcel->getActiveSheet()->getCell("L".$currentRow)->getValue();//获取L列的值
                 $offerLogic = model('Offer', 'logic');
                 $info = $offerLogic->getOneById($data['id']);
-                if (!strpos($data['req_date'],'-' )) {
-//                    $data['req_date'] = $data['req_date'] > 25568 ? $data['req_date'] + 1 : 25569;
-//                    /*There was a bug if Converting date before 1-1-1970 (tstamp 0)*/
-//                    $ofs = (70 * 365 + 17 + 2) * 86400;
-//                    $data['req_date'] = ($data['req_date'] * 86400) - $ofs;
-                    $data['req_date'] = intval(($data['req_date'] - 25569) * 3600 * 24); //转换成1970年以来的秒数
-                } else {
+                if(!strpos($data['req_date'], '-')){
+                    //                    $data['req_date'] = $data['req_date'] > 25568 ? $data['req_date'] + 1 : 25569;
+                    //                    /*There was a bug if Converting date before 1-1-1970 (tstamp 0)*/
+                    //                    $ofs = (70 * 365 + 17 + 2) * 86400;
+                    //                    $data['req_date'] = ($data['req_date'] * 86400) - $ofs;
+                    $data['req_date'] = intval(($data['req_date'] - 25569)*3600*24); //转换成1970年以来的秒数
+                }else{
                     $data['req_date'] = strtotime($data['req_date']);
                 }
                 // $data['req_date'] = intval(($data['req_date'] - 25569) * 3600 * 24); //转换成1970年以来的秒数
                 // gmdate('Y-m-d H:i:s',$n);//格式化时间,不是用date哦, 时区相差8小时的
                 //检查id是否存在
-                if (!empty($info) && isset($info['status']) && $info['status'] == 'init') {//不存在
+                if(!empty($info) && isset($info['status']) && $info['status'] == 'init'){//不存在
                     $key = $data['id'];
-                    if ($data['req_date'] < time()) {
+                    if($data['req_date'] < time()){
                         continue;
                     }
                     $dataArr = [

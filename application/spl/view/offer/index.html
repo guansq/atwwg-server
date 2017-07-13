@@ -16,7 +16,7 @@
        <span>状态: <select name="status" id="status">
         <option value="all">全部</option>
         {volist name='status' id='pstatus'}
-          <option value="{$key}">{$pstatus}</option>
+          <option value="{$key}"  {eq name="$key" value="$queryStatus"}selected{/eq} >{$pstatus}</option>
         {/volist}
       </select></span>
       <span>询价时间： <input id="quote_begintime" name="quote_begintime" class="laydate-icon" value="">  到

@@ -30,7 +30,7 @@ class Io extends BaseLogic{
             ->join('item b', 'a.item_code=b.code', 'LEFT')
             ->join('u9_pr pr', 'pr.id = a.pr_id', 'LEFT')
             ->limit("$start,$length")
-            ->order('a.update_at desc')
+            ->order('pr.update_at desc')
             ->group('pr_id');
         if(!empty($where)){
             $list = $list->where($where);

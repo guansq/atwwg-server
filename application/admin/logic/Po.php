@@ -64,10 +64,11 @@ class Po extends BaseLogic{
      * 得到即将过期的订单数量
      */
     function getPoItemNum(){
-        return poItemModel::alias('a')
-            ->join('po b', 'a.po_id = b.id')
-            ->where('b.status', 'in', ['executing'])
+        return poItemModel::alias('pi')
+            ->join('po po', 'pi.po_id = po.id')
+            ->where('po.status', 'NOT IN', ['init','finish','sup_cancel'])
             ->where('pro_goods_num', '>', 0)
+            ->group('po.id')
             ->count();//得到执行中的订单，和订单未到货数量>0
     }
 

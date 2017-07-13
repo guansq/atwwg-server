@@ -18,13 +18,14 @@ class Showmsg extends BaseController{
 
     public function index(){
         $current_time = time();
-        //询价待审批
         $ioLogic = model('Io','logic');
-        $quoteNum = $ioLogic->getQuoteNum();
+        $poLogic = model('Po','logic');
+        $prLogic = model('RequireOrder','logic');
+        //待询价请购单
+        $quoteNum = $prLogic->getUnQuoteNum();
         $this->assign('quoteNum',$quoteNum);
 
         //订单逾期警告    //dump($quoteNum);
-        $poLogic = model('Po','logic');
         $poItemNum = $poLogic->getPoItemNum();
         $this->assign('poItemNum',$poItemNum);
 

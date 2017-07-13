@@ -29,13 +29,13 @@ class Offer extends BaseLogic{
         if(!empty($where)){
             $list = IoModel::where('sup_code', $sup_code)
                 ->where($where)
-                ->order('create_at desc')
-                ->field('*, "" AS pro_no ')
+                ->field("*, '' AS pro_no ,IF(`status`='init','1','0') AS sort ")
+                ->order('sort DESC, update_at DESC')
                 ->select();
         }else{
             $list = IoModel::where('sup_code', $sup_code)
-                ->order('create_at desc')
-                ->field('*, "" AS pro_no ')
+                ->field("*, '' AS pro_no ,IF(`status`='init','1','0') AS sort ")
+                ->order('sort DESC, update_at DESC')
                 ->select();
         }
         foreach($list as &$pi){

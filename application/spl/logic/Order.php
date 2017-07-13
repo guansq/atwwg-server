@@ -86,18 +86,19 @@ class Order extends BaseLogic{
 
         return $list;
     }
+
     //调用u9 接口 更新交期时间
-    function updateU9Supconfirmdate($pi,$supconfirmdate){
-        if(empty($pi['po_ln']) || empty($supconfirmdate) ){
-            return resultArray(4001,'订单行号和交期不能为空。');
+    function updateU9Supconfirmdate($pi, $supconfirmdate){
+        if(empty($pi['po_ln']) || empty($supconfirmdate)){
+            return resultArray(4001, '订单行号和交期不能为空。');
         }
         $reqData = [
-            'DocNo'=>$pi['po_code'],
-            'DocLineNo'=>$pi['po_ln'],
-            'DeliveryDate'=>$supconfirmdate,
+            'DocNo' => $pi['po_code'],
+            'DocLineNo' => $pi['po_ln'],
+            'DeliveryDate' => $supconfirmdate,
         ];
-        $httpRet = HttpService::post(getenv('APP_API_U9').'/index/updatePODeliveryDate',$reqData);
-        return json_decode($httpRet,true);
+        $httpRet = HttpService::post(getenv('APP_API_U9').'/index/updatePODeliveryDate', $reqData);
+        return json_decode($httpRet, true);
 
     }
 
@@ -113,10 +114,12 @@ class Order extends BaseLogic{
             if(empty($item_code)){
                 $list = PoItem::where(['po_id' => $po_id])->field('*, "" AS pro_no ')->select();
             }else{
-                $list = PoItem::where(['po_id' => $po_id, 'item_code' => $item_code])->field('*, "" AS pro_no ')->select();
+                $list = PoItem::where(['po_id' => $po_id, 'item_code' => $item_code])
+                    ->field('*, "" AS pro_no ')
+                    ->select();
             }
             foreach($list as &$pi){
-                $pi['pro_no'] = model('PR','logic')->where('id',$pi->pr_id)->value('pro_no');
+                $pi['pro_no'] = model('PR', 'logic')->where('id', $pi->pr_id)->value('pro_no');
             }
             return $list;
         }
@@ -204,7 +207,7 @@ class Order extends BaseLogic{
 
         $pdf->SetMargins(10, 10, 10);
         // set auto page breaks
-        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+        $pdf->SetAutoPageBreak(TRUE, 0);
 
         $pdf->setfont($fontFamly);
         // Add a page
@@ -279,7 +282,7 @@ tr>th{
 }
 
 .text-small{
-  font-size: 0.9em;
+  font-size: 0.8em;
 }
 
 .agreement-form div , .agreement-form ul{
@@ -295,6 +298,9 @@ tr>th{
   text-align: right;
 }
 
+.agreement-form .bg-img{
+   background: url("https://www.baidu.com/img/bd_logo1.png");
+}
 .agreement-form .top{
 }
 </style>
@@ -354,7 +360,7 @@ tr>th{
         
         <div>1、订单文件：<br>本订单所附下列文件是构成合同不可分割的部分</div>
         <div>2、订单明细（以下价格已经包含17%增值税、运输费用及其他所有税费）：</div>
-        <table class="text-small" style="width: 100%">
+        <table style="width: 100%">
             <thead >
             <tr >
                 <th width="26">行号</th>
@@ -368,7 +374,7 @@ tr>th{
                 <th>金额</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody  >
 EOD;
         $po['price_total'] = 0;
         foreach($piList as $i => $pi){
@@ -377,7 +383,7 @@ EOD;
             $subTotal = number_format($pi['price_num']*$pi['price'], 2);
             $po['price_total'] += $pi['price_num']*$pi['price'];
             $ln = $i + 1;
-            $html .= "<tr>
+            $html .= "<tr class=\"text-small\">
                 <td width=\"26\" class=\"content-center\">$ln</td>
                 <td width=\"70\">$pi[item_code]</td>
                 <td width=\"180\">$pi[item_name]</td>
@@ -388,6 +394,21 @@ EOD;
                 <td width=\"40\" class=\"content-right\">$price</td>
                 <td class=\"content-right\">$subTotal</td>
             </tr>";
+
+            // 测试用
+            // for($i=1; $i<=5;$i++ ){
+            //     $html .= "<tr class=\"text-small\">
+            //     <td width=\"26\" class=\"content-center\">$i</td>
+            //     <td width=\"70\">$pi[item_code]</td>
+            //     <td width=\"180\">$pi[item_name]</td>
+            //     <td width=\"60\">$pi[pro_no]</td>
+            //     <td width=\"65\">$confirmDate</td>
+            //     <td width=\"26\" class=\"content-right\">$pi[price_num]</td>
+            //     <td width=\"26\" class=\"content-center\">$pi[price_uom]</td>
+            //     <td width=\"40\" class=\"content-right\">$price</td>
+            //     <td class=\"content-right\">$subTotal</td>
+            // </tr>";
+            // }
         }
         $yuan = numbToCnYuan($po['price_total']);
         $po['price_total'] = number_format($po['price_total'], 2);
@@ -419,6 +440,13 @@ EOD;
         </div>
         <div>6、订单生效：本订单应在双方授权代表签字盖章后立即生效。</div>
         <div>7、此订单其他未尽条款按照买卖双方签订的合同条款执行。</div>
+
+    </div>
+</body>
+</html>
+
+EOD;
+        $sginHtml = <<<EOD
        <div></div>
        <table class="border-none" width="100%">
          <tr >
@@ -434,20 +462,39 @@ EOD;
            <td width="50%">日期：</td>
          </tr>
        </table>
-    </div>
-</body>
-</html>
 EOD;
 
+
+        $sginHtmlHeight = 36.46; // $sginHtml 的高度
+        $imgH = $imgW = 50;
         // Print text using writeHTMLCell()
         //$html = iconv('gb2312','utf-8',$html);
         //$pdf->writeHTML($html);
         $pdf->writeHTML($html, true, false, true, false, '');
-        // ---------------------------------------------------------
 
+        $pageHeight = $pdf->getPageHeight();
+        $lastY = $pdf->GetY();
+
+        //剩余空间展示放不下 $sginHtml 就新开一页
+        if($pageHeight - $lastY < $sginHtmlHeight){
+            $pdf->AddPage();
+        }
+        $pdf->writeHTML($sginHtml, true, false, true, false, '');
+        $lastY = $pdf->GetY();
+        $imgY = $lastY - 30;
+        if($imgY + $imgH >= $pageHeight){
+            $imgY -= $imgY + $imgH - $pageHeight;
+        }
+        //echo "ph=".$pdf->getPageHeight() ;
+        //dd($pageHeight);
+        //dd($lastY);
+        $pdf->Image(APP_PATH.'common/static/po_seal.png', 25, $imgY, $imgW, $imgH, '', '', '', false, 300);
+
+        // ---------------------------------------------------------
         // Close and output PDF document
         // This method has several options, check the source code documentation for more information.
-        $pdf->Output("$po[order_code].pdf", 'D');
+        //$pdf->Output("$po[order_code].pdf" ); //'D'
+        $pdf->Output("$po[order_code].pdf",'D'); //'D'
         exit();
 
     }

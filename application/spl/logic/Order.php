@@ -507,13 +507,18 @@ EOD;
         //echo "ph=".$pdf->getPageHeight() ;
         //dd($pageHeight);
         //dd($lastY);
+        //印章
         $pdf->Image(APP_PATH.'common/static/po_seal.png', 25, $imgY, $imgW, $imgH, '', '', '', false, 300);
+
+        // logo
+        $pdf->setPage(1);
+        $pdf->Image(APP_PATH.'common/static/po_logo.png', 30, 15, 10, '', '', '', '', false, 300);
 
         // ---------------------------------------------------------
         // Close and output PDF document
         // This method has several options, check the source code documentation for more information.
         //$pdf->Output("$po[order_code].pdf" ); //'D'
-        $pdf->Output("$po[order_code].pdf", 'D'); //'D'
+        $pdf->Output("$po[order_code].pdf",'D'); //,'D'
         exit();
 
     }

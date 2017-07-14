@@ -21,16 +21,33 @@ class Order extends BaseLogic{
     /*
      * 得到订单列表
      */
-    function getPolist($where){
+    function getPolist($where, $tag = ''){
+        $now = time();
         if(empty($where)){
             $list = Po::order('update_at DESC')->select();
         }else{
             $list = Po::where($where)->order('update_at DESC')->select();
         }
-        if($list){
-            $list = collection($list)->toArray();
+
+        if($tag != 'exceed'){
+            return $list;
         }
-        return $list;
+
+        $retList = [];
+        foreach($list as $po){
+            $hasExceed = false;
+            $piList = $this->getPoItemInfo($po['id']);
+            foreach($piList as $pi){
+                $hasExceed = $hasExceed || ($pi['sup_confirm_date'] < $now) && ($pi['pro_goods_num'] > 0) && !in_array($po['status'], [
+                        'finish',
+                        'sup_cancel'
+                    ]);
+            }
+            if($hasExceed){
+                $retList[] = $po;
+            }
+        }
+        return $retList;
     }
 
     /*
@@ -49,9 +66,6 @@ class Order extends BaseLogic{
     */
     function getPoItemInfo($po_id){
         $list = PoItem::where('po_id', $po_id)->select();
-        if($list){
-            $list = collection($list)->toArray();
-        }
         return $list;
     }
     //获取订单中心列表

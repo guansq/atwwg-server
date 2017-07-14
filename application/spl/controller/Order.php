@@ -12,10 +12,11 @@ class Order extends Base{
     protected $title = '采购订单';
 
     public function getOrderList(){
-        $offerLogic = model('Order', 'logic');
+        $orderLogic = model('Order', 'logic');
         $sup_code = session('spl_user')['sup_code'];
         $where = ['sup_code' => $sup_code];
         $data = input('param.');
+        $tag = input('tag');
         //        var_dump( $data);
         // 应用搜索条件
         if(!empty($data)){
@@ -38,7 +39,7 @@ class Order extends Base{
                 $where['contract_time'] = array('elt', strtotime($data['contract_endtime']));
             }
         }
-        $list = $offerLogic->getPolist($where);
+        $list = $orderLogic->getPolist($where,$tag);
 
         $returnInfo = [];
         $status = [
@@ -58,7 +59,7 @@ class Order extends Base{
         foreach($list as $k => $v){
             $returnInfo[$k]['checked'] = $v['id'];
             $exec_desc = '';
-            if(!empty($itemInfo = $offerLogic->getPoItemInfo($v['id']))){
+            if(!empty($itemInfo = $orderLogic->getPoItemInfo($v['id']))){
                 foreach($itemInfo as $vv){
                     $vv['arv_goods_num'] = $vv['arv_goods_num'] == '' ? 0 : $vv['arv_goods_num'];
                     $vv['pro_goods_num'] = $vv['pro_goods_num'] == '' ? 0 : $vv['pro_goods_num'];
@@ -187,9 +188,9 @@ class Order extends Base{
             return returnJson($u9Ret);
         }
 
-//        if(empty($u9Ret['result']['IsSuccess'])){
-//            return returnJson(6000);
-//        }
+        //        if(empty($u9Ret['result']['IsSuccess'])){
+        //            return returnJson(6000);
+        //        }
 
         $data = [
             'pi_id' => $id,
@@ -203,7 +204,7 @@ class Order extends Base{
         }
         //记录修改次数
         $sup_code = session('spl_user')['sup_code'];
-        model('SupplierInfo','logic')->where('code',$sup_code)->setInc('readjust_count');
+        model('SupplierInfo', 'logic')->where('code', $sup_code)->setInc('readjust_count');
         $detail = $orderLogic->updateSupconfirmdate($id, $supconfirmdate);
         //$detailPo = $orderLogic->updateStatus($pi['po_id'], 'sup_edit');
         if($detail){

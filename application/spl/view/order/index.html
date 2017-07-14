@@ -15,10 +15,11 @@
     <form class="form-inline">
       <input type="hidden" id="tag_hid" name="tag" value="{$Think.get.tag}">
       <span>合同状态:
-        <select name="status" id="status"> <option value="all">全部</option>
-        {volist name='orderstatus' id='pstatus'}
-          <option value="{$key}">{$pstatus}</option>
-        {/volist}</select></span>
+        <select name="status" id="status">
+          <option value="all">全部</option>
+          {volist name='orderstatus' id='pstatus'}
+            <option value="{$key}"  {eq name="$key" value="$Think.get.status"}selected{/eq}>{$pstatus}</option>
+          {/volist}</select></span>
         <span>合同签订日期：
           <input class="laydate-icon" type="text" id="contract_begintime">
           到

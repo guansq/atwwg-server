@@ -8,10 +8,13 @@
 
 namespace app\spl\controller;
 
+use PHPExcel;
+use PHPExcel_IOFactory;
+
 class Order extends Base{
     protected $title = '采购订单';
 
-    public function getOrderList(){
+    public function getPoList(){
         $orderLogic = model('Order', 'logic');
         $sup_code = session('spl_user')['sup_code'];
         $where = ['sup_code' => $sup_code];
@@ -75,7 +78,12 @@ class Order extends Base{
             $returnInfo[$k]['contract_time'] = empty($v['contract_time']) ? '--' : date('Y-m-d', $v['contract_time']);
             $returnInfo[$k]['id'] = $v['id'];
         }
-        //dump($returnInfo);
+        return $returnInfo;
+    }
+
+
+    public function getOrderList(){
+        $returnInfo = $this->getPoList();
         $info = ['draw' => time(), 'data' => $returnInfo, 'extData' => [],];
         return json($info);
     }
@@ -247,5 +255,43 @@ class Order extends Base{
         }
 
         return $poLogic->downContract($po);
+    }
+
+    /**
+     * Author: WILL<314112362@qq.com>
+     * Time: ${DAY}
+     * Describe:导出表格
+     */
+    function exportPoExcel(){
+        $list = $this->getPoList();
+        $path = ROOT_PATH.'public'.DS.'upload'.DS;
+        //dump($list);die;请购单编号-物料编号-请购日期-评标日期-供应商名称-要求交期-承诺交期-采购数量-报价-小计-状态
+        $PHPExcel = new PHPExcel(); //实例化PHPExcel类，类似于在桌面上新建一个Excel表格
+        $PHPSheet = $PHPExcel->getActiveSheet(); //获得当前活动sheet的操作对象
+        $PHPSheet->setTitle('采购订单列表'); //给当前活动sheet设置名称
+
+        $PHPSheet->setCellValue('A1', '订单编号');
+        $PHPSheet->setCellValue('B1', '物料交付情况');
+        $PHPSheet->setCellValue('C1', '状态');
+        $PHPSheet->setCellValue('D1', '合同签订日期');
+        $num = 1;
+        foreach($list as $k => $v){
+            $v['exec_desc'] = str_replace('<br>',"\r\n",$v['exec_desc']);
+            $num = $num + 1;
+            $PHPSheet->setCellValue('A'.$num, $v['order_code'])
+                ->setCellValue('B'.$num, $v['exec_desc'])
+                ->setCellValue('C'.$num, $v['status'])
+                ->setCellValue('D'.$num, $v['contract_time']);
+        }
+        $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel, 'Excel2007');//按照指定格式生成Excel文件，'Excel2007’表示生成2007版本的xlsx，
+        $PHPWriter->save($path.'/poItemList.xlsx'); //表示在$path路径下面生成ioList.xlsx文件
+        $file_name = "安特威采购订单".date('Y-m-d',time()).".xlsx";
+        $contents = file_get_contents($path.'/poItemList.xlsx');
+        $file_size = filesize($path.'/poItemList.xlsx');
+        header("Content-type: application/octet-stream;charset=utf-8");
+        header("Accept-Ranges: bytes");
+        header("Accept-Length: $file_size");
+        header("Content-Disposition: attachment; filename=".$file_name);
+        exit($contents);
     }
 }

@@ -18,15 +18,16 @@
         <select name="status" id="status">
           <option value="all">全部</option>
           {volist name='orderstatus' id='pstatus'}
-            <option value="{$key}"  {eq name="$key" value="$Think.get.status"}selected{/eq}>{$pstatus}</option>
+            <option value="{$key}" {eq name="$key" value="$Think.get.status" }selected{/eq}>{$pstatus}</option>
           {/volist}</select></span>
-        <span>合同签订日期：
+      <span>合同签订日期：
           <input class="laydate-icon" type="text" id="contract_begintime">
           到
           <input class="laydate-icon" id="contract_endtime" type="text">
         </span>
       <button class="btn btn-primary" id="searchVal" type="button">查询</button>
     </form>
+    <button type="button" id="excel_out" class="btn btn-info">导出Excel</button>
   </div>
   <div class="table-responsive">
     <table class="table table-bordered  atw-order-tab" id="example">
@@ -125,5 +126,20 @@
     //console.log(orderTables);
     orderTables.ajax.reload();
   })
+
+  //导出
+  $("#excel_out").click(function(){
+    var status = $("#status").val()||'';
+    var contract_begintime = $("#contract_begintime").val()||'';
+    var contract_endtime = $("#contract_endtime").val()||'';
+    var tag = $("#tag_hid").val()||'';
+    var str = "{:url('Order/exportPoExcel')}"
+        + '?status=' + status
+        + '&contract_begintime=' + contract_begintime
+        + '&contract_endtime=' + contract_endtime
+        + '&tag=' + tag;
+    window.open(str);
+    //console.log(str);
+  });
 </script>
 {/block}

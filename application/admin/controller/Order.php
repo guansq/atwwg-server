@@ -485,6 +485,7 @@ class Order extends BaseController{
                 'ValuationQty' => $v['tc_num'],//
                 'ValuationUnit' => $v['price_uom'],//
                 'srcDocPRLineNo' => $v['pr_ln'],
+                'ProCode' => $v['pro_no'],
                 'srcDocPRNo' => $v['pr_code']
             ];
         }

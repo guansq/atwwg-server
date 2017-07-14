@@ -278,6 +278,7 @@ class Requireorder extends BaseController{
             $sendInfo['pr_ln'] = $prInfo['pr_ln'];
             $sendInfo['pr_code'] = $prInfo['pr_code'];
             $sendInfo['sup_code'] = $data['appoint_sup_code'];
+            $sendInfo['pro_no'] = $prInfo['pro_no'];
         }
         $ret = placeOrder($sendInfo);//生成PO表 生成PO ITEM表
         if($ret['code'] != 2000){

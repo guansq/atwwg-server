@@ -690,9 +690,9 @@ function placeOrder($itemInfo){
         'ValuationQty' => $itemInfo['tc_num'],//
         'ValuationUnit' => $itemInfo['price_uom'],//
         'srcDocPRLineNo' => $itemInfo['pr_ln'],
+        'ProCode' => $itemInfo['pro_no'],
         'srcDocPRNo' => $itemInfo['pr_code']
     ];
-
     $sendData['lines'] = $lines;
     //dd($sendData);
     $httpRet = HttpService::curl(getenv('APP_API_U9').'index/po', $sendData);

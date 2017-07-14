@@ -464,6 +464,7 @@ class Order extends BaseController{
      * 内部创建U9订单
      */
     public function placeOrderAll($itemInfo){
+        $prLogic =  model('RequireOrder', 'logic');
         $sendData = [];
         $sendData['DocDate'] = time();//单价日期
         $sendData['DocTypeCode'] = 'PO01';//单据类型
@@ -485,7 +486,7 @@ class Order extends BaseController{
                 'ValuationQty' => $v['tc_num'],//
                 'ValuationUnit' => $v['price_uom'],//
                 'srcDocPRLineNo' => $v['pr_ln'],
-                'ProCode' => $v['pro_no'],
+                'ProCode' => $prLogic->where('id',$v['pr_id'])->value('pro_no'),
                 'srcDocPRNo' => $v['pr_code']
             ];
         }

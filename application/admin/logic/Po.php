@@ -23,9 +23,6 @@ class Po extends BaseLogic{
         }else{
             $list = poModel::where($where)->order('update_at DESC')->select();
         }
-        if($list){
-            $list = collection($list)->toArray();
-        }
         return $list;
     }
 

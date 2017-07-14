@@ -48,7 +48,7 @@ class Order extends BaseController{
         return view();
     }
 
-    public function getOrderList(){
+    public function getPoList(){
         $now = time();
         $poLogic = model('Po', 'logic');
         $get = input('param.');
@@ -67,7 +67,7 @@ class Order extends BaseController{
             $isCheckExceed = true;
         }
         $list = $poLogic->getPolist($where);
-        $returnInfo = [];
+        $retList = [];
         $status = [
             '' => '',
             'init' => '初始',
@@ -124,7 +124,7 @@ class Order extends BaseController{
                 case 'upload_contract'://供应商已经上传合同
                     $statusStr = '合同待审核';
                     /*$returnInfo[$k]['status'] = '<a href="javascript:;" onclick="verifyOrder('.$v['id'].',\'contract_pass\',this);">合同审核通过</a>
-                                                 <a href="javascript:;" onclick="verifyOrder('.$v['id'].',\'contract_refuse\',this);">拒绝该合同</a>';*/
+                    <a href="javascript:;" onclick="verifyOrder('.$v['id'].',\'contract_refuse\',this);">拒绝该合同</a>';*/
                     break;
                 case 'contract_pass'://合同审核通过
                     $statusStr = '合同审核通过';
@@ -134,9 +134,10 @@ class Order extends BaseController{
                     break;
             }
 
-            $returnInfo[] = [
+            $retList[] = [
                 'detail' => '<a class="detail" data-open="'.url('order/detailed').'?id='.$v['id'].'">详情</a>',
                 'exec_desc' => $exec_desc,
+                'id' => $v['id'],
                 'checked' => $v['id'],
                 'order_code' => $v['order_code'],
                 'create_at' => atwDate($v['create_at']),
@@ -144,9 +145,13 @@ class Order extends BaseController{
                 'status' => empty($v['u9_status']) ? $statusStr : $v['u9_status']
             ];
         }
-        //dump($returnInfo);
-        $info = ['draw' => time(), 'data' => $returnInfo, 'extData' => [],];
+        return $retList;
+    }
 
+
+    public function getOrderList(){
+        $returnInfo = $this->getPoList();
+        $info = ['draw' => time(), 'data' => $returnInfo, 'extData' => [],];
         return json($info);
     }
 
@@ -426,7 +431,7 @@ class Order extends BaseController{
         }
         $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel, 'Excel2007');//按照指定格式生成Excel文件，'Excel2007’表示生成2007版本的xlsx，
         $PHPWriter->save($path.'/poItemList.xlsx'); //表示在$path路径下面生成ioList.xlsx文件
-        $file_name = "poItemList.xlsx";
+        $file_name = "未下单采购订单".date('Y-m-d',time()).".xlsx";
         $contents = file_get_contents($path.'/poItemList.xlsx');
         $file_size = filesize($path.'/poItemList.xlsx');
         header("Content-type: application/octet-stream;charset=utf-8");
@@ -585,65 +590,30 @@ class Order extends BaseController{
      * 导出excel采购订单列表
      */
     public function exportPoExcel(){
-        $poLogic = model('Po', 'logic');
-        $get = input('param.');
-        //dump($requestInfo);die;
-        $where = [];
-        // 应用搜索条件
-        foreach(['order_code', 'pr_code'] as $key){
-            if(isset($get[$key]) && $get[$key] !== ''){
-                $where[$key] = ['like', "%{$get[$key]}%"];
-            }
-        }
-        $list = $poLogic->getPolist($where);
-        $returnInfo = [];
-
-        foreach($list as $k => $v){
-            $returnInfo[$k]['checked'] = $v['id'];
-            $exec_desc = '';
-            if(!empty($itemInfo = $poLogic->getPoItemInfo($v['id']))){
-                foreach($itemInfo as $vv){
-                    $vv['arv_goods_num'] = $vv['arv_goods_num'] == '' ? 0 : $vv['arv_goods_num'];
-                    $vv['pro_goods_num'] = $vv['pro_goods_num'] == '' ? 0 : $vv['pro_goods_num'];
-                    $exec_desc .= '物料名称：'.$vv['item_name'].'; '.'到货数量：'.$vv['arv_goods_num'].'; 未到货数量：'.$vv['pro_goods_num'].'; 可供货交期：'.date('Y-m-d', $vv['sup_confirm_date']).'<br>';
-                }
-                $returnInfo[$k]['exec_desc'] = $exec_desc;
-            }else{
-                $returnInfo[$k]['exec_desc'] = '';
-            }
-            $returnInfo[$k]['order_code'] = $v['order_code'];
-            $returnInfo[$k]['pr_code'] = $v['pr_code'];
-            $returnInfo[$k]['pr_date'] = atwDate($poLogic->getPrDate($v['pr_code']));
-            $returnInfo[$k]['create_at'] = atwDate($v['create_at']);
-            $returnInfo[$k]['sup_name'] = $poLogic->getSupName($v['sup_code']);
-        }
-
-
-        $list = $returnInfo;
+        $list = $this->getPoList();
         $path = ROOT_PATH.'public'.DS.'upload'.DS;
         //dump($list);die;请购单编号-物料编号-请购日期-评标日期-供应商名称-要求交期-承诺交期-采购数量-报价-小计-状态
         $PHPExcel = new PHPExcel(); //实例化PHPExcel类，类似于在桌面上新建一个Excel表格
         $PHPSheet = $PHPExcel->getActiveSheet(); //获得当前活动sheet的操作对象
         $PHPSheet->setTitle('采购订单列表'); //给当前活动sheet设置名称
         $PHPSheet->setCellValue('A1', '订单编号');
-        $PHPSheet->setCellValue('B1', '请购单编号');
-        $PHPSheet->setCellValue('C1', '请购日期');
-        $PHPSheet->setCellValue('D1', '下单日期');
-        $PHPSheet->setCellValue('E1', '供应商名称');
-        $PHPSheet->setCellValue('F1', '执行情况');
+        $PHPSheet->setCellValue('B1', '下单日期');
+        $PHPSheet->setCellValue('C1', '供应商名称');
+        $PHPSheet->setCellValue('D1', '状态');
+        $PHPSheet->setCellValue('E1', '执行情况');
         $num = 1;
         foreach($list as $k => $v){
+            $v['exec_desc'] = str_replace('<br>',"\r\n",$v['exec_desc']);
             $num = $num + 1;
             $PHPSheet->setCellValue('A'.$num, $v['order_code'])
-                ->setCellValue('B'.$num, $v['pr_code'])
-                ->setCellValue('C'.$num, $v['pr_date'])
-                ->setCellValue('D'.$num, $v['create_at'])
-                ->setCellValue('E'.$num, $v['sup_name'])
-                ->setCellValue('F'.$num, $v['exec_desc']);
+                ->setCellValue('B'.$num, $v['create_at'])
+                ->setCellValue('C'.$num, $v['sup_name'])
+                ->setCellValue('D'.$num, $v['status'])
+                ->setCellValue('E'.$num, $v['exec_desc']);
         }
         $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel, 'Excel2007');//按照指定格式生成Excel文件，'Excel2007’表示生成2007版本的xlsx，
         $PHPWriter->save($path.'/poItemList.xlsx'); //表示在$path路径下面生成ioList.xlsx文件
-        $file_name = "poItemList.xlsx";
+        $file_name = "已下单采购订单".date('Y-m-d',time()).".xlsx";
         $contents = file_get_contents($path.'/poItemList.xlsx');
         $file_size = filesize($path.'/poItemList.xlsx');
         header("Content-type: application/octet-stream;charset=utf-8");

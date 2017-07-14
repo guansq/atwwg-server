@@ -223,8 +223,8 @@
       btn:['确定导出', '取消导出']
     }, function(index){
       layer.close(index);
-      var order_code = $("#order_code").val();
-      var pr_code = $("#pr_code").val();
+      var order_code = $("#order_code").val()||'';
+      var pr_code = $("#pr_code").val() || '';
       var str = "{:url('Order/exportPoExcel')}" + '?order_code=' + order_code + '&pr_code=' + pr_code;
       window.open(str);
       //console.log(str);

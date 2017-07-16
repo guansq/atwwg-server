@@ -110,6 +110,20 @@ class Showmsg extends BaseController{
         return view();
     }
 
+    /**
+     * Author: WILL<314112362@qq.com>
+     * Describe: 查询 待审核的报价单
+     * @return \think\response\Json
+     */
+    public function getUncheckIo(){
+
+        $ioLogic = model('Io', 'logic');
+        // 应用搜索条件
+        $list = $ioLogic->getUncheckIos();
+        $info = ['draw' => time(), 'data' => $list, 'extData' => [],];
+        return json($info);
+    }
+
     public function updateLog(){
         return view();
     }

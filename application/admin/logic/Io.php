@@ -100,7 +100,7 @@ class Io extends BaseLogic{
             if(!empty($item['quote_price'])){
                 $item['totalPrice'] = atwMoney($item['quote_price']*$item['price_num']);
             }
-         }
+        }
         return $list;
     }
 
@@ -139,7 +139,7 @@ class Io extends BaseLogic{
     function getIoRecord($where){
         $info = IoModel::where($where)->find();
         if($info){
-            $info  = $info->toArray();
+            $info = $info->toArray();
         }
         return $info;
     }
@@ -147,7 +147,33 @@ class Io extends BaseLogic{
     /*
      * 更新Io
      */
-    function updateIo($where,$data){
+    function updateIo($where, $data){
         return IoModel::where($where)->update($data);
+    }
+
+    /**
+     * Author: WILL<314112362@qq.com>
+     * Describe: 查询待审核的报价单
+     */
+    function getUncheckIos(){
+        $prLogic = model('RequireOrder', 'logic');
+        $dbList = $this->where('status', 'winbid_uncheck')->order('update_at', 'DESC')->select();
+
+        foreach($dbList as $k => &$v){
+            $v['statusStr'] = self::STATUS_ARR[$v['status']];
+            $v['pro_no'] = $prLogic->where('id',$v['pr_id'])->value('pro_no');
+            $v['promise_date_fmt'] =  date('Y-m-d', $v['promise_date']);
+            $v['create_at_fmt'] = date('Y-m-d', $v['create_at']);
+            $v['quote_date_fmt'] = date('Y-m-d', $v['quote_date']);
+            $v['quote_endtime_fmt'] = date('Y-m-d', $v['quote_endtime']);
+            $v['req_date_fmt'] = date('Y-m-d', $v['req_date']);
+            $v['total_price'] = number_format($v['price_num']*$v['quote_price'], 2);
+            $v['quote_price'] =  number_format($v['quote_price'], 2);
+            $v['remark'] = empty($v['remark']) ? '' : $v['remark'];
+        }
+
+        return $dbList;
+
+
     }
 }

@@ -46,7 +46,15 @@
         </thead>
         <tbody>
         {volist name="poItemInfo" id="vo"}
-        <tr>
+        {if condition="$vo.pro_goods_num == 0"}
+        <tr class="bg-success">
+        {elseif condition="$vo.surplus_days <= 0"/}
+        <tr class="bg-danger">
+        {elseif condition="$vo.surplus_days <= 7"/}
+        <tr class="bg-warning">
+        {else /}
+        <tr class="">
+        {/if}
           <td>{$i}</td>
           <td>{$vo['item_code']}</td>
           <td>{$vo['item_name']}</td>

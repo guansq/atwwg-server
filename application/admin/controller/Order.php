@@ -238,6 +238,7 @@ class Order extends BaseController{
      * po详情
      */
     public function detailed(){
+        $today = strtotime(date('Y-m-d'));
         $this->assign('title', $this->title);
         $id = input('get.id');
         //echo $id;
@@ -259,6 +260,9 @@ class Order extends BaseController{
             $allAmount += $v['amount'];
             $v['arv_goods_num'] = empty($v['arv_goods_num']) ? 0 : $v['arv_goods_num'];
             $v['pro_goods_num'] = empty($v['pro_goods_num']) ? 0 : $v['pro_goods_num'];
+            //送货剩余天数
+            //dd(floor(($v['sup_confirm_date']-$now)/(60*60*24)));
+            $v['surplus_days'] = in_array($v['status'],['finish', 'sup_cancel']) ? 999 : intval(($v['sup_confirm_date']-$today)/(60*60*24));
         }
         $this->assign('poInfo', $poInfo);
         $this->assign('poItemInfo', $poItemInfo);

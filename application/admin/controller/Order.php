@@ -63,7 +63,7 @@ class Order extends BaseController{
         //逾期状态
         $isCheckExceed = false;
         if(!empty($get['status']) && $get['status'] == 'exceed'){
-            $where['status'] = ['NOT IN' , ['finish', 'sup_cancel']];
+            $where['status'] = ['NOT IN', ['finish', 'sup_cancel']];
             $isCheckExceed = true;
         }
         $list = $poLogic->getPolist($where);
@@ -131,6 +131,12 @@ class Order extends BaseController{
                     break;
                 case 'contract_refuse'://合同审核拒绝
                     $statusStr = '合同已被拒绝';
+                    break;
+                case 'executing'://合同审核拒绝
+                    $statusStr = '执行中';
+                    break;
+                case 'finish'://合同审核拒绝 '' => '结束',
+                    $statusStr = '结束';
                     break;
             }
 
@@ -251,6 +257,8 @@ class Order extends BaseController{
         $allAmount = 0;
         foreach($poItemInfo as $k => $v){
             $allAmount += $v['amount'];
+            $v['arv_goods_num'] = empty($v['arv_goods_num']) ? 0 : $v['arv_goods_num'];
+            $v['pro_goods_num'] = empty($v['pro_goods_num']) ? 0 : $v['pro_goods_num'];
         }
         $this->assign('poInfo', $poInfo);
         $this->assign('poItemInfo', $poItemInfo);
@@ -431,7 +439,7 @@ class Order extends BaseController{
         }
         $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel, 'Excel2007');//按照指定格式生成Excel文件，'Excel2007’表示生成2007版本的xlsx，
         $PHPWriter->save($path.'/poItemList.xlsx'); //表示在$path路径下面生成ioList.xlsx文件
-        $file_name = "未下单采购订单".date('Y-m-d',time()).".xlsx";
+        $file_name = "未下单采购订单".date('Y-m-d', time()).".xlsx";
         $contents = file_get_contents($path.'/poItemList.xlsx');
         $file_size = filesize($path.'/poItemList.xlsx');
         header("Content-type: application/octet-stream;charset=utf-8");
@@ -464,7 +472,7 @@ class Order extends BaseController{
      * 内部创建U9订单
      */
     public function placeOrderAll($itemInfo){
-        $prLogic =  model('RequireOrder', 'logic');
+        $prLogic = model('RequireOrder', 'logic');
         $sendData = [];
         $sendData['DocDate'] = time();//单价日期
         $sendData['DocTypeCode'] = 'PO01';//单据类型
@@ -486,7 +494,7 @@ class Order extends BaseController{
                 'ValuationQty' => $v['tc_num'],//
                 'ValuationUnit' => $v['price_uom'],//
                 'srcDocPRLineNo' => $v['pr_ln'],
-                'ProCode' => $prLogic->where('id',$v['pr_id'])->value('pro_no'),
+                'ProCode' => $prLogic->where('id', $v['pr_id'])->value('pro_no'),
                 'srcDocPRNo' => $v['pr_code']
             ];
         }
@@ -605,7 +613,7 @@ class Order extends BaseController{
         $PHPSheet->setCellValue('E1', '执行情况');
         $num = 1;
         foreach($list as $k => $v){
-            $v['exec_desc'] = str_replace('<br>',"\r\n",$v['exec_desc']);
+            $v['exec_desc'] = str_replace('<br>', "\r\n", $v['exec_desc']);
             $num = $num + 1;
             $PHPSheet->setCellValue('A'.$num, $v['order_code'])
                 ->setCellValue('B'.$num, $v['create_at'])
@@ -615,7 +623,7 @@ class Order extends BaseController{
         }
         $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel, 'Excel2007');//按照指定格式生成Excel文件，'Excel2007’表示生成2007版本的xlsx，
         $PHPWriter->save($path.'/poItemList.xlsx'); //表示在$path路径下面生成ioList.xlsx文件
-        $file_name = "已下单采购订单".date('Y-m-d',time()).".xlsx";
+        $file_name = "已下单采购订单".date('Y-m-d', time()).".xlsx";
         $contents = file_get_contents($path.'/poItemList.xlsx');
         $file_size = filesize($path.'/poItemList.xlsx');
         header("Content-type: application/octet-stream;charset=utf-8");

@@ -38,7 +38,8 @@
           <th>需求交期</th>
           <th>承诺交期</th>
           <th>供应商修改交期</th>
-          <th>供应商名称</th>
+          <th>到货数量</th>
+          <th>未到数量</th>
           <th>单价</th>
           <th>金额</th>
         </tr>
@@ -56,14 +57,15 @@
           <td>{$vo['req_date']|atwDate}</td>
           <td>{$vo['sup_confirm_date']|atwDate}</td>
           <td>{$vo['sup_update_date']|atwDate}</td>
-          <td>{$poInfo['sup_name']}</td>
+          <td>{$vo['arv_goods_num']|0}</td>
+          <td>{$vo['pro_goods_num']|0}</td>
           <td>{$vo['price']|atwMoney}</td>
           <td>{$vo['amount']|atwMoney}</td>
         </tr>
         {/volist}
         <tr>
           <td colspan="2">合并</td>
-          <td colspan="7"></td>
+          <td colspan="8"></td>
           <td colspan="4" class="text-right">{$allAmount|atwMoney}</td>
         </tr>
         </tbody>

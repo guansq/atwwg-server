@@ -262,7 +262,10 @@ class Order extends BaseController{
             $v['pro_goods_num'] = empty($v['pro_goods_num']) ? 0 : $v['pro_goods_num'];
             //送货剩余天数
             //dd(floor(($v['sup_confirm_date']-$now)/(60*60*24)));
-            $v['surplus_days'] = in_array($v['status'],['finish', 'sup_cancel']) ? 999 : intval(($v['sup_confirm_date']-$today)/(60*60*24));
+            $v['surplus_days'] = in_array($v['status'], [
+                'finish',
+                'sup_cancel'
+            ]) ? 999 : intval(($v['sup_confirm_date'] - $today)/(60*60*24));
         }
         $this->assign('poInfo', $poInfo);
         $this->assign('poItemInfo', $poItemInfo);
@@ -471,67 +474,27 @@ class Order extends BaseController{
         returnJson($httpRet);
     }
 
-
-    /*
-     * 内部创建U9订单
-     */
-    public function placeOrderAll($itemInfo){
-        $prLogic = model('RequireOrder', 'logic');
-        $sendData = [];
-        $sendData['DocDate'] = time();//单价日期
-        $sendData['DocTypeCode'] = 'PO01';//单据类型
-        $sendData['TCCode'] = 'C001';//币种编码
-        $sendData['bizType'] = '316';//U9参数
-        $sendData['isPriceIncludeTax'] = 1;//是否含税
-        $sendData['supplierCode'] = $itemInfo[0]['sup_code'];//供应商代码
-        $lines = [];
-        foreach($itemInfo as $k => $v){
-            $lines[] = [
-                'ItemCode' => $v['item_code'],//料品号
-                'OrderPriceTC' => $v['price'],//采购单价
-                'OrderTotalTC' => $v['price']*$v['price_num'],//采购总金额
-                'ReqQty' => $v['price_num'],//采购数量
-                'RequireDate' => $v['req_date'],//请购时间
-                'SupConfirmDate' => $v['sup_confirm_date'],//供应商供货日期
-                'TaxRate' => $v['tax_rate']*100,//税率
-                'TradeUOM' => $v['tc_uom'],//交易单位
-                'ValuationQty' => $v['tc_num'],//
-                'ValuationUnit' => $v['price_uom'],//
-                'srcDocPRLineNo' => $v['pr_ln'],
-                'ProCode' => $prLogic->where('id', $v['pr_id'])->value('pro_no'),
-                'srcDocPRNo' => $v['pr_code']
-            ];
-        }
-        $sendData['lines'] = $lines;
-        //exit(json_encode($sendData));
-        $httpRet = HttpService::curl(getenv('APP_API_U9').'index/po', $sendData);
-        $res = json_decode($httpRet, true);//成功回写数据库
-        if($res['code'] != 2000){
-            returnjson($res);
-        }
-        //dump($res['result']);die;
-        return ['code' => 2000, 'msg' => '', 'data' => $res['result']];
-    }
-
     /*
      * 合并生成订单
      */
     public function placeOrderByPoItem(){
+        $now = time();
         $ids = input('param.ids');
         $idArr = explode('|', $ids);
         $poLogic = model('Po', 'logic');
-        $supLogic = model('Supporter', 'logic');
         $supCodeInfo = [];
-        if(!empty($ids)){
-            $poArr = [];
-            foreach($idArr as $k => $v){
-                $po_id = $poLogic->getPoId(['id' => $v]);//判断id是否存在po_id有存在返回不能合并订单操作
-                if($po_id){
-                    $poArr[$k] = $po_id;
-                }
-                $supInfo = $poLogic->getSupInfo(['id' => $v]);//通过id获取sup_code sup_name
-                $supCodeInfo[$supInfo['sup_code']] = $supInfo['sup_name'];
+        if(empty($ids)){
+            return json(['code' => 4000, 'msg' => '请选择单据', 'data' => []]);
+        }
+
+        $poArr = [];
+        foreach($idArr as $k => $v){
+            $po_id = $poLogic->getPoId(['id' => $v]);//判断id是否存在po_id有存在返回不能合并订单操作
+            if($po_id){
+                $poArr[$k] = $po_id;
             }
+            $supInfo = $poLogic->getSupInfo(['id' => $v]);//通过id获取sup_code sup_name
+            $supCodeInfo[$supInfo['sup_code']] = $supInfo['sup_name'];
         }
 
         if(!empty($poArr)){
@@ -544,60 +507,9 @@ class Order extends BaseController{
             $sup_code = $k;
             $sup_name = $v;
         }
-        $now = time();
-        //进行生成订单
-        $idWhere = str_replace('|', ',', $ids);
-        $itemInfo = $poLogic->getPoItemByIds($idWhere);//单个子订单信息
-        $res = $this->placeOrderAll($itemInfo);//内部生成订单
-        //dump($res);die;
-        $data = [];
-        //dump($res);die;
-        if($res['code'] == 2000){
-            //生成一条po记录
-            $poData = [
-                //'pr_code' => $itemInfo['pr_code'],
-                'order_code' => $res['data']['DocNo'],
-                'sup_code' => $sup_code,
-                'doc_date' => $now,
-                'is_include_tax' => 1,      //是否含税
-                'status' => 'init',
-                'create_at' => $now,
-                'update_at' => $now,
-            ];
-            $po_id = $poLogic->insertOrGetId($poData);
-            //生成关联关系
-            $list = [];
-            $rtnPoLine = empty($res['data']['rtnLines']['rtnPoLine']) ? [] : $res['data']['rtnLines']['rtnPoLine'];
-            foreach($itemInfo as $pi){
-                $list[] = [
-                    'id' => $pi['id'],
-                    'po_id' => $po_id,
-                    'po_code' => $res['data']['DocNo'],
-                    'po_ln' => $poLogic->matePoLn($rtnPoLine, $pi),
-                    'update_at' => $now,
-                    'status' => 'placeorder'
-                ];
 
-            }
-            /*foreach($idArr as $k=>$v){
-                $data[$k] = ['id'=>$v,'po_id'=>$po_id,'po_code'=>$res['data']['DocNo'],'create_at'=>date('Y-m-d',$now)];
-            }*/
-            $res = $poLogic->updateAllPoid($list);
-            $data = $list;
-            //更改PR表status状态为已下单
-            $prLogic = model('RequireOrder', 'logic');
-            foreach($itemInfo as $k => $v){
-                $prLogic->updatePr(['id' => $v['pr_id']], ['status' => 'order']);
-            }
-            //发消息通过$sup_code $sup_name得到$sup_id
-            $sup_id = $supLogic->getSupIdVal(['code' => $sup_code]);
-            if(empty($sup_id)){
-                return json(['code' => 5000, 'msg' => "下订单成功，消息发送失败。 code:$sup_code 未绑定账号。", 'data' => $data]);
-            }
-            sendMsg($sup_id, '安特威订单', '您有新的订单，请注意查收。');//发送消息
-            return json(['code' => 2000, 'msg' => '下订单成功', 'data' => $data]);
-        }
-        return json(['code' => 6000, 'msg' => '下订单失败', 'data' => $data]);
+        return returnJson($poLogic->placePoOrder($idArr, $sup_code));
+
     }
 
     /*

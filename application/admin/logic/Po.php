@@ -10,9 +10,18 @@ namespace app\admin\logic;
 
 use app\common\model\Po as poModel;
 use app\common\model\PoItem as poItemModel;
+use service\HttpService;
 
 class Po extends BaseLogic{
     protected $table = 'atw_po_item';
+
+    const U9_BIZ_TYPES = [
+        '0' => 'PO01',  //标准类型
+        '1' => 'PO14',  //全程委外
+        '2' => 'PO16',  //机加委外
+        '3' => 'PO12',  //工序外协
+    ];
+
 
     /*
      * 得到订单列表
@@ -234,5 +243,138 @@ class Po extends BaseLogic{
             }
         }
         return null;
+    }
+
+    /**
+     * Author: WILL<314112362@qq.com>
+     * Describe: u9下采购单
+     * @param $idArr
+     * @param $supCode
+     */
+    function placePoOrder($idArr, $supCode){
+        $now = time();
+        $supLogic = model('Supporter', 'logic');
+        $prLogic = model('RequireOrder', 'logic');
+        foreach(self::U9_BIZ_TYPES as $bizType => $docTypeCode){
+            //进行生成订单
+            $itemInfo = $this->getPiByIdsAndBizType($idArr,$bizType);//单个子订单信息
+            trace( "u9下采购单 ====== placePoOrder \n");
+            trace(json_encode($itemInfo));
+            if(empty($itemInfo)){
+                continue;
+            }
+            $res = $this->placeOrderAll($itemInfo,$docTypeCode);//内部生成订单
+            //dump($res);die;
+            $data = [];
+            //dump($res);die;
+
+            if($res['code'] != 2000){
+                return json(['code' => 6000, 'msg' => '下订单失败', 'data' => $data]);
+            }
+            //生成一条po记录
+            $poData = [
+                //'pr_code' => $itemInfo['pr_code'],
+                'order_code' => $res['data']['DocNo'],
+                'sup_code' => $supCode,
+                'doc_date' => $now,
+                'is_include_tax' => 1,      //是否含税
+                'status' => 'init',
+                'create_at' => $now,
+                'update_at' => $now,
+            ];
+            $po_id = $this->insertOrGetId($poData);
+            //生成关联关系
+            $list = [];
+            $rtnPoLine = empty($res['data']['rtnLines']['rtnPoLine']) ? [] : $res['data']['rtnLines']['rtnPoLine'];
+            foreach($itemInfo as $pi){
+                $list[] = [
+                    'id' => $pi['id'],
+                    'po_id' => $po_id,
+                    'po_code' => $res['data']['DocNo'],
+                    'po_ln' => $this->matePoLn($rtnPoLine, $pi),
+                    'update_at' => $now,
+                    'status' => 'placeorder'
+                ];
+
+            }
+            /*foreach($idArr as $k=>$v){
+                $data[$k] = ['id'=>$v,'po_id'=>$po_id,'po_code'=>$res['data']['DocNo'],'create_at'=>date('Y-m-d',$now)];
+            }*/
+            $res = $this->updateAllPoid($list);
+            $data = $list;
+            //更改PR表status状态为已下单
+
+            foreach($itemInfo as $k => $v){
+                $prLogic->updatePr(['id' => $v['pr_id']], ['status' => 'order']);
+            }
+        }
+
+        //发消息通过$sup_code $sup_name得到$sup_id
+        $sup_id = $supLogic->getSupIdVal(['code' => $supCode]);
+        if(empty($sup_id)){
+            return json(['code' => 5000, 'msg' => "下订单成功，消息发送失败。 code:$supCode 未绑定账号。", 'data' => $data]);
+        }
+        sendMsg($sup_id, '安特威订单', '您有新的订单，请注意查收。');//发送消息
+        return json(['code' => 2000, 'msg' => '下订单成功', 'data' => $data]);
+
+    }
+
+    /**
+     * 内部创建U9订单
+     */
+    public function placeOrderAll($itemInfo,$docTypeCode='PO01'){
+        $prLogic = model('RequireOrder', 'logic');
+        $sendData = [];
+        $sendData['DocDate'] = time();//单价日期
+        $sendData['DocTypeCode'] = 'PO01';//单据类型
+        $sendData['TCCode'] = 'C001';//币种编码
+        $sendData['bizType'] = '316';//U9参数
+        $sendData['isPriceIncludeTax'] = 1;         //  是否含税
+        $sendData['DocTypeCode'] = $docTypeCode;    //  采购订单单据类型
+        $sendData['supplierCode'] = $itemInfo[0]['sup_code'];//供应商代码
+        $lines = [];
+        foreach($itemInfo as $k => $v){
+            $lines[] = [
+                'ItemCode' => $v['item_code'],//料品号
+                'OrderPriceTC' => $v['price'],//采购单价
+                'OrderTotalTC' => $v['price']*$v['price_num'],//采购总金额
+                'ReqQty' => $v['price_num'],//采购数量
+                'RequireDate' => $v['req_date'],//请购时间
+                'SupConfirmDate' => $v['sup_confirm_date'],//供应商供货日期
+                'TaxRate' => $v['tax_rate']*100,//税率
+                'TradeUOM' => $v['tc_uom'],//交易单位
+                'ValuationQty' => $v['tc_num'],//
+                'ValuationUnit' => $v['price_uom'],//
+                'srcDocPRLineNo' => $v['pr_ln'],
+                'ProCode' => $prLogic->where('id', $v['pr_id'])->value('pro_no'),
+                'srcDocPRNo' => $v['pr_code'],
+
+            ];
+        }
+        $sendData['lines'] = $lines;
+        //exit(json_encode($sendData));
+        $httpRet = HttpService::curl(getenv('APP_API_U9').'index/po', $sendData);
+        $res = json_decode($httpRet, true);//成功回写数据库
+        if($res['code'] != 2000){
+            returnjson($res);
+        }
+        //dump($res['result']);die;
+        return ['code' => 2000, 'msg' => '', 'data' => $res['result']];
+    }
+
+    /**
+     * Author: WILL<314112362@qq.com>
+     * Describe:
+     * @param $piIds
+     * @param $bizType
+     */
+    function getPiByIdsAndBizType($piIds,$bizType){
+         $list = $this->alias('pi')
+            ->join('u9_pr pr' ,'pi.pr_id = pr.id')
+            ->where('pi.id','IN',$piIds)
+            ->where('pr.biz_type',$bizType)
+            ->order('pi.update_at','DESC')
+            ->select();
+        return $list;
     }
 }

@@ -257,19 +257,19 @@ class Po extends BaseLogic{
         $prLogic = model('RequireOrder', 'logic');
         foreach(self::U9_BIZ_TYPES as $bizType => $docTypeCode){
             //进行生成订单
-            $itemInfo = $this->getPiByIdsAndBizType($idArr,$bizType);//单个子订单信息
-            trace( "u9下采购单 ====== placePoOrder \n");
+            $itemInfo = $this->getPiByIdsAndBizType($idArr, $bizType);//单个子订单信息
+            trace("u9下采购单 ====== placePoOrder \n");
             trace(json_encode($itemInfo));
             if(empty($itemInfo)){
                 continue;
             }
-            $res = $this->placeOrderAll($itemInfo,$docTypeCode);//内部生成订单
+            $res = $this->placeOrderAll($itemInfo, $docTypeCode);//内部生成订单
             //dump($res);die;
             $data = [];
             //dump($res);die;
 
             if($res['code'] != 2000){
-                return json(['code' => 6000, 'msg' => '下订单失败', 'data' => $data]);
+                return resultArray(6000, '下订单失败', $data);
             }
             //生成一条po记录
             $poData = [
@@ -312,17 +312,17 @@ class Po extends BaseLogic{
         //发消息通过$sup_code $sup_name得到$sup_id
         $sup_id = $supLogic->getSupIdVal(['code' => $supCode]);
         if(empty($sup_id)){
-            return json(['code' => 5000, 'msg' => "下订单成功，消息发送失败。 code:$supCode 未绑定账号。", 'data' => $data]);
+            return resultArray(5000, "下订单成功，消息发送失败。 code:$supCode 未绑定账号。",$data);
         }
         sendMsg($sup_id, '安特威订单', '您有新的订单，请注意查收。');//发送消息
-        return json(['code' => 2000, 'msg' => '下订单成功', 'data' => $data]);
+        return resultArray(2000,'下订单成功',$data);
 
     }
 
     /**
      * 内部创建U9订单
      */
-    public function placeOrderAll($itemInfo,$docTypeCode='PO01'){
+    public function placeOrderAll($itemInfo, $docTypeCode = 'PO01'){
         $prLogic = model('RequireOrder', 'logic');
         $sendData = [];
         $sendData['DocDate'] = time();//单价日期
@@ -368,12 +368,12 @@ class Po extends BaseLogic{
      * @param $piIds
      * @param $bizType
      */
-    function getPiByIdsAndBizType($piIds,$bizType){
-         $list = $this->alias('pi')
-            ->join('u9_pr pr' ,'pi.pr_id = pr.id')
-            ->where('pi.id','IN',$piIds)
-            ->where('pr.biz_type',$bizType)
-            ->order('pi.update_at','DESC')
+    function getPiByIdsAndBizType($piIds, $bizType){
+        $list = $this->alias('pi')
+            ->join('u9_pr pr', 'pi.pr_id = pr.id')
+            ->where('pi.id', 'IN', $piIds)
+            ->where('pr.biz_type', $bizType)
+            ->order('pi.update_at', 'DESC')
             ->select();
         return $list;
     }

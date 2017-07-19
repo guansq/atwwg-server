@@ -203,9 +203,6 @@ class Po extends BaseLogic{
      */
     public function updateAllPoid($list){
         $res = $this->saveAll($list);
-        if($res){
-            $res = collection($res)->toArray();
-        }
         return $res;
     }
 
@@ -252,13 +249,15 @@ class Po extends BaseLogic{
      * @param $supCode
      */
     function placePoOrder($idArr, $supCode){
+        trace("u9下采购单 ====== placePoOrder \n");
+        trace("idArr ======".json_encode($idArr));
         $now = time();
         $supLogic = model('Supporter', 'logic');
         $prLogic = model('RequireOrder', 'logic');
         foreach(self::U9_BIZ_TYPES as $bizType => $docTypeCode){
             //进行生成订单
             $itemInfo = $this->getPiByIdsAndBizType($idArr, $bizType);//单个子订单信息
-            trace("u9下采购单 ====== placePoOrder \n");
+
             trace(json_encode($itemInfo));
             if(empty($itemInfo)){
                 continue;
@@ -374,6 +373,7 @@ class Po extends BaseLogic{
             ->where('pi.id', 'IN', $piIds)
             ->where('pr.biz_type', $bizType)
             ->order('pi.update_at', 'DESC')
+            ->field('pi.*')
             ->select();
         return $list;
     }

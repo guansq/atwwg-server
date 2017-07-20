@@ -571,7 +571,7 @@ EOD;
 
 
         // set header and footer fonts
-        $fontFamly = 'cid0cs';
+        $fontFamly = 'stsongstdlight';
         $pdf->setHeaderFont([$fontFamly, '', 5]);
         $pdf->setFooterFont([$fontFamly, '', 6]);
 

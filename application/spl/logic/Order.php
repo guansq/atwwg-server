@@ -221,6 +221,7 @@ class Order extends BaseLogic{
 
         // set header and footer fonts
         $fontFamly = 'cid0cs';
+        $fontFamly = 'stsongstdlight';
         $pdf->setHeaderFont([$fontFamly, '', 5]);
         $pdf->setFooterFont([$fontFamly, '', 6]);
 
@@ -304,7 +305,14 @@ tr>th{
   font-size: 0.8em;
 }
 
-.agreement-form div , .agreement-form ul{
+.pi-tab-th{
+   height: 20px;
+   line-height: 20px;
+}
+.pi-tab-td{
+   height: 20px;
+   line-height: 20px;
+   padding-right: 10px;
 }
 
 .agreement-form .title{
@@ -379,18 +387,18 @@ tr>th{
         
         <div>1、订单文件：<br>本订单所附下列文件是构成合同不可分割的部分</div>
         <div>2、订单明细（以下价格已经包含17%增值税、运输费用及其他所有税费）：</div>
-        <table style="width: 100%">
+        <table id="pi_tab" style="width: 100% ">
             <thead >
-            <tr >
-                <th width="26">行号</th>
-                <th width="70">料号</th>
-                <th width="180">物料名称</th>
-                <th width="60">项目</th>
-                <th width="65">交期</th>
-                <th width="26">数量</th>
-                <th width="26">单位</th>
-                <th width="40">单价</th>
-                <th>金额</th>
+            <tr>
+                <th width="26" class="pi-tab-th" style="">行号</th>
+                <th width="55" class="pi-tab-th">料号</th>
+                <th width="180" class="pi-tab-th">物料名称</th>
+                <th width="75" class="pi-tab-th">项目号</th>
+                <th width="50" class="pi-tab-th">交期</th>
+                <th width="26" class="pi-tab-th">数量</th>
+                <th width="26" class="pi-tab-th">单位</th>
+                <th width="40" class="pi-tab-th">单价</th>
+                <th class="pi-tab-th">金额</th>
             </tr>
             </thead>
             <tbody  >
@@ -403,15 +411,15 @@ EOD;
             $po['price_total'] += $pi['price_num']*$pi['price'];
             $ln = $i + 1;
             $html .= "<tr class=\"text-small\">
-                <td width=\"26\" class=\"content-center\">$ln</td>
-                <td width=\"70\">$pi[item_code]</td>
-                <td width=\"180\">$pi[item_name]</td>
-                <td width=\"60\">$pi[pro_no]</td>
-                <td width=\"65\">$confirmDate</td>
-                <td width=\"26\" class=\"content-right\">$pi[price_num]</td>
-                <td width=\"26\" class=\"content-center\">$pi[price_uom]</td>
-                <td width=\"40\" class=\"content-right\">$price</td>
-                <td class=\"content-right\">$subTotal</td>
+                <td width=\"26\" class=\"content-center pi-tab-td\">$ln</td>
+                <td width=\"55\" class=\"content-center pi-tab-td\">$pi[item_code]</td>
+                <td width=\"180\" class=\"content-center pi-tab-td\">$pi[item_name]</td>
+                <td width=\"75\" class=\"content-center pi-tab-td\" >$pi[pro_no]</td>
+                <td width=\"50\" class=\"content-center pi-tab-td\">$confirmDate</td>
+                <td width=\"26\" class=\"content-right pi-tab-td\">$pi[price_num]</td>
+                <td width=\"26\" class=\"content-center pi-tab-td\">$pi[price_uom]</td>
+                <td width=\"40\" class=\"content-center pi-tab-td\">$price</td>
+                <td class=\"content-right pi-tab-td\">$subTotal</td>
             </tr>";
 
             // 测试用
@@ -436,25 +444,23 @@ EOD;
             <tfoot>
             <tr>
                 <td class="content-center"colspan="2">合计:</td>
-                <td class="content-right" colspan="6">$yuan</td>
+                <td class="content-right" colspan="6">$yuan &nbsp;</td>
                 <td class="content-right">$po[price_total] </td>
             </tr>
             </tfoot>
         </table>
         <div>3、付款条件：$supInfo[pay_way]</div>
-        <div>4、卖方产品质量保证： 
-          <div style="padding-left: 10px">
-            a.卖方需要提供产品合格证书，产品质量符合我厂要求，质保期从使用之日起一年，或发货之日起18个月，如在质保期内发生质量问题问题，卖方接受无条件退货，并承担相应损失；<br>
-            b.按买方图纸要求和材料采购规范《ATW/GF-CLCGGF-2015》生产、检验；<br>
-            c.涉及铸造、锻造和热处理的原材料类产品出货需在材料和产品标注“炉号”、材质； 
-          </div>
+        <div>4、卖方产品质量保证：<br> 
+            &nbsp;a.卖方需要提供产品合格证书，产品质量符合我厂要求，质保期从使用之日起一年，或发货之日起18个月，如在质保期内发生质量问题问题，卖方接受无条件退货，并承担相应损失；<br>
+            &nbsp;b.按买方图纸要求和材料采购规范《ATW/GF-CLCGGF-2015》生产、检验；<br>
+            &nbsp;c.涉及铸造、锻造和热处理的原材料类产品出货需在材料和产品标注“炉号”、材质； 
         </div>
         <div>5、产品的交货单位、交货方法、运输方式、到达地点（包括专用线、码头）
           <div style="padding-left: 3em; ">
-            a.产品的收货单位：{$orgName}；<br>
-            b.包装、交货方法：卖方承担货物最终运达到买方到货地点之间的所有运费，并提供坚固、适合长途运输的包装；<br>
-            c.运输方式：快递，送货上门；<br>
-            d.到货地点和接货单位（或接货人）：{$orgReceiveAddress}，{$orgReceiver}，{$orgReceiverMobile};
+            &nbsp;a.产品的收货单位：{$orgName}；<br>
+            &nbsp;b.包装、交货方法：卖方承担货物最终运达到买方到货地点之间的所有运费，并提供坚固、适合长途运输的包装；<br>
+            &nbsp;c.运输方式：快递，送货上门；<br>
+            &nbsp;d.到货地点和接货单位（或接货人）：{$orgReceiveAddress}，{$orgReceiver}，{$orgReceiverMobile};
           </div>
         </div>
         <div>6、订单生效：本订单应在双方授权代表签字盖章后立即生效。</div>
@@ -518,7 +524,7 @@ EOD;
         // Close and output PDF document
         // This method has several options, check the source code documentation for more information.
         //$pdf->Output("$po[order_code].pdf" ); //'D'
-        $pdf->Output("$po[order_code].pdf", 'D'); //,'D'
+        $pdf->Output("$po[order_code].pdf"); //,'D'
         exit();
 
     }

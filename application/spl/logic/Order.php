@@ -416,10 +416,10 @@ EOD;
                 <td width=\"180\" class=\"content-center pi-tab-td\">$pi[item_name]</td>
                 <td width=\"75\" class=\"content-center pi-tab-td\" >$pi[pro_no]</td>
                 <td width=\"50\" class=\"content-center pi-tab-td\">$confirmDate</td>
-                <td width=\"26\" class=\"content-right pi-tab-td\">$pi[price_num]</td>
+                <td width=\"26\" class=\"content-center pi-tab-td\">$pi[price_num]</td>
                 <td width=\"26\" class=\"content-center pi-tab-td\">$pi[price_uom]</td>
                 <td width=\"40\" class=\"content-center pi-tab-td\">$price</td>
-                <td class=\"content-right pi-tab-td\">$subTotal</td>
+                <td class=\"content-center pi-tab-td\">$subTotal</td>
             </tr>";
 
             // 测试用
@@ -445,7 +445,7 @@ EOD;
             <tr>
                 <td class="content-center"colspan="2">合计:</td>
                 <td class="content-right" colspan="6">$yuan &nbsp;</td>
-                <td class="content-right">$po[price_total] </td>
+                <td class="content-center">$po[price_total] </td>
             </tr>
             </tfoot>
         </table>

@@ -259,6 +259,22 @@ class Order extends Base{
 
     /**
      * Author: WILL<314112362@qq.com>
+     * Describe: 下载送货单
+     */
+    public function downDeliverOrder(){
+        $id = input('id');
+        $poLogic = model('Order', 'logic');
+        $sup_code = session('spl_user')['sup_code'];
+        $po = $poLogic->where('sup_code', $sup_code)->where('id', $id)->find();
+        if(empty($po)){
+            $this->error('无效的id='.$id, '');
+        }
+
+        return $poLogic->downDeliverOrder($po);
+    }
+
+    /**
+     * Author: WILL<314112362@qq.com>
      * Time: ${DAY}
      * Describe:导出表格
      */

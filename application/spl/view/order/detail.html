@@ -42,7 +42,7 @@
       {/if}
         <span>*下载合同模版后请 打印 盖公章后 扫描或者拍照上传由平台运营人员审核通过后会通过绑定邮箱和手机通知到您。</span>
     </div>
-    <div class="bottom">订单采购内容 <button class="btn btn-primary">打印送货单</button>
+    <div class="bottom">订单采购内容 <button id="print_delivery_order_btn" class="btn btn-primary">打印送货单</button>
       <button class="btn btn-primary" id="order_cancel" {if $statusButton.cancelable eq 1}{else}disabled="true"{/if}>取消订单</button><button class="btn btn-primary" id="order_confirm" {if $statusButton.confirmorderable eq 1 }{else}disabled="true"{/if} >确认订单</button></div>
   </div>
   <div class="table-responsive">
@@ -227,7 +227,11 @@
         }
       });
     });
-  })
+  });
 
+  
+  $("#print_delivery_order_btn").click(function(){
+    open('{:url("$classuri/downDeliverOrder")}?id={$codeInfo.id}');
+  });
 </script>
 {/block}

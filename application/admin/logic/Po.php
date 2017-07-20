@@ -264,11 +264,8 @@ class Po extends BaseLogic{
             }
             $res = $this->placeOrderAll($itemInfo, $docTypeCode);//内部生成订单
             //dump($res);die;
-            $data = [];
-            //dump($res);die;
-
             if($res['code'] != 2000){
-                return resultArray(6000, '下订单失败', $data);
+                return resultArray($res);
             }
             //生成一条po记录
             $poData = [
@@ -355,7 +352,7 @@ class Po extends BaseLogic{
         $httpRet = HttpService::curl(getenv('APP_API_U9').'index/po', $sendData);
         $res = json_decode($httpRet, true);//成功回写数据库
         if($res['code'] != 2000){
-            resultArray(6000,'',$res);
+            return  resultArray($res);
         }
         //dump($res['result']);die;
         return ['code' => 2000, 'msg' => '', 'data' => $res['result']];

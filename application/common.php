@@ -406,12 +406,12 @@ function atwMoney($num,$ispre = true){
 function initPerVal($num,$isMul = true,$ispre = ''){
     if($isMul){
         if($ispre == ''){
-            return $num = empty($num) ? '' : (number_format($num*100, 2)).'%';
+            return $num = empty($num) ? '0.00%' : (number_format($num*100, 2)).'%';
         }else{
-            return $num = empty($num) ? '' : (number_format($num*100, 2));
+            return $num = empty($num) ? '0.00%' : (number_format($num*100, 2));
         }
     }else{
-        return $num = empty($num) ? '' : intval($num)/100;
+        return $num = empty($num) ? '0.00' : intval($num)/100;
     }
 }
 

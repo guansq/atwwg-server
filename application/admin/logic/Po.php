@@ -355,7 +355,7 @@ class Po extends BaseLogic{
         $httpRet = HttpService::curl(getenv('APP_API_U9').'index/po', $sendData);
         $res = json_decode($httpRet, true);//成功回写数据库
         if($res['code'] != 2000){
-            returnjson($res);
+            resultArray(6000,'',$res);
         }
         //dump($res['result']);die;
         return ['code' => 2000, 'msg' => '', 'data' => $res['result']];

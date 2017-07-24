@@ -79,7 +79,7 @@ class Item extends Baselogic{
     public function getRelationSup($item_code){
         $list = model('U9SupItem')
             ->alias('a')
-            ->field('a.*,b.tech_score,b.risk_level,b.risk_level,b.credit_total')
+            ->field('a.*,b.tech_score,b.risk_level,b.credit_total')
             ->join('supplier_info b', 'a.sup_code = b.code', 'LEFT')
             ->where("item_code", "$item_code")
             ->select();

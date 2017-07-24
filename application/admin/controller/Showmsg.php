@@ -47,6 +47,9 @@ class Showmsg extends BaseController{
         //高信用風險供应商数量
         $creditRiskCount = $suppLogic->countCreditRisk();
         $this->assign('creditRiskCount', $creditRiskCount);
+        //高供应風險供应商数量
+        $supplyRiskCount = $suppLogic->where('risk_level','>=',2)->count();;
+        $this->assign('supplyRiskCount', $supplyRiskCount);
         //运营情况一览表
         $messLogic = model('AskReply', 'logic');
         $msgNum = $messLogic->getAskUnreadNum();

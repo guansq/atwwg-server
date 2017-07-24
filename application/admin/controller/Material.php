@@ -20,9 +20,9 @@ class Material extends BaseController{
     protected $table = 'SystemItem';
     protected $title = '物料管理';
     const RISKLEVEL = [
-        '1' => '底',
-        '2' => '中',
-        '3' => '高',
+        '1' => '低',
+        '2' => '高',
+        '3' => '极高',
     ];
     public function index(){
         //得到全部INFO

@@ -16,9 +16,9 @@ class Supporter extends BaseController{
     protected $table = 'SystemArea';
     protected $title = '供应商管理';
     const RISKLEVEL        = [
-        '1' => '底',
-        '2' => '中',
-        '3' => '高',
+        '1' => '低',
+        '2' => '高',
+        '3' => '极高',
     ];
     const MSGPASSTITLE     = '恭喜，您的资质审核通过';
     const MSGREFUSETITLE   = '抱歉，您的资质审核没有通过';
@@ -87,6 +87,11 @@ class Supporter extends BaseController{
         //高信用风险的
         if(!empty($tag) && $tag == 'credit_risk'){
             $where['credit_total'] = ['<=', 85];
+        }
+
+        //高供应风险的
+        if(!empty($tag) && $tag == 'supply_risk'){
+            $where['risk_level'] = ['>=', 2];
         }
         $list = $logicSupInfo->getListInfo($start, $length, $where);//分页
         $returnArr = [];

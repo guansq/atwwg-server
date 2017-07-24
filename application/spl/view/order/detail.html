@@ -19,7 +19,9 @@
   </div>
   <div class="atw-orderdet-title">订单基本信息 <span class="glyphicon glyphicon-circle-arrow-left"></span></div>
   <div class="atw-orderdet-list">
-    <div class="top"><p>订单编号：{$codeInfo.order_code}</p>
+    <div class="top">
+      <input type="hidden" id="poid_hid" value="{$codeInfo.id}">
+      <p>订单编号：{$codeInfo.order_code}</p>
       <p>订单合同签订日期：{$codeInfo.contract_time}</p>
     </div>
     <div class="center" >
@@ -40,7 +42,8 @@
      {else}
       <img src="/static/spl/img/add.png" alt=""  >
       {/if}
-        <span>*下载合同模版后请 打印 盖公章后 扫描或者拍照上传由平台运营人员审核通过后会通过绑定邮箱和手机通知到您。</span>
+      <button id="re_upload_btn" class="btn btn-danger">清空图片</button>
+      <span>*下载合同模版后请 打印 盖公章后 扫描或者拍照上传由平台运营人员审核通过后会通过绑定邮箱和手机通知到您。</span>
     </div>
     <div class="bottom">订单采购内容 <button id="print_delivery_order_btn" class="btn btn-primary">打印送货单</button>
       <button class="btn btn-primary" id="order_cancel" {if $statusButton.cancelable eq 1}{else}disabled="true"{/if}>取消订单</button><button class="btn btn-primary" id="order_confirm" {if $statusButton.confirmorderable eq 1 }{else}disabled="true"{/if} >确认订单</button></div>
@@ -232,6 +235,39 @@
   
   $("#print_delivery_order_btn").click(function(){
     open('{:url("$classuri/downDeliverOrder")}?id={$codeInfo.id}');
+  });
+
+  $("#re_upload_btn").click(function(){
+    var poId = $('#poid_hid').val();
+    layer.confirm('清空图片后，您需要重新上传合同影像，是否继续操作？', {
+      btn: ['确定','取消']
+    }, function(index){
+      layer.close(index);
+      $.ajax({
+        'url' : '{:url("Order/cleanContractImg")}',
+        'type' : 'POST',
+        //'dataType' : 'html',
+        'data' : {
+          id:poId
+        },
+        'complete' : function(){
+          //layer.closeAll();
+        },
+        'success' : function(obj){
+          layer.closeAll();
+          if(obj.code != 2000){
+            layer.alert(obj.msg);
+            return false;
+          }
+          $.form.reload();
+          //console.log(obj);
+        },
+        'error' : function(){
+          layer.closeAll();
+          layer.alert('请求失败');
+        }
+      });
+    });
   });
 </script>
 {/block}

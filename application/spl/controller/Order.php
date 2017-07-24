@@ -42,7 +42,7 @@ class Order extends Base{
                 $where['contract_time'] = array('elt', strtotime($data['contract_endtime']));
             }
         }
-        $list = $orderLogic->getPolist($where,$tag);
+        $list = $orderLogic->getPolist($where, $tag);
 
         $returnInfo = [];
         $status = [
@@ -118,7 +118,11 @@ class Order extends Base{
             $item['sup_update_date_str'] = empty($item['sup_update_date']) ? '' : date('Y-m-d', $item['sup_update_date']);
         }
         $codeInfo = $offerLogic->getOrderListOneInfo($pr_id);
-        $contractable = in_array($codeInfo[0]['status'], array('sup_sure', 'upload_contract')) ? '1' : '0';
+        $contractable = in_array($codeInfo[0]['status'], array(
+            'sup_sure',
+            'upload_contract',
+            'contract_refuse'
+        )) ? '1' : '0';
         $cancelable = in_array($codeInfo[0]['status'], array('init', 'atw_sure')) ? '1' : '0';
         $confirmorderable = in_array($codeInfo[0]['status'], array('init', 'atw_sure')) ? '1' : '0';
         $confirmable = !in_array($codeInfo[0]['status'], ['sup_cance', 'finish']) ? '1' : '0';
@@ -220,6 +224,22 @@ class Order extends Base{
         }
     }
 
+    /**
+     * Author: WILL<314112362@qq.com>
+     * Time: ${DAY}
+     * Describe: 供应商 clean 合同影像
+     * @return \think\response\Json
+     */
+    public function cleanContractImg(){
+        $id = input('id');
+        $orderLogic = model('Order', 'logic');
+        $dbRet = $orderLogic->where('id', $id)->update(['contract' => '', 'contract_time' => null,'status'=>'sup_sure']);
+        if($dbRet){
+            returnJson(2000);
+        }
+        returnJson(5000);
+    }
+
 
     public function add(){
         if(request()->isPost()){
@@ -292,7 +312,7 @@ class Order extends Base{
         $PHPSheet->setCellValue('D1', '合同签订日期');
         $num = 1;
         foreach($list as $k => $v){
-            $v['exec_desc'] = str_replace('<br>',"\r\n",$v['exec_desc']);
+            $v['exec_desc'] = str_replace('<br>', "\r\n", $v['exec_desc']);
             $num = $num + 1;
             $PHPSheet->setCellValue('A'.$num, $v['order_code'])
                 ->setCellValue('B'.$num, $v['exec_desc'])
@@ -301,7 +321,7 @@ class Order extends Base{
         }
         $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel, 'Excel2007');//按照指定格式生成Excel文件，'Excel2007’表示生成2007版本的xlsx，
         $PHPWriter->save($path.'/poItemList.xlsx'); //表示在$path路径下面生成ioList.xlsx文件
-        $file_name = "安特威采购订单".date('Y-m-d',time()).".xlsx";
+        $file_name = "安特威采购订单".date('Y-m-d', time()).".xlsx";
         $contents = file_get_contents($path.'/poItemList.xlsx');
         $file_size = filesize($path.'/poItemList.xlsx');
         header("Content-type: application/octet-stream;charset=utf-8");

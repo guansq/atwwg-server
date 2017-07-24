@@ -128,6 +128,10 @@ class Offer extends Base{
             'status' => $status,//改变 状态
             'read_at' => $now,//记录阅读时间
         ];
+        $io = $offerLogic->find($key);
+        if($io['quote_endtime'] <= $now){
+            returnJson(4000,'报价期限已过。');
+        }
         $list = $offerLogic->updateData($key, $dataArr);
         //dump($list);die;
         if($list !== false){
@@ -196,6 +200,7 @@ class Offer extends Base{
     }
 
     public function uploadexcel(){
+        $now = time();
         //$file = request()->file('excel');
         //$info = $file->validate(['size'=>102400,'ext'=>'xlsx,xls,csv'])->move(ROOT_PATH . 'public' . DS . 'upload','');
         $path = input('src');
@@ -237,7 +242,7 @@ class Offer extends Base{
                 // $data['req_date'] = intval(($data['req_date'] - 25569) * 3600 * 24); //转换成1970年以来的秒数
                 // gmdate('Y-m-d H:i:s',$n);//格式化时间,不是用date哦, 时区相差8小时的
                 //检查id是否存在
-                if(!empty($info) && isset($info['status']) && $info['status'] == 'init'){//不存在
+                if(!empty($info) && isset($info['status']) && $info['status'] == 'init' && $info['quote_endtime'] >= $now){//不存在
                     $key = $data['id'];
                     if($data['req_date'] < time()){
                         continue;

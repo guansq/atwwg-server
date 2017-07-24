@@ -13,35 +13,53 @@
     </p>
     <section class="rd_chart">
       <ul>
-        <a data-open="/requireorder/index?status=hang"><li style="background: #63c2eb;">
-          <span>待询价请购单</span>
-          <i>{$quoteNum}</i>
-        </li></a>
-        <a data-open="/order/index?status=exceed"><li style="background: #28b878;">
-          <span>订单逾期警告</span>
-          <i>{$poItemNum}</i>
-        </li></a>
-        <a data-open="/supporter/index?tag=qlf_exceed"><li style="background: #842c98;">
-          <span>供应商资质过期</span>
-          <i>{$pastSuppNum}</i>
-        </li></a>
-        <a data-open="/supporter/index?tag=qlf_uncheck"><li style="background: #6cd96c;">
-          <span>供应商资质待审核</span>
-          <i>{$unCheckNum}</i>
-        </li></a>
+        <a data-open="/requireorder/index?status=init">
+          <li style="background: #63c2eb;">
+            <span>待询价请购单</span>
+            <i>{$initIoNum}</i>
+          </li>
+        </a>
+        <a data-open="/requireorder/index?status=hang">
+          <li style="background: #63c2eb;">
+            <span>挂起的请购单</span>
+            <i>{$hungIoNum}</i>
+          </li>
+        </a>
+        <a data-open="/order/index?status=exceed">
+          <li style="background: #28b878;">
+            <span>订单逾期警告</span>
+            <i>{$poItemNum}</i>
+          </li>
+        </a>
+        <a data-open="/supporter/index?tag=qlf_exceed">
+          <li style="background: #842c98;">
+            <span>供应商资质过期</span>
+            <i>{$pastSuppNum}</i>
+          </li>
+        </a>
+        <a data-open="/supporter/index?tag=qlf_uncheck">
+          <li style="background: #6cd96c;">
+            <span>供应商资质待审核</span>
+            <i>{$unCheckNum}</i>
+          </li>
+        </a>
 
-        <a data-open="/enquiryorder/index?status=flow"><li style="background: #ffb847;">
-          <span>流拍询价数量</span>
-          <i>{$giveupNum}</i>
-        </li></a>
-        <a data-open="/supporter/index?tag=credit_risk"> <li style="background: red;">
-          <span>高信用风险数量</span>
-          <i>{$creditRiskCount}</i>
-        </li></a>
+        <a data-open="/enquiryorder/index?status=flow">
+          <li style="background: #ffb847;">
+            <span>流拍询价数量</span>
+            <i>{$giveupNum}</i>
+          </li>
+        </a>
+        <a data-open="/supporter/index?tag=credit_risk">
+          <li style="background: red;">
+            <span>高信用风险数量</span>
+            <i>{$creditRiskCount}</i>
+          </li>
+        </a>
       </ul>
     </section>
     <div class="rd_table">
-      <form class="search form-inline animated form-search" onsubmit="return false" method="get" action ="{:url('Showmsg/index')}" >
+      <form class="search form-inline animated form-search" onsubmit="return false" method="get" action="{:url('Showmsg/index')}">
         <span>运营情况一览表（默认一周）</span>
         <input type="text" name="startTime" value="{$Think.get.startTime|default=''}" class="date_time form-control" style="min-width: 200px;">
         到
@@ -74,7 +92,7 @@
 
 
     <div class="rd_table">
-      <form class="search form-inline animated form-search" onsubmit="return false" method="get" action ="{:url('Showmsg/index')}" >
+      <form class="search form-inline animated form-search" onsubmit="return false" method="get" action="{:url('Showmsg/index')}">
         <span>单一资源待审核报价单</span>
       </form>
       <table id="need_ck_io_table" class="cell-border table table-bordered" width="100%" cellspacing="0" style="margin-bottom: 20px;">

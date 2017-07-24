@@ -192,6 +192,8 @@ class RequireOrder extends BaseLogic{
         return $this->where('status', 'IN' ,['init','hang'])->count();
     }
 
+
+
     /**
      * 统计流标的请购单
      */

@@ -398,7 +398,7 @@ tr>th{
                 <th width="26" class="pi-tab-th">数量</th>
                 <th width="26" class="pi-tab-th">单位</th>
                 <th width="40" class="pi-tab-th">单价</th>
-                <th class="pi-tab-th">金额</th>
+                <th width="70" class="pi-tab-th">金额</th>
             </tr>
             </thead>
             <tbody  >
@@ -408,7 +408,16 @@ EOD;
             $confirmDate = date('Y-m-d', $pi['sup_confirm_date']);
             $price = number_format($pi['price'], 2);
             $subTotal = number_format($pi['price_num']*$pi['price'], 2);
-            $po['price_total'] += $pi['price_num']*$pi['price'];
+
+            //双单位的物料 不计算总价。
+            if($pi['price_uom'] != $pi['tc_uom']){
+                $pi['price'] =0;
+                $pi['price_num'] ='';
+                $subTotal='实际重量结算';
+            }else{
+                $po['price_total'] += $pi['price_num']*$pi['price'];
+            }
+
             $ln = $i + 1;
             $html .= "<tr class=\"text-small\">
                 <td width=\"26\" class=\"content-center pi-tab-td\">$ln</td>
@@ -417,9 +426,9 @@ EOD;
                 <td width=\"75\" class=\"content-center pi-tab-td\" >$pi[pro_no]</td>
                 <td width=\"50\" class=\"content-center pi-tab-td\">$confirmDate</td>
                 <td width=\"26\" class=\"content-center pi-tab-td\">$pi[price_num]</td>
-                <td width=\"26\" class=\"content-center pi-tab-td\">$pi[price_uom]</td>
+                <td width=\"26\" class=\"content-center pi-tab-td\">$pi[tc_uom]</td>
                 <td width=\"40\" class=\"content-center pi-tab-td\">$price</td>
-                <td class=\"content-center pi-tab-td\">$subTotal</td>
+                <td width=\"70\" class=\"content-center pi-tab-td\">$subTotal</td>
             </tr>";
 
             // 测试用

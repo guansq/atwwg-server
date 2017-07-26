@@ -556,17 +556,9 @@ EOD;
             return $this->error('没有PI,po.id='.$po['id']);
         }
 
-        $orgName = getSysconf('org_name', '苏州安特威阀门有限公司');
         $orgAddress = getSysconf('org_address', '苏州吴江汾湖开发区越秀路988号');
         $orgTel = getSysconf('org_tel', '0512-82880588');
         $orgFax = getSysconf('org_fax', '0512-82079059');
-        $orgBankDeposit = getSysconf('org_bank_deposit', '中国农业银行吴江汾湖支行');
-        $orgBankAccount = getSysconf('org_bank_account', '10543701040015106');
-        $orgTaxNo = getSysconf('org_tax_no', '913205096829757874');
-        $orgReceiveAddress = getSysconf('org_receive_address', '苏州吴江汾湖开发区越秀路988号');
-        $orgReceiver = getSysconf('org_receiver', '沈斌');
-        $orgReceiverMobile = getSysconf('org_receiver_mobile', '13962546667');
-        $today = date('Y-m-d', time());
 
         //dd($supInfo->toJson());
         // create new PDF document

@@ -37,4 +37,29 @@ class Base extends BasicSpl{
             $this->redirect('@spl/login');
         }
     }*/
+
+
+    /**
+     * 获得请求参参数
+     */
+    protected function getReqParams($keys = []){
+        $params = input("param.");
+        $ret = [];
+        //        if(empty($params)){
+        //            return [];
+        //        }
+        if(empty($keys)){
+            return $params;
+        }
+
+        foreach($keys as $k => $v){
+            if(is_numeric($k)){ // 一维数组
+                $ret[$v] = array_key_exists($v, $params) ? $params[$v] : '';
+                continue;
+            }
+            $ret[$k] = array_key_exists($k, $params) ? $params[$k] : (empty($v) ? '' : $v);
+        }
+
+        return $ret;
+    }
 }

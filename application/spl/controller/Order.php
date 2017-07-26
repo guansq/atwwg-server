@@ -11,6 +11,7 @@ namespace app\spl\controller;
 use PHPExcel;
 use PHPExcel_IOFactory;
 use service\HttpService;
+use think\Request;
 
 class Order extends Base{
     protected $title = '采购订单';
@@ -126,12 +127,14 @@ class Order extends Base{
         )) ? '1' : '0';
         $cancelable = in_array($codeInfo[0]['status'], array('init', 'atw_sure')) ? '1' : '0';
         $confirmorderable = in_array($codeInfo[0]['status'], array('init', 'atw_sure')) ? '1' : '0';
-        $confirmable = !in_array($codeInfo[0]['status'], ['sup_cance', 'finish']) ? '1' : '0';
+        $confirmable = !in_array($codeInfo[0]['status'], ['sup_cancel', 'finish']) ? '1' : '0';
+        $printRcvAble = !in_array($codeInfo[0]['status'], ['sup_cancel', 'finish']) ? '1' : '0';
         $statusButton = array(
             'contractable' => $contractable,
             'cancelable' => $cancelable,
             'confirmable' => $confirmable,
-            'confirmorderable' => $confirmorderable
+            'confirmorderable' => $confirmorderable,
+            'printRcvAble' => $printRcvAble
         );
         $imgInfos = explode(',', $codeInfo[0]['contract']);
         $imgInfos = array_filter($imgInfos);
@@ -165,15 +168,14 @@ class Order extends Base{
         // 通知到责任采购
         $supCode = session('spl_user')['sup_code'];
         $supInfo = $supLogic->findByCode($supCode);
-
-        $msg ="供应商[$supInfo[code] $supInfo[name]]取消了采购订单[$po[order_code]]。供应商联系方式：$supInfo[ctc_name] $supInfo[mobile] $supInfo[phone] $supInfo[email]。 \n -- 物供平台 ".date('Y-m-d H:i');
+        $msg = "供应商[$supInfo[code] $supInfo[name]]取消了采购订单[$po[order_code]]。供应商联系方式：$supInfo[ctc_name] $supInfo[mobile] $supInfo[phone] $supInfo[email]。 \n -- 物供平台 ".date('Y-m-d H:i');
         if(!empty($supInfo['purch_email'])){
             $sendData = [
                 'rt_appkey' => getenv('APP_RT_APP_KEY'),
                 'fromName' => '安特威物供平台',//发送人名
                 'to' => $supInfo['purch_email'],
                 'subject' => '供应商取消采购订单',
-                'html' => $msg.' 本邮件由安特威物供平台系统发送，请勿回复。' ,
+                'html' => $msg.' 本邮件由安特威物供平台系统发送，请勿回复。',
                 'from' => 'atwwg@antiwearvalve.com',//平台的邮件头
             ];
             HttpService::curl(getenv('APP_API_MSG').'SendEmail/sendHtml', $sendData);
@@ -198,6 +200,22 @@ class Order extends Base{
         }else{
             return json(['code' => 4000, 'msg' => '更新失败', 'data' => []]);
         }
+    }
+
+    public function printRcv(Request $request){
+        $poLogic = model('Order', 'logic');
+        $reqParmas = $this->getReqParams();
+        if($request->isGet()){
+            $piList = $poLogic->getOrderDetailInfo($reqParmas['id']);
+            $this->assign('piList', $piList);
+            $this->assign('id', $reqParmas['id']);
+            return view();
+        }elseif($request->isPost()){
+            $rcvLogic = model('PoReceive', 'logic');
+            $ret = $rcvLogic->createReturnCode($reqParmas);
+            returnJson($ret);
+        }
+
     }
 
     /**

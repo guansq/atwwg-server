@@ -38,14 +38,17 @@
       </span>
 
       {if $statusButton.contractable eq 1}
-      <img src="/static/spl/img/add.png" alt="" class="uploadImg" data-modal='{:url("$classuri/add")}?id={$codeInfo.id}&contract={$codeInfo.contract}' >
+      <img src="/static/spl/img/add.png" alt="" class="uploadImg" data-modal='{:url("$classuri/add")}?id={$codeInfo.id}&contract={$codeInfo.contract}'  >
      {else}
       <img src="/static/spl/img/add.png" alt=""  >
       {/if}
       <button id="re_upload_btn" class="btn btn-danger">清空图片</button>
       <span>*下载合同模版后请 打印 盖公章后 扫描或者拍照上传由平台运营人员审核通过后会通过绑定邮箱和手机通知到您。</span>
     </div>
-    <div class="bottom">订单采购内容 <button id="print_delivery_order_btn" class="btn btn-primary">打印送货单</button>
+    <div class="bottom">订单采购内容
+      {if $statusButton.printRcvAble eq 1}
+      <button id="print_delivery_order_btn" class="btn btn-primary"  data-modal='{:url("$classuri/printRcv")}?id={$codeInfo.id}' data-title="打印送货单">打印送货单</button>
+      {/if}
       <button class="btn btn-primary" id="order_cancel" {if $statusButton.cancelable eq 1}{else}disabled="true"{/if}>取消订单</button><button class="btn btn-primary" id="order_confirm" {if $statusButton.confirmorderable eq 1 }{else}disabled="true"{/if} >确认订单</button></div>
   </div>
   <div class="table-responsive">
@@ -230,11 +233,6 @@
         }
       });
     });
-  });
-
-  
-  $("#print_delivery_order_btn").click(function(){
-    open('{:url("$classuri/downDeliverOrder")}?id={$codeInfo.id}');
   });
 
   $("#re_upload_btn").click(function(){

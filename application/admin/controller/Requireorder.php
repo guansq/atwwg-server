@@ -106,7 +106,7 @@ class Requireorder extends BaseController{
                             }
                         }else{
                             //选择供应商
-                            $inquiry = '<a class="select_sell" href="javascript:void(0);" onclick="bomb_box(event,\''.$v['pr_code'].'\',\''.$v['item_code'].'\',\''.$v['id'].'\');" data-url="'
+                            $inquiry = '<a class="select_sell" href="javascript:void(0);" onclick="bomb_box1(event,\''.$v['pr_code'].'\',\''.$v['item_code'].'\',\''.$v['id'].'\');" data-url="'
                                 .url('requireorder/selectSup',array('pr_code'=>$v['pr_code'],'item_code'=>$v['item_code'])).'">选择供应商</a>';
                             $v['check_status'] = $checkStatus[$v['check_status']];
                         }

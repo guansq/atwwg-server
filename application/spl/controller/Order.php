@@ -10,6 +10,7 @@ namespace app\spl\controller;
 
 use PHPExcel;
 use PHPExcel_IOFactory;
+use service\HttpService;
 
 class Order extends Base{
     protected $title = '采购订单';
@@ -152,13 +153,40 @@ class Order extends Base{
 
     public function cancel(){
         $id = input('id');
-        $offerLogic = model('Order', 'logic');
-        $detail = $offerLogic->updateStatus($id, 'sup_cancel');
-        if($detail){
-            return json(['code' => 2000, 'msg' => '成功', 'data' => []]);
-        }else{
-            return json(['code' => 4000, 'msg' => '更新失败', 'data' => []]);
+        $poLogic = model('Order', 'logic');
+        $supLogic = model('SupplierInfo', 'logic');
+        $po = $poLogic->find($id);
+        if(empty($po)){
+            returnJson(4004);
         }
+        //更改po.status
+        $po->status = 'sup_cancel';
+        // $po->save();  //FIXME
+        // 通知到责任采购
+        $supCode = session('spl_user')['sup_code'];
+        $supInfo = $supLogic->findByCode($supCode);
+
+        $msg ="供应商[$supInfo[code] $supInfo[name]]取消了采购订单[$po[order_code]]。供应商联系方式：$supInfo[ctc_name] $supInfo[mobile] $supInfo[phone] $supInfo[email]。 \n -- 物供平台 ".date('Y-m-d H:i');
+        if(!empty($supInfo['purch_email'])){
+            $sendData = [
+                'rt_appkey' => getenv('APP_RT_APP_KEY'),
+                'fromName' => '安特威物供平台',//发送人名
+                'to' => $supInfo['purch_email'],
+                'subject' => '供应商取消采购订单',
+                'html' => $msg,
+                'from' => 'tan3250204@sina.com',//平台的邮件头
+            ];
+            HttpService::curl(getenv('APP_API_MSG').'SendEmail/sendHtml', $sendData);
+        }
+        if(!empty($supInfo['purch_mobile'])){
+            $sendData = [
+                'mobile' => $supInfo['purch_mobile'],
+                'rt_appkey' => getenv('APP_RT_APP_KEY'),
+                'text' => $msg,
+            ];
+            HttpService::curl(getenv('APP_API_MSG').'SendSms/sendText', $sendData);//sendSms($data)
+        }
+        return json(['code' => 2000, 'msg' => '成功', 'data' => []]);
     }
 
     public function orderconfirm(){
@@ -233,7 +261,11 @@ class Order extends Base{
     public function cleanContractImg(){
         $id = input('id');
         $orderLogic = model('Order', 'logic');
-        $dbRet = $orderLogic->where('id', $id)->update(['contract' => '', 'contract_time' => null,'status'=>'sup_sure']);
+        $dbRet = $orderLogic->where('id', $id)->update([
+            'contract' => '',
+            'contract_time' => null,
+            'status' => 'sup_sure'
+        ]);
         if($dbRet){
             returnJson(2000);
         }

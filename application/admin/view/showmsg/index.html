@@ -25,14 +25,27 @@
             <i>{$hungIoNum}</i>
           </li>
         </a>
+        <a data-open="/enquiryorder/index?status=flow">
+          <li style="background: #63c2eb;">
+            <span>流拍询价数量</span>
+            <i>{$giveupNum}</i>
+          </li>
+        </a>
+        <a data-open="/order/index?status=sup_cancel">
+          <li style="background: #ffb45d;">
+            <span>订单取消数量</span>
+            <i>{$poCancelNum}</i>
+          </li>
+        </a>
         <a data-open="/order/index?status=exceed">
-          <li style="background: #28b878;">
+          <li style="background: #ffb45d;">
             <span>订单逾期警告</span>
             <i>{$poItemNum}</i>
           </li>
         </a>
+
         <a data-open="/supporter/index?tag=qlf_exceed">
-          <li style="background: #842c98;">
+          <li style="background: #6cd96c;">
             <span>供应商资质过期</span>
             <i>{$pastSuppNum}</i>
           </li>
@@ -44,20 +57,15 @@
           </li>
         </a>
 
-        <a data-open="/enquiryorder/index?status=flow">
-          <li style="background: #ffb847;">
-            <span>流拍询价数量</span>
-            <i>{$giveupNum}</i>
-          </li>
-        </a>
+
         <a data-open="/supporter/index?tag=credit_risk">
-          <li style="background: red;">
+          <li style="background: #ff6c00;">
             <span>高信用风险数量</span>
             <i>{$creditRiskCount}</i>
           </li>
         </a>
         <a data-open="/supporter/index?tag=supply_risk">
-          <li style="background: red;">
+          <li style="background: #ff6c00;">
             <span>高供应风险数量</span>
             <i>{$supplyRiskCount}</i>
           </li>

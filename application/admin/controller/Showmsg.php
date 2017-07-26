@@ -6,7 +6,11 @@
  * Time: 9:33
  */
 
+
+
 namespace app\admin\controller;
+
+use app\common\model\Po as poModel;
 
 class Showmsg extends BaseController{
     protected $table = 'AskReply';
@@ -32,6 +36,10 @@ class Showmsg extends BaseController{
         //订单逾期警告    //dump($quoteNum);
         $poItemNum = $poLogic->getPoItemNum();
         $this->assign('poItemNum', $poItemNum);
+
+        //订单取消    //dump($quoteNum);
+        $poCancelNum = poModel::where('status','sup_cancel')->count();
+        $this->assign('poCancelNum', $poCancelNum);
 
         //供应商资质过期
         $suppLogic = model('Supporter', 'logic');

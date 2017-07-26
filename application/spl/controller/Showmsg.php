@@ -17,7 +17,7 @@ class Showmsg extends Base{
     public function index(){
         $current_time = time();
         $quoteLogic = model('Offer','logic');
-        $itemLogic = model('Order','logic');
+        $poLogic = model('Order','logic');
         $suppLogic = model('Supportercenter','logic');
 
         $sup_code = session('spl_user.sup_code');
@@ -28,7 +28,7 @@ class Showmsg extends Base{
         ];
         $waitQuoteNum = $quoteLogic->getWaitQuoteNum($where);
         //订单逾期警告
-        $poItemNum = $itemLogic->getPoItemNum($sup_code);
+        $poItemNum = $poLogic->getPoItemNum($sup_code);
         //资质过期提醒
         $pastSuppNum = $suppLogic->getPastSuppNum($current_time,$sup_code);
         //新订单
@@ -36,19 +36,24 @@ class Showmsg extends Base{
             'sup_code' => $sup_code,
             'status' => 'init'
         ];
-        $initPoNum = $itemLogic->getInitPoNum($where);
+        $initPoNum = $poLogic->getInitPoNum($where);
         //合同未回传
         $where = [
             'sup_code' => $sup_code,
             'status' => 'atw_sure'
         ];
-        $atwSureNum = $itemLogic->getInitPoNum($where);
+        $atwSureNum = $poLogic->getInitPoNum($where);
+
+        // 合同被拒
+        $where['status'] = 'contract_refuse';
+        $contractRefuseNum = $poLogic->where($where)->count();
 
         $this->assign('waitQuoteNum',$waitQuoteNum);
         $this->assign('poItemNum',$poItemNum);
         $this->assign('pastSuppNum',$pastSuppNum);
         $this->assign('initPoNum',$initPoNum);
         $this->assign('atwSureNum',$atwSureNum);
+        $this->assign('contractRefuseNum',$contractRefuseNum);
         $this->assign('title',$this->title);
         return view();
     }

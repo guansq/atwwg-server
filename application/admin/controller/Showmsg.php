@@ -14,7 +14,7 @@ use app\common\model\Po as poModel;
 
 class Showmsg extends BaseController{
     protected $table = 'AskReply';
-    protected $title = '首页';
+    protected $title = '信息中心';
 
     public function index(){
         $current_time = time();

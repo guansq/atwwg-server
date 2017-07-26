@@ -161,7 +161,7 @@ class Order extends Base{
         }
         //更改po.status
         $po->status = 'sup_cancel';
-        // $po->save();  //FIXME
+        $po->save();  //FIXME
         // 通知到责任采购
         $supCode = session('spl_user')['sup_code'];
         $supInfo = $supLogic->findByCode($supCode);
@@ -173,8 +173,8 @@ class Order extends Base{
                 'fromName' => '安特威物供平台',//发送人名
                 'to' => $supInfo['purch_email'],
                 'subject' => '供应商取消采购订单',
-                'html' => $msg,
-                'from' => 'tan3250204@sina.com',//平台的邮件头
+                'html' => $msg.' 本邮件由安特威物供平台系统发送，请勿回复。' ,
+                'from' => 'atwwg@antiwearvalve.com',//平台的邮件头
             ];
             HttpService::curl(getenv('APP_API_MSG').'SendEmail/sendHtml', $sendData);
         }

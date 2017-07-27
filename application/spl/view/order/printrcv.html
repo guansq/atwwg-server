@@ -13,7 +13,7 @@
       </tr>
       </thead>
       <tbody>
-      {volist name='piList' id='pi' key='key' empty='<tr><td colspan=5>没有数据 </td></tr>'}
+      {volist name='piList' id='pi' key='key' empty='<tr><td colspan=5>没有数据</td></tr>'}
       <tr>
         <td class="hidden"><input type="text" name="rcv[{$pi.id}][id]" value="{$pi.id}"></td>
         <td>{$pi.item_name}</td>
@@ -35,7 +35,15 @@
 
 </form>
 <script>
-  function callback(){
-    layer.closeAll();
+  function callback(ret){
+    if(ret.code != 1){
+      layer.alert(ret.msg);
+      return false;
+    }
+    if(!ret.data.rcvCode){
+      layer.alert('打印失败。');
+      return false;
+    }
+    open('{:url("$classuri/downDeliverOrder")}?rcvCode='+ret.data.rcvCode);
   }
 </script>

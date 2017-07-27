@@ -8,6 +8,7 @@
 
 namespace app\spl\logic;
 
+use barcodegen\BCGUtil;
 use TCPDF;
 use think\Model;
 
@@ -60,12 +61,15 @@ class PoReceive extends Model{
      * @param $po
      */
     public function downPoReceive($rcvCode){
+
         $rcvList = $this->where('rcv_code',$rcvCode)->select();
         $piLogic = model('PoItem','logic');
         $today = date('Y-m-d');
         if(empty($rcvList)){
             exit('<script>window.close();</script>');
         }
+
+
         $po = model('Order', 'logic')->find($rcvList[0]['po_id']);
         $supInfo = model('SupplierInfo')->findByCode($po['sup_code']);
         if(empty($supInfo)){
@@ -75,6 +79,7 @@ class PoReceive extends Model{
         $orgTel = getSysconf('org_tel', '0512-82880588');
         $orgFax = getSysconf('org_fax', '0512-82079059');
 
+        $codePath = BCGUtil::generateCode($rcvCode);
         //dd($supInfo->toJson());
         // create new PDF document
         $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
@@ -222,6 +227,8 @@ tr>th{
       <p></p><p></p>
       <h1>送 货 单</h1>
     </div>
+    <div></div>
+    <div></div>
     <div class=".header">
      <table class="border-none">
       <tr >
@@ -238,8 +245,7 @@ tr>th{
       </tr>
      </table>
     </div>
-        
-        <table style="width: 100%">
+        <table style="width: 100%;">
             <thead >
             <tr >
                 <th width="26">行号</th>
@@ -301,6 +307,7 @@ EOD;
         // logo
         $pdf->setPage(1);
         $pdf->Image(APP_PATH.'common/static/po_logo.png', 30, 15, 10, '', '', '', '', false, 300);
+        $pdf->Image($codePath, 50, 75, 120, '', '', '', '', false, 300);
 
         // ---------------------------------------------------------
         // Close and output PDF document

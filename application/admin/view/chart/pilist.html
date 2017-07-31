@@ -1,0 +1,224 @@
+{extend name='extra@admin/content' /}
+
+{block name="style"}
+<link rel="stylesheet" href="//cdn.datatables.net/plug-ins/28e7751dbec/integration/bootstrap/3/dataTables.bootstrap.css">
+<link href="https://cdn.bootcss.com/iCheck/1.0.2/skins/minimal/minimal.css" rel="stylesheet">
+{/block}
+
+{block name="button"}
+
+{/block}
+
+{block name="content"}
+
+<main class="main">
+  <div class="mt_box">
+    <div class="inquiry_box">
+      <form class="form-inline">
+        <input type="text" id="search_pr" class="form-control" placeholder="请购单编号">
+        <input type="text" id="search_po" class="form-control" placeholder="采购单编号">
+        <input type="text" id="search_item" class="form-control" placeholder="物料编号/物料描述">
+        <input type="text" id="search_sup" class="form-control" placeholder="供应商编号/供应商名称">
+        <input type="text" id="search_purch" class="form-control" placeholder="采购员编号/采购员名称">
+        <input type="text" id="search_pro" class="form-control" placeholder="项目号">
+        <!--<input type="text" id="req_date" class="date_time form-control" placeholder="要求交期">-->
+        <button type="button" id="search_btn" class="btn btn-info">查询</button>
+      </form>
+    </div>
+    <div class="order_table">
+      <div class="pb_15">
+        <!--<button type="button" id="remove_btn" class="btn btn-info">删除</button>-->
+        <button type="button" id="excel_out" class="btn btn-info" style="margin-right: 15px;">导出Excel</button>
+        <!--<button type="button" id="sync_erp" class="btn btn-info" style="margin-right: 15px;">同步订单状态</button>-->
+        <button type="button" id="doorder_btn" class="btn btn-info">立即下单</button>
+      </div>
+      <div class="order_box">
+        <table id="example" class="display table table-bordered" cellspacing="0">
+          <thead>
+          <tr>
+            <th>采购订单号</th>
+            <th>请购订单号</th>
+            <th>物料编号</th>
+            <th width="300">物料描述</th>
+            <th width="30">供应商编号</th>
+            <th width="300">供应商名称</th>
+            <th width="60">要求交期</th>
+            <th width="60">承诺交期</th>
+            <th width="60">修改交期</th>
+            <th width="60">采购数量</th>
+            <th>单价</th>
+            <th>小计</th>
+            <th>到货数量</th>
+            <th>未交数量</th>
+            <th>退货数量</th>
+            <th>采购员</th>
+            <th>项目号</th>
+            <th width="50">状态</th>
+            <!--<th>操作</th>-->
+          </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+
+{/block}
+
+{block name="script"}
+
+<script>
+  var orderTables;
+  require(["laydate", "jquery.dataTables", "icheck"], function(){
+    require(["dataTables.bootstrap"], function(){
+      $(document).ready(function(){
+        initPage();
+        initEvent();
+      });
+    });
+  });
+
+  function initPage(){
+    //icheck
+    $('input').iCheck({
+      checkboxClass:'icheckbox_minimal',
+      radioClass:'iradio_minimal',
+      increaseArea:'20%' // optional
+    });
+
+    // datatable
+    $.fn.dataTable.ext.errMode = 'none';
+    orderTables = $('#example').DataTable({
+      "paging":true, //设置是否分页
+      "info":true,  //去除左下角的信息
+      "lengthChange":false, //是否允许用户改变表格每页显示的记录数
+      "ordering":false, //是否允许Datatables开启排序
+      "searching":false,  //是否允许Datatables开启本地搜索
+      "processing":true,
+      "serverSide":true,
+      "ajax":{
+        "url":'{:url("Order/getPiPage")}',
+        "type":"GET",
+        "data":function(parameter){
+          //添加额外的参数传给服务器
+          parameter.searchKwd = {};
+          parameter.searchKwd.pr = $("#search_pr").val();
+          parameter.searchKwd.po = $("#search_po").val();
+          parameter.searchKwd.item = $("#search_item").val();
+          parameter.searchKwd.sup = $("#search_sup").val();
+          parameter.searchKwd.purch = $("#search_purch").val();
+          parameter.searchKwd.pro = $("#search_pro").val();
+        }
+      },
+      /*"columnDefs":[
+        {
+          "targets":0,
+          "data":null,
+          "render":function(data){
+            return data;
+          }
+        },
+      ],*/
+      "pageLength":10,
+      language:{
+        "oPaginate":{
+          "sFirst":"首页",
+          "sPrevious":"上页",
+          "sNext":"下页",
+          "sLast":"末页"
+        },
+        "lengthMenu": "每页 _MENU_ 条记录",
+        "zeroRecords": "没有找到记录",
+        "info": "第 _PAGE_ 页 ( 总共 _PAGES_ 页 / _MAX_ 条记录 )",
+        "infoEmpty": "无记录",
+        "infoFiltered": "(从 _MAX_ 条记录过滤)"
+      },
+      "columns":[
+        {"data":"po_code"},
+        {"data":"pr_code"},
+        {"data":"item_code"},
+        {"data":"item_name"},
+        {"data":"pro_no"},
+        {"data":"pr_date"},
+        {"data":"winbid_time"},
+        //{"data":"create_at"},
+        {"data":"sup_name"},
+        {"data":"req_date"},
+        {"data":"sup_confirm_date"},
+        {"data":"price_num", className:'text-right'},
+        {"data":"price", className:'text-right'},
+        {"data":"total_price", className:'text-right'},
+        //{"data":"exec_desc"},
+        {"data":"status"},
+        {"data":"status"},
+        {"data":"status"},
+        {"data":"status"},
+        {"data":"status"},
+        //{"data":"detail"},
+      ],
+      "drawCallback":function(settings){
+
+      }
+    });
+
+  }
+
+  function initEvent(){
+    initTimePicker();
+    // 点击详情
+
+    // tr点击选中事件
+    $('#example tbody').on('click', 'tr', function(){
+      $(this).toggleClass('selected');
+    });
+    // 立即同步ERP 点击事件
+    $('#synchronization_btn').click(function(){
+      alert(orderTables.rows('.selected').data().length + ' row(s) selected');
+    });
+    //删除物料
+    $('#remove_btn').click(function(){
+      orderTables.rows('.selected').remove().draw(false);
+    });
+
+    $("#search_btn").on('click', function(){
+      //console.log(orderTables);
+      orderTables.ajax.reload();
+    });
+
+    //导出
+    $("#excel_out").click(function(){
+      layer.confirm('是否进行导出', {
+        btn:['确定导出', '取消导出']
+      }, function(index){
+        layer.close(index);
+        var pr_code = $("#pr_code").val();
+        var item_code = $("#item_code").val();
+        var sup_name = $("#sup_name").val();
+        var req_date = $("#req_date").val();
+        var str = "{:url('Order/exportExcel')}" + '?pr_code=' + pr_code + '&item_code=' + item_code + '&sup_name=' + sup_name + '&req_date=' + req_date;
+        window.open(str);
+        //console.log(str);
+      });
+    });
+  }
+
+  /*
+   初始化时间
+   */
+  function initTimePicker(){
+    $(".date_time").focus(function(){
+      laydate({
+        format:"YYYY-MM-DD",
+        istime:true,
+        isclear:true,
+        istoday:true,
+        issure:true
+      });
+    });
+  }
+</script>
+
+
+{/block}

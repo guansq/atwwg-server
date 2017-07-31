@@ -226,6 +226,26 @@ class Order extends BaseController{
         return json($info);
     }
 
+    /**
+     *
+     */
+    public function getPiPage(){
+
+        // 申请资源 获取参数
+        $poLogic = model('Po', 'logic');
+        $reqParams = $this->getReqParams(['start'=>0,'length'=>10,'searchKwd'=>[]]);
+        $pageIndex = ceil($reqParams['start']/$reqParams['length'])+1;
+        $piPage = $poLogic->getPoItemPage($reqParams['searchKwd'],$pageIndex, $reqParams['length']);
+        $info = [
+            'draw' => time(),
+            'data' => $piPage->itemList,
+            'extData' => $reqParams,
+            'recordsTotal' => $piPage->itemTotal,
+            'recordsFiltered' => $piPage->itemTotal
+        ];
+        return json($info);
+    }
+
 
     public function mkzip(){
         $accessKey = sysconf('storage_qiniu_access_key');

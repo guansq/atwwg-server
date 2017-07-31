@@ -10,6 +10,7 @@ namespace app\admin\logic;
 
 use app\common\model\Po as poModel;
 use app\common\model\PoItem as poItemModel;
+use app\common\util\Page;
 use service\HttpService;
 
 class Po extends BaseLogic{
@@ -287,6 +288,8 @@ class Po extends BaseLogic{
                     'id' => $pi['id'],
                     'po_id' => $po_id,
                     'po_code' => $res['data']['DocNo'],
+                    'purch_code' => $res['data']['OperatorCode'],
+                    'purch_name' => $res['data']['OperatorName'],
                     'po_ln' => $this->matePoLn($rtnPoLine, $pi),
                     'update_at' => $now,
                     'status' => 'placeorder'
@@ -308,10 +311,10 @@ class Po extends BaseLogic{
         //发消息通过$sup_code $sup_name得到$sup_id
         $sup_id = $supLogic->getSupIdVal(['code' => $supCode]);
         if(empty($sup_id)){
-            return resultArray(5000, "下订单成功，消息发送失败。 code:$supCode 未绑定账号。",$data);
+            return resultArray(5000, "下订单成功，消息发送失败。 code:$supCode 未绑定账号。", $data);
         }
         sendMsg($sup_id, '安特威订单', '您有新的订单，请注意查收。');//发送消息
-        return resultArray(2000,'下订单成功',$data);
+        return resultArray(2000, '下订单成功', $data);
 
     }
 
@@ -352,7 +355,7 @@ class Po extends BaseLogic{
         $httpRet = HttpService::curl(getenv('APP_API_U9').'index/po', $sendData);
         $res = json_decode($httpRet, true);//成功回写数据库
         if($res['code'] != 2000){
-            return  resultArray($res);
+            return resultArray($res);
         }
         //dump($res['result']);die;
         return ['code' => 2000, 'msg' => '', 'data' => $res['result']];
@@ -373,5 +376,65 @@ class Po extends BaseLogic{
             ->field('pi.*')
             ->select();
         return $list;
+    }
+
+    /**
+     * Author: WILL<314112362@qq.com>
+     * Describe:
+     * @param $piIds
+     * @param $bizType
+     */
+    function getPoItemPage($searchKwd, $startpageIndex = 1, $length = 10){
+        $page = new Page($startpageIndex, $length);
+        $fields=[
+            'pi.po_id',
+            'pi.po_code',
+            'pi.po_ln',
+            'pi.item_code',
+            'pi.item_name',
+            'pi.sup_code',
+            'pi.sup_name',
+            'pi.price_num',
+            'pi.price_uom',
+            'pi.tc_num',
+            'pi.tc_uom',
+            'pi.pr_id',
+            'pi.pr_code',
+            'pi.pr_ln',
+            'pi.sup_confirm_date',
+            'pi.req_date',
+            'pi.sup_update_date',
+            'pi.price',
+            'pi.amount',
+            'pi.tax_rate',
+            'pi.purch_code',
+            'pi.purch_name',
+            'pi.arv_goods_num',
+            'pi.pro_goods_num',
+            'pi.create_at',
+            'pi.update_at',
+            'pi.status',
+            'pi.u9_status',
+            'pi.last_sync_time',
+            'pi.winbid_time',
+            'pr.pro_no',
+        ];
+        $where = [];
+        $total = $this->alias('pi')
+            ->join('atw_u9_pr pr', 'pr.id = pi.pr_id', 'LEFT')
+            ->where($where)
+            ->whereNotNull('pi.po_code')
+            ->count();
+        $page->setItemTotal($total);
+        $itemList = $this->alias('pi')
+            ->join('atw_u9_pr pr', 'pr.id = pi.pr_id', 'LEFT')
+            ->where($where)
+            ->whereNotNull('pi.po_code')
+            ->order('pi.update_at', 'DESC')
+            ->limit($page->getItemStart(), $length)
+            ->field($fields)
+            ->select();
+        $page->setItemList($itemList);
+        return $page;
     }
 }

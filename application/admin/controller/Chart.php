@@ -123,4 +123,13 @@ class Chart extends BaseController{
 
     //public function
 
+    /**
+     * Author: WILL<314112362@qq.com>
+     * Describe: 采购订单报表
+     */
+    public function piList(){
+        $this->assign('title','采购订单报表');
+        return view();
+    }
+
 }

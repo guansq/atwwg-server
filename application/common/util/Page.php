@@ -23,11 +23,18 @@ class Page{
     public function __construct($pageIndex = 1, $pageSize = 10){
         $this->pageIndex = $pageIndex;
         $this->pageSize = $pageSize;
-        $this->itemStart =($pageIndex - 1)*$pageSize;
+        $this->itemStart = ($pageIndex - 1)*$pageSize;
     }
 
     public function setItemList($itemList){
         $this->itemList = $itemList;
+    }
+
+    public function getItemList($defaultItemList = []){
+        if(empty($this->itemList)){
+            return $defaultItemList;
+        };
+        return $this->itemList;
     }
 
     public function setItemTotal($itemTotal){

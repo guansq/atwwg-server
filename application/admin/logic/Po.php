@@ -386,7 +386,7 @@ class Po extends BaseLogic{
      */
     function getPoItemPage($searchKwd, $startpageIndex = 1, $length = 10){
         $page = new Page($startpageIndex, $length);
-        $fields=[
+        $fields = [
             'pi.po_id',
             'pi.po_code',
             'pi.po_ln',
@@ -411,6 +411,8 @@ class Po extends BaseLogic{
             'pi.purch_name',
             'pi.arv_goods_num',
             'pi.pro_goods_num',
+            'pi.return_goods_num',
+            'pi.fill_goods_num',
             'pi.create_at',
             'pi.update_at',
             'pi.status',
@@ -419,7 +421,26 @@ class Po extends BaseLogic{
             'pi.winbid_time',
             'pr.pro_no',
         ];
-        $where = [];
+        $where = []; // 查询条件
+        if(!empty($searchKwd['pr'])){
+            $where['pi.pr_code'] = ['LIKE', "%$searchKwd[pr]%"];
+        };
+        if(!empty($searchKwd['po'])){
+            $where['pi.po_code'] = ['LIKE', "%$searchKwd[po]%"];
+        };
+        if(!empty($searchKwd['item'])){
+            $where['pi.item_code|pi.item_name'] = ['LIKE', "%$searchKwd[item]%"];
+        };
+        if(!empty($searchKwd['sup'])){
+            $where['pi.sup_code|pi.sup_name'] = ['LIKE', "%$searchKwd[sup]%"];
+        };
+        if(!empty($searchKwd['purch'])){
+            $where['pi.purch_code|pi.purch_name'] = ['LIKE', "%$searchKwd[purch]%"];
+        };
+        if(!empty($searchKwd['pro'])){
+            $where['pr.pro_no'] = ['LIKE', "%$searchKwd[pro]%"];
+        };
+
         $total = $this->alias('pi')
             ->join('atw_u9_pr pr', 'pr.id = pi.pr_id', 'LEFT')
             ->where($where)
@@ -434,6 +455,16 @@ class Po extends BaseLogic{
             ->limit($page->getItemStart(), $length)
             ->field($fields)
             ->select();
+        foreach($itemList as &$item){
+            $item['req_date_fmt'] = empty($item['req_date']) ? "" : date('Y-m-d', $item['req_date']);
+            $item['sup_confirm_date_fmt'] = empty($item['sup_confirm_date']) ? "" :date('Y-m-d', $item['sup_confirm_date']);
+            $item['sup_update_date_fmt'] = empty($item['sup_update_date']) ? "" : date('Y-m-d', $item['sup_update_date']);
+            $item['price_num_fmt'] = number_format($item['price_num'], 2);
+            $item['price_fmt'] = number_format($item['price'], 2);
+            $item['price_subtotal_fmt'] = number_format($item['price']*$item['price_num'], 2);
+            $item['arv_goods_num_fmt'] = number_format($item['arv_goods_num'], 2);
+            $item['pro_goods_num_fmt'] = number_format($item['pro_goods_num'], 2);
+        }
         $page->setItemList($itemList);
         return $page;
     }

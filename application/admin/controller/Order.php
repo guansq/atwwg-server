@@ -589,6 +589,7 @@ class Order extends BaseController{
         $PHPExcel = new PHPExcel(); //实例化PHPExcel类，类似于在桌面上新建一个Excel表格
         $PHPSheet = $PHPExcel->getActiveSheet(); //获得当前活动sheet的操作对象
         foreach(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'] as $cl ){
+            //設置列寬自適應
             $PHPSheet->getColumnDimension($cl)->setAutoSize(true);
         }
         $PHPSheet->setTitle('采购订单列表'); //给当前活动sheet设置名称

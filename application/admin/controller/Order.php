@@ -253,9 +253,7 @@ class Order extends BaseController{
         $bucket = sysconf('storage_qiniu_bucket');
         $host = sysconf('storage_qiniu_domain');
         $key = '1.png';
-
         $auth = new QiniuAuth($accessKey, $secretKey);
-
     }
 
     /*

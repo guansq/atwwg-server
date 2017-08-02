@@ -485,14 +485,11 @@ class Order extends BaseController{
      */
     public function syncErp(){
         $httpRet = HttpService::get(getenv('APP_API_HOME').'/u9api/syncPOState');
+        $httpRet = json_decode($httpRet, true);
         if(empty($httpRet)){
             returnJson(6000);
         }
 
-        $httpRet = json_decode($httpRet, true);
-        if(empty($httpRet) || $httpRet['code'] != 2000){
-            returnJson(6000, '', $httpRet);
-        }
         returnJson($httpRet);
     }
 

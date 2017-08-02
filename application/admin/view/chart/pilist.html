@@ -29,15 +29,16 @@
       <div class="pb_15">
         <!--<button type="button" id="remove_btn" class="btn btn-info">删除</button>-->
         <button type="button" id="excel_out" class="btn btn-info" style="margin-right: 15px;">导出Excel</button>
+        <button type="button" id="sync_erp" class="btn btn-info" style="margin-right: 15px;">同步订单状态</button>
         <!--<button type="button" id="sync_erp" class="btn btn-info" style="margin-right: 15px;">同步订单状态</button>-->
         <!--<button type="button" id="doorder_btn" class="btn btn-info">立即下单</button>-->
       </div>
-      <div class="order_box">
-        <table id="example" class="display table table-bordered" cellspacing="0">
+      <div class="order_box" style="overflow: auto">
+        <table id="example" class="display table table-bordered" cellspacing="0" width="2148">
           <thead>
           <tr>
-            <th>采购订单号</th>
-            <th>请购订单号</th>
+            <th width="70">采购订单</th>
+            <th width="70">请购订单</th>
             <th width="120">物料编号</th>
             <th width="200">物料描述</th>
             <th width="90">供应商编号</th>
@@ -45,13 +46,13 @@
             <th width="70">要求交期</th>
             <th width="70">承诺交期</th>
             <th width="70">修改交期</th>
-            <th width="">采购数量</th>
+            <th width="50">采购数量</th>
             <th>单价</th>
             <th>小计</th>
-            <th>到货数量</th>
-            <th>未交数量</th>
-            <th>退货数量</th>
-            <th>采购员</th>
+            <th width="50">到货数量</th>
+            <th width="50">未交数量</th>
+            <th width="50">退货数量</th>
+            <th width="50">采购员</th>
             <th width="100">项目号</th>
             <th width="50">状态</th>
             <!--<th>操作</th>-->
@@ -223,6 +224,24 @@
       });
     });
   }
+
+  //立即同步ERP
+  $("#sync_erp").click(function(){
+    layer.msg('加载中', {
+      icon:16,
+      shade:0.01,
+      time:9999000,
+    });
+    $.get('{:url("Order/syncErp")}', function(ret){
+      if(!ret){
+        layer.alert('网络异常请稍后再试。', {icon:6});
+      }
+      if(ret.code !== 2000){
+        layer.alert(ret.msg, {icon:6});
+      }
+      layer.closeAll();
+    });
+  })
 </script>
 
 

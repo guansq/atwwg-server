@@ -38,23 +38,19 @@
             <th>
               <input type="checkbox" class="all">
             </th>
-            <!--<th>订单编号</th>-->
             <th>请购单编号</th>
             <th>物料编号</th>
             <th>物料描述</th>
-            <th>项目号</th>
-            <th>请购日期</th>
-            <th>评标日期</th>
-            <!--<th>下单日期</th>-->
+            <th width="60">项目号</th>
+            <th width="50">请购日期</th>
+            <th width="50">评标日期</th>
             <th>供应商名称</th>
-            <!--<th>执行情况</th>-->
-            <th>要求交期</th>
-            <th>可供货交期</th>
-            <th>采购数量</th>
+            <th width="50">要求交期</th>
+            <th width="70">可供货交期</th>
+            <th>数量</th>
             <th>报价</th>
             <th>小计</th>
             <th>状态</th>
-            <!--<th>操作</th>-->
           </tr>
           </thead>
           <tbody>
@@ -141,23 +137,19 @@
         },
         "columns":[
           {"data":"checked"},
-          //{"data":"po_code"},
           {"data":"pr_code"},
           {"data":"item_code"},
           {"data":"item_name"},
           {"data":"pro_no"},
           {"data":"pr_date"},
           {"data":"winbid_time"},
-          //          {"data":"create_at"},
           {"data":"sup_name"},
           {"data":"req_date"},
           {"data":"sup_confirm_date"},
           {"data":"price_num", className:'text-right'},
           {"data":"price", className:'text-right'},
           {"data":"total_price", className:'text-right'},
-          //{"data":"exec_desc"},
           {"data":"status"},
-          //{"data":"detail"},
         ],
         "drawCallback":function(settings){
 

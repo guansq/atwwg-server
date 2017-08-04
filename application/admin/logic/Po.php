@@ -8,8 +8,8 @@
 
 namespace app\admin\logic;
 
-use app\common\model\Po as poModel;
-use app\common\model\PoItem as poItemModel;
+use app\common\model\Po as PoModel;
+use app\common\model\PoItem as PiModel;
 use app\common\util\Page;
 use service\HttpService;
 
@@ -29,9 +29,9 @@ class Po extends BaseLogic{
      */
     function getPolist($where){
         if(empty($where)){
-            $list = poModel::order('update_at DESC')->select();
+            $list = PoModel::order('update_at DESC')->select();
         }else{
-            $list = poModel::where($where)->order('update_at DESC')->select();
+            $list = PoModel::where($where)->order('update_at DESC')->select();
         }
         return $list;
     }
@@ -40,7 +40,7 @@ class Po extends BaseLogic{
      * 得到poList的数量
      */
     public function getPoCount(){
-        $count = poModel::count();
+        $count = PoModel::count();
         return $count;
     }
 
@@ -48,7 +48,7 @@ class Po extends BaseLogic{
      * 得到单个列表信息
      */
     function getPoInfo($id){
-        $info = poModel::where('id', $id)->find();
+        $info = PoModel::where('id', $id)->find();
         if($info){
             $info = $info->toArray();
             $info['contract'] = empty($info['contract']) ? [] : explode(',', $info['contract']);
@@ -60,7 +60,7 @@ class Po extends BaseLogic{
      * 得到订单下的item列表
      */
     function getPoItemInfo($po_id){
-        $list = poItemModel::where('po_id', $po_id)->field('*, "" AS pro_no ')->select();
+        $list = PiModel::where('po_id', $po_id)->field('*, "" AS pro_no ')->select();
         foreach($list as &$pi){
             $pi['pro_no'] = model('RequireOrder', 'logic')->where('id', $pi->pr_id)->value('pro_no');
         }
@@ -71,7 +71,7 @@ class Po extends BaseLogic{
      * 得到即将过期的订单数量
      */
     function getPoItemNum(){
-        $count = poItemModel::alias('pi')
+        $count = PiModel::alias('pi')
             ->join('po po', 'pi.po_id = po.id')
             ->where('po.status', 'NOT IN', [
                 'finish',
@@ -88,14 +88,14 @@ class Po extends BaseLogic{
      *保存订单状态
      */
     function saveStatus($where, $data){
-        return poModel::where($where)->update($data);
+        return PoModel::where($where)->update($data);
     }
 
     /*
      *保存明细订单状态
      */
     function saveItemInfo($where, $data){
-        $dbRet = poItemModel::where($where)->update($data);
+        $dbRet = PiModel::where($where)->update($data);
         return $dbRet;
     }
 
@@ -103,14 +103,14 @@ class Po extends BaseLogic{
      * 根据条件得到订单数量
      */
     public function getPoNumByWhere($where){
-        return poModel::where($where)->count();
+        return PoModel::where($where)->count();
     }
 
     /*
      * 得到订单状态
      */
     public function getPoStatus($where){
-        return poModel::where($where)->value('status');
+        return PoModel::where($where)->value('status');
     }
 
     /*
@@ -118,9 +118,9 @@ class Po extends BaseLogic{
      */
     public function getPoItemList($where){
         if(empty($where)){
-            $list = poItemModel::where('status', 'init')->order('update_at DESC')->field('*, "" AS pro_no ')->select();
+            $list = PiModel::where('status', 'init')->order('update_at DESC')->field('*, "" AS pro_no ')->select();
         }else{
-            $list = poItemModel::where($where)
+            $list = PiModel::where($where)
                 ->where('status', 'init')
                 ->order('update_at DESC')
                 ->field('*, "" AS pro_no ')
@@ -136,7 +136,7 @@ class Po extends BaseLogic{
      * 得到poItemList的数量
      */
     public function getPoItemCount(){
-        $count = poItemModel::where('status', 'init')->count();
+        $count = PiModel::where('status', 'init')->count();
         return $count;
     }
 
@@ -144,21 +144,21 @@ class Po extends BaseLogic{
     * 得到订单生成日期
     */
     public function getPoCreateat($where){
-        return poModel::where($where)->value('create_at');
+        return PoModel::where($where)->value('create_at');
     }
 
     /*
      * 得到po_id
      */
     public function getPoId($where){
-        return poItemModel::where($where)->value('po_id');
+        return PiModel::where($where)->value('po_id');
     }
 
     /*
      * 得到order_code
      */
     public function getOrderCode($where){
-        return poModel::where($where)->value('order_code');
+        return PoModel::where($where)->value('order_code');
     }
 
     /*
@@ -172,7 +172,7 @@ class Po extends BaseLogic{
      * 得到供应商code 得到供应商名称
      */
     public function getSupInfo($where){
-        $info = poItemModel::field('sup_code,sup_name')->where($where)->find();
+        $info = PiModel::field('sup_code,sup_name')->where($where)->find();
         if($info){
             $info = $info->toArray();
         }
@@ -183,7 +183,7 @@ class Po extends BaseLogic{
      * 得到poitemInfo
      */
     public function getPoItem($id){
-        $info = poItemModel::where('id', $id)->find();
+        $info = PiModel::where('id', $id)->find();
         if($info){
             $info = $info->toArray();
         }
@@ -196,7 +196,7 @@ class Po extends BaseLogic{
     public function insertOrGetId($poData){
         //$findPo = poModel::where('pr_code', $poData['pr_code'])->where('sup_code', $poData['sup_code'])->find();
         //if(empty($findPo)){} return $findPo['id'];
-        return poModel::insertGetId($poData);
+        return PoModel::insertGetId($poData);
     }
 
     /*
@@ -211,7 +211,7 @@ class Po extends BaseLogic{
      * 得到订单记录
      */
     public function getPoItemByIds($idWhere){
-        $list = poItemModel::where('id', 'in', $idWhere)->where('status', 'init')->select();
+        $list = PiModel::where('id', 'in', $idWhere)->where('status', 'init')->select();
         return $list;
     }
 
@@ -219,7 +219,7 @@ class Po extends BaseLogic{
      * 保存poItem
      */
     public function savePoItem($data){
-        return $res = poItemModel::create($data);
+        return $res = PiModel::create($data);
     }
 
     /**
@@ -457,7 +457,7 @@ class Po extends BaseLogic{
             ->select();
         foreach($itemList as &$item){
             $item['req_date_fmt'] = empty($item['req_date']) ? "" : date('Y-m-d', $item['req_date']);
-            $item['sup_confirm_date_fmt'] = empty($item['sup_confirm_date']) ? "" :date('Y-m-d', $item['sup_confirm_date']);
+            $item['sup_confirm_date_fmt'] = empty($item['sup_confirm_date']) ? "" : date('Y-m-d', $item['sup_confirm_date']);
             $item['sup_update_date_fmt'] = empty($item['sup_update_date']) ? "" : date('Y-m-d', $item['sup_update_date']);
             $item['price_num_fmt'] = number_format($item['price_num'], 2);
             $item['price_fmt'] = number_format($item['price'], 2);
@@ -467,5 +467,57 @@ class Po extends BaseLogic{
         }
         $page->setItemList($itemList);
         return $page;
+    }
+
+    /**
+     * Author: WILL<314112362@qq.com>
+     * Describe: 取消PO
+     * @param array $poCOodes = ['po_code','po_code2']
+     */
+    public function cancelPo(array $poCoodes, $cancelCause = ''){
+
+        $successCount = $failedCount = 0;
+        $errorMessage = $failedPoCode = '';
+        foreach($poCoodes as $pocode){
+            $httpRet = HttpService::post(getenv('APP_API_U9').'index/PODelete', ['pODocNo' => $pocode]);
+            $retArr = json_decode($httpRet, true);
+
+            if(empty($retArr)){
+                $failedCount++;
+                $failedPoCode = $pocode;
+                break;
+            }
+            if($retArr['code'] != 2000){
+                $failedCount++;
+                $failedPoCode = $pocode;
+                $errorMessage = $retArr['msg'];
+                break;
+            }
+
+            if(empty($retArr['result']['Success'])){
+                $failedCount++;
+                $failedPoCode = $pocode;
+                $errorMessage = $retArr['result']['Message'];
+                break;
+            }
+
+            PoModel::where('order_code', $pocode)->update(['status' => 'atw_cancel', 'cancel_cause' => $cancelCause]);
+            PiModel::where('po_code', $pocode)->update(['status' => 'close']);
+            $successCount++;
+        }
+
+        $ret = [
+            'successCount' => $successCount,
+            'failedPoCode' => $failedPoCode,
+            'errorMessage' => $errorMessage,
+            'u9Ret' => $retArr,
+        ];
+
+        if($failedCount > 0){
+            return resultArray(6000, '', $ret);
+        }
+
+        return resultArray(2000, '', $ret);
+
     }
 }

@@ -218,7 +218,7 @@
         {
           "data":"inquiry_way",
           "render":function(data, type, row, meta){
-            if(data == '无匹配供应商'){
+            if(data == '无匹配供应商' && row.status!='关闭'){
               return '<span>'+data+'</span><a href="javascript:reInquiry('+row.id+');"> 重新询价</a>';
             }
             return data;

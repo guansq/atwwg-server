@@ -12,6 +12,7 @@ use PHPExcel;
 use PHPExcel_IOFactory;
 use Qiniu\Auth as QiniuAuth;
 use service\HttpService;
+use think\Request;
 
 class Order extends BaseController{
     protected $table = 'SystemPo';
@@ -55,7 +56,7 @@ class Order extends BaseController{
         //dump($requestInfo);die;
         $where = [];
         // 应用搜索条件
-        foreach(['order_code', 'sup_name'] as $key){
+        foreach(['order_code', 'sup_code'] as $key){
             if(isset($get[$key]) && $get[$key] !== ''){
                 $where[$key] = ['like', "%{$get[$key]}%"];
             }
@@ -151,6 +152,7 @@ class Order extends BaseController{
                 'checked' => $v['id'],
                 'order_code' => $v['order_code'],
                 'create_at' => atwDate($v['create_at']),
+                'sup_code' => $v['sup_code'],
                 'sup_name' => $poLogic->getSupName($v['sup_code']),
                 'status' => empty($v['u9_status']) ? $statusStr : $v['u9_status']
             ];
@@ -638,5 +640,18 @@ class Order extends BaseController{
         header("Accept-Length: $file_size");
         header("Content-Disposition: attachment; filename=".$file_name);
         exit($contents);
+    }
+
+    /**
+     * Author: WILL<314112362@qq.com>
+     * Describe: 取消订单
+     */
+    public function cancelPo(Request $request){
+        $reqParams = $this->getReqParams(['poCodes'=>[],'cancelCause'=>'']);
+        if(empty($reqParams['poCodes'])){
+            returnJson(4001);
+        }
+        $poLogic = model('Po', 'logic');
+        returnJson($poLogic->cancelPo($reqParams['poCodes'],$reqParams['cancelCause']));
     }
 }

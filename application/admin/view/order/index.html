@@ -14,11 +14,11 @@
 <main class="main">
   <div class="mt_box">
     <div class="inquiry_box">
-      <form class="form-inline animated form-search" action='{:url("$classuri/index")}' onsubmit="return false" method="get">
+      <form id="search_form" class="form-inline animated form-search" action='{:url("$classuri/index")}' onsubmit="return false" method="get">
         <input type="hidden" id="status_ipt" name="status" value="{$Think.get.status}">
         <input type="text" id="order_code" name="order_code" value="{$Think.get.order_code}" class="form-control" placeholder="订单编号">
-        <input type="text" id="sup_name" name="sup_name" value="{$Think.get.sup_name}" class="form-control" placeholder="供应商名称">
-        <button type="submit" id="searchVal" class="btn btn-info">查询</button>
+        <input type="text" id="sup_code" name="sup_code" value="{$Think.get.sup_code}" class="form-control" placeholder="供应商编码">
+        <button type="button" id="searchVal" class="btn btn-info">查询</button>
       </form>
     </div>
     <div class="order_table">
@@ -26,18 +26,18 @@
         <!--<button type="button" id="remove_btn" class="btn btn-info">删除</button>-->
         <button type="button" id="excel_out" class="btn btn-info" style="margin-right: 15px;">导出Excel</button>
         <button type="button" id="sync_erp" class="btn btn-info" style="margin-right: 15px;">同步订单状态</button>
-        <!--<button type="button" id="doorder_btn" class="btn btn-info">立即下单</button>-->
-        <!--<span style="margin-right: 25px;" class="layui-nav-item">*当前总记录数{$allNums}条</span>-->
+        <button type="button" id="cancel_btn" class="btn btn-info" disabled>取消订单</button>
       </div>
       <div class="order_box">
         <table id="example" class="display table table-bordered" cellspacing="0" width="100%">
           <thead>
           <tr>
-            <!--<th>-->
-              <!--<input type="checkbox" class="all">-->
-            <!--</th>-->
+            <th>
+              <input type="checkbox" class="all">
+            </th>
             <th>订单编号</th>
             <th>下单日期</th>
+            <th>供应商编码</th>
             <th>供应商名称</th>
             <th>状态</th>
             <th>执行情况</th>
@@ -65,19 +65,11 @@
     require(["dataTables.bootstrap"], function(){
       $(document).ready(function(){
         initPage();
-        initEvent();
-
+        //initEvent();
       });
-    })
+    });
 
     function initPage(){
-      //icheck
-      $('input').iCheck({
-        checkboxClass:'icheckbox_minimal',
-        radioClass:'iradio_minimal',
-        increaseArea:'20%' // optional
-      });
-
       // datatable
       $.fn.dataTable.ext.errMode = 'none';
       orderTables = $('#example').DataTable({
@@ -95,27 +87,27 @@
             //添加额外的参数传给服务器
             parameter.order_code = $("#order_code").val();
             parameter.pr_code = $("#pr_code").val();
-            parameter.sup_name = $("#sup_name").val();
+            parameter.sup_code = $("#sup_code").val();
             parameter.status = $("#status_ipt").val();
           }
         },
-        /*"columnDefs":[
+        "columnDefs":[
           {
             "targets":0,
             "data":null,
             "render":function(data){
-              return '<input type="checkbox" id="order_id_'+data+'" class="check" value="' + data + '">';
+              return '<input type="checkbox" id="order_id_' + data + '" class="check" value="' + data + '">';
             }
           },
-         {
-            "targets":8,
-            "render":function(data){
-              var url = '{:url(\'order/detailed\')}?id=' + data;//data
-              return '<a class="detail" data-open="' + url + '">详情</a>';
-              //return url;
-            }
-          }
-        ],*/
+          /*{
+             "targets":8,
+             "render":function(data){
+               var url = '{:url(\'order/detailed\')}?id=' + data;//data
+               return '<a class="detail" data-open="' + url + '">详情</a>';
+               //return url;
+             }
+           }*/
+        ],
         "pageLength":10,
         language:{
           "oPaginate":{
@@ -124,19 +116,20 @@
             "sNext":"下页",
             "sLast":"末页"
           },
-          "info" : "当前总记录数_TOTAL_条"
+          "info":"当前总记录数_TOTAL_条"
         },
         "columns":[
-          /*{"data":"checked"},*/
+          {"data":"order_code"},
           {"data":"order_code"},
           {"data":"create_at"},
+          {"data":"sup_code"},
           {"data":"sup_name"},
           {"data":"status"},
           {"data":"exec_desc"},
           {"data":"detail"},
         ],
         "drawCallback":function(settings){
-
+          initEvent();
         }
       });
 
@@ -155,38 +148,41 @@
     }
 
     function initEvent(){
-      // 点击详情
-      $(".detail").click(function(e){
-        // e.stopPropagation();
+      //icheck
+      $('input').iCheck({
+        checkboxClass:'icheckbox_minimal',
+        radioClass:'iradio_minimal',
+        increaseArea:'20%' // optional
       });
 
       var checkAll = $('input.all');
       var checkboxs = $('input.check');
 
-      checkAll.on('ifChecked ifUnchecked', function(event){
+      checkAll.unbind('ifChecked ifUnchecked').on('ifChecked ifUnchecked', function(event){
         if(event.type == 'ifChecked'){
           checkboxs.iCheck('check');
         }else{
           checkboxs.iCheck('uncheck');
         }
       });
-
-      checkboxs.on('ifChanged', function(event){
-        if(checkboxs.filter(':checked').length == checkboxs.length){
-          checkAll.prop('checked', true);
-        }else{
-          checkAll.prop('checked', false);
+      checkboxs.unbind('ifChecked').on('ifChecked', function(event){
+        $("#cancel_btn").attr('disabled', false);
+      });
+      checkboxs.unbind('ifUnchecked').on('ifUnchecked', function(event){
+        if(checkboxs.filter(':checked').length === 0){
+          $("#cancel_btn").attr('disabled', true);
         }
-        checkAll.iCheck('update');
-      })
+      });
+
+
     }
 
     $("#searchVal").on('click', function(){
       //console.log(orderTables);
-      //orderTables.ajax.reload();
+      orderTables.ajax.reload();
     })
 
-  })
+  });
 
   function verifyOrder(id, action, dom){
     layer.confirm('确认该操作吗？', {
@@ -223,7 +219,7 @@
       btn:['确定导出', '取消导出']
     }, function(index){
       layer.close(index);
-      var order_code = $("#order_code").val()||'';
+      var order_code = $("#order_code").val() || '';
       var pr_code = $("#pr_code").val() || '';
       var str = "{:url('Order/exportPoExcel')}" + '?order_code=' + order_code + '&pr_code=' + pr_code;
       window.open(str);
@@ -234,20 +230,58 @@
   //立即同步ERP
   $("#sync_erp").click(function(){
     layer.msg('加载中', {
-      icon: 16,
-      shade: 0.01,
+      icon:16,
+      shade:0.01,
       time:9999000,
     });
-    $.get('{:url("Order/syncErp")}',function(ret){
+    $.get('{:url("Order/syncErp")}', function(ret){
       if(!ret){
-        layer.alert('网络异常请稍后再试。', {icon: 6});
+        layer.alert('网络异常请稍后再试。', {icon:6});
       }
       if(ret.code !== 2000){
-        layer.alert(ret.msg, {icon: 6});
+        layer.alert(ret.msg, {icon:6});
       }
       layer.closeAll();
     });
-  })
+  });
+
+  $("#search_form").submit(function(){
+    orderTables.ajax.reload();
+    return false;
+  });
+
+  $("#cancel_btn").on('click', function(){
+    var url = "{:URL('order/cancelPo')}";
+
+    layer.confirm("你确定取消订单吗？", {
+      bth:['确定', '取消']
+    }, function(index, layero){
+      layer.close(index);
+      var loader = layer.load(1, {
+        shade:[0.1, "#fff"]
+      });
+      var poCodes = [];
+      $(".check:checked").map(function(i, v){
+        poCodes.push(v.value);
+      });
+
+      layer.close(loader);
+
+      $.post(url, {poCodes:poCodes}, function(ret){
+        if(ret.code == 2000){
+          orderTables.ajax.reload();
+          layer.closeAll();
+        }else{
+          var msg = ret.msg;
+          msg += '<br/> 成功取消：' + ret.result.successCount + '个';
+          msg += '<br/> 异常单号：' + ret.result.failedPoCode;
+          msg += '<br/> 异常信息：' + ret.result.errorMessage;
+          layer.alert(msg);
+        }
+      })
+    });
+
+  });
 
 </script>
 

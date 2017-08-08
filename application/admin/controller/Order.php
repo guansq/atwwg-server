@@ -117,6 +117,10 @@ class Order extends BaseController{
                     $action = [];
                     $statusStr = '供应商取消了订单';
                     break;
+                case 'atw_cancel':// 安特威取消
+                    $action = [];
+                    $statusStr = '已取消订单';
+                    break;
                 case 'sup_edit'://供应商修改
                     $statusStr = '<a href="javascript:;" onclick="verifyOrder('.$v['id'].',\'atw_sure\',this);">供应商修改交期，请确认</a>';
                     break;
@@ -610,7 +614,7 @@ class Order extends BaseController{
         $PHPSheet->setCellValue('R1', '状态');
         $num = 1;
         foreach($list as $k => $v){
-            $num = $num + 1;
+            $num++;
             $PHPSheet->setCellValue('A'.$num, $v['po_code'])
                 ->setCellValue('B'.$num, $v['pr_code'])
                 ->setCellValue('C'.$num, $v['item_code'])

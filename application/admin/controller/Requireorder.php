@@ -163,6 +163,15 @@ class Requireorder extends BaseController{
                     $inquiry = $v['inquiry_way'];
                 }
             }
+
+            // 流标的 且 有供应商的 可以重新指定供应商下单
+            if($v['status'] == 'flow' && $v['inquiry_way'] != 'no_sup'){
+                $inquiry =  $inquiry_way[$v['inquiry_way']];
+                $inquiry .= '<br/> <a class="select_sell" href="javascript:void(0);" onclick="bomb_box(event,\''.$v['pr_code'].'\',\''.$v['item_code'].'\',\''.$v['id'].'\');" data-url="'
+                    .url('requireorder/selectSup',array('pr_code'=>$v['pr_code'],'item_code'=>$v['item_code'])).'">选择供应商</a>';
+
+
+            }
             $returnArr[] = [
                 'id' => $v['id'],//请购单id
                 'pr_code' => $v['pr_code'],//请购单号

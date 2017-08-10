@@ -18,6 +18,16 @@ function p($data, $replace = false, $pathname = NULL){
 }
 
 /**
+ *
+ */
+if(!function_exists("dd")){
+    function dd($obj){
+        var_dump($obj);
+        die();
+    }
+}
+
+/**
  * 获取微信操作对象
  * @param string $type
  * @return \Wechat\WechatReceive|\Wechat\WechatUser|\Wechat\WechatPay|\Wechat\WechatScript|\Wechat\WechatOauth|\Wechat\WechatMenu
@@ -84,6 +94,41 @@ function sysconf($name, $value = false){
     }
     return isset($config[$name]) ? $config[$name] : '';
 }
+
+
+/**
+ * 获取设备或配置系统参数 基于数据库
+ * @param string $name  参数名称
+ * @param bool   $value 默认值
+ * @return string|bool
+ */
+function getSysconf($name, $defaultValue = ''){
+    $logic = model('SystemConfig', 'logic');
+    $data = $logic->where(['name' => $name])->find();
+    if(empty($data)){
+        return $defaultValue;
+    }
+    return $data['value'];
+
+}
+
+/**
+ * 设置设备或配置系统参数 基于数据库
+ * @param string $name 参数名称
+ */
+function setSysconf($name, $value = '', $group = 'app', $remark = ''){
+    $data = ['name' => $name, 'value' => $value, 'group' => $group, 'remark' => $remark];
+    $oldData = getSysconf($name);
+    $logic = model('SystemConfig', 'logic');
+    if(empty($oldData)){
+        return $logic->create($data);
+    }else{
+        return $logic->update($data, ['name' => $name]);
+    }
+
+}
+
+
 
 /**
  * array_column 函数兼容
@@ -189,15 +234,6 @@ if(!function_exists('assureNotEmpty')){
     }
 }
 
-if(!function_exists("dd")){
-
-    function dd($obj){
-        var_dump($obj);
-        die();
-    }
-
-}
-
 /**
  * 生成訂單號
  */
@@ -234,7 +270,7 @@ function randomStr($len = 4){
 }
 
 /**
- * 随机生成四位字符
+ * 随机生成n位 苏州字符
  */
 function randomNum($len = 4){
     $chars_array = [
@@ -249,6 +285,80 @@ function randomNum($len = 4){
     return $outputstr;
 }
 
+
+/**
+ *数字金额转换成中文大写金额的函数
+ *String Int $num 要转换的小写数字或小写字符串
+ *return 大写字母
+ *小数位为两位
+ **/
+function numbToCnYuan($num){
+    $c1 = "零壹贰叁肆伍陆柒捌玖";
+    $c2 = "分角元拾佰仟万拾佰仟亿";
+    //精确到分后面就不要了，所以只留两个小数位
+    $num = round($num, 2);
+    //将数字转化为整数
+    $num = $num * 100;
+    if (strlen($num) > 10) {
+        return "金额太大，请检查";
+    }
+    $i = 0;
+    $c = "";
+    while (1) {
+        if ($i == 0) {
+            //获取最后一位数字
+            $n = substr($num, strlen($num)-1, 1);
+        } else {
+            $n = $num % 10;
+        }
+        //每次将最后一位数字转化为中文
+        $p1 = substr($c1, 3 * $n, 3);
+        $p2 = substr($c2, 3 * $i, 3);
+        if ($n != '0' || ($n == '0' && ($p2 == '亿' || $p2 == '万' || $p2 == '元'))) {
+            $c = $p1 . $p2 . $c;
+        } else {
+            $c = $p1 . $c;
+        }
+        $i = $i + 1;
+        //去掉数字最后一位了
+        $num = $num / 10;
+        $num = (int)$num;
+        //结束循环
+        if ($num == 0) {
+            break;
+        }
+    }
+    $j = 0;
+    $slen = strlen($c);
+    while ($j < $slen) {
+        //utf8一个汉字相当3个字符
+        $m = substr($c, $j, 6);
+        //处理数字中很多0的情况,每次循环去掉一个汉字“零”
+        if ($m == '零元' || $m == '零万' || $m == '零亿' || $m == '零零') {
+            $left = substr($c, 0, $j);
+            $right = substr($c, $j + 3);
+            $c = $left . $right;
+            $j = $j-3;
+            $slen = $slen-3;
+        }
+        $j = $j + 3;
+    }
+    //这个是为了去掉类似23.0中最后一个“零”字
+    if (substr($c, strlen($c)-3, 3) == '零') {
+        $c = substr($c, 0, strlen($c)-3);
+    }
+    //将处理的汉字加上“整”
+    if (empty($c)) {
+        return "零元整";
+    }else{
+        return $c . "整";
+    }
+}
+
+
+/**
+ * todo 放到 base controller 中
+ */
 if(!function_exists('validateData')){
     /**
      * Auther: WILL<314112362@qq.com>
@@ -273,7 +383,7 @@ if(!function_exists('validateData')){
     }
 }
 
-
+//=========================================== ↓↓↓ APP特有方法 ↓↓↓ =======================================================
 /*
  * PHPexcel读取并返回数组
  */
@@ -314,67 +424,6 @@ function prDates($start,$end){
         echo date('Y-m-d',$dt_start)."\n";
         $dt_start = strtotime('+1 day',$dt_start);
     }
-}
-
-/*
- * 得到技术评分 技术分=（a+b*20+c*60）/100 *40
- *
-
-技术评分标准  分值
-
-a  认证资质（ISO 5分；TS 5分；API 5分；PED 5分；）20
-
-b  近半年交货及时率100%（数据来源U9，每周同步） 20
-
-c  近半年质量合格率100%（数据来源U9，每周同步） 60
- */
-function getTechScore($code){
-
-    return '80分';
-}
-
-/*
- * 供应商资质评分  可随资质变化情况变更，资质有效期可显示，超过有效期的评分为0，需要提醒采购及时通知供方更新。
- */
-function getQualiScore($code){
-    return '70分';
-}
-
-/*
- * 供应风险
- */
-/*单一资源&技术型：(独家采购)
-a)	极高-供应商连续3次出现质量合格率＜99%*0.95，或交货及时率＜95%*0.95
-b)	高-供应商连续2次出现质量合格率＜99%*0.95，或交货及时率＜95%*0.95
-c)	低-除上述a、b条件以外。
-充分竞争型：
-a)	极高-同一物料供应商=2家，其中1家供应商质量合格率＜99%*0.95，或交货及时率＜95%*0.95
-a)	高-同一物料供应商大于2小于4家，其中2家供应商质量合格率＜99%*0.95，或交货及时率＜95%*0.95
-b)	低-同一物料供应商大于2小于4家，其中1家供应商质量合格率＜99%*0.95，或交货及时率＜95%*0.95*/
-
-function getSupplyRisk($code){
-    return '极小';
-}
-/*
- * 信用等级
- *
- *   信用等级	标准
- *   优	≥98分
- *   良	≥95分，＜98分
- *   一般	85分＜95分
- *   差	≤85分
- */
-function getQualiLevel($score){
-    if($score>=98){
-        return '优';
-    }
-    if($score>=95){
-        return '良';
-    }
-    if($score>=85){
-        return '一般';
-    }
-    return '差';
 }
 
 /*
@@ -509,107 +558,7 @@ function getMonthBetweenTime($smonth,$emonth){
 
 
 
-/**
- *数字金额转换成中文大写金额的函数
- *String Int $num 要转换的小写数字或小写字符串
- *return 大写字母
- *小数位为两位
- **/
-function numbToCnYuan($num){
-    $c1 = "零壹贰叁肆伍陆柒捌玖";
-    $c2 = "分角元拾佰仟万拾佰仟亿";
-    //精确到分后面就不要了，所以只留两个小数位
-    $num = round($num, 2);
-    //将数字转化为整数
-    $num = $num * 100;
-    if (strlen($num) > 10) {
-        return "金额太大，请检查";
-    }
-    $i = 0;
-    $c = "";
-    while (1) {
-        if ($i == 0) {
-            //获取最后一位数字
-            $n = substr($num, strlen($num)-1, 1);
-        } else {
-            $n = $num % 10;
-        }
-        //每次将最后一位数字转化为中文
-        $p1 = substr($c1, 3 * $n, 3);
-        $p2 = substr($c2, 3 * $i, 3);
-        if ($n != '0' || ($n == '0' && ($p2 == '亿' || $p2 == '万' || $p2 == '元'))) {
-            $c = $p1 . $p2 . $c;
-        } else {
-            $c = $p1 . $c;
-        }
-        $i = $i + 1;
-        //去掉数字最后一位了
-        $num = $num / 10;
-        $num = (int)$num;
-        //结束循环
-        if ($num == 0) {
-            break;
-        }
-    }
-    $j = 0;
-    $slen = strlen($c);
-    while ($j < $slen) {
-        //utf8一个汉字相当3个字符
-        $m = substr($c, $j, 6);
-        //处理数字中很多0的情况,每次循环去掉一个汉字“零”
-        if ($m == '零元' || $m == '零万' || $m == '零亿' || $m == '零零') {
-            $left = substr($c, 0, $j);
-            $right = substr($c, $j + 3);
-            $c = $left . $right;
-            $j = $j-3;
-            $slen = $slen-3;
-        }
-        $j = $j + 3;
-    }
-    //这个是为了去掉类似23.0中最后一个“零”字
-    if (substr($c, strlen($c)-3, 3) == '零') {
-        $c = substr($c, 0, strlen($c)-3);
-    }
-    //将处理的汉字加上“整”
-    if (empty($c)) {
-        return "零元整";
-    }else{
-        return $c . "整";
-    }
-}
 
-
-/**
- * 获取设备或配置系统参数
- * @param string $name  参数名称
- * @param bool   $value 默认值
- * @return string|bool
- */
-function getSysconf($name, $defaultValue = ''){
-    $logic = model('SystemConfig', 'logic');
-    $data = $logic->where(['name' => $name])->find();
-    if(empty($data)){
-        return $defaultValue;
-    }
-    return $data['value'];
-
-}
-
-/**
- * 设置设备或配置系统参数
- * @param string $name 参数名称
- */
-function setSysconf($name, $value = '', $group = 'app', $remark = ''){
-    $data = ['name' => $name, 'value' => $value, 'group' => $group, 'remark' => $remark];
-    $oldData = getSysconf($name);
-    $logic = model('SystemConfig', 'logic');
-    if(empty($oldData)){
-        return $logic->create($data);
-    }else{
-        return $logic->update($data, ['name' => $name]);
-    }
-
-}
 
 /*
  * 发送短信
@@ -700,4 +649,67 @@ function placeOrder($itemInfo){
     //dump($res);
     return ['code'=>$res['code'],'msg'=>$res['msg'],'data'=>$res['result']];
 
+}
+
+
+
+/*
+ * 得到技术评分 技术分=（a+b*20+c*60）/100 *40
+ *
+
+技术评分标准  分值
+
+a  认证资质（ISO 5分；TS 5分；API 5分；PED 5分；）20
+
+b  近半年交货及时率100%（数据来源U9，每周同步） 20
+
+c  近半年质量合格率100%（数据来源U9，每周同步） 60
+ */
+function getTechScore($code){
+
+    return '80分';
+}
+
+/*
+ * 供应商资质评分  可随资质变化情况变更，资质有效期可显示，超过有效期的评分为0，需要提醒采购及时通知供方更新。
+ */
+function getQualiScore($code){
+    return '70分';
+}
+
+/*
+ * 供应风险
+ */
+/*单一资源&技术型：(独家采购)
+a)	极高-供应商连续3次出现质量合格率＜99%*0.95，或交货及时率＜95%*0.95
+b)	高-供应商连续2次出现质量合格率＜99%*0.95，或交货及时率＜95%*0.95
+c)	低-除上述a、b条件以外。
+充分竞争型：
+a)	极高-同一物料供应商=2家，其中1家供应商质量合格率＜99%*0.95，或交货及时率＜95%*0.95
+a)	高-同一物料供应商大于2小于4家，其中2家供应商质量合格率＜99%*0.95，或交货及时率＜95%*0.95
+b)	低-同一物料供应商大于2小于4家，其中1家供应商质量合格率＜99%*0.95，或交货及时率＜95%*0.95*/
+
+function getSupplyRisk($code){
+    return '极小';
+}
+/*
+ * 信用等级
+ *
+ *   信用等级	标准
+ *   优	≥98分
+ *   良	≥95分，＜98分
+ *   一般	85分＜95分
+ *   差	≤85分
+ */
+function getQualiLevel($score){
+    if($score>=98){
+        return '优';
+    }
+    if($score>=95){
+        return '良';
+    }
+    if($score>=85){
+        return '一般';
+    }
+    return '差';
 }

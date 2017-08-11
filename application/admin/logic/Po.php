@@ -268,6 +268,7 @@ class Po extends BaseLogic{
             if($res['code'] != 2000){
                 return resultArray($res);
             }
+            // $res['data']['DocNo'] ='PO01708110001';
             //生成一条po记录
             $poData = [
                 //'pr_code' => $itemInfo['pr_code'],
@@ -280,7 +281,10 @@ class Po extends BaseLogic{
                 'update_at' => $now,
             ];
             $oldPo = PoModel::findByCode($res['data']['DocNo']);
-            $po_id = !empty($oldPo) ? $oldPo['id'] : $this->insertOrGetId($poData);
+            if(!empty($oldPo)){
+                PoModel::where('order_code' , $res['data']['DocNo'])->delete();
+            }
+            $po_id =  $this->insertOrGetId($poData);
             //生成关联关系
             $list = [];
             $rtnPoLine = empty($res['data']['rtnLines']['rtnPoLine']) ? [] : $res['data']['rtnLines']['rtnPoLine'];

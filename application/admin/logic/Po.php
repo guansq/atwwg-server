@@ -279,7 +279,8 @@ class Po extends BaseLogic{
                 'create_at' => $now,
                 'update_at' => $now,
             ];
-            $po_id = $this->insertOrGetId($poData);
+            $oldPo = PoModel::findByCode($res['data']['DocNo']);
+            $po_id = !empty($oldPo) ? $oldPo['id'] : $this->insertOrGetId($poData);
             //生成关联关系
             $list = [];
             $rtnPoLine = empty($res['data']['rtnLines']['rtnPoLine']) ? [] : $res['data']['rtnLines']['rtnPoLine'];

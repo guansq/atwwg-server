@@ -1,0 +1,79 @@
+<form class="layui-form layui-box dl-horizontal" style='padding:25px 30px' action='{:url("$classuri/saveBarCode")}' data-auto="true" method="post" data-callback="callback">
+  <input type="hidden" name="pi_id" value="{$pi.id}">
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">物料编码</label>
+    <div class="layui-input-block">
+      <input placeholder="物料编码" autocomplete="off" class="layui-input" value="{$pi.item_code}" readonly>
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">物料名称</label>
+    <div class="layui-input-block">
+      <input placeholder="物料名称" autocomplete="off" class="layui-input" value="{$pi.item_name}" readonly>
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">数量</label>
+    <div class="layui-input-block">
+      <input type="number" name="num" required lay-verify="required" placeholder="数量" autocomplete="off" class="layui-input">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">单位</label>
+    <div class="layui-input-block">
+      <input placeholder="单位" autocomplete="off" class="layui-input" value="{$pi.price_uom}" readonly>
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">生产日期</label>
+    <div class="layui-input-block">
+      <input name="facture_date" lay-verify="required" placeholder="生产日期" autocomplete="off" class="layui-input-inline laydate-icon" style="height: 30px; padding-left: 6px;">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">炉号</label>
+    <div class="layui-input-block">
+      <input name="heat_no" placeholder="炉号" autocomplete="off" class="layui-input">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">备注</label>
+    <div class="layui-input-block">
+      <input name="remark" placeholder="备注" autocomplete="off" class="layui-input">
+    </div>
+  </div>
+
+  <div class="hr-line-dashed"></div>
+
+  <div class="layui-form-item text-center">
+    <button class="layui-btn" type='submit'>打印</button>
+  </div>
+
+</form>
+<script>
+  $(".laydate-icon").focus(function(){
+    laydate({
+      format:"YYYY-MM-DD",
+      //istime : true,
+      isclear:true,
+      istoday:true,
+      issure:true,
+      max:laydate.now()
+    });
+  });
+
+
+  function callback(ret){
+    if(ret.code != 1){
+      layer.alert(ret.msg);
+      return false;
+    }
+    if(!ret.data.rcvCode){
+      layer.alert('打印失败。');
+      return false;
+    }
+    open('{:url("$classuri/downDeliverOrder")}?rcvCode=' + ret.data.rcvCode);
+  }
+</script>

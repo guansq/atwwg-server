@@ -91,7 +91,7 @@
         <td>{$plist.times|0}</td>
         <td>{$plist.price|atwMoney}</td>
         <td>{$plist.amount|atwMoney}</td>
-        <td><a href="">打印</a></td>
+        <td><a href="javascript:;"  data-modal='{:url("$classuri/barCodeModal")}?pi_id={$plist.id}' data-title="打印条形码">打印</a></td>
         <td>{$plist.arv_goods_num}</td>
         <td>{$plist.pro_goods_num}</td>
       </tr>

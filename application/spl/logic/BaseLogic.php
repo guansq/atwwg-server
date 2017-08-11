@@ -5,11 +5,38 @@
  * Date: 2017/5/25
  * Time: 11:34
  */
+
 namespace app\spl\logic;
 
 use think\Model;
 
 class BaseLogic extends Model{
+
+    /**
+     * 写入数据
+     * @access public
+     * @param array      $data  数据数组
+     * @param array|true $field 允许字段
+     * @return $this
+     */
+    public static function create($data = [], $field = null){
+        $data['create_at'] = $data['update_at'] = time();
+        return parent::create($data, $field);
+    }
+
+    /**
+     * 更新数据
+     * @access public
+     * @param array      $data  数据数组
+     * @param array      $where 更新条件
+     * @param array|true $field 允许字段
+     * @return $this
+     */
+    public static function update($data = [], $where = [], $field = null){
+        $data['update_at'] = time();
+        return parent::update($data, $where, $field);
+    }
+
     protected $table = 'atw_system_user';
 
     /**

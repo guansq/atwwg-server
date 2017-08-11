@@ -202,6 +202,12 @@ class Order extends Base{
         }
     }
 
+    /**
+     * Author: WILL<314112362@qq.com>
+     * Describe: 打印送货单
+     * @param Request $request
+     * @return \think\response\View
+     */
     public function printRcv(Request $request){
         $poLogic = model('Order', 'logic');
         $reqParmas = $this->getReqParams();
@@ -223,6 +229,58 @@ class Order extends Base{
 
     /**
      * Author: WILL<314112362@qq.com>
+     * Describe: 打印条形码
+     * @param Request $request
+     * @return \think\response\View
+     */
+    public function barCodeModal(Request $request){
+        $pILogic = model('PoItem', 'logic');
+        $reqParmas = $this->getReqParams(['pi_id']);
+        $pi = $pILogic->find($reqParmas['pi_id']);
+        $this->assign('pi', $pi);
+        return view();
+
+    }
+
+    /**
+     * Author: WILL<314112362@qq.com>
+     * Describe: 打印条形码
+     * @param Request $request
+     * @return \think\response\View
+     */
+    public function saveBarCode(Request $request){
+        $pILogic = model('PoItem', 'logic');
+        $bcLogic = model('BarCode', 'logic');
+        $itemLogic = model('Item', 'logic');
+        $reqParams = $this->getReqParams(['pi_id', 'num', 'facture_date', 'heat_no', 'remark']);
+        $pi = $pILogic->find($reqParams['pi_id']);
+        if(empty($pi)){
+            returnJson(4004);
+        }
+        $item = $itemLogic->findByCode($pi['item_code']);
+        if(empty($item)){
+            returnJson(4004);
+        }
+
+        $printParmas = [
+            'LotNo' => '',                        //todo 物料条码
+            'ItemCode' => $pi['item_code'],       //物料编码
+            'ItemName' => $pi['item_name'],       //物料名称
+            'ItemStd' => $item['specs'],                      //物料规格
+            'MaterialTexture' => $item['mat_quality'],          //材质
+            'Quantity' => $reqParams['num'],         //数量
+            'MeasurementUnit' => $pi['price_uom'],          //计量单位
+            'ManufactureDate' => strtotime($reqParams['facture_date']),            //生产日期
+            'HeatNumber' => $reqParams['heat_no'],           //炉号
+            'VendorName' => $pi['sup_name'],           //供应商名称
+            'Remark' => $reqParams['remark'],           //备注
+        ];
+
+        returnJson($bcLogic->saveBarCode($printParmas));
+    }
+
+    /**
+     * Author: WILL<314112362@qq.com>
      * Describe: 下载送货单
      */
     public function downDeliverOrder(){
@@ -230,6 +288,7 @@ class Order extends Base{
         $poRcvLogic = model('PoReceive', 'logic');
         return $poRcvLogic->downPoReceive($rcvCode);
     }
+
     /**
      * Author: WILL<314112362@qq.com>
      * Time: ${DAY}

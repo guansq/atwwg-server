@@ -1,9 +1,9 @@
 <?php
 
 use service\DataService;
+use service\HttpService;
 use think\Db;
 use think\Validate;
-use service\HttpService;
 
 /**
  * 打印输出数据到文件
@@ -129,7 +129,6 @@ function setSysconf($name, $value = '', $group = 'app', $remark = ''){
 }
 
 
-
 /**
  * array_column 函数兼容
  */
@@ -214,26 +213,9 @@ if(!function_exists('resultArray')){
     }
 }
 
-if(!function_exists('assureNotEmpty')){
-    /**
-     * Auther: WILL<314112362@qq.com>
-     * Time: 2017-3-20 17:51:09
-     * Describe: 校验参数是否有空值
-     * @return bool
-     */
-    function assureNotEmpty($params = []){
-        if(empty($params)){
-            returnJson(4001, '缺少必要参数.');
-        }
-        foreach($params as $param){
-            if(empty($param)){
-                returnJson(4001, '缺少必要参数或者参数不合法.');
-            }
-        }
-        return true;
-    }
-}
-
+//===========================
+// 字符串操作  ↓↓↓↓↓
+//===========================
 /**
  * 生成訂單號
  */
@@ -252,13 +234,68 @@ if(!function_exists("generatOrderCode")){
  */
 function randomStr($len = 4){
     $chars_array = [
-        "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
-        "a", "b", "c", "d", "e", "f", "g", "h", "i", "j",
-        "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
-        "u", "v", "w", "x", "y", "z", "A", "B", "C", "D",
-        "E", "F", "G", "H", "I", "J", "K", "L", "M", "N",
-        "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X",
-        "Y", "Z"
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f",
+        "g",
+        "h",
+        "i",
+        "j",
+        "k",
+        "l",
+        "m",
+        "n",
+        "o",
+        "p",
+        "q",
+        "r",
+        "s",
+        "t",
+        "u",
+        "v",
+        "w",
+        "x",
+        "y",
+        "z",
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "N",
+        "O",
+        "P",
+        "Q",
+        "R",
+        "S",
+        "T",
+        "U",
+        "V",
+        "W",
+        "X",
+        "Y",
+        "Z"
     ];
     $charsLen = count($chars_array) - 1;
 
@@ -274,7 +311,16 @@ function randomStr($len = 4){
  */
 function randomNum($len = 4){
     $chars_array = [
-        "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9"
     ];
     $charsLen = count($chars_array) - 1;
 
@@ -298,60 +344,87 @@ function numbToCnYuan($num){
     //精确到分后面就不要了，所以只留两个小数位
     $num = round($num, 2);
     //将数字转化为整数
-    $num = $num * 100;
-    if (strlen($num) > 10) {
+    $num = $num*100;
+    if(strlen($num) > 10){
         return "金额太大，请检查";
     }
     $i = 0;
     $c = "";
-    while (1) {
-        if ($i == 0) {
+    while(1){
+        if($i == 0){
             //获取最后一位数字
-            $n = substr($num, strlen($num)-1, 1);
-        } else {
-            $n = $num % 10;
+            $n = substr($num, strlen($num) - 1, 1);
+        }else{
+            $n = $num%10;
         }
         //每次将最后一位数字转化为中文
-        $p1 = substr($c1, 3 * $n, 3);
-        $p2 = substr($c2, 3 * $i, 3);
-        if ($n != '0' || ($n == '0' && ($p2 == '亿' || $p2 == '万' || $p2 == '元'))) {
-            $c = $p1 . $p2 . $c;
-        } else {
-            $c = $p1 . $c;
+        $p1 = substr($c1, 3*$n, 3);
+        $p2 = substr($c2, 3*$i, 3);
+        if($n != '0' || ($n == '0' && ($p2 == '亿' || $p2 == '万' || $p2 == '元'))){
+            $c = $p1.$p2.$c;
+        }else{
+            $c = $p1.$c;
         }
         $i = $i + 1;
         //去掉数字最后一位了
-        $num = $num / 10;
+        $num = $num/10;
         $num = (int)$num;
         //结束循环
-        if ($num == 0) {
+        if($num == 0){
             break;
         }
     }
     $j = 0;
     $slen = strlen($c);
-    while ($j < $slen) {
+    while($j < $slen){
         //utf8一个汉字相当3个字符
         $m = substr($c, $j, 6);
         //处理数字中很多0的情况,每次循环去掉一个汉字“零”
-        if ($m == '零元' || $m == '零万' || $m == '零亿' || $m == '零零') {
+        if($m == '零元' || $m == '零万' || $m == '零亿' || $m == '零零'){
             $left = substr($c, 0, $j);
             $right = substr($c, $j + 3);
-            $c = $left . $right;
-            $j = $j-3;
-            $slen = $slen-3;
+            $c = $left.$right;
+            $j = $j - 3;
+            $slen = $slen - 3;
         }
         $j = $j + 3;
     }
     //这个是为了去掉类似23.0中最后一个“零”字
-    if (substr($c, strlen($c)-3, 3) == '零') {
-        $c = substr($c, 0, strlen($c)-3);
+    if(substr($c, strlen($c) - 3, 3) == '零'){
+        $c = substr($c, 0, strlen($c) - 3);
     }
     //将处理的汉字加上“整”
-    if (empty($c)) {
+    if(empty($c)){
         return "零元整";
     }else{
-        return $c . "整";
+        return $c."整";
+    }
+}
+
+
+//===========================
+// 时间 操作  ↓↓↓↓↓
+//===========================
+
+if(!function_exists('getTodayStartTime')){
+    /**
+     * Auther: WILL<314112362@qq.com>
+     * Describe: 获取当天 00:00 时刻时间戳
+     * @return int
+     */
+    function getTodayStartTime(){
+        return strtotime(date('Y-m-d'));
+    }
+}
+
+if(!function_exists('getTodayEndTime')){
+    /**
+     * Auther: WILL<314112362@qq.com>
+     * Describe: 获取当天 23:59:59 时刻时间戳
+     * @return int
+     */
+    function getTodayEndTime(){
+        return getTodayStartTime() + 60*60*24 - 1;
     }
 }
 
@@ -383,12 +456,37 @@ if(!function_exists('validateData')){
     }
 }
 
+/**
+ * todo 放到 base controller 中
+ */
+if(!function_exists('assureNotEmpty')){
+    /**
+     * Auther: WILL<314112362@qq.com>
+     * Time: 2017-3-20 17:51:09
+     * Describe: 校验参数是否有空值
+     * @return bool
+     */
+    function assureNotEmpty($params = []){
+        if(empty($params)){
+            returnJson(4001, '缺少必要参数.');
+        }
+        foreach($params as $param){
+            if(empty($param)){
+                returnJson(4001, '缺少必要参数或者参数不合法.');
+            }
+        }
+        return true;
+    }
+}
+
 //=========================================== ↓↓↓ APP特有方法 ↓↓↓ =======================================================
 /*
  * PHPexcel读取并返回数组
  */
-function format_excel2array11($excelObj,$filePath='',$sheet=0){
-    if(empty($filePath) or !file_exists($filePath)){die('file not exists');}
+function format_excel2array11($excelObj, $filePath = '', $sheet = 0){
+    if(empty($filePath) or !file_exists($filePath)){
+        die('file not exists');
+    }
     //$PHPReader = new PHPExcel_Reader_Excel2007();        //建立reader对象
     $PHPReader = $excelObj;
     /*dump($PHPReader);
@@ -404,8 +502,8 @@ function format_excel2array11($excelObj,$filePath='',$sheet=0){
     $allColumn = $currentSheet->getHighestColumn();        //**取得最大的列号*/
     $allRow = $currentSheet->getHighestRow();        //**取得一共有多少行*/
     $data = array();
-    for($rowIndex=1;$rowIndex<=$allRow;$rowIndex++){        //循环读取每个单元格的内容。注意行从1开始，列从A开始
-        for($colIndex='A';$colIndex<=$allColumn;$colIndex++){
+    for($rowIndex = 1; $rowIndex <= $allRow; $rowIndex++){        //循环读取每个单元格的内容。注意行从1开始，列从A开始
+        for($colIndex = 'A'; $colIndex <= $allColumn; $colIndex++){
             $addr = $colIndex.$rowIndex;
             $cell = $currentSheet->getCell($addr)->getValue();
             if($cell instanceof PHPExcel_RichText){ //富文本转换字符串
@@ -417,12 +515,12 @@ function format_excel2array11($excelObj,$filePath='',$sheet=0){
     return $data;
 }
 
-function prDates($start,$end){
+function prDates($start, $end){
     $dt_start = strtotime($start);
     $dt_end = strtotime($end);
-    while ($dt_start<=$dt_end){
-        echo date('Y-m-d',$dt_start)."\n";
-        $dt_start = strtotime('+1 day',$dt_start);
+    while($dt_start <= $dt_end){
+        echo date('Y-m-d', $dt_start)."\n";
+        $dt_start = strtotime('+1 day', $dt_start);
     }
 }
 
@@ -433,13 +531,13 @@ function atwDate($time){
     if(empty($time)){
         return $time;
     }
-    return date('Y-m-d',$time);
+    return date('Y-m-d', $time);
 }
 
 /*
  * 金钱的处理-->统一后两位小数点
  */
-function atwMoney($num,$ispre = true){
+function atwMoney($num, $ispre = true){
     $num = $num > 0 ? $num : 0;
     $formattedNum = number_format($num, 2);
     if($ispre){
@@ -452,7 +550,7 @@ function atwMoney($num,$ispre = true){
 /*
  * 初始化百分比的值
  */
-function initPerVal($num,$isMul = true,$ispre = ''){
+function initPerVal($num, $isMul = true, $ispre = ''){
     if($isMul){
         if($ispre == ''){
             return $num = empty($num) ? '0.00%' : (number_format($num*100, 2)).'%';
@@ -467,10 +565,11 @@ function initPerVal($num,$isMul = true,$ispre = ''){
 function keepdecimal($num){
     return number_format($num, 2);
 }
+
 /*
  * 发送信息
  */
-function sendMsg($sendeeId,$title,$content,$type='single',$pri=3){
+function sendMsg($sendeeId, $title, $content, $type = 'single', $pri = 3){
     $data = [
         'title' => $title,
         'content' => $content,
@@ -498,8 +597,8 @@ function getReceDateArr($m){
     $mArr = [];
     $m = intval($m);
     $Y = date('Y');//当前的年
-    for ($x=0; $x<12; $x++) {
-        if($m > 0 ){
+    for($x = 0; $x < 12; $x++){
+        if($m > 0){
             $mArr[$x] = $Y.'-'.$m.'-01';
         }else{
             $mArr[$x] = 12 - abs($m);
@@ -510,6 +609,7 @@ function getReceDateArr($m){
     }
     return $mArr;
 }
+
 /*
  * 得到一个月的日期
  */
@@ -518,15 +618,16 @@ function getEndMonthTime($date){
     $times = 30*24*60*60;
     return $start + $times;
 }
+
 /*
  * 根据结束月份和开始月份得到月份区间
  */
-function getMonthBetweenTime($smonth,$emonth){
+function getMonthBetweenTime($smonth, $emonth){
     //得到各自的年
-    $sYear = date('Y',$smonth);
-    $eYear = date('Y',$emonth);
-    $smon = intval(date('m',$smonth));
-    $emon = intval(date('m',$emonth));
+    $sYear = date('Y', $smonth);
+    $eYear = date('Y', $emonth);
+    $smon = intval(date('m', $smonth));
+    $emon = intval(date('m', $emonth));
     $resArr = [];
 
     if($sYear == $eYear){
@@ -540,13 +641,13 @@ function getMonthBetweenTime($smonth,$emonth){
         $months = $grpYear*12 - $smon + $emon;//总得月份数量
         //echo $months;die;
         $k = 0;
-        for($i=0;$i<=$months;$i++){
+        for($i = 0; $i <= $months; $i++){
             $curmon = ($smon + $i);//当前月份
             //echo $curmon;die;
             $curyear = intval(floor($curmon/12));//除以12取整  算出是否超出1年
             if($curyear > 0){
                 $tmpmon = $curmon%12 == 0 ? 12 : $curmon%12;
-                $resArr[$k] = $sYear+$curyear.'-'.$tmpmon.'-01';
+                $resArr[$k] = $sYear + $curyear.'-'.$tmpmon.'-01';
             }else{
                 $resArr[$k] = $sYear.'-'.$curmon.'-01';//起始年 和 当前月
             }
@@ -557,25 +658,22 @@ function getMonthBetweenTime($smonth,$emonth){
 }
 
 
-
-
-
 /*
  * 发送短信
  */
-function sendSMS($phone,$content){
+function sendSMS($phone, $content){
     $sendData = [
         'mobile' => $phone,
         'rt_appkey' => 'atw_wg',
         'text' => $content,
     ];
-    HttpService::curl(getenv('APP_API_MSG').'SendSms/sendText',$sendData);//sendSms($data)
+    HttpService::curl(getenv('APP_API_MSG').'SendSms/sendText', $sendData);//sendSms($data)
 }
 
 /*
  * 发送邮件
  */
-function sendMail($to,$title,$content){
+function sendMail($to, $title, $content){
     $sendData = [
         'rt_appkey' => 'atw_wg',
         'fromName' => '安特威物供平台',//发送人名
@@ -584,13 +682,13 @@ function sendMail($to,$title,$content){
         'html' => $content,
         'from' => 'tan3250204@sina.com',//平台的邮件头
     ];
-    HttpService::curl(getenv('APP_API_MSG').'SendEmail/sendHtml',$sendData);
+    HttpService::curl(getenv('APP_API_MSG').'SendEmail/sendHtml', $sendData);
 }
 
 /*
  * 推送信息
  */
-function pushInfo($token,$title,$content){
+function pushInfo($token, $title, $content){
     $sendData = [
         "platform" => "all",
         "rt_appkey" => "atw_wg",
@@ -610,7 +708,7 @@ function pushInfo($token,$title,$content){
             ]
         ]
     ];
-    HttpService::curl(getenv('APP_API_MSG').'push',$sendData);
+    HttpService::curl(getenv('APP_API_MSG').'push', $sendData);
 }
 
 /*
@@ -647,10 +745,9 @@ function placeOrder($itemInfo){
     $httpRet = HttpService::curl(getenv('APP_API_U9').'index/po', $sendData);
     $res = json_decode($httpRet, true);//成功回写数据库
     //dump($res);
-    return ['code'=>$res['code'],'msg'=>$res['msg'],'data'=>$res['result']];
+    return ['code' => $res['code'], 'msg' => $res['msg'], 'data' => $res['result']];
 
 }
-
 
 
 /*
@@ -692,6 +789,7 @@ b)	低-同一物料供应商大于2小于4家，其中1家供应商质量合格�
 function getSupplyRisk($code){
     return '极小';
 }
+
 /*
  * 信用等级
  *
@@ -702,13 +800,13 @@ function getSupplyRisk($code){
  *   差	≤85分
  */
 function getQualiLevel($score){
-    if($score>=98){
+    if($score >= 98){
         return '优';
     }
-    if($score>=95){
+    if($score >= 95){
         return '良';
     }
-    if($score>=85){
+    if($score >= 85){
         return '一般';
     }
     return '差';

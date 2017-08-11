@@ -13,15 +13,13 @@ namespace barcodegen;
 
 class BCGUtil{
 
-    public static function generateCode($codeStr, $fileName = ''){
+    public static function generateCode($codeStr, $label = null){
 
-        if(empty($fileName)){
-            $dir = RUNTIME_PATH."barcode/";
-            if(!is_dir($dir)){
-                @mkdir($dir, 0777);
-            }
-            $fileName =  "$dir$codeStr.png";
+        $dir = RUNTIME_PATH."barcode/";
+        if(!is_dir($dir)){
+            @mkdir($dir, 0777);
         }
+        $fileName = "$dir$codeStr.png";
 
         //$font = new BCGFontFile('extend/barcodegen/font/Arial.ttf', 18);
         $colorFront = new BCGColor(0, 0, 0);
@@ -36,6 +34,7 @@ class BCGUtil{
         //$code->setFont($font);
         $barcode->setStart(NULL);
         $barcode->setTilde(true);
+        $barcode->setLabel( $label === null ? $codeStr : $label);
         $barcode->parse($codeStr);
 
         // Drawing Part

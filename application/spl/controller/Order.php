@@ -229,7 +229,7 @@ class Order extends Base{
 
     /**
      * Author: WILL<314112362@qq.com>
-     * Describe: 打印条形码
+     * Describe: 打印条形码 弹框
      * @param Request $request
      * @return \think\response\View
      */
@@ -278,6 +278,23 @@ class Order extends Base{
 
         returnJson($bcLogic->saveBarCode($printParmas));
     }
+
+    /**
+     * Author: WILL<314112362@qq.com>
+     * Describe: 打印条形码
+     * @param Request $request
+     * @return \think\response\View
+     */
+    public function printBarCode(Request $request){
+        $bcLogic = model('BarCode', 'logic');
+        $reqParmas = $this->getReqParams(['lot_no']);
+        $barCode = $bcLogic->findByCode($reqParmas['lot_no']);
+        if(empty($barCode)){
+            exit('<script>window.close();</script>');
+        }
+        return $bcLogic->printBarCode($barCode);
+    }
+
 
     /**
      * Author: WILL<314112362@qq.com>

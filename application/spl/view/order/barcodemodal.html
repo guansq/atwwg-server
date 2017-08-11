@@ -66,14 +66,14 @@
 
 
   function callback(ret){
-    if(ret.code != 1){
+    if(ret.code != 2000){
       layer.alert(ret.msg);
       return false;
     }
-    if(!ret.data.rcvCode){
+    if(!ret.result.lot_no){
       layer.alert('打印失败。');
       return false;
     }
-    open('{:url("$classuri/downDeliverOrder")}?rcvCode=' + ret.data.rcvCode);
+    open('{:url("$classuri/printBarCode")}?lot_no=' + ret.result.lot_no);
   }
 </script>

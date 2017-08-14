@@ -192,12 +192,18 @@ class RequireOrder extends BaseLogic{
         return $this->where('status', 'IN' ,['init','hang'])->count();
     }
 
-
-
     /**
      * 统计流标的请购单
      */
     function countFlow(){
+        $count =  $this->where('status','flow')->count();
+        return $count;
+    }
+
+    /**
+     * 统计流标的询价单
+     */
+    function countFlowIo(){
         $count = model('Io','logic')->alias('a')
             ->field('a.id')
             ->join('item b', 'a.item_code=b.code', 'LEFT')

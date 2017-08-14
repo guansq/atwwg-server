@@ -419,7 +419,7 @@ class Order extends Base{
     /**
      * Author: WILL<314112362@qq.com>
      * Time: ${DAY}
-     * Describe:导出表格
+     * Describe:导出表格  discard
      */
     function exportPoExcel(){
         $list = $this->getPoList();
@@ -453,4 +453,79 @@ class Order extends Base{
         header("Content-Disposition: attachment; filename=".$file_name);
         exit($contents);
     }
+
+
+    /*
+  * 导出excel采购订单列表
+  */
+    public function exportPiList(){
+
+        // 申请资源 获取参数
+        $piLogic = model('PoItem', 'logic');
+        $reqParams = $this->getReqParams(['status'=>'','contract_begintime'=>'','contract_endtime'=>'','sup'=>'']);
+        $reqParams['sup']= session('spl_user')['sup_code'];
+        $piPage = $piLogic->getPoItemPage($reqParams,1,PHP_INT_MAX);
+        $list = $piPage->getItemList();
+
+        $path = ROOT_PATH.'public'.DS.'upload'.DS;
+        //dump($list);die;请购单编号-物料编号-请购日期-评标日期-供应商名称-要求交期-承诺交期-采购数量-报价-小计-状态
+        $PHPExcel = new PHPExcel(); //实例化PHPExcel类，类似于在桌面上新建一个Excel表格
+        $PHPSheet = $PHPExcel->getActiveSheet(); //获得当前活动sheet的操作对象
+        foreach(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'] as $cl ){
+            //設置列寬自適應
+            $PHPSheet->getColumnDimension($cl)->setAutoSize(true);
+        }
+        $PHPSheet->setTitle('采购订单列表'); //给当前活动sheet设置名称
+        $PHPSheet->setCellValue('A1', '采购订单号');
+        $PHPSheet->setCellValue('B1', '请购订单号');
+        $PHPSheet->setCellValue('C1', '物料编号');
+        $PHPSheet->setCellValue('D1', '物料描述');
+        $PHPSheet->setCellValue('E1', '供应商编号');
+        $PHPSheet->setCellValue('F1', '供应商名称');
+        $PHPSheet->setCellValue('G1', '要求交期');
+        $PHPSheet->setCellValue('H1', '承诺交期');
+        $PHPSheet->setCellValue('I1', '修改交期');
+        $PHPSheet->setCellValue('J1', '采购数量');
+        $PHPSheet->setCellValue('K1', '单价');
+        $PHPSheet->setCellValue('L1', '小计');
+        $PHPSheet->setCellValue('M1', '到货数量');
+        $PHPSheet->setCellValue('N1', '未交数量');
+        $PHPSheet->setCellValue('O1', '退货数量');
+        $PHPSheet->setCellValue('P1', '采购员');
+        $PHPSheet->setCellValue('Q1', '项目号');
+        $PHPSheet->setCellValue('R1', '状态');
+        $num = 1;
+        foreach($list as $k => $v){
+            $num++;
+            $PHPSheet->setCellValue('A'.$num, $v['po_code'])
+                ->setCellValue('B'.$num, $v['pr_code'])
+                ->setCellValue('C'.$num, $v['item_code'])
+                ->setCellValue('D'.$num, $v['item_name'])
+                ->setCellValue('E'.$num, $v['sup_code'])
+                ->setCellValue('F'.$num, $v['sup_name'])
+                ->setCellValue('G'.$num, $v['req_date_fmt'])
+                ->setCellValue('H'.$num, $v['sup_confirm_date_fmt'])
+                ->setCellValue('I'.$num, $v['sup_update_date_fmt'])
+                ->setCellValue('J'.$num, $v['price_num_fmt'])
+                ->setCellValue('K'.$num, $v['price_fmt'])
+                ->setCellValue('L'.$num, $v['price_subtotal_fmt'])
+                ->setCellValue('M'.$num, $v['arv_goods_num_fmt'])
+                ->setCellValue('N'.$num, $v['pro_goods_num_fmt'])
+                ->setCellValue('O'.$num, $v['return_goods_num'])
+                ->setCellValue('P'.$num, $v['purch_name'])
+                ->setCellValue('Q'.$num, $v['pro_no'])
+                ->setCellValue('R'.$num, $v['u9_status']);
+        }
+        $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel, 'Excel2007');//按照指定格式生成Excel文件，'Excel2007’表示生成2007版本的xlsx，
+        $PHPWriter->save($path.'/poItemList.xlsx'); //表示在$path路径下面生成ioList.xlsx文件
+        $file_name = "单采购订单报表".date('Y-m-d', time()).".xlsx";
+        $contents = file_get_contents($path.'/poItemList.xlsx');
+        $file_size = filesize($path.'/poItemList.xlsx');
+        header("Content-type: application/octet-stream;charset=utf-8");
+        header("Accept-Ranges: bytes");
+        header("Accept-Length: $file_size");
+        header("Content-Disposition: attachment; filename=".$file_name);
+        exit($contents);
+    }
+
 }

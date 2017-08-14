@@ -133,7 +133,7 @@
     var contract_begintime = $("#contract_begintime").val()||'';
     var contract_endtime = $("#contract_endtime").val()||'';
     var tag = $("#tag_hid").val()||'';
-    var str = "{:url('Order/exportPoExcel')}"
+    var str = "{:url('Order/exportPiList')}"
         + '?status=' + status
         + '&contract_begintime=' + contract_begintime
         + '&contract_endtime=' + contract_endtime

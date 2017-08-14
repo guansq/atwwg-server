@@ -9,6 +9,8 @@
 namespace app\spl\logic;
 
 
+use app\common\util\Page;
+
 class PoItem extends BaseLogic{
     protected $table = 'atw_po_item';
 
@@ -27,6 +29,99 @@ class PoItem extends BaseLogic{
             ->select();
         //dd(self::getLastSql());
         return $list;
+    }
+
+
+    /**
+     * Author: WILL<314112362@qq.com>
+     * Describe:
+     * @param $piIds
+     * @param $bizType
+     */
+    function getPoItemPage($searchKwd, $startpageIndex = 1, $length = 10){
+        $page = new Page($startpageIndex, $length);
+        $fields = [
+            'pi.po_id',
+            'pi.po_code',
+            'pi.po_ln',
+            'pi.item_code',
+            'pi.item_name',
+            'pi.sup_code',
+            'pi.sup_name',
+            'pi.price_num',
+            'pi.price_uom',
+            'pi.tc_num',
+            'pi.tc_uom',
+            'pi.pr_id',
+            'pi.pr_code',
+            'pi.pr_ln',
+            'pi.sup_confirm_date',
+            'pi.req_date',
+            'pi.sup_update_date',
+            'pi.price',
+            'pi.amount',
+            'pi.tax_rate',
+            'pi.purch_code',
+            'pi.purch_name',
+            'pi.arv_goods_num',
+            'pi.pro_goods_num',
+            'pi.return_goods_num',
+            'pi.fill_goods_num',
+            'pi.create_at',
+            'pi.update_at',
+            'pi.status',
+            'pi.u9_status',
+            'pi.last_sync_time',
+            'pi.winbid_time',
+            'pr.pro_no',
+        ];
+        $where = []; // 查询条件
+        if(!empty($searchKwd['status']) && $searchKwd['status'] != 'all'){
+            $where['po.status'] = $searchKwd['status'];
+        };
+
+
+        if(!empty($searchKwd['contract_begintime'])){
+            $where['po.contract_time'] = ['>=', $searchKwd['contract_begintime']];
+        };
+        if(!empty($searchKwd['contract_endtime'])){
+            $where['po.contract_time'] = ['<=', $searchKwd['contract_endtime']];
+        };
+
+
+        if(!empty($searchKwd['sup'])){
+            $where['pi.sup_code'] = $searchKwd['sup'];
+        };
+
+        $total = $this->alias('pi')
+            ->join('atw_po po', 'po.id = pi.po_id', 'LEFT')
+            ->join('atw_u9_pr pr', 'pr.id = pi.pr_id', 'LEFT')
+            ->where($where)
+            ->whereNotNull('pi.po_code')
+            ->count();
+
+        $page->setItemTotal($total);
+        $itemList = $this->alias('pi')
+            ->join('atw_po po', 'po.id = pi.po_id', 'LEFT')
+            ->join('atw_u9_pr pr', 'pr.id = pi.pr_id', 'LEFT')
+            ->where($where)
+            ->whereNotNull('pi.po_code')
+            ->order('pi.update_at', 'DESC')
+            ->limit($page->getItemStart(), $length)
+            ->field($fields)
+            ->select();
+        foreach($itemList as &$item){
+            $item['req_date_fmt'] = empty($item['req_date']) ? "" : date('Y-m-d', $item['req_date']);
+            $item['sup_confirm_date_fmt'] = empty($item['sup_confirm_date']) ? "" : date('Y-m-d', $item['sup_confirm_date']);
+            $item['sup_update_date_fmt'] = empty($item['sup_update_date']) ? "" : date('Y-m-d', $item['sup_update_date']);
+            $item['price_num_fmt'] = number_format($item['price_num'], 2);
+            $item['price_fmt'] = number_format($item['price'], 2);
+            $item['price_subtotal_fmt'] = number_format($item['price']*$item['price_num'], 2);
+            $item['arv_goods_num_fmt'] = number_format($item['arv_goods_num'], 2);
+            $item['pro_goods_num_fmt'] = number_format($item['pro_goods_num'], 2);
+        }
+        $page->setItemList($itemList);
+        return $page;
     }
 
     /**

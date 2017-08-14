@@ -49,8 +49,12 @@ class Showmsg extends BaseController{
         $this->assign('pastSuppNum', $pastSuppNum);
         $this->assign('unCheckNum', $unCheckNum);
         //流拍询价数量
-        $giveupNum = $prLogic->countFlow();
+        $giveupNum = $prLogic->countFlowIo();
         $this->assign('giveupNum', $giveupNum);
+
+        //流拍询价数量
+        $flowPrNum = $prLogic->countFlow();
+        $this->assign('flowPrNum', $flowPrNum);
 
         //高信用風險供应商数量
         $creditRiskCount = $suppLogic->countCreditRisk();

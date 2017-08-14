@@ -37,10 +37,25 @@
             <i>{$flowPrNum}</i>
           </li>
         </a>
+
         <a data-open="/order/index?status=sup_cancel">
           <li style="background: #ffb45d;">
             <span>订单取消数量</span>
             <i>{$poCancelNum}</i>
+          </li>
+        </a>
+
+        <a data-open="/order/index?status=sup_sure">
+          <li style="background: #ffb45d;">
+            <span>订单未回传合同</span>
+            <i>{$poUnUploadNum}</i>
+          </li>
+        </a>
+
+        <a data-open="/order/index?status=upload_contract">
+          <li style="background: #ffb45d;">
+            <span>订单未审核合同</span>
+            <i>{$poUnCheckNum}</i>
           </li>
         </a>
         <a data-open="/order/index?status=exceed">

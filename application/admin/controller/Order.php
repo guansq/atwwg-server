@@ -69,8 +69,8 @@ class Order extends BaseController{
             $where['status'] = ['NOT IN', ['finish', 'sup_cancel']];
             $isCheckExceed = true;
         }
-        if(!empty($get['status']) && $get['status'] == 'sup_cancel'){
-            $where['status'] = 'sup_cancel';
+        if(!empty($get['status'])){
+            $where['status'] = $get['status'];
         }
 
         $list = $poLogic->getPolist($where);

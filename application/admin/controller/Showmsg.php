@@ -41,6 +41,14 @@ class Showmsg extends BaseController{
         $poCancelNum = poModel::where('status','sup_cancel')->count();
         $this->assign('poCancelNum', $poCancelNum);
 
+        //订单未回传合同    //dump($quoteNum);
+        $poUnUploadNum = poModel::where('status','sup_sure')->count();
+        $this->assign('poUnUploadNum', $poUnUploadNum);
+
+        //订单未审核合同    //dump($quoteNum);
+        $poUnCheckNum = poModel::where('status','upload_contract')->count();
+        $this->assign('poUnCheckNum', $poUnCheckNum);
+
         //供应商资质过期
         $suppLogic = model('Supporter', 'logic');
         $pastSuppNum = $suppLogic->countPastSupNum();

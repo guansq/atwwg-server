@@ -445,31 +445,31 @@ class Enquiryorder extends BaseController{
         $PHPExcel = new PHPExcel(); //实例化PHPExcel类，类似于在桌面上新建一个Excel表格
         $PHPSheet = $PHPExcel->getActiveSheet(); //获得当前活动sheet的操作对象
         $PHPSheet->setTitle('询价单列表'); //给当前活动sheet设置名称
-        $PHPSheet->setCellValue('A1', '询价单号');
-        $PHPSheet->setCellValue('B1', '请购单号');
-        $PHPSheet->setCellValue('C1', '料号');
-        $PHPSheet->setCellValue('D1', '交易单位');
-        $PHPSheet->setCellValue('E1', '计价单位');
-        $PHPSheet->setCellValue('F1', '数量');
-        $PHPSheet->setCellValue('G1', '交期');
-        $PHPSheet->setCellValue('H1', '询价日期');
-        $PHPSheet->setCellValue('I1', '报价截止日期');
-        $PHPSheet->setCellValue('J1', '报价状态');
-        $PHPSheet->setCellValue('K1', '状态');
+        $PHPSheet->setCellValueExplicit('A1', '询价单号');
+        $PHPSheet->setCellValueExplicit('B1', '请购单号');
+        $PHPSheet->setCellValueExplicit('C1', '料号');
+        $PHPSheet->setCellValueExplicit('D1', '交易单位');
+        $PHPSheet->setCellValueExplicit('E1', '计价单位');
+        $PHPSheet->setCellValueExplicit('F1', '数量');
+        $PHPSheet->setCellValueExplicit('G1', '交期');
+        $PHPSheet->setCellValueExplicit('H1', '询价日期');
+        $PHPSheet->setCellValueExplicit('I1', '报价截止日期');
+        $PHPSheet->setCellValueExplicit('J1', '报价状态');
+        $PHPSheet->setCellValueExplicit('K1', '状态');
         $num = 1;
         foreach($list as $k => $v){
             $num = $num + 1;
-            $PHPSheet->setCellValue('A'.$num, $v['io_code'])
-                ->setCellValue('B'.$num, $v['pr_code'])
-                ->setCellValue('C'.$num, $v['item_code'])
-                ->setCellValue('D'.$num, $v['tc_uom'])
-                ->setCellValue('E'.$num, $v['price_uom'])
-                ->setCellValue('F'.$num, $v['price_num'])
-                ->setCellValue('G'.$num, $v['req_date'])
-                ->setCellValue('H'.$num, $v['quote_date'])
-                ->setCellValue('I'.$num, $v['quote_endtime'])
-                ->setCellValue('J'.$num, $v['price_status'])
-                ->setCellValue('K'.$num, $v['status']);
+            $PHPSheet->setCellValueExplicit('A'.$num, $v['io_code'])
+                ->setCellValueExplicit('B'.$num, $v['pr_code'])
+                ->setCellValueExplicit('C'.$num, $v['item_code'])
+                ->setCellValueExplicit('D'.$num, $v['tc_uom'])
+                ->setCellValueExplicit('E'.$num, $v['price_uom'])
+                ->setCellValueExplicit('F'.$num, $v['price_num'])
+                ->setCellValueExplicit('G'.$num, $v['req_date'])
+                ->setCellValueExplicit('H'.$num, $v['quote_date'])
+                ->setCellValueExplicit('I'.$num, $v['quote_endtime'])
+                ->setCellValueExplicit('J'.$num, $v['price_status'])
+                ->setCellValueExplicit('K'.$num, $v['status']);
         }
         $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel, 'Excel2007');//按照指定格式生成Excel文件，'Excel2007’表示生成2007版本的xlsx，
         $PHPWriter->save($path.'/ioList.xlsx'); //表示在$path路径下面生成ioList.xlsx文件

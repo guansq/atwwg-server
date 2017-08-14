@@ -205,55 +205,55 @@ class Supporter extends BaseController{
         $PHPSheet->setTitle('供应商列表'); //给当前活动sheet设置名称
         //dump($list);die;
 
-        $PHPSheet->setCellValue('A1', '供应商ID')->setCellValue('B1', '供应商CODE');
-        $PHPSheet->setCellValue('C1', '供应商名称')->setCellValue('D1', '供应商登录名');
-        $PHPSheet->setCellValue('E1', '供应商密码');
-        $PHPSheet->setCellValue('F1', '主分类名称');
-        $PHPSheet->setCellValue('G1', '主分类编码');
-        $PHPSheet->setCellValue('H1', '地税号');
-        $PHPSheet->setCellValue('I1', '国税号');
-        $PHPSheet->setCellValue('J1', '成立日期');
-        $PHPSheet->setCellValue('K1', '税率');
-        $PHPSheet->setCellValue('L1', '供应商电话');
-        $PHPSheet->setCellValue('M1', '供应商手机');
-        $PHPSheet->setCellValue('N1', '供应商邮箱');
-        $PHPSheet->setCellValue('O1', '供应商传真');
-        $PHPSheet->setCellValue('P1', '联系人');
-        $PHPSheet->setCellValue('Q1', '地址');
-        $PHPSheet->setCellValue('R1', '付款方式');
-        $PHPSheet->setCellValue('S1', '企业名称');
-        $PHPSheet->setCellValue('T1', '采购员工号');
-        $PHPSheet->setCellValue('U1', '采购员工姓名');
-        $PHPSheet->setCellValue('V1', '供应商采购属性');
-        $PHPSheet->setCellValue('W1', '检验类型');
-        $PHPSheet->setCellValue('X1', '抽检比例');
+        $PHPSheet->setCellValueExplicit('A1', '供应商ID')->setCellValueExplicit('B1', '供应商CODE');
+        $PHPSheet->setCellValueExplicit('C1', '供应商名称')->setCellValueExplicit('D1', '供应商登录名');
+        $PHPSheet->setCellValueExplicit('E1', '供应商密码');
+        $PHPSheet->setCellValueExplicit('F1', '主分类名称');
+        $PHPSheet->setCellValueExplicit('G1', '主分类编码');
+        $PHPSheet->setCellValueExplicit('H1', '地税号');
+        $PHPSheet->setCellValueExplicit('I1', '国税号');
+        $PHPSheet->setCellValueExplicit('J1', '成立日期');
+        $PHPSheet->setCellValueExplicit('K1', '税率');
+        $PHPSheet->setCellValueExplicit('L1', '供应商电话');
+        $PHPSheet->setCellValueExplicit('M1', '供应商手机');
+        $PHPSheet->setCellValueExplicit('N1', '供应商邮箱');
+        $PHPSheet->setCellValueExplicit('O1', '供应商传真');
+        $PHPSheet->setCellValueExplicit('P1', '联系人');
+        $PHPSheet->setCellValueExplicit('Q1', '地址');
+        $PHPSheet->setCellValueExplicit('R1', '付款方式');
+        $PHPSheet->setCellValueExplicit('S1', '企业名称');
+        $PHPSheet->setCellValueExplicit('T1', '采购员工号');
+        $PHPSheet->setCellValueExplicit('U1', '采购员工姓名');
+        $PHPSheet->setCellValueExplicit('V1', '供应商采购属性');
+        $PHPSheet->setCellValueExplicit('W1', '检验类型');
+        $PHPSheet->setCellValueExplicit('X1', '抽检比例');
         $num = 1;
         foreach($list as $k => $v){
             $num = $num + 1;
-            $PHPSheet->setCellValue('A'.$num, $v['id'])
-                ->setCellValue('B'.$num, $v['code'])
-                ->setCellValue('C'.$num, $v['name'])
-                ->setCellValue('D'.$num, strtolower($v['code']))
-                ->setCellValue('E'.$num, '')
-                ->setCellValue('F'.$num, $v['type_name'])
-                ->setCellValue('G'.$num, $v['type_code'])
-                ->setCellValue('H'.$num, $v['state_tax_code'])
-                ->setCellValue('I'.$num, $v['national_tax_code'])
-                ->setCellValue('J'.$num, $v['found_date'])
-                ->setCellValue('K'.$num, $v['tax_rate'])
-                ->setCellValue('L'.$num, $v['mobile'])
-                ->setCellValue('M'.$num, $v['phone'])
-                ->setCellValue('N'.$num, $v['email'])
-                ->setCellValue('O'.$num, $v['fax'])
-                ->setCellValue('P'.$num, $v['ctc_name'])
-                ->setCellValue('Q'.$num, $v['address'])
-                ->setCellValue('R'.$num, $v['pay_way'])
-                ->setCellValue('S'.$num, $v['com_name'])
-                ->setCellValue('T'.$num, $v['purch_code'])
-                ->setCellValue('U'.$num, $v['purch_name'])
-                ->setCellValue('V'.$num, $v['purch_type'])
-                ->setCellValue('W'.$num, $v['check_type'])
-                ->setCellValue('X'.$num, $v['check_rate']);
+            $PHPSheet->setCellValueExplicit('A'.$num, $v['id'])
+                ->setCellValueExplicit('B'.$num, $v['code'])
+                ->setCellValueExplicit('C'.$num, $v['name'])
+                ->setCellValueExplicit('D'.$num, strtolower($v['code']))
+                ->setCellValueExplicit('E'.$num, '')
+                ->setCellValueExplicit('F'.$num, $v['type_name'])
+                ->setCellValueExplicit('G'.$num, $v['type_code'])
+                ->setCellValueExplicit('H'.$num, $v['state_tax_code'])
+                ->setCellValueExplicit('I'.$num, $v['national_tax_code'])
+                ->setCellValueExplicit('J'.$num, $v['found_date'])
+                ->setCellValueExplicit('K'.$num, $v['tax_rate'])
+                ->setCellValueExplicit('L'.$num, $v['mobile'])
+                ->setCellValueExplicit('M'.$num, $v['phone'])
+                ->setCellValueExplicit('N'.$num, $v['email'])
+                ->setCellValueExplicit('O'.$num, $v['fax'])
+                ->setCellValueExplicit('P'.$num, $v['ctc_name'])
+                ->setCellValueExplicit('Q'.$num, $v['address'])
+                ->setCellValueExplicit('R'.$num, $v['pay_way'])
+                ->setCellValueExplicit('S'.$num, $v['com_name'])
+                ->setCellValueExplicit('T'.$num, $v['purch_code'])
+                ->setCellValueExplicit('U'.$num, $v['purch_name'])
+                ->setCellValueExplicit('V'.$num, $v['purch_type'])
+                ->setCellValueExplicit('W'.$num, $v['check_type'])
+                ->setCellValueExplicit('X'.$num, $v['check_rate']);
         }
         $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel, 'Excel2007');//按照指定格式生成Excel文件，'Excel2007’表示生成2007版本的xlsx，
         $PHPWriter->save($path.'/supList.xlsx'); //表示在$path路径下面生成supList.xlsx文件

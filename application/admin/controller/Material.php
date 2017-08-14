@@ -193,30 +193,30 @@ class Material extends BaseController{
         $PHPExcel = new PHPExcel(); //实例化PHPExcel类，类似于在桌面上新建一个Excel表格
         $PHPSheet = $PHPExcel->getActiveSheet(); //获得当前活动sheet的操作对象
         $PHPSheet->setTitle('物料列表'); //给当前活动sheet设置名称
-        $PHPSheet->setCellValue('A1','ID');
-        $PHPSheet->setCellValue('B1','物料编码');
-        $PHPSheet->setCellValue('C1','物料名称');
-        $PHPSheet->setCellValue('D1','主分类名称');
-        $PHPSheet->setCellValue('E1','物料描述');
-        $PHPSheet->setCellValue('F1','创建时间');
-        $PHPSheet->setCellValue('G1','更新时间');
-        $PHPSheet->setCellValue('H1','货期让步比例');
-        $PHPSheet->setCellValue('I1','价格采购权重');
-        $PHPSheet->setCellValue('J1','技术采购权重');
-        $PHPSheet->setCellValue('K1','商务权重');
-        $PHPSheet->setCellValue('L1','标准货期');
+        $PHPSheet->setCellValueExplicit('A1','ID');
+        $PHPSheet->setCellValueExplicit('B1','物料编码');
+        $PHPSheet->setCellValueExplicit('C1','物料名称');
+        $PHPSheet->setCellValueExplicit('D1','主分类名称');
+        $PHPSheet->setCellValueExplicit('E1','物料描述');
+        $PHPSheet->setCellValueExplicit('F1','创建时间');
+        $PHPSheet->setCellValueExplicit('G1','更新时间');
+        $PHPSheet->setCellValueExplicit('H1','货期让步比例');
+        $PHPSheet->setCellValueExplicit('I1','价格采购权重');
+        $PHPSheet->setCellValueExplicit('J1','技术采购权重');
+        $PHPSheet->setCellValueExplicit('K1','商务权重');
+        $PHPSheet->setCellValueExplicit('L1','标准货期');
         $num = 1;
         foreach($list as $k => $v){
             $num = $num+1;
-            $PHPSheet->setCellValue('A'.$num,$v['id'])->setCellValue('B'.$num,$v['code'])
-                    ->setCellValue('C'.$num,$v['name'])->setCellValue('D'.$num,$v['main_name'])
-                    ->setCellValue('E'.$num,$v['desc'])->setCellValue('F'.$num,date('Y-m-d H:i:s',$v['create_at']))
-                    ->setCellValue('G'.$num,date('Y-m-d H:i:s',$v['update_at']))
-                    ->setCellValue('H'.$num,initPerVal($v['future_scale']))
-                    ->setCellValue('I'.$num,initPerVal($v['price_weight']))
-                    ->setCellValue('J'.$num,initPerVal($v['tech_weight']))
-                    ->setCellValue('K'.$num,initPerVal($v['business_weight']))
-                    ->setCellValue('L'.$num,$v['standard_date']);
+            $PHPSheet->setCellValueExplicit('A'.$num,$v['id'])->setCellValueExplicit('B'.$num,$v['code'])
+                    ->setCellValueExplicit('C'.$num,$v['name'])->setCellValueExplicit('D'.$num,$v['main_name'])
+                    ->setCellValueExplicit('E'.$num,$v['desc'])->setCellValueExplicit('F'.$num,date('Y-m-d H:i:s',$v['create_at']))
+                    ->setCellValueExplicit('G'.$num,date('Y-m-d H:i:s',$v['update_at']))
+                    ->setCellValueExplicit('H'.$num,initPerVal($v['future_scale']))
+                    ->setCellValueExplicit('I'.$num,initPerVal($v['price_weight']))
+                    ->setCellValueExplicit('J'.$num,initPerVal($v['tech_weight']))
+                    ->setCellValueExplicit('K'.$num,initPerVal($v['business_weight']))
+                    ->setCellValueExplicit('L'.$num,$v['standard_date']);
         }
         $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel,'Excel2007');//按照指定格式生成Excel文件，'Excel2007’表示生成2007版本的xlsx，
         $PHPWriter->save($path.'/itemList.xlsx'); //表示在$path路径下面生成itemList.xlsx文件

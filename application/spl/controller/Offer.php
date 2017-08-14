@@ -158,29 +158,29 @@ class Offer extends Base{
         $PHPSheet->setTitle('询价单导出'); //给当前活动sheet设置名称
         $logicSupInfo = Model('Offer', 'logic');
         $list = $logicSupInfo->getOfferInfo($sup_code, ['status' => 'init']);
-        $PHPSheet->setCellValue('A1', 'ID')->setCellValue('B1', '物料名称');
-        $PHPSheet->setCellValue('C1', '采购数量')->setCellValue('D1', '交易单位');
-        $PHPSheet->setCellValue('E1', '计价单位')->setCellValue('F1', '询价时间');
-        $PHPSheet->setCellValue('G1', '报价截止日期')->setCellValue('H1', '要求交期');
-        $PHPSheet->setCellValue('I1', '可供货日期')->setCellValue('J1', '单价');
-        $PHPSheet->setCellValue('K1', '总价')->setCellValue('L1', '备注');
+        $PHPSheet->setCellValueExplicit('A1', 'ID')->setCellValueExplicit('B1', '物料名称');
+        $PHPSheet->setCellValueExplicit('C1', '采购数量')->setCellValueExplicit('D1', '交易单位');
+        $PHPSheet->setCellValueExplicit('E1', '计价单位')->setCellValueExplicit('F1', '询价时间');
+        $PHPSheet->setCellValueExplicit('G1', '报价截止日期')->setCellValueExplicit('H1', '要求交期');
+        $PHPSheet->setCellValueExplicit('I1', '可供货日期')->setCellValueExplicit('J1', '单价');
+        $PHPSheet->setCellValueExplicit('K1', '总价')->setCellValueExplicit('L1', '备注');
 
         $num = 1;
         foreach($list as $k => $v){
             // var_dump($v);
             $num = $num + 1;
-            $PHPSheet->setCellValue('A'.$num, $v['id'])
-                ->setCellValue('B'.$num, $v['item_name'])
-                ->setCellValue('C'.$num, $v['price_num'])
-                ->setCellValue('D'.$num, $v['price_uom'])
-                ->setCellValue('E'.$num, $v['tc_uom'])
-                ->setCellValue('F'.$num, date('Y-m-d', $v['create_at']))
-                ->setCellValue('G'.$num, date('Y-m-d', $v['quote_endtime']))
-                ->setCellValue('H'.$num, date('Y-m-d', $v['req_date']))
-                ->setCellValue('I'.$num, date('Y-m-d', $v['req_date']))
-                ->setCellValue('J'.$num, $v['quote_price'])
-                ->setCellValue('K'.$num, ($v['price_num']*$v['quote_price']))
-                ->setCellValue('L'.$num, $v['remark']);
+            $PHPSheet->setCellValueExplicit('A'.$num, $v['id'])
+                ->setCellValueExplicit('B'.$num, $v['item_name'])
+                ->setCellValueExplicit('C'.$num, $v['price_num'])
+                ->setCellValueExplicit('D'.$num, $v['price_uom'])
+                ->setCellValueExplicit('E'.$num, $v['tc_uom'])
+                ->setCellValueExplicit('F'.$num, date('Y-m-d', $v['create_at']))
+                ->setCellValueExplicit('G'.$num, date('Y-m-d', $v['quote_endtime']))
+                ->setCellValueExplicit('H'.$num, date('Y-m-d', $v['req_date']))
+                ->setCellValueExplicit('I'.$num, date('Y-m-d', $v['req_date']))
+                ->setCellValueExplicit('J'.$num, $v['quote_price'])
+                ->setCellValueExplicit('K'.$num, ($v['price_num']*$v['quote_price']))
+                ->setCellValueExplicit('L'.$num, $v['remark']);
 
         }
         $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel, 'Excel2007');//按照指定格式生成Excel文件，'Excel2007’表示生成2007版本的xlsx，

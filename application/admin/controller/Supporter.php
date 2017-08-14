@@ -444,5 +444,24 @@ class Supporter extends BaseController{
         }
     }
 
+    /**
+     * 更改供应商弃标次数
+     */
+    public function changeGiveUp(){
+        $logicSupInfo = Model('Supporter', 'logic');
+        $where = [
+            'code' => input('param.code'),
+        ];
+        $data = [
+            'giveup_count' => input('param.giveup_count')
+        ];
+        $result = $logicSupInfo->changeSupplierInfo($where, $data);
+        if($result !== false){
+            return json(['code' => 2000, 'data' => [], 'msg' => '成功']);
+        }else{
+            return json(['code' => 4000, 'data' => [], 'msg' => '失败']);
+        }
+    }
+
 
 }

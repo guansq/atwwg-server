@@ -188,6 +188,13 @@
             <input type="text" class="form-control" value="{$sup_info['pay_way']}" disabled="">
           </div>
         </div>
+        <div class="form-group col-sm-6">
+          <label class="col-sm-2 control-label">弃标次数</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" required="required" name="giveup_count" id="giveup_count" value="{$sup_info['giveup_count']}">
+            <button type="button" class="btn btn-success" onclick="changeGiveUp('{$sup_info.code}');">更改弃标次数</button>
+          </div>
+        </div>
         {notempty name="$sup_info['pay_way_change']"}
         <div class="form-group col-sm-6">
           <label class="col-sm-2 control-label">更改后付款方式</label>
@@ -377,5 +384,33 @@
     }, options));
   };
 
+  function changeGiveUp(code){
+    layer.confirm('确认该操作吗？', {
+      btn: ['提交','取消'], //按钮
+      shade: false //不显示遮罩
+    }, function(index){
+      url = '{:url("Supporter/changeGiveUp")}';
+      var give_num = $('#giveup_count').val();
+
+      data = {
+        'code' : code,
+        'giveup_count' : give_num
+      };
+
+      layer.close(index);
+      layer.load();
+      $.post(url,data,function(res){
+        layer.closeAll();
+        if(res.code == 2000){
+          $.form.reload();
+          layer.alert('更改成功');
+        }else{
+          layer.alert('更改失败');
+        }
+      });
+      //$("#form 的 id").submit();
+
+    });
+  }
 </script>
 {/block}

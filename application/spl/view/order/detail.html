@@ -32,7 +32,7 @@
       <span id="ImageList">
         {if $imgInfos|@count neq 0 }
         {volist name='imgInfos' key='i' id='pimgInfos'}
-        <a  href="{$pimgInfos}" target="_blank">查看映像({$i})</a> &nbsp;
+        <a  href="{$pimgInfos}" target="_blank">查看影像({$i})</a> &nbsp;
         {/volist}
         {/if}
       </span>
@@ -40,7 +40,7 @@
       {if $statusButton.contractable eq 1}
       <img src="/static/spl/img/add.png" alt="" class="uploadImg" data-modal='{:url("$classuri/add")}?id={$codeInfo.id}&contract={$codeInfo.contract}'  >
       <!--<a class="btn btn-link" data-file="one" data-type="jpg|pdf|png" data-field="src" data-callback="">添加</a>-->
-      <button id="re_upload_btn" class="btn btn-danger" style="margin-left: 20px;">清空映像</button>
+      <button id="re_upload_btn" class="btn btn-danger" style="margin-left: 20px;">清空影像</button>
       <span>*下载合同模版后请 打印 盖公章后 扫描或者拍照上传由平台运营人员审核通过后会通过绑定邮箱和手机通知到您。</span>
       {/if}
 

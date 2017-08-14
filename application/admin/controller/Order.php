@@ -69,7 +69,7 @@ class Order extends BaseController{
             $where['status'] = ['NOT IN', ['finish', 'sup_cancel']];
             $isCheckExceed = true;
         }
-        if(!empty($get['status'])){
+        if(!empty($get['status']) && in_array($get['status'],['sup_cancel','sup_sure','upload_contract'])){
             $where['status'] = $get['status'];
         }
 

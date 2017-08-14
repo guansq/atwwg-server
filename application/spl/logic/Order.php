@@ -211,19 +211,18 @@ class Order extends BaseLogic{
         // create new PDF document
         $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         // set document information
-        $pdf->SetCreator(PDF_CREATOR);
-        $pdf->SetAuthor('wxx@ruitukeji.com');
-        $pdf->SetTitle('安特威采购合同');
-        $pdf->SetSubject('安特威采购合同');
-        $pdf->SetKeywords('安特威,采购合同');
-
+        //$pdf->SetCreator(PDF_CREATOR);
+        // $pdf->SetAuthor('wxx@ruitukeji.com');
+        // $pdf->SetTitle('安特威采购合同');
+        // $pdf->SetSubject('安特威采购合同');
+        // $pdf->SetKeywords('安特威,采购合同');
 
         // set header and footer fonts
         $fontFamly = 'cid0cs';
         $fontFamly = 'stsongstdlight';
-        $pdf->setHeaderFont([$fontFamly, '', 5]);
-        $pdf->setFooterFont([$fontFamly, '', 6]);
-
+        //$pdf->setHeaderFont([$fontFamly, '', 5]);
+        //$pdf->setFooterFont([$fontFamly, '', 6]);
+        $pdf->setPrintHeader(false);
         $pdf->SetMargins(10, 10, 10);
         // set auto page breaks
         $pdf->SetAutoPageBreak(TRUE, 0);
@@ -309,8 +308,7 @@ tr>th{
    line-height: 20px;
 }
 .pi-tab-td{
-   height: 20px;
-   line-height: 20px;
+   line-height: 14px;
    padding-right: 10px;
 }
 
@@ -452,8 +450,8 @@ EOD;
             <tfoot>
             <tr>
                 <td class="content-center"colspan="2">合计:</td>
-                <td class="content-right" colspan="6">$yuan &nbsp;</td>
-                <td class="content-center">$po[price_total] </td>
+                <td class="content-left" colspan="5">$yuan &nbsp;</td>
+                <td class="content-center" colspan="2">$po[price_total] </td>
             </tr>
             </tfoot>
         </table>
@@ -503,6 +501,7 @@ EOD;
         // Print text using writeHTMLCell()
         //$html = iconv('gb2312','utf-8',$html);
         //$pdf->writeHTML($html);
+        // $html = $sginHtml = '';
         $pdf->writeHTML($html, true, false, true, false, '');
 
         $pageHeight = $pdf->getPageHeight();

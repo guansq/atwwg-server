@@ -88,8 +88,9 @@
           <span class="col_red">*供应商上传</span>
         </div>
         <div class="other_oneimg">
-          {volist name="$poInfo['contract']" id="contract"}
-          <img src="{$contract}" data-tips-image class="mr_15">
+          {volist name="$poInfo['contract']" key='i' id="contract"}
+          <!--<img src="{$contract}" data-tips-image class="mr_15">-->
+          <a  href="{$contract}" target="_blank">查看映像({$i})</a> &nbsp;
           {/volist}
         </div>
       </section>

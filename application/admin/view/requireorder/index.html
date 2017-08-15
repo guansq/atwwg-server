@@ -295,8 +295,8 @@
           tmphtml += '<tr><td>' +
               '<input class="listcheck" name="listcheck" type="checkbox" ' + diabled + ' data-pr_id="' + item_id + '" value="' + resDate[i]["item_code"] + '" data-pr_code="' + resDate[i]["pr_code"] + '"data-sup_code="' + resDate[i]["sup_code"] + '"></td>' +
               '<td>' + resDate[i]["sup_code"] + '</td><td>' + resDate[i]["sup_name"] + '</td>' +
-              '<td><input type="text" class="form-control" required="required" id="point_price_' + item_id + '" placeholder="价格"></td>' +
-              '<td><input type="text" class="form-control date_time" required="required" id="point_date_' + item_id + '" placeholder="格式为2000-10-03"></td><td>' + status + '</td></tr>';
+              '<td><input type="text" class="form-control" required="required" id="point_price_' + resDate[i]["sup_code"] + '" placeholder="价格"></td>' +
+              '<td><input type="text" class="form-control date_time" required="required" id="point_date_' + resDate[i]["sup_code"] + '" placeholder="格式为2000-10-03"></td><td>' + status + '</td></tr>';
         }
         $(".listcheck").click(function(){
           $("[name='listcheck']").removeAttr("checked");//取消全选
@@ -336,19 +336,19 @@
       'appoint_sup_name':appoint_sup_name,
       'item_code':item_code,
       'item_id':item_id,
-      'point_price':$('#point_price_' + item_id).val(),
-      'point_date':$('#point_date_' + item_id).val(),
+      'point_price':$('#point_price_' + appoint_sup_code).val(),
+      'point_date':$('#point_date_' + appoint_sup_code).val(),
       'pr_code':pr_code
     };
-//    if($.trim($('#point_price_' + item_id).val()) == ''){
-//      alert('填写的价格不能为空！');
-//      return;
-//    }
-//    if($.trim($('#point_date' + item_id).val()) == ''){
-//      alert('填写的日期不能为空！');
-//      return;
-//    }
-//    layer.load();
+    if($.trim($('#point_price_' + appoint_sup_code).val()) == ''){
+      alert('填写的价格不能为空！');
+      return;
+    }
+    if($.trim($('#point_date' + appoint_sup_code).val()) == ''){
+      alert('填写的日期不能为空！');
+      return;
+    }
+    layer.load();
     $.post("{:url('Requireorder/savePr')}", sendObj, function(res){
       layer.closeAll();
       if(res.code == 2000){

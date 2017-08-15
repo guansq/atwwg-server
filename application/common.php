@@ -744,7 +744,8 @@ function placeOrder($itemInfo){
     //dd($sendData);
     $httpRet = HttpService::curl(getenv('APP_API_U9').'index/po', $sendData);
     $res = json_decode($httpRet, true);//成功回写数据库
-    //dump($res);
+    trace('placeOrder ==========>结果：');
+    trace($res);
     return ['code' => $res['code'], 'msg' => $res['msg'], 'data' => $res['result']];
 
 }

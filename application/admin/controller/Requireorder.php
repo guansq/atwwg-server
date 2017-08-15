@@ -294,7 +294,7 @@ class Requireorder extends BaseController{
         if($ret['code'] != 2000){
             $msg = $ret['msg'];
             if(!empty($ret['data']['Message'])){
-                $msg .= $ret['data']['Message'];
+                $msg .= ':'.$ret['data']['Message'];
             }
             return json(['code'=>$ret['code'],'msg'=>$msg,'data'=>[]]);
         }

@@ -8,7 +8,7 @@ namespace app\common\model;
 
 class Po extends BaseModel{
 
-    public function findByCode($code){
+    public static function findByCode($code){
        return self::where('order_code' ,$code)->find();
     }
 }

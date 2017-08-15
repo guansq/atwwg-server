@@ -348,7 +348,6 @@
       alert('填写的日期不能为空！');
       return;
     }
-    return;
     layer.load();
     $.post("{:url('Requireorder/savePr')}", sendObj, function(res){
       layer.closeAll();

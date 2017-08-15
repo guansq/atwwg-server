@@ -250,7 +250,7 @@ class Po extends BaseLogic{
      * @param $supCode
      */
     function placePoOrder($idArr, $supCode){
-        trace("u9下采购单 ====== placePoOrder \n");
+        trace("u9下采购单 ====== placePoOrder");
         trace("idArr ======".json_encode($idArr));
         $now = time();
         $supLogic = model('Supporter', 'logic');

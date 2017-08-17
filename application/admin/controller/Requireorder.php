@@ -7,10 +7,7 @@
  */
 namespace app\admin\controller;
 
-use controller\BasicAdmin;
-use service\LogService;
-use service\DataService;
-use think\Db;
+use app\common\model\Po as PoModel;
 use PHPExcel_IOFactory;
 use PHPExcel;
 use service\HttpService;
@@ -319,6 +316,7 @@ class Requireorder extends BaseController{
                 'create_at' => $now,
                 'update_at' => $now,
             ];
+            PoModel::deletePoPi($docNo);
             $po_id = $poLogic->insertOrGetId($poData);
             //生成poItem
             $poItemData = [

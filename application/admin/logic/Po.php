@@ -23,7 +23,8 @@ class Po extends BaseLogic{
         '3' => 'PO12',  //工序外协
     ];
 
-
+    const TITLE = '安特威订单';
+    const CONTENT = '您有新的订单，请注意查收。';
     /*
      * 得到订单列表
      */
@@ -318,7 +319,23 @@ class Po extends BaseLogic{
         if(empty($sup_id)){
             return resultArray(5000, "下订单成功，消息发送失败。 code:$supCode 未绑定账号。", $data);
         }
-        sendMsg($sup_id, '安特威订单', '您有新的订单，请注意查收。');//发送消息
+        sendMsg($sup_id, self::TITLE, self::CONTENT);//发送消息
+        $logicSupInfo = Model('Supporter', 'logic');
+        if(!config('app_debug')){//没有开启app_debug--->发送短信
+            $sendInfo = $logicSupInfo->getSupSendInfo(['code' => $supCode]);
+            //通过sup_code得到发送信息
+            if($sendInfo['phone']){ //发送消息
+                //sendSMS('18451847701',$content);
+                sendSMS($sendInfo['phone'], self::CONTENT);
+            }
+            if($sendInfo['email']){ //发送邮件
+                //sendMail('94600115@qq.com',$title,$content);
+                sendSMS($sendInfo['email'], self::CONTENT);
+            }
+            if($sendInfo['push_token']){ //发送token
+                pushInfo($sendInfo['push_token'], self::TITLE, self::CONTENT);
+            }
+        }
         return resultArray(2000, '下订单成功', $data);
 
     }

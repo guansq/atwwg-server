@@ -204,7 +204,7 @@ class Material extends BaseController{
         $PHPSheet->setCellValueExplicit('I1','价格采购权重');
         $PHPSheet->setCellValueExplicit('J1','技术采购权重');
         $PHPSheet->setCellValueExplicit('K1','商务权重');
-        $PHPSheet->setCellValueExplicit('L1','标准货期');
+        //$PHPSheet->setCellValueExplicit('L1','标准货期');
         $num = 1;
         foreach($list as $k => $v){
             $num = $num+1;
@@ -215,8 +215,8 @@ class Material extends BaseController{
                     ->setCellValueExplicit('H'.$num,initPerVal($v['future_scale']))
                     ->setCellValueExplicit('I'.$num,initPerVal($v['price_weight']))
                     ->setCellValueExplicit('J'.$num,initPerVal($v['tech_weight']))
-                    ->setCellValueExplicit('K'.$num,initPerVal($v['business_weight']))
-                    ->setCellValueExplicit('L'.$num,$v['standard_date']);
+                    ->setCellValueExplicit('K'.$num,initPerVal($v['business_weight']));
+                    //->setCellValueExplicit('L'.$num,$v['standard_date']);
         }
         $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel,'Excel2007');//按照指定格式生成Excel文件，'Excel2007’表示生成2007版本的xlsx，
         $PHPWriter->save($path.'/itemList.xlsx'); //表示在$path路径下面生成itemList.xlsx文件

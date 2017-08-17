@@ -25,16 +25,18 @@ class Offer extends BaseLogic{
     ];
 
     //获得报价中心列表
-    function getOfferInfo($sup_code, $where = ''){
+    function getOfferInfo($sup_code, $where = '',$orderby=''){
         if(!empty($where)){
             $list = IoModel::where('sup_code', $sup_code)
                 ->where($where)
                 ->field("*, '' AS pro_no ,IF(`status`='init','1','0') AS sort ")
+                ->order($orderby)
                 ->order('sort DESC, update_at DESC')
                 ->select();
         }else{
             $list = IoModel::where('sup_code', $sup_code)
                 ->field("*, '' AS pro_no ,IF(`status`='init','1','0') AS sort ")
+                ->order($orderby)
                 ->order('sort DESC, update_at DESC')
                 ->select();
         }

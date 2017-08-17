@@ -45,7 +45,10 @@ class Offer extends Base{
         $offerLogic = model('Offer', 'logic');
         $where = [];//'status' => 'init'
         $data = input('param.');
-
+        $orderby = '';
+        if(isset($data['order'][0])){
+            $orderby = $data['columns'][$data['order'][0]['column']]['data'].' '.$data['order'][0]['dir'];
+        }
         // 应用搜索条件
         if(!empty($data)){
             foreach(['status', 'tag'] as $key){
@@ -74,7 +77,7 @@ class Offer extends Base{
                 $where['create_at'] = array('elt', strtotime($data['quote_endtime']));
             }
         }
-        $list = $offerLogic->getOfferInfo($sup_code, $where);
+        $list = $offerLogic->getOfferInfo($sup_code, $where,$orderby);
         //状态init=未报价  quoted=已报价  winbid=中标 giveupbid=弃标  close=已关闭
         foreach($list as $k => $v){
             if(in_array($v['status'], ['init', 'quoted', 'winbid_uncheck'])){

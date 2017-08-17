@@ -76,7 +76,8 @@ class Po extends BaseLogic{
             ->join('po po', 'pi.po_id = po.id')
             ->where('po.status', 'NOT IN', [
                 'finish',
-                'sup_cancel'
+                'sup_cancel',
+                'atw_cancel'
             ])
             ->where('pi.pro_goods_num', '>', 0)
             ->where('pi.sup_confirm_date', '<', time())

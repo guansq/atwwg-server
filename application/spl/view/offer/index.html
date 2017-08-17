@@ -78,9 +78,11 @@
         //"paging": false, //设置是否分页
         "info":true,  //去除左下角的信息
         "lengthChange":false, //是否允许用户改变表格每页显示的记录数
-        "ordering":false, //是否允许Datatables开启排序
+        "ordering":true, //是否允许Datatables开启排序
         "searching":false,  //是否允许Datatables开启本地搜索
         "processing":true,
+          "aaSorting" : [[0, "asc"]], //默认的排序方式，第2列，升序排列
+          "aoColumnDefs": [ { "bSortable": false, "aTargets": [ 1 , 2 , 3 ,4,5,6,7,8,9,10] }],
         //"serverSide": true,
         "ajax":{
           "url":'{:url("Offer/getOrderList")}',

@@ -145,8 +145,11 @@
           $('td', row).eq(11).addClass('active');
           tmpstr = '<input type="text" value="' + data.remark + '" name="remark" ' + data.showinfo + '>';
           $('td', row).eq(12).html(tmpstr);
-          if(data.showinfo == ''){
+          console.log(data);
+          if(data.showinfo == '' && data.status !='quoted'){
             tmpstr = '<button data-io-id="' + data.id + '" class="btn btn-primary"  ' + data.showinfo + 'lay-submit="" lay-filter="sub">提交报价</button>';
+          }else if(data.showinfo == '' && data.status == 'quoted'){
+            tmpstr = '<button data-io-id="' + data.id + '" class="btn btn-warning"  ' + data.showinfo + 'lay-submit="" lay-filter="sub">修改报价</button>';
           }else{
             tmpstr = '<span> </span>';
           }

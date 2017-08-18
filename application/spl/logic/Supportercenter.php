@@ -142,14 +142,15 @@ class Supportercenter extends BaseLogic{
     }
 
     //更新资质图片
-    function updatesupplierqualification($sup_code, $src, $code, $begintime, $endtime){
+    function updatesupplierqualification($sup_code, $src, $code, $begintime, $endtime,$is_forever=0){
         $now = time();
         $list = $this->where(['code' => $code, 'sup_code' => $sup_code])->update([
             'update_at' => $now,
             'status' => '',
             'term_start' => $begintime,
             'term_end' => $endtime,
-            'img_src' => $src
+            'img_src' => $src,
+            'is_forever' => $is_forever
         ]);
         return $list;
     }

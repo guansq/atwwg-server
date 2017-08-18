@@ -78,9 +78,10 @@ class Suppliercenter extends Base{
                     }
                     // ,'status'=>$statusCheck[$iv['status']]
                     $supQualiList[$iv['code']] = array(
-                        'term_start' => date('Y-m-d', $iv['term_start']),
-                        'term_end' => date('Y-m-d', $iv['term_end']),
+                        'term_start' =>empty($iv['term_start'])?'': date('Y-m-d', $iv['term_start']),
+                        'term_end' => empty($iv['term_end'])?'':date('Y-m-d', $iv['term_end']),
                         'img_src' => $iv['img_src'],
+                        'is_forever' => $iv['is_forever'],
                         'status' => $iv['status'],
                         'remark' => $iv['remark'],
                         'statusStr' => $statusList[$iv['status']]
@@ -122,6 +123,7 @@ class Suppliercenter extends Base{
         $endtime = strtotime($data['endtime']);
         $code = $data['imgid'];
         $src = $data['img_src'];
+        $is_forever = $data['is_forever'];
         $qualilist = [
             'biz_lic' => '营业执照',
             'tax_reg_ctf' => '税务登记证',
@@ -150,10 +152,11 @@ class Suppliercenter extends Base{
                 'term_end' => $endtime,
                 'status' => '',
                 'img_src' => $src,
+                'is_forever' => $is_forever,
                 'name' => $qualilist[$code]
             ]);
         }else{
-            $result = $supQlflogic->updatesupplierqualification($sup_code, $src, $code, $begintime, $endtime);
+            $result = $supQlflogic->updatesupplierqualification($sup_code, $src, $code, $begintime, $endtime,$is_forever);
         }
 
         $sup = $supLogic->where('code', $sup_code)->find();

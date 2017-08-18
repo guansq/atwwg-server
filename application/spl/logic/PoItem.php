@@ -23,7 +23,7 @@ class PoItem extends BaseLogic{
             'pr.pro_no',
         ];
         $list = self::alias('pi')
-            ->join('u9_pr pr', 'pr.id = pi.pr_id')
+            ->join('u9_pr pr', 'pr.id = pi.pr_id','LEFT')
             ->where('pi.po_id', $po_id)
             ->field($field)
             ->select();

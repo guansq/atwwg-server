@@ -202,11 +202,13 @@
             layer.alert('请先确定图片是否上传');
             return ;
         }
+        is_forever = 1;
     }else{
         if(begintime=='' || endtime=='' || img_src==''  || img_src=='/static/spl/img/add.png'){
             layer.alert('请先确定图片是否上传和时间是否选择');
             return ;
         }
+        is_forever = 0;
     }
 
     var alertMsg = '提交后需要重新审核，审核期间相应的资质分会清零，将影响您的竞标，审核通过后将增加相应的资质分。\n 确定提交吗？';

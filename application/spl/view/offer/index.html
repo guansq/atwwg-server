@@ -82,7 +82,7 @@
         "searching":false,  //是否允许Datatables开启本地搜索
         "processing":true,
           "aaSorting" : [[0, "asc"]], //默认的排序方式，第2列，升序排列
-          "aoColumnDefs": [ { "bSortable": false, "aTargets": [ 1 , 2 , 3 ,4,5,6,7,8,9,10] }],
+          "aoColumnDefs": [ { "bSortable": false, "aTargets": [ 1 , 2 , 3 ,4,5,6,7,8,9,10,11,12,13] }],
         //"serverSide": true,
         "ajax":{
           "url":'{:url("Offer/getOrderList")}',
@@ -145,7 +145,7 @@
           $('td', row).eq(11).addClass('active');
           tmpstr = '<input type="text" value="' + data.remark + '" name="remark" ' + data.showinfo + '>';
           $('td', row).eq(12).html(tmpstr);
-          console.log(data);
+         // console.log(data);
           if(data.showinfo == '' && data.status !='quoted'){
             tmpstr = '<button data-io-id="' + data.id + '" class="btn btn-primary"  ' + data.showinfo + 'lay-submit="" lay-filter="sub">提交报价</button>';
           }else if(data.showinfo == '' && data.status == 'quoted'){

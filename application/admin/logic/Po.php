@@ -76,7 +76,8 @@ class Po extends BaseLogic{
             ->join('po po', 'pi.po_id = po.id')
             ->where('po.status', 'NOT IN', [
                 'finish',
-                'sup_cancel'
+                'sup_cancel',
+                'atw_cancel'
             ])
             ->where('pi.pro_goods_num', '>', 0)
             ->where('pi.sup_confirm_date', '<', time())
@@ -283,7 +284,7 @@ class Po extends BaseLogic{
             ];
             $oldPo = PoModel::findByCode($res['data']['DocNo']);
             if(!empty($oldPo)){
-                PoModel::where('order_code' , $res['data']['DocNo'])->delete();
+                PoModel::deletePoPi($res['data']['DocNo']);
             }
             $po_id =  $this->insertOrGetId($poData);
             //生成关联关系
@@ -376,6 +377,8 @@ class Po extends BaseLogic{
         //exit(json_encode($sendData));
         $httpRet = HttpService::curl(getenv('APP_API_U9').'index/po', $sendData);
         $res = json_decode($httpRet, true);//成功回写数据库
+        trace('placeOrderAll ====');
+        trace($res);
         if($res['code'] != 2000){
             return resultArray($res);
         }

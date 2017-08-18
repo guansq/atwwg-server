@@ -102,7 +102,10 @@
             <input type="hidden" name="src-{$key}" onchange="$('#img-{$key}').attr('src', this.value)" value="" class="layui-input">
             <a class="btn btn-link" data-file="one" data-field="src-{$key}">上传图片</a>
           </span>
-          <p>证件有效期 <input type="text" class="laydate-icon" class="begintime" name="begintime"><input type="text" class="laydate-icon" class="endtime" name="endtime"></p>
+          <p>证件有效期 <input type="text" class="laydate-icon" class="begintime" name="begintime">
+            <input type="text" class="laydate-icon" class="endtime" name="endtime">
+            长期有效   <input name="is_forever" type="checkbox" value="0"   style="width:20px;height: 20px;margin: 15px 20px 5px 20px;" />
+          </p>
         </td>
         <td ></td>
         <td class="btn2"><button class="btn btn-primary submitbtn">提交</button></td>
@@ -117,6 +120,7 @@
           证件有效期
           <input type="text" class="laydate-icon" value="{$supqualilist[$key]['term_start']}" class="begintime" name="begintime">
           <input type="text" value="{$supqualilist[$key]['term_end']}" class="laydate-icon" class="endtime" name="endtime">
+          长期有效   <input name="is_forever" type="checkbox" style="width:20px;height: 20px;margin: 15px 20px 5px 20px;"  {eq name="supqualilist[$key]['is_forever']" value="1"} checked {/eq}  />
         </p>
        </td>
         <td >
@@ -192,10 +196,19 @@
     var begintime = trObj.find($('input[name="begintime"]')).val();
     var endtime = trObj.find($('input[name="endtime"]')).val();
     var img_src = trObj.find($('img')).attr('src');
-    if(begintime=='' || endtime=='' || img_src==''){
-      layer.alert('请先确定图片是否上传和时间是否选择');
-      return ;
+    var is_forever =  trObj.find($('input[name="is_forever"]')).is(':checked');
+    if(is_forever ){
+        if( img_src=='' || img_src=='/static/spl/img/add.png'){
+            layer.alert('请先确定图片是否上传');
+            return ;
+        }
+    }else{
+        if(begintime=='' || endtime=='' || img_src==''  || img_src=='/static/spl/img/add.png'){
+            layer.alert('请先确定图片是否上传和时间是否选择');
+            return ;
+        }
     }
+
     var alertMsg = '提交后需要重新审核，审核期间相应的资质分会清零，将影响您的竞标，审核通过后将增加相应的资质分。\n 确定提交吗？';
     layer.confirm(alertMsg, {
       btn: ['确定','取消']
@@ -210,6 +223,7 @@
           'endtime':endtime,
           'imgid':imgid,
           'img_src':img_src,
+          'is_forever':is_forever,
         },
         'complete' : function(){
           //layer.closeAll();

@@ -252,7 +252,7 @@ class Requireorder extends BaseController{
     /*
      * 保存到pr表
      */
-    public function savePr(){
+    public function savePrToOrder(){
         $data=input('param.');
         $logicPrInfo = Model('RequireOrder','logic');
         $dataArr = [
@@ -364,6 +364,89 @@ class Requireorder extends BaseController{
     }
 
 
+    /*
+     * 保存到pr表
+     */
+    public function savePr(){
+        $data=input('param.');
+        $logicPrInfo = Model('RequireOrder','logic');
+        $dataArr = [
+            'is_appoint_sup' => $data['is_appoint_sup'],
+            'appoint_sup_code' => $data['appoint_sup_code'],
+            'appoint_sup_name' => $data['appoint_sup_name'],
+        ];
+        $where = [
+            'pr_code' => $data['pr_code'],
+            'item_code' => $data['item_code'],
+        ];
+        $data['point_date'] = strtotime($data['point_date']);
+        $item_id = $data['item_id'];
+        $sup_code = $data['appoint_sup_code'];
+        $sup_name = $data['appoint_sup_name'];
+        //得到pr_info
+        $prInfo = $logicPrInfo->getPrInfo(['id'=>$data['item_id']]);
+
+        $result = $logicPrInfo->updateByPrCode($where,$dataArr);
+        if (false === $result) {
+            return json(['code'=>4000,'msg'=>'指定供应商状态失败','data'=>[]]);
+        }
+
+
+        $poLogic = model('Po', 'logic');
+        $now = time();
+        //生成一条po记录
+        $poData = [
+            //'pr_code' => $itemInfo['pr_code'],
+            //'order_code' => $docNo,
+            'sup_code' => $data['appoint_sup_code'],
+            'doc_date' => $now,
+            'is_include_tax' => 1,      //是否含税
+            'status' => 'init',
+            'create_at' => $now,
+            'update_at' => $now,
+        ];
+        //
+
+        //生成poItem
+        $poItemData = [
+            'item_code' => $prInfo['item_code'],
+            'item_name' => $prInfo['item_name'],
+            'sup_code' => $data['appoint_sup_code'],
+            'sup_name' => $data['appoint_sup_name'],
+            'price_num' => $prInfo['price_num'],
+            'price_uom' => $prInfo['price_uom'],
+            'tc_num' => $prInfo['tc_num'],
+            'tc_uom' => $prInfo['tc_uom'],
+            'pr_code' => $prInfo['pr_code'],
+            'pr_id' => $prInfo['id'],
+            'pr_ln' => $prInfo['pr_ln'],
+            'sup_confirm_date' => $data['point_date'],
+            'req_date' => $prInfo['req_date'],
+            'price' => $data['point_price'],
+            'tax_price' => $data['point_price']+($prInfo['tax_rate']*$data['point_price']),//
+            'amount' => $data['point_price']*$prInfo['price_num'],
+            'tax_rate' => $prInfo['tax_rate'],
+            'create_at' => $now,
+            'update_at' => $now,
+            'status' => 'placeorder',
+        ];
+        //dd($poItemData);
+
+        //if($po_id){}
+        $res = $poLogic->savePoItem($poItemData);
+        if($res === false){
+            return json(['code'=>6000,'msg'=>'生成未下单订单失败','data'=>['sup_name' => $data['appoint_sup_name']]]);
+        }
+        //if($res){}
+        $where = ['id'=>$item_id];
+        $ret = $logicPrInfo->updatePr($where,['status'=>'order']);
+        if($ret === false){
+            return json(['code'=>6000,'msg'=>'更改下单状态失败','data'=>['sup_name' => $data['appoint_sup_name']]]);
+        }
+
+        return json(['code'=>2000,'msg'=>'成功','data'=>['sup_name' => $data['appoint_sup_name']]]);
+        //is_appoint_sup 1 //appoint_sup_code //appoint_sup_name
+    }
 
     /*
      * 审批指定供应商状态

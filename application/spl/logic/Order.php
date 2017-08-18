@@ -306,14 +306,15 @@ tr>th{
 .pi-tab-th{
    height: 20px;
    line-height: 20px;
+   border-top: 2px solid black;
 }
 .pi-tab-td{
-   line-height: 14px;
+  
    padding-right: 10px;
 }
 
 .agreement-form .title{
-    font-size: 1em;
+    font-size: 2em;
     font-weight: bold;
     text-align: center;
     line-height: 1em;
@@ -386,16 +387,16 @@ tr>th{
         <div>2、订单明细（以下价格已经包含17%增值税、运输费用及其他所有税费）：</div>
         <table id="pi_tab" style="width: 100% ">
             <thead >
-            <tr>
-                <th width="26" class="pi-tab-th" style="">行号</th>
-                <th width="55" class="pi-tab-th">料号</th>
+            <tr >
+                <th width="26" class="pi-tab-th" style="border-left: 2px solid black">行号</th>
+                <th width="55" class="pi-tab-th" >料号</th>
                 <th width="180" class="pi-tab-th">物料名称</th>
                 <th width="75" class="pi-tab-th">项目号</th>
                 <th width="50" class="pi-tab-th">交期</th>
                 <th width="26" class="pi-tab-th">数量</th>
                 <th width="26" class="pi-tab-th">单位</th>
                 <th width="40" class="pi-tab-th">单价</th>
-                <th width="70" class="pi-tab-th">金额</th>
+                <th width="70" class="pi-tab-th" style="border-right: 2px solid black">金额</th>
             </tr>
             </thead>
             <tbody  >
@@ -414,18 +415,18 @@ EOD;
             }else{
                 $po['price_total'] += $pi['price_num']*$pi['price'];
             }
-
+            $l_height = mb_strlen($pi['item_name'],'utf8')>30?"14":"20";
             $ln = $i + 1;
-            $html .= "<tr class=\"text-small\">
-                <td width=\"26\" class=\"content-center pi-tab-td\">$ln</td>
+            $html .= "<tr class=\"text-small\" style=\"line-height: {$l_height}px;\">
+                <td width=\"26\" class=\"content-center pi-tab-td\" style=\"border-left: 2px solid black; padding: 10px;\">$ln</td>
                 <td width=\"55\" class=\"content-center pi-tab-td\">$pi[item_code]</td>
-                <td width=\"180\" class=\"content-center pi-tab-td\">$pi[item_name]</td>
+                <td width=\"180\" class=\"content-center pi-tab-td\" >$pi[item_name]</td>
                 <td width=\"75\" class=\"content-center pi-tab-td\" >$pi[pro_no]</td>
                 <td width=\"50\" class=\"content-center pi-tab-td\">$confirmDate</td>
                 <td width=\"26\" class=\"content-center pi-tab-td\">$pi[price_num]</td>
                 <td width=\"26\" class=\"content-center pi-tab-td\">$pi[tc_uom]</td>
                 <td width=\"40\" class=\"content-center pi-tab-td\">$price</td>
-                <td width=\"70\" class=\"content-center pi-tab-td\">$subTotal</td>
+                <td width=\"70\" class=\"content-center pi-tab-td\" style=\"border-right: 2px solid black\">$subTotal</td>
             </tr>";
 
             // 测试用
@@ -443,15 +444,16 @@ EOD;
             // </tr>";
             // }
         }
+        //dd($html);
         $yuan = numbToCnYuan($po['price_total']);
         $po['price_total'] = number_format($po['price_total'], 2);
         $html .= <<<EOD
             </tbody>
             <tfoot>
-            <tr>
-                <td class="content-center"colspan="2">合计:</td>
-                <td class="content-left" colspan="5">$yuan &nbsp;</td>
-                <td class="content-center" colspan="2">$po[price_total] </td>
+            <tr style="line-height: 20px">
+                <td class="content-center"colspan="2" style="border-left: 2px solid black;border-bottom: 2px solid black">合计:</td>
+                <td class="content-left" colspan="5" style="border-bottom: 2px solid black">$yuan &nbsp;</td>
+                <td class="content-center" colspan="2" style="border-right: 2px solid black;border-bottom: 2px solid black">$po[price_total] </td>
             </tr>
             </tfoot>
         </table>

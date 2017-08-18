@@ -251,10 +251,14 @@
           <td>
             <img class="" data-tips-image src="{$vo['img_src']}" alt="">
             <section class="dis_inb ml_20 w75b">
+              {if $vo['is_forever'] eq 0}
               <label class="mr_15">证件有效期</label>
               <input type="text" class="date_time form-control w30b" disabled value="{$vo['term_start']|atwDate}">
               到
               <input type="text" class="date_time form-control w30b" disabled value="{$vo['term_end']|atwDate}">
+              {else /}
+              有效期 ：永久
+              {/if}
             </section>
           </td>
           <td>

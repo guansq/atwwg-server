@@ -203,8 +203,8 @@
         //  console.info('Showing page: ' + info.page + ' of ' + info.pages);
         //});
         //绘制的时候触发，绑定文本框的值
-        supporterTable.on('draw.dt', function (e, settings, data) {
-            var info = supporterTable.page.info();
+        orderTables.on('draw.dt', function (e, settings, data) {
+            var info = orderTables.page.info();
             //此处的page为0开始计算
             // console.info('Showing page: ' + info.page + ' of ' + info.pages);
             $('#searchNumber').val(info.page + 1);

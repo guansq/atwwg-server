@@ -60,7 +60,7 @@ class Material extends BaseController{
         }
         //dump($data);
         $start = input('start') == '' ? 0 : input('start');
-        $length = input('length') == '' ? 10 : input('length');
+        $length = input('length') == '' ? 100 : input('length');
         $logicItemInfo = Model('Item','logic');
         $list = $logicItemInfo->getListInfo($start,$length,$where);
         $returnArr = [];

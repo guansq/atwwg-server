@@ -3,6 +3,23 @@
 {block name="style"}
 <link rel="stylesheet" href="/static/admin/dataTables.bootstrap.css">
 <link href="/static/admin/minimal.css" rel="stylesheet">
+<style>
+  .Total{
+    display: inline-block;
+    clear: right;
+    margin-top: -6px;
+  }
+  .Lengthchanging{
+    display: inline-block;
+    float: left;
+    margin-right: 2em;
+  }
+  .toolbar{
+    float: right;
+    margin-right: 2em;
+    margin-top: -6px;
+  }
+</style>
 {/block}
 
 {block name="button"}
@@ -75,7 +92,9 @@
       orderTables = $('#example').DataTable({
         //"paging": false, //设置是否分页
         "info":true,  //去除左下角的信息
-        "lengthChange":false, //是否允许用户改变表格每页显示的记录数
+        "lengthChange": true, //是否允许用户改变表格每页显示的记录数
+        "lengthMenu": [[100, 200, 300], [100, 200, 300]],
+        "dom": 'rt<"bottom"fp<"Lengthchanging"l><"Total"i><"toolbar">><"clear">',
         "ordering":false, //是否允许Datatables开启排序
         "searching":false,  //是否允许Datatables开启本地搜索
         "processing":true,
@@ -116,7 +135,8 @@
             "sNext":"下页",
             "sLast":"末页"
           },
-          "info":"当前总记录数_TOTAL_条"
+          "info" : "当前总记录数_TOTAL_条",
+          "lengthMenu": "每页 _MENU_ 条记录"
         },
         "columns":[
           {"data":"order_code"},
@@ -133,6 +153,14 @@
         }
       });
 
+      $("div.toolbar").html(' <span>第</span><input type="number" id="searchNumber" min="1" style="width: 40px;text-align: center; margin: 1em;"/><span>页&nbsp;&nbsp;</span><button id="btn-jump" onclick="changejump()" class="paginate_button">跳转</button>');
+      orderTables.on('draw.dt', function (e, settings, data) {
+        var info = orderTables.page.info();
+        //此处的page为0开始计算
+        // console.info('Showing page: ' + info.page + ' of ' + info.pages);
+        $('#searchNumber').val(info.page + 1);
+      });
+
       // tr点击选中事件
       $('#example tbody').on('click', 'tr', function(){
         $(this).toggleClass('selected');
@@ -145,6 +173,16 @@
       $('#remove_btn').click(function(){
         orderTables.rows('.selected').remove().draw(false);
       });
+    }
+
+    //监听文本框更改
+    function changejump(){
+      var page = $('#searchNumber').val();
+      page = parseInt(page) || 1;
+      page = page - 1;
+      //调转到指定页面索引 ，注意大小写
+      var oTable = $('#example').dataTable();
+      oTable.fnPageChange(page);
     }
 
     function initEvent(){

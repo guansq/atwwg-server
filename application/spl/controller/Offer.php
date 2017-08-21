@@ -245,10 +245,19 @@ class Offer extends Base{
                 // $data['req_date'] = intval(($data['req_date'] - 25569) * 3600 * 24); //转换成1970年以来的秒数
                 // gmdate('Y-m-d H:i:s',$n);//格式化时间,不是用date哦, 时区相差8小时的
                 //检查id是否存在
+                if(empty($info)){
+                    $this->error("成功：".($currentRow-2)."条,失败：".($allRow-$currentRow+1).",失败原因：未查询到报价单号", '');
+                }
+                if(!(isset($info['status']) && $info['status'] == 'init')){
+                    $this->error("成功：".($currentRow-2)."条,失败：".($allRow-$currentRow+1).",失败原因：报价单状态不支持报价，失败料号：".(isset($info['item_code'])?$info['item_code']:''), '');
+                }
+                if($info['quote_endtime'] < $now){
+                    $this->error("成功：".($currentRow-2)."条,失败：".($allRow-$currentRow+1).",失败原因：报价截止日期小于当前日期不支持报价，失败料号：".(isset($info['item_code'])?$info['item_code']:''), '');
+               }
                 if(!empty($info) && isset($info['status']) && $info['status'] == 'init' && $info['quote_endtime'] >= $now){//不存在
                     $key = $data['id'];
                     if($data['req_date'] < time()){
-                        continue;
+                        $this->error("成功：".($currentRow-2)."条,失败：".($allRow-$currentRow+1).",失败原因：承诺交期小于当前日期不支持报价，失败料号：".(isset($info['item_code'])?$info['item_code']:''), '');
                     }
                     $dataArr = [
                         'quote_date' => time(),
@@ -263,7 +272,7 @@ class Offer extends Base{
             $this->success("更新成功！", '');
             //echo $path;
         }else{
-            $this->success("上传失败！", '');
+            $this->error("上传失败！", '');
         }
     }
 

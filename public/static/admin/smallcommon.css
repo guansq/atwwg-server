@@ -1,0 +1,19 @@
+.Total{
+  display: inline-block;
+  clear: right;
+  margin-top: -6px;
+}
+.Lengthchanging{
+  display: inline-block;
+  float: left;
+  margin-right: 2em;
+}
+.toolbar{
+  float: right;
+  margin-right: 2em;
+  margin-top: -6px;
+}
+#btn-jump{
+  background-color: #337ab7;
+  border-color: #337ab7;
+}

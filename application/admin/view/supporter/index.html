@@ -2,23 +2,7 @@
 
 {block name="style"}
 <link rel="stylesheet" href="/static/admin/dataTables.bootstrap.css">
-<style>
-  .Total{
-    display: inline-block;
-    clear: right;
-    margin-top: -6px;
-  }
-  .Lengthchanging{
-    display: inline-block;
-    float: left;
-    margin-right: 2em;
-  }
-  .toolbar{
-    float: right;
-    margin-right: 2em;
-    margin-top: -6px;
-  }
-</style>
+<link rel="stylesheet" href="/static/admin/smallcommon.css">
 {/block}
 
 {block name="button"}
@@ -196,7 +180,7 @@ function initPage(){
       "sLengthMenu": "显示 _MENU_ 记录",
     }
   });
-  $("div.toolbar").html(' <span>第</span><input type="number" id="searchNumber" min="1" style="width: 40px;text-align: center; margin: 1em;"/><span>页&nbsp;&nbsp;</span><button id="btn-jump" onclick="changejump()" class="paginate_button">跳转</button>');
+  $("div.toolbar").html(' <span>第</span><input type="number" id="searchNumber" min="1" style="width: 40px;text-align: center; margin: 1em;"/><span>页&nbsp;&nbsp;</span><button id="btn-jump" onclick="changejump()" class="layui-btn layui-btn-small">跳转</button>');
     //绑定分页事件----在切换分页的时候触发
     //table.on('page.dt', function () {
     //  var info = table.page.info();

@@ -90,17 +90,22 @@
       itemTable = $('#example').DataTable({
       //paging: false, 设置是否分页
       "info": true,  //去除左下角的信息
-      "lengthChange": false, //是否允许用户改变表格每页显示的记录数
+      "lengthChange": true, //是否允许用户改变表格每页显示的记录数
+      "lengthMenu": [[100, 200, 300], [100, 200, 300]],
+      "dom": 'rt<"bottom"lip>',
       "ordering": false, //是否允许Datatables开启排序
       "searching": false,  //是否允许Datatables开启本地搜索
+      //"pagingType": "input",
       language: {
         "oPaginate": {
           "sFirst": "首页",
           "sPrevious": "上页",
           "sNext": "下页",
-          "sLast": "末页"
+          "sLast": "末页",
+          "sJump": "跳转"
         },
-        "info" : "当前总记录数_TOTAL_条"
+        "info" : "当前总记录数_TOTAL_条",
+        "lengthMenu": "每页 _MENU_ 条记录",
       },
       "processing": true,
       "serverSide": true,
@@ -130,6 +135,7 @@
         { "data": "action" }
       ],
     });
+    $("#example_info").css('display','inline').css('margin-left','5em');
 
     // tr点击选中事件
     $('#example tbody').on( 'click', 'tr', function () {

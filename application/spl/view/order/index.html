@@ -6,6 +6,18 @@
 {block name="style"}
 <link rel="stylesheet"
       href="/static/admin/dataTables.bootstrap.css">
+<style>
+  .Total{
+    display: inline-block;
+    clear: right;
+    margin-top: -6px;
+  }
+  .Lengthchanging{
+    display: inline-block;
+    float: left;
+    margin-right: 2em;
+  }
+</style>
 {/block}
 {block name="content"}
 
@@ -72,7 +84,9 @@
       orderTables = $('#example').DataTable({
         //"paging": false, //设置是否分页
         "info":true,  //去除左下角的信息
-        "lengthChange":false, //是否允许用户改变表格每页显示的记录数
+        "lengthChange": true, //是否允许用户改变表格每页显示的记录数
+        "lengthMenu": [[100, 200, 300], [100, 200, 300]],
+        "dom": 'rt<"bottom"<"Lengthchanging"l><"Total"i>p>',
         "ordering":false, //是否允许Datatables开启排序
         "searching":false,  //是否允许Datatables开启本地搜索
         "processing":true,
@@ -95,7 +109,9 @@
             "sNext":"下页",
             "sLast":"末页"
           },
-          "info":"当前总记录数_TOTAL_条"
+          "info":"当前总记录数_TOTAL_条",
+          "sInfoEmpty": "当前总记录数_TOTAL_条",
+          "lengthMenu": "每页 _MENU_ 条记录",
         },
         "columns":[
           {"data":"order_code"},

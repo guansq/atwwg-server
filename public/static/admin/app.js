@@ -46,6 +46,7 @@ require.config({
         'jquery.cookies': ['../plugs/jquery/jquery.cookie'],
         'jquery.masonry': ['../plugs/jquery/masonry.min'],
         'jquery.dataTables': ['../plugs/common/jquery.dataTables.min'],
+        'dataTablesInput': ['../plugs/common/input'],
         'cityselect':['../plugs/cityselect/cityselect'],
         'select2':['../plugs/select2/js/select2'],
         'icheck': ['../plugs/common/icheck.min'],

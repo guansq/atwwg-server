@@ -182,7 +182,7 @@ class Offer extends Base {
                 // 如果是单一资源的物料 则 状态改为 要审核
                 $io = $offerLogic->where('id', $key)->find();
                 if (empty($io)) {
-                    return json(['code' => 4001, 'msg' => "成功：" . ($success) . "条<br/> 失败：" . ($totalItems - $success) . "<br/> 失败原因：未查询到报价单号", 'data' => []]);
+                    return json(['code' => 4001, 'msg' => "成功：" . ($success) . "条<br/> 失败：" . ($totalItems - $success) . "条<br/> 失败原因：未查询到报价单号", 'data' => []]);
                 }
                 $total = $offerLogic->where('pr_id', $io['pr_id'])->count(); // 询价总数
                 $status = $total == 1 ? 'winbid_uncheck' : 'quoted';
@@ -197,13 +197,13 @@ class Offer extends Base {
                 ];
                 $io = $offerLogic->find($key);
                 if ($io['quote_endtime'] <= $now) {
-                    returnJson(4000, "成功：" . ($success) . "条<br/> 失败：" . ($totalItems - $success) . "<br/> 失败原因：报价期限已过。<br/> 失败料号：" . (isset($io['item_code']) ? $io['item_code'] : ''));
+                    returnJson(4000, "成功：" . ($success) . "条<br/> 失败：" . ($totalItems - $success) . "条<br/> 失败原因：报价期限已过。<br/> 失败料号：" . (isset($io['item_code']) ? $io['item_code'] : ''));
                 }
                 if (strtotime($data['req_date']) < time()) {
-                    returnJson(4000, "成功：" . ($success) . "条<br/> 失败：" . ($totalItems - $success) . "<br/> 失败原因：承诺交期小于当前日期不支持报价<br/> 失败料号：" . (isset($io['item_code']) ? $io['item_code'] : ''));
+                    returnJson(4000, "成功：" . ($success) . "条<br/> 失败：" . ($totalItems - $success) . "条<br/> 失败原因：承诺交期小于当前日期不支持报价<br/> 失败料号：" . (isset($io['item_code']) ? $io['item_code'] : ''));
                 }
                 if (!in_array($io['status'], ['init', 'quoted', 'winbid_uncheck'])) {
-                    returnJson(4000, "成功：" . ($success) . "条<br/> 失败：" . ($totalItems - $success) . "<br/> 失败原因：报价单状态不支持报价<br/> 失败料号：" . (isset($io['item_code']) ? $io['item_code'] : ''));
+                    returnJson(4000, "成功：" . ($success) . "条<br/> 失败：" . ($totalItems - $success) . "条<br/> 失败原因：报价单状态不支持报价<br/> 失败料号：" . (isset($io['item_code']) ? $io['item_code'] : ''));
                 }
                 $list = $offerLogic->updateData($key, $dataArr);
                 //dump($list);die;
@@ -321,18 +321,18 @@ class Offer extends Base {
                 // gmdate('Y-m-d H:i:s',$n);//格式化时间,不是用date哦, 时区相差8小时的
                 //检查id是否存在
                 if (empty($info)) {
-                    $this->error("成功：" . ($currentRow - 2) . "条<br/> 失败：" . ($allRow - $currentRow + 1) . "<br/> 失败原因：未查询到报价单号", '');
+                    $this->error("成功：" . ($currentRow - 2) . "条<br/> 失败：" . ($allRow - $currentRow + 1) . "条<br/> 失败原因：未查询到报价单号", '');
                 }
                 if (!(isset($info['status']) && in_array($info['status'], ['init', 'quoted', 'winbid_uncheck']))) {
-                    $this->error("成功：" . ($currentRow - 2) . "条<br/> 失败：" . ($allRow - $currentRow + 1) . "<br/> 失败原因：报价单状态不支持报价<br/> 失败料号：" . (isset($info['item_code']) ? $info['item_code'] : ''), '');
+                    $this->error("成功：" . ($currentRow - 2) . "条<br/> 失败：" . ($allRow - $currentRow + 1) . "条<br/> 失败原因：报价单状态不支持报价<br/> 失败料号：" . (isset($info['item_code']) ? $info['item_code'] : ''), '');
                 }
                 if ($info['quote_endtime'] < $now) {
-                    $this->error("成功：" . ($currentRow - 2) . "条<br/> 失败：" . ($allRow - $currentRow + 1) . "<br/> 失败原因：报价截止日期小于当前日期不支持报价<br/> 失败料号：" . (isset($info['item_code']) ? $info['item_code'] : ''), '');
+                    $this->error("成功：" . ($currentRow - 2) . "条<br/> 失败：" . ($allRow - $currentRow + 1) . "条<br/> 失败原因：报价截止日期小于当前日期不支持报价<br/> 失败料号：" . (isset($info['item_code']) ? $info['item_code'] : ''), '');
                 }
                 if (!empty($info) && isset($info['status']) && $info['quote_endtime'] >= $now) {//不存在
                     $key = $data['id'];
                     if ($data['req_date'] < time()) {
-                        $this->error("成功：" . ($currentRow - 2) . "条<br/> 失败：" . ($allRow - $currentRow + 1) . "<br/> 失败原因：承诺交期小于当前日期不支持报价<br/> 失败料号：" . (isset($info['item_code']) ? $info['item_code'] : ''), '');
+                        $this->error("成功：" . ($currentRow - 2) . "条<br/> 失败：" . ($allRow - $currentRow + 1) . "条<br/> 失败原因：承诺交期小于当前日期不支持报价<br/> 失败料号：" . (isset($info['item_code']) ? $info['item_code'] : ''), '');
                     }
                     $data['quote_price'] = number_format($data['quote_price'], 2);
                     if ( empty($data['quote_price'])) {

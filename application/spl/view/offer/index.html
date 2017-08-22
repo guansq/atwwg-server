@@ -238,8 +238,6 @@
                     min: laydate.now(),
                     choose: function(dates){  // 选择好日期的回调
                         ($("tr").find($('input[data-flag="'+code+'"]'))).val(dates);
-                        ($("tr").find("[name='req_date']")).val(dates);
-
                     }
                 });
             });
@@ -320,6 +318,7 @@
           if($checkbox.length){
               layer.load();
               var quoteinfo = '';
+              var flagsubmit = 1;
               $checkbox.each(function(){
                  var id = $(this).attr('id').substr(6);
                   var req_date_item = $('#io-'+id).find("[name = 'req_date']").val();
@@ -329,26 +328,27 @@
                       $('#io-'+id).find("[name='req_date']").css('border','1px red solid');
                       layer.alert('可供货日期不能为空');
                       layer.closeAll("loading");
+                      flagsubmit = 0;
                       return false;
                   }else{
-                      $('#io-'+id).find("[name='req_date']").css('border','none');
+                      $('#io-'+id).find("[name='req_date']").css('border','1px solid #ccc;');
                   }
                   if(req_quote_price==''||req_quote_price == undefined){
                       $('#io-'+id).find(("[name='quote_price']")).css('border','1px red solid');
                       layer.alert('含税价格不能为空');
                       layer.closeAll("loading");
+                      flagsubmit = 0;
                       return false;
                   }else{
-                      $('#io-'+id).find(["name = 'quote_price'"]).css('border','none');
+                      $('#io-'+id).find(["name = 'quote_price'"]).css('border','1px solid #ccc;');
                   }
 
                   if(id){
                       quoteinfo += id+'_'+req_quote_price+'_'+req_date_item+'_'+req_remark+'&&&&';
                   }
               });
-              quoteinfo = quoteinfo.substr(0,quoteinfo.length-4)
-              console.log(quoteinfo);
-              if(quoteinfo == ''){
+              quoteinfo = quoteinfo.substr(0,quoteinfo.length-4);
+              if(quoteinfo == '' || flagsubmit==0){
                 return;
               }
               var url = "{:url('Offer/savePriceAll')}";

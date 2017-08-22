@@ -331,7 +331,7 @@ class Po extends BaseLogic{
             }
             if($sendInfo['email']){ //发送邮件
                 //sendMail('94600115@qq.com',$title,$content);
-                sendMail($sendInfo['email'], self::CONTENT);
+                sendMail($sendInfo['email'],self::TITLE, self::CONTENT);
             }
             if($sendInfo['push_token']){ //发送token
                 pushInfo($sendInfo['push_token'], self::TITLE, self::CONTENT);

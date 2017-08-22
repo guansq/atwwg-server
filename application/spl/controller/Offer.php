@@ -334,6 +334,10 @@ class Offer extends Base {
                     if ($data['req_date'] < time()) {
                         $this->error("成功：" . ($currentRow - 2) . "条<br/> 失败：" . ($allRow - $currentRow + 1) . "<br/> 失败原因：承诺交期小于当前日期不支持报价<br/> 失败料号：" . (isset($info['item_code']) ? $info['item_code'] : ''), '');
                     }
+                    $data['quote_price'] = number_format($data['quote_price'], 2);
+                    if ( empty($data['quote_price'])) {
+                        $this->error("成功：" . ($currentRow - 2) . "条<br/> 失败：" . ($allRow - $currentRow + 1) . "<br/> 失败原因：价格不能为空<br/> 失败料号：" . (isset($info['item_code']) ? $info['item_code'] : ''), '');
+                    }
                     // 如果是单一资源的物料 则 状态改为 要审核
                     $io = $offerLogic->where('id', $key)->find();
                     if (empty($io)) {

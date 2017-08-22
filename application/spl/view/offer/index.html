@@ -6,6 +6,7 @@
 {block name="style"}
 <link rel="stylesheet"
       href="/static/admin/dataTables.bootstrap.css">
+<link href="/static/admin/minimal.css" rel="stylesheet">
 <style>
   .Total{
     display: inline-block;
@@ -21,6 +22,12 @@
     float: right;
     margin-right: 2em;
     margin-top: -6px;
+  }
+  input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{
+    -webkit-appearance:textfield;
+  }
+  input[type="number"]{
+    -moz-appearance: textfield;
   }
 </style>
 {/block}
@@ -46,11 +53,15 @@
     <button class="btn btn-warning" id="excel_out">导出询价单</button>
 
     <button class="btn btn-warning" id="excel_in1" data-modal='{:url("$classuri/add")}'>导入报价单</button>
+    <button class="btn btn-primary" id="save_price" disabled="true">提交报价</button>
   </div>
   <div class="table-responsive">
     <table class="table table-bordered" id="example">
       <thead>
       <tr class="active">
+        <td>
+          <input type="checkbox" class="all">
+        </td>
         <td>物料编号</td>
         <td>物料名称</td>
         <td>项目号</td>
@@ -64,7 +75,7 @@
         <td>含税单价</td>
         <td>总价</td>
         <td>备注</td>
-        <td>操作</td>
+        <!--<td>操作</td>-->
         <td>状态</td>
       </tr>
       </thead>
@@ -100,8 +111,8 @@
         "ordering":true, //是否允许Datatables开启排序
         "searching":false,  //是否允许Datatables开启本地搜索
         "processing":true,
-          "aaSorting" : [[0, "asc"]], //默认的排序方式，第2列，升序排列
-          "aoColumnDefs": [ { "bSortable": false, "aTargets": [ 1 , 2 , 3 ,4,5,6,7,8,9,10,11,12,13] }],
+          "aaSorting" : [[1, "asc"]], //默认的排序方式，第2列，升序排列
+          "aoColumnDefs": [ { "bSortable": false, "aTargets": [ 0 , 2 , 3 ,4,5,6,7,8,9,10,11,12,13,14] }],
         //"serverSide": true,
         "ajax":{
           "url":'{:url("Offer/getOrderList")}',
@@ -127,6 +138,7 @@
 
         "columns":[
           {"data":"item_code"},
+          {"data":"item_code"},
           {"data":"item_name"},
           {"data":"pro_no"},
           {"data":"price_num"},
@@ -139,42 +151,44 @@
           {"data":"quote_price"},
           {"data":"total_price"},
           {"data":"remark"},
-          {"data":"showinfo"},
+//          {"data":"showinfo"},
           {"data":"statusStr"}
         ],
         "createdRow":function(row, data, index){
-          $('td', row).eq(0).html($('td', row).eq(0).html() + '<input type="hidden" name="id" value="' + data.id + '">');
-          $('td', row).eq(1).attr('style', 'text-align: left;');
-          $('td', row).eq(3).attr('id', 'num_' + data.id);
-          $('td', row).eq(3).attr('style', 'text-align: right;');
+          $('td', row).eq(0).html('<input type="checkbox" id="quote_' +data.id + '" class="check" value="' + $('td', row).eq(0).html() + '"> ' );
+          $('td', row).eq(1).html($('td', row).eq(1).html() + '<input type="hidden" name="id" value="' + data.id + '">');
+          $('td', row).eq(2).attr('style', 'text-align: left;');
+          $('td', row).eq(4).attr('id', 'num_' + data.id);
+          $('td', row).eq(4).attr('style', 'text-align: right;');
           if(!data.create_at){
-            $('td', row).eq(6).html('--');
+            $('td', row).eq(7).html('--');
           }
           var tmpstr = '';
           if(data.promise_date == null || data.promise_date == ''){
-            $('td', row).eq(9).html('');
+            $('td', row).eq(10).html('');
           }
-          tmpstr = '<input onclick="laydate({ min: laydate.now()})"  class="laydate-icon" type="text" name="req_date" lay-verify="required" value="' + $('td', row)
-                  .eq(9)
-                  .html() + '" ' + data.showinfo + '>';
-          $('td', row).eq(9).html(tmpstr);
-          tmpstr = '￥<input type="text" id="price_' + data.id + '" class="price" style="width:80%;float:right;   text-align: right;" data-id="' + data.id + '" name="quote_price" lay-verify="required|float" value="' + data.quote_price + '"' + data.showinfo + ' placeholder="请输入单价">';
+          tmpstr = '<input onclick="laydate({ min: laydate.now()})"  class="laydate-icon inputdate " type="text" name="req_date" lay-verify="required" value="' + $('td', row)
+                  .eq(10)
+                  .html() + '" ' + data.showinfo + ' data-flag="'+data.item_code+'">';
           $('td', row).eq(10).html(tmpstr);
+          tmpstr = '￥<input  type="number" id="price_' + data.id + '" class="price sigprice" style="width:80%;float:right; -webkit-appearance：none;   text-align: right;" data-id="' + data.id + '" name="quote_price" lay-verify="required|float" value="' +data.quote_price.replace(',','')  + '"' + data.showinfo + ' placeholder="请输入单价" data-value="'+data.item_code+'" >';
+          $('td', row).eq(11).html(tmpstr);
           //$('td', row).eq(9).attr('id','price_'+data.id);
-          $('td', row).eq(11).attr('id', 'total_price_' + data.id);
-          $('td', row).eq(11).html('￥' + $('td', row).eq(11).html())
-          $('td', row).eq(11).addClass('active');
+          $('td', row).eq(12).attr('id', 'total_price_' + data.id);
+          $('td', row).eq(12).attr('data-content', data.item_code);
+          $('td', row).eq(12).html('￥' + $('td', row).eq(12).html())
+          $('td', row).eq(12).addClass('active');
           tmpstr = '<input type="text" value="' + data.remark + '" name="remark" ' + data.showinfo + '>';
-          $('td', row).eq(12).html(tmpstr);
-         // console.log(data);
-          if(data.showinfo == '' && data.status !='quoted'){
-            tmpstr = '<button data-io-id="' + data.id + '" class="btn btn-primary"  ' + data.showinfo + 'lay-submit="" lay-filter="sub">提交报价</button>';
-          }else if(data.showinfo == '' && data.status == 'quoted'){
-            tmpstr = '<button data-io-id="' + data.id + '" class="btn btn-warning"  ' + data.showinfo + 'lay-submit="" lay-filter="sub">修改报价</button>';
-          }else{
-            tmpstr = '<span> </span>';
-          }
           $('td', row).eq(13).html(tmpstr);
+         // console.log(data);
+//          if(data.showinfo == '' && data.status !='quoted'){
+//            tmpstr = '<button data-io-id="' + data.id + '" class="btn btn-primary"  ' + data.showinfo + 'lay-submit="" lay-filter="sub">提交报价</button>';
+//          }else if(data.showinfo == '' && data.status == 'quoted'){
+//            tmpstr = '<button data-io-id="' + data.id + '" class="btn btn-warning"  ' + data.showinfo + 'lay-submit="" lay-filter="sub">修改报价</button>';
+//          }else{
+//            tmpstr = '<span> </span>';
+//          }
+//          $('td', row).eq(14).html(tmpstr);
           // console.log(row);
           $(row).attr('id', 'io-' + data.id);
           $(row).addClass("layui-form");
@@ -191,13 +205,48 @@
             var total_price = num * price;
             total_price = parseFloat(total_price).toFixed(2);
             $('#total_price_' + id).html('¥' + total_price);
-            //console.log(total_price);
+            var code = $(this).attr('data-value');
+            ($("tr").find($('input[data-value="'+code+'"]'))).val(price);
+            ($("tr").find($('td[data-content="'+code+'"]'))).html('¥' + total_price);
             //console.log($(this).val());//打印输入框字符长度
           });
+            initEvent();
+            $(".laydate-icon").focus(function () {
+                var code = $(this).attr('data-flag');
+                /*
+                 laydate插件提供显示日期控件的方法
+                 laydate(options)
+                 * options - 选项,格式为 { key : value }
+                 * 选项
+                 * format - 日期格式
+                 默认格式为 YYYY-MM-DD hh:mm:ss(标准格式)
+                 * 客户端
+                 * 服务器端
+                 * 数据库
+                 * istime - 是否开启时间选择
+                 * 默认值为false,不开启
+                 * isclear - 是否显示清空按钮
+                 * istoday - 是否显示今天按钮
+                 * issure - 是否显示确认按钮
+                 */
+                laydate({
+                    format: "YYYY-MM-DD",
+                    //  istime : true,
+                    isclear: true,
+                    istoday: true,
+                    issure: true,
+                    min: laydate.now(),
+                    choose: function(dates){  // 选择好日期的回调
+                        ($("tr").find($('input[data-flag="'+code+'"]'))).val(dates);
+                        ($("tr").find("[name='req_date']")).val(dates);
+
+                    }
+                });
+            });
         },
       });
-        $("div.toolbar").html(' <span>跳转第</span><input id="searchNumber" style="width: 40px;text-align: center; margin: 1em;"/><span >页</span>');
-        //绑定分页事件----在切换分页的时候触发
+        $("div.toolbar").html(' <span>第</span><input type="number" id="searchNumber" min="1" style="width: 40px;text-align: center; margin: 1em;"/><span>页&nbsp;&nbsp;</span><button id="btn-jump" onclick="changejump()" class="layui-btn layui-btn-small">跳转</button>');
+         //绑定分页事件----在切换分页的时候触发
         //table.on('page.dt', function () {
         //  var info = table.page.info();
         //  console.info('Showing page: ' + info.page + ' of ' + info.pages);
@@ -209,21 +258,119 @@
             // console.info('Showing page: ' + info.page + ' of ' + info.pages);
             $('#searchNumber').val(info.page + 1);
         });
-        //监听文本框更改
-        $('#searchNumber').change(function () {
-            var page = $(this).val();
-            page = parseInt(page) || 1;
-            page = page - 1;
-            //调转到指定页面索引 ，注意大小写
-            var oTable = $('#example').dataTable();
-            oTable.fnPageChange(page);
-        });
+//        //监听文本框更改
+//        $('#searchNumber').change(function () {
+//            var page = $(this).val();
+//            page = parseInt(page) || 1;
+//            page = page - 1;
+//            //调转到指定页面索引 ，注意大小写
+//            var oTable = $('#example').dataTable();
+//            oTable.fnPageChange(page);
+//        });
 
 
     }
   })
 
+  function initEvent(){
+      //icheck
+      $('input').iCheck({
+          checkboxClass:'icheckbox_minimal',
+          radioClass:'iradio_minimal',
+          increaseArea:'20%' // optional
+      });
 
+      var checkAll = $('input.all');
+      var checkboxs = $('input.check');
+
+
+      checkAll.unbind('ifChecked ifUnchecked').on('ifChecked ifUnchecked', function(event){
+          if(event.type == 'ifChecked'){
+              checkboxs.iCheck('check');
+          }else{
+              checkboxs.iCheck('uncheck');
+          }
+      });
+      checkboxs.unbind('ifChecked').on('ifChecked', function(event){
+          $("#save_price").attr('disabled', false);
+      });
+      checkboxs.unbind('ifUnchecked').on('ifUnchecked', function(event){
+          if(checkboxs.filter(':checked').length === 0){
+              $("#save_price").attr('disabled', true);
+          }
+      });
+
+  }
+  //监听文本框更改
+  function changejump(){
+      var page = $('#searchNumber').val();
+      page = parseInt(page) || 1;
+      page = page - 1;
+      //调转到指定页面索引 ，注意大小写
+      var oTable = $('#example').dataTable();
+      oTable.fnPageChange(page);
+  }
+  //批量修改
+  $('#save_price').click(function(){
+      layer.confirm('确定批量提交报价吗？', {
+          btn:['确定', '取消']
+      }, function(index){
+          layer.close(index);
+          $checkbox = $('[id ^= "quote_"]:checked');
+          if($checkbox.length){
+              layer.load();
+              var quoteinfo = '';
+              $checkbox.each(function(){
+                 var id = $(this).attr('id').substr(6);
+                  var req_date_item = $('#io-'+id).find("[name = 'req_date']").val();
+                  var req_quote_price =$('#io-'+id).find("[name = 'quote_price']").val();
+                  var req_remark =$('#io-'+id).find("[name = 'remark']").val();
+                  if(req_date_item == '' ||  req_date_item == undefined ){
+                      $('#io-'+id).find("[name='req_date']").css('border','1px red solid');
+                      layer.alert('可供货日期不能为空');
+                      layer.closeAll("loading");
+                      return false;
+                  }else{
+                      $('#io-'+id).find("[name='req_date']").css('border','none');
+                  }
+                  if(req_quote_price==''||req_quote_price == undefined){
+                      $('#io-'+id).find(("[name='quote_price']")).css('border','1px red solid');
+                      layer.alert('含税价格不能为空');
+                      layer.closeAll("loading");
+                      return false;
+                  }else{
+                      $('#io-'+id).find(["name = 'quote_price'"]).css('border','none');
+                  }
+
+                  if(id){
+                      quoteinfo += id+'_'+req_quote_price+'_'+req_date_item+'_'+req_remark+'&&&&';
+                  }
+              });
+              quoteinfo = quoteinfo.substr(0,quoteinfo.length-4)
+              console.log(quoteinfo);
+              if(quoteinfo == ''){
+                return;
+              }
+              var url = "{:url('Offer/savePriceAll')}";
+              var data = {
+                  'quoteinfo':quoteinfo
+              };
+              $.post(url, data, function(res){
+                  layer.closeAll();
+                  if(res.code == '2000'){
+                      layer.alert('报价成功');
+                      location.reload();
+                  }else{
+                      var msg = res.msg;
+                      layer.alert(msg);
+                  }
+              });
+          }else{
+              layer.alert('请选择需要报价数据');
+              return;
+          }
+      });
+  });
   $("#searchVal").on('click', function(){
     //console.log(orderTables);
     orderTables.ajax.reload();
@@ -296,6 +443,7 @@
       return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
     });
     //各种基于事件的操作，下面会有进一步介绍
+
   });
   function subQuote(id){
 

@@ -141,7 +141,7 @@
           }
         ],
       });
-        $("div.toolbar").html(' <span>跳转第</span><input id="searchNumber" style="width: 40px;text-align: center; margin: 1em;"/><span >页</span>');
+        $("div.toolbar").html(' <span>第</span><input type="number" id="searchNumber" min="1" style="width: 40px;text-align: center; margin: 1em;"/><span>页&nbsp;&nbsp;</span><button id="btn-jump" onclick="changejump()" class="layui-btn layui-btn-small">跳转</button>');
         //绑定分页事件----在切换分页的时候触发
         //table.on('page.dt', function () {
         //  var info = table.page.info();
@@ -154,7 +154,7 @@
             // console.info('Showing page: ' + info.page + ' of ' + info.pages);
             $('#searchNumber').val(info.page + 1);
         });
-        //监听文本框更改
+        /*//监听文本框更改
         $('#searchNumber').change(function () {
             var page = $(this).val();
             page = parseInt(page) || 1;
@@ -162,7 +162,7 @@
             //调转到指定页面索引 ，注意大小写
             var oTable = $('#example').dataTable();
             oTable.fnPageChange(page);
-        });
+        });*/
 
     }
   })
@@ -170,7 +170,15 @@
     //console.log(orderTables);
     orderTables.ajax.reload();
   })
-
+  //监听文本框更改
+  function changejump(){
+      var page = $('#searchNumber').val();
+      page = parseInt(page) || 1;
+      page = page - 1;
+      //调转到指定页面索引 ，注意大小写
+      var oTable = $('#example').dataTable();
+      oTable.fnPageChange(page);
+  }
   //导出
   $("#excel_out").click(function(){
     var status = $("#status").val()||'';

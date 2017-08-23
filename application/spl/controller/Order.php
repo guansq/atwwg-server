@@ -113,8 +113,9 @@ class Order extends Base{
         //$pr_code = '1111222';
         $offerLogic = model('Order', 'logic');
         $piList = $offerLogic->getOrderDetailInfo($pr_id);
-
+        $orderamount = 0;
         foreach($piList as $key => &$item){
+            $orderamount += $item['amount'];
             $result = $offerLogic->getOrderRecordInfo($item['id']);
             $piList[$key]['times'] = (!empty($result) ? count($result) : 0);
             $item['sup_update_date_str'] = empty($item['sup_update_date']) ? '' : date('Y-m-d', $item['sup_update_date']);
@@ -142,6 +143,7 @@ class Order extends Base{
         $this->assign('imgInfos', $imgInfos);
         // var_dump($detail);
         $this->assign('list', $piList);
+        $this->assign('orderamount', $orderamount);
         if(empty($codeInfo[0]['order_code'])){
             $codeInfo[0]['order_code'] = '--';
         }
@@ -474,6 +476,8 @@ class Order extends Base{
         foreach(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'] as $cl ){
             //設置列寬自適應
             $PHPSheet->getColumnDimension($cl)->setAutoSize(true);
+
+
         }
         $PHPSheet->setTitle('采购订单列表'); //给当前活动sheet设置名称
         $PHPSheet->setCellValueExplicit('A1', '采购订单号');
@@ -506,16 +510,29 @@ class Order extends Base{
                 ->setCellValueExplicit('G'.$num, $v['req_date_fmt'])
                 ->setCellValueExplicit('H'.$num, $v['sup_confirm_date_fmt'])
                 ->setCellValueExplicit('I'.$num, $v['sup_update_date_fmt'])
-                ->setCellValueExplicit('J'.$num, $v['price_num_fmt'])
-                ->setCellValueExplicit('K'.$num, $v['price_fmt'])
-                ->setCellValueExplicit('L'.$num, $v['price_subtotal_fmt'])
-                ->setCellValueExplicit('M'.$num, $v['arv_goods_num_fmt'])
-                ->setCellValueExplicit('N'.$num, $v['pro_goods_num_fmt'])
-                ->setCellValueExplicit('O'.$num, $v['return_goods_num'])
+                ->setCellValue('J'.$num, $v['price_num'])
+                ->setCellValue('K'.$num,$v['price'])
+                ->setCellValue('L'.$num, $v['price']*$v['price_num'])
+                ->setCellValue('M'.$num, $v['arv_goods_num'])
+                ->setCellValue('N'.$num, $v['pro_goods_num'])
+                ->setCellValue('O'.$num, $v['return_goods_num'])
                 ->setCellValueExplicit('P'.$num, $v['purch_name'])
                 ->setCellValueExplicit('Q'.$num, $v['pro_no'])
                 ->setCellValueExplicit('R'.$num, $v['u9_status']);
+            $PHPSheet ->getStyle('J'.$num)->getNumberFormat()
+                ->setFormatCode('#,##0.00');
+            $PHPSheet ->getStyle('K'.$num)->getNumberFormat()
+                ->setFormatCode('#,##0.00');
+            $PHPSheet ->getStyle('L'.$num)->getNumberFormat()
+                ->setFormatCode('#,##0.00');
+            $PHPSheet ->getStyle('M'.$num)->getNumberFormat()
+                ->setFormatCode('#,##0.00');
+            $PHPSheet ->getStyle('N'.$num)->getNumberFormat()
+                ->setFormatCode('#,##0.00');
+            $PHPSheet ->getStyle('O'.$num)->getNumberFormat()
+                ->setFormatCode('#,##0.00');
         }
+
         $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel, 'Excel2007');//按照指定格式生成Excel文件，'Excel2007’表示生成2007版本的xlsx，
         $PHPWriter->save($path.'/poItemList.xlsx'); //表示在$path路径下面生成ioList.xlsx文件
         $file_name = "单采购订单报表".date('Y-m-d', time()).".xlsx";

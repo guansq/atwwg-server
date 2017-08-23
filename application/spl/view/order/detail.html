@@ -64,13 +64,14 @@
         <td>交易单位</td>
         <td>要求交期</td>
         <td>交期</td>
-        <td>修改交期</td>
+
         <td>修改次数</td>
         <td>单价</td>
         <td>总价</td>
         <td>条码</td>
         <td>已送货数量</td>
         <td>未送货数量</td>
+        <td>修改交期</td>
       </tr>
       </thead>
       <tbody>
@@ -85,21 +86,31 @@
         <td>{$plist.price_uom}</td>
         <td name="showdate">{$plist.req_date|atwDate}</td>
         <td name="showdate">{$plist.sup_confirm_date|atwDate}</td>
-        <td >
-          <input type="text" class="laydate-icon" name="confirmdate"  value="{$plist.sup_update_date_str}" {if $statusButton.confirmable eq 0 || $plist.times egt 3}disabled="true"{/if}  >
-          <button name="confirmdatesubmit" class="btn btn-primary confirmdatesubmit" value="{$plist.id}" data-item_code="{$plist.item_code}" {if $statusButton.confirmable eq 0 || $plist.times egt 3}disabled="true"{/if}>提交</button>
-        </td>
+
         <td>{$plist.times|0}</td>
         <td>{$plist.price|atwMoney}</td>
         <td>{$plist.amount|atwMoney}</td>
         <td><a href="javascript:;"  data-modal='{:url("$classuri/barCodeModal")}?pi_id={$plist.id}' data-title="打印条形码">打印</a></td>
         <td>{$plist.arv_goods_num}</td>
         <td>{$plist.pro_goods_num}</td>
+        <td >
+          <input type="text" class="laydate-icon" name="confirmdate"  value="{$plist.sup_update_date_str}" {if $statusButton.confirmable eq 0 || $plist.times egt 3}disabled="true"{/if}  >
+          <button name="confirmdatesubmit" class="btn btn-primary confirmdatesubmit" value="{$plist.id}" data-item_code="{$plist.item_code}" {if $statusButton.confirmable eq 0 || $plist.times egt 3}disabled="true"{/if}>提交</button>
+        </td>
       </tr>
       {/volist}
       {/if}
+      <tr >
+        <td >合并</td>
+        <td colspan="8"></td>
+        <td>{$orderamount|atwMoney}</td>
+        <td colspan="4"></td>
+      </tr>
       </tbody>
     </table>
+  </div>
+  <div class="atw-orddet-text1">
+    <span>总价:</span><span style="margin-left: 2em;">{$orderamount|atwMoney}</span>
   </div>
   <div class="atw-orddet-text1">
     <p>订单异常情况</p>

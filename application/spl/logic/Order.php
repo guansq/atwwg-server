@@ -403,7 +403,7 @@ tr>th{
 EOD;
         $po['price_total'] = 0;
         foreach($piList as $i => $pi){
-            $confirmDate = date('Y-m-d', $pi['sup_confirm_date']);
+            $confirmDate = date('Y-m-d', $pi['req_date']);//管少秋2017-8-23更改sup_confirm_date->req_date
             $price = number_format($pi['price'], 2);
             $subTotal = number_format($pi['price_num']*$pi['price'], 2);
 

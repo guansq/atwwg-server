@@ -52,6 +52,7 @@ class Order extends Base{
             'init' => '待签订',
             'sup_cancel' => '已取消',
             'sup_sure' => '合同待上传',
+            'atw_cancel'=>'安特威取消',
             'upload_contract' => '合同待审核',
             'contract_pass' => '合同审核通过',
             'contract_refuse' => '合同审核拒绝',

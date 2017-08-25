@@ -329,6 +329,9 @@ class Offer extends Base {
                 // gmdate('Y-m-d H:i:s',$n);//格式化时间,不是用date哦, 时区相差8小时的
                 //检查id是否存在
                 if (empty($info)) {
+                    if(intval($data['id']) <30000){
+                        $this->error("系统更新<br/>表格数据需要重新导出", '');
+                    }
                     $this->error("成功：" . ($currentRow - 2) . "条<br/> 失败：" . ($allRow - $currentRow + 1) . "条<br/> 失败原因：未查询到报价单号", '');
                 }
                 if (!(isset($info['status']) && in_array($info['status'], ['init', 'quoted', 'winbid_uncheck']))) {

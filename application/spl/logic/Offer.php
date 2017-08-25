@@ -58,6 +58,11 @@ class Offer extends BaseLogic{
         $result = IoModel::where('id', $Id)->find($Id);
         return $result;
     }
+    //获取报价单条信息
+    function getOneItem($where=[]){
+        $result = IoModel::where($where)->find();
+        return $result;
+    }
 
     /**
      * Author: WILL<314112362@qq.com>

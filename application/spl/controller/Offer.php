@@ -199,7 +199,7 @@ class Offer extends Base {
                 if ($io['quote_endtime'] <  strtotime(date('Y-m-d'))) {
                     returnJson(4000, "成功：" . ($success) . "条<br/> 失败：" . ($totalItems - $success) . "条<br/> 失败原因：报价期限已过。<br/> 失败料号：" . (isset($io['item_code']) ? $io['item_code'] : ''));
                 }
-                if (strtotime($data['req_date']) < time()) {
+                if (strtotime($data['req_date']) < strtotime(date('Y-m-d'))) {
                     returnJson(4000, "成功：" . ($success) . "条<br/> 失败：" . ($totalItems - $success) . "条<br/> 失败原因：承诺交期小于当前日期不支持报价<br/> 失败料号：" . (isset($io['item_code']) ? $io['item_code'] : ''));
                 }
                 if (!in_array($io['status'], ['init', 'quoted', 'winbid_uncheck'])) {
@@ -236,29 +236,32 @@ class Offer extends Base {
         $PHPSheet->setTitle('询价单导出'); //给当前活动sheet设置名称
         $logicSupInfo = Model('Offer', 'logic');
         $list = $logicSupInfo->getOfferInfo($sup_code, ['status' => 'init']);
-        $PHPSheet->setCellValueExplicit('A1', 'ID')->setCellValueExplicit('B1', '物料名称');
-        $PHPSheet->setCellValueExplicit('C1', '采购数量')->setCellValueExplicit('D1', '交易单位');
-        $PHPSheet->setCellValueExplicit('E1', '计价单位')->setCellValueExplicit('F1', '询价时间');
-        $PHPSheet->setCellValueExplicit('G1', '报价截止日期')->setCellValueExplicit('H1', '要求交期');
-        $PHPSheet->setCellValueExplicit('I1', '可供货日期')->setCellValueExplicit('J1', '单价');
-        $PHPSheet->setCellValueExplicit('K1', '总价')->setCellValueExplicit('L1', '备注');
+        $PHPSheet->setCellValueExplicit('A1', '物料编号')->setCellValueExplicit('B1', '请购单号');
+        $PHPSheet->setCellValueExplicit('C1', '请购单行号')->setCellValueExplicit('D1', '物料名称');
+        $PHPSheet->setCellValueExplicit('E1', '采购数量')->setCellValueExplicit('F1', '交易单位');
+        $PHPSheet->setCellValueExplicit('G1', '计价单位')->setCellValueExplicit('H1', '询价时间');
+        $PHPSheet->setCellValueExplicit('I1', '报价截止日期')->setCellValueExplicit('J1', '要求交期');
+        $PHPSheet->setCellValueExplicit('K1', '可供货日期')->setCellValueExplicit('L1', '单价');
+        $PHPSheet->setCellValueExplicit('M1', '总价')->setCellValueExplicit('N1', '备注');
 
         $num = 1;
         foreach ($list as $k => $v) {
             // var_dump($v);
             $num = $num + 1;
-            $PHPSheet->setCellValueExplicit('A' . $num, $v['id'])
-                ->setCellValueExplicit('B' . $num, $v['item_name'])
-                ->setCellValueExplicit('C' . $num, $v['price_num'])
-                ->setCellValueExplicit('D' . $num, $v['price_uom'])
-                ->setCellValueExplicit('E' . $num, $v['tc_uom'])
-                ->setCellValueExplicit('F' . $num, date('Y-m-d', $v['create_at']))
-                ->setCellValueExplicit('G' . $num, date('Y-m-d', $v['quote_endtime']))
-                ->setCellValueExplicit('H' . $num, date('Y-m-d', $v['req_date']))
-                ->setCellValueExplicit('I' . $num, empty($v['promise_date']) ? '' : date('Y-m-d', $v['promise_date']))
-                ->setCellValueExplicit('J' . $num, $v['quote_price'])
-                ->setCellValueExplicit('K' . $num, ($v['price_num'] * $v['quote_price']))
-                ->setCellValueExplicit('L' . $num, $v['remark']);
+            $PHPSheet->setCellValueExplicit('A' . $num, $v['item_code'])
+                ->setCellValueExplicit('B' . $num, $v['pr_code'])
+                ->setCellValueExplicit('C' . $num, $v['pr_ln'])
+                ->setCellValueExplicit('D' . $num, $v['item_name'])
+                ->setCellValueExplicit('E' . $num, $v['price_num'])
+                ->setCellValueExplicit('F' . $num, $v['price_uom'])
+                ->setCellValueExplicit('G' . $num, $v['tc_uom'])
+                ->setCellValueExplicit('H' . $num, date('Y-m-d', $v['create_at']))
+                ->setCellValueExplicit('I' . $num, date('Y-m-d', $v['quote_endtime']))
+                ->setCellValueExplicit('J' . $num, date('Y-m-d', $v['req_date']))
+                ->setCellValueExplicit('K' . $num, empty($v['promise_date']) ? '' : date('Y-m-d', $v['promise_date']))
+                ->setCellValueExplicit('L' . $num, $v['quote_price'])
+                ->setCellValueExplicit('M' . $num, ($v['price_num'] * $v['quote_price']))
+                ->setCellValueExplicit('N' . $num, $v['remark']);
 
         }
         $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel, 'Excel2007');//按照指定格式生成Excel文件，'Excel2007’表示生成2007版本的xlsx，
@@ -302,12 +305,17 @@ class Offer extends Base {
             $allRow = $currentSheet->getHighestRow();
             for ($currentRow = 2; $currentRow <= $allRow; $currentRow++) {
                 $data = [];
+                $data['pr_code'] = ($objPHPExcel->getActiveSheet()->getCell("B" . $currentRow)->getValue());//获取B列的值
+                $data['pr_ln'] = ($objPHPExcel->getActiveSheet()->getCell("C" . $currentRow)->getValue());//获取C列的值
                 $data['id'] = intval($objPHPExcel->getActiveSheet()->getCell("A" . $currentRow)->getValue());//获取A列的值
-                $data['req_date'] = $objPHPExcel->getActiveSheet()->getCell("I" . $currentRow)->getValue();//获取H列的值
-                $data['quote_price'] = $objPHPExcel->getActiveSheet()->getCell("J" . $currentRow)->getValue();//获取J列的值
-                $data['remark'] = $objPHPExcel->getActiveSheet()->getCell("L" . $currentRow)->getValue();//获取L列的值
+                $data['req_date'] = $objPHPExcel->getActiveSheet()->getCell("K" . $currentRow)->getValue();//获取H列的值
+                $data['quote_price'] = $objPHPExcel->getActiveSheet()->getCell("L" . $currentRow)->getValue();//获取J列的值
+                $data['remark'] = $objPHPExcel->getActiveSheet()->getCell("N" . $currentRow)->getValue();//获取L列的值
                 $offerLogic = model('Offer', 'logic');
-                $info = $offerLogic->getOneById($data['id']);
+                $info = $offerLogic->getOneItem([
+                    'pr_code' => $data['pr_code'],
+                    'pr_ln' => $data['pr_ln']
+                ]);
                 if (!strpos($data['req_date'], '-')) {
                     //                    $data['req_date'] = $data['req_date'] > 25568 ? $data['req_date'] + 1 : 25569;
                     //                    /*There was a bug if Converting date before 1-1-1970 (tstamp 0)*/
@@ -330,12 +338,12 @@ class Offer extends Base {
                     $this->error("成功：" . ($currentRow - 2) . "条<br/> 失败：" . ($allRow - $currentRow + 1) . "条<br/> 失败原因：报价截止日期小于当前日期不支持报价<br/> 失败料号：" . (isset($info['item_code']) ? $info['item_code'] : ''), '');
                 }
                 if (!empty($info) ) {//不存在
-                    $key = $data['id'];
-                    if ($data['req_date'] < time()) {
+                    $key = $info['id'];
+                    if ($data['req_date'] < strtotime(date('Y-m-d'))) {
                         $this->error("成功：" . ($currentRow - 2) . "条<br/> 失败：" . ($allRow - $currentRow + 1) . "条<br/> 失败原因：承诺交期小于当前日期不支持报价<br/> 失败料号：" . (isset($info['item_code']) ? $info['item_code'] : ''), '');
                     }
                     $data['quote_price'] = number_format($data['quote_price'], 2);
-                    if ( empty($data['quote_price'])) {
+                    if ( empty(floatval($data['quote_price']))) {
                         $this->error("成功：" . ($currentRow - 2) . "条<br/> 失败：" . ($allRow - $currentRow + 1) . "<br/> 失败原因：价格不能为空<br/> 失败料号：" . (isset($info['item_code']) ? $info['item_code'] : ''), '');
                     }
                     // 如果是单一资源的物料 则 状态改为 要审核
@@ -365,6 +373,7 @@ class Offer extends Base {
                         //  return json(['code' => 2000, 'msg' => '成功', 'data' => ['total_price' => $total_price]]);
                     } else {
                         $this->error("成功：" . ($currentRow - 2) . "条<br/> 失败：" . ($allRow - $currentRow + 1) . "<br/> 失败原因：更新状态失败", '');
+                        die();
                     }
                 }
             }

@@ -58,9 +58,16 @@ class Order extends BaseController{
         //dump($requestInfo);die;
         $where = [];
         // 应用搜索条件
-        foreach(['order_code', 'sup_code'] as $key){
+        foreach(['order_code', 'sup_code', 'sup_name'] as $key){
             if(isset($get[$key]) && $get[$key] !== ''){
-                $where[$key] = ['like', "%{$get[$key]}%"];
+                if($key == 'order_code'){
+                    $where['po.order_code'] = ['like', "%{$get[$key]}%"];
+                }else if($key == 'sup_code'){
+                    $where['po.sup_code'] = ['like', "%{$get[$key]}%"];
+                }else if($key == 'sup_name'){
+                    $where['sup.name'] = ['like', "%{$get[$key]}%"];
+                }
+                //$where[$key] = ['like', "%{$get[$key]}%"];
             }
         }
         //逾期状态
@@ -88,7 +95,7 @@ class Order extends BaseController{
             'executing' => '执行中',
             'finish' => '结束',
         ];
-
+        //dump(collection($list)->toArray());die;
         foreach($list as $k => $v){
 
             $exec_desc = '';
@@ -98,7 +105,7 @@ class Order extends BaseController{
             foreach($itemInfo as $vv){
                 $vv['arv_goods_num'] = $vv['arv_goods_num'] == '' ? 0 : $vv['arv_goods_num'];
                 $vv['pro_goods_num'] = $vv['pro_goods_num'] == '' ? 0 : $vv['pro_goods_num'];
-                $exec_desc .= '物料名称：'.$vv['item_name'].'; '.'到货数量：'.$vv['arv_goods_num'].'; 未到货数量：'.$vv['pro_goods_num'].'; 可供货交期：'.date('Y-m-d', $vv['sup_confirm_date']).'<br>';
+                //$exec_desc .= '物料名称：'.$vv['item_name'].'; '.'到货数量：'.$vv['arv_goods_num'].'; 未到货数量：'.$vv['pro_goods_num'].'; 可供货交期：'.date('Y-m-d', $vv['sup_confirm_date']).'<br>';
                 // 是否有逾期物料
                 $hasExceed = $hasExceed || (($vv['sup_confirm_date'] < $now) && ($vv['pro_goods_num'] > 0) && !in_array($v['status'], [
                             'finish',
@@ -159,7 +166,7 @@ class Order extends BaseController{
                 'order_code' => $v['order_code'],
                 'create_at' => atwDate($v['create_at']),
                 'sup_code' => $v['sup_code'],
-                'sup_name' => $poLogic->getSupName($v['sup_code']),
+                'sup_name' => $v['sup_name'],//$poLogic->getSupName($v['sup_code']),
                 'status' => empty($v['u9_status']) ? $statusStr : $v['u9_status']
             ];
         }

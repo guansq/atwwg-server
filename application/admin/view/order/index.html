@@ -19,6 +19,7 @@
         <input type="hidden" id="status_ipt" name="status" value="{$Think.get.status}">
         <input type="text" id="order_code" name="order_code" value="{$Think.get.order_code}" class="form-control" placeholder="订单编号">
         <input type="text" id="sup_code" name="sup_code" value="{$Think.get.sup_code}" class="form-control" placeholder="供应商编码">
+        <input type="text" id="sup_name" name="sup_name" value="{$Think.get.sup_name}" class="form-control" placeholder="供应商名称">
         <button type="button" id="searchVal" class="btn btn-info">查询</button>
       </form>
     </div>
@@ -91,6 +92,7 @@
             parameter.order_code = $("#order_code").val();
             parameter.pr_code = $("#pr_code").val();
             parameter.sup_code = $("#sup_code").val();
+            parameter.sup_name = $("#sup_name").val();
             parameter.status = $("#status_ipt").val();
           }
         },
@@ -242,8 +244,9 @@
     }, function(index){
       layer.close(index);
       var order_code = $("#order_code").val() || '';
-      var pr_code = $("#pr_code").val() || '';
-      var str = "{:url('Order/exportPoExcel')}" + '?order_code=' + order_code + '&pr_code=' + pr_code;
+      var sup_code = $("#sup_code").val() || '';
+      var sup_name = $("#sup_name").val() || '';
+      var str = "{:url('Order/exportPoExcel')}" + '?order_code=' + order_code + '&sup_code=' + sup_code + '&sup_name=' + sup_name;
       window.open(str);
       //console.log(str);
     });

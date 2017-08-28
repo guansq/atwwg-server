@@ -29,10 +29,12 @@ class Po extends BaseLogic{
      * 得到订单列表
      */
     function getPolist($where){
+
         if(empty($where)){
-            $list = PoModel::order('update_at DESC')->select();
+            $list = PoModel::alias('po')->field('po.*,name as sup_name')->join('supplier_info sup','po.sup_code = sup.code')->order('po.update_at DESC')->select();
         }else{
-            $list = PoModel::where($where)->order('update_at DESC')->select();
+            $list = PoModel::alias('po')->field('po.*,name as sup_name')->where($where)->join('supplier_info sup','po.sup_code = sup.code')->order('po.update_at DESC')->select();
+            //$list = PoModel::where($where)->order('update_at DESC')->select();
         }
         return $list;
     }
@@ -276,6 +278,7 @@ class Po extends BaseLogic{
                 //'pr_code' => $itemInfo['pr_code'],
                 'order_code' => $res['data']['DocNo'],
                 'sup_code' => $supCode,
+                'sup_name' => self::getSupName($supCode),
                 'doc_date' => $now,
                 'is_include_tax' => 1,      //是否含税
                 'status' => 'init',

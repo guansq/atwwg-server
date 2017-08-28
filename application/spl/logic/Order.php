@@ -499,7 +499,7 @@ EOD;
 
 
         $sginHtmlHeight = 36.46; // $sginHtml 的高度
-        $imgH = $imgW = 50;
+        $imgH = $imgW = 45;
         // Print text using writeHTMLCell()
         //$html = iconv('gb2312','utf-8',$html);
         //$pdf->writeHTML($html);

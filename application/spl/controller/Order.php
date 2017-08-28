@@ -30,6 +30,21 @@ class Order extends Base{
                     if($key == 'status' && $data[$key] == 'all'){
                         continue;
                     }
+                    if($key == 'status' && $data['status'] == 'zr_close'){
+                        $where['status'] = 'finish';
+                        $where['u9_status'] = 3;
+                        continue;
+                    }
+                    if($key == 'status' && $data['status'] == 'dq_close'){
+                        $where['status'] = 'finish';
+                        $where['u9_status'] = 4;
+                        continue;
+                    }
+                    if($key == 'status' && $data['status'] == 'ce_close'){
+                        $where['status'] = 'finish';
+                        $where['u9_status'] = 5;
+                        continue;
+                    }
                     $where[$key] = $data[$key];
                 }
             }
@@ -49,17 +64,20 @@ class Order extends Base{
         $returnInfo = [];
         $status = [
             '' => '',
-            'init' => '待签订',
+            'init' => '待确认',
             'sup_cancel' => '已取消',
-            'sup_sure' => '合同待上传',
-            'sup_edit' => '合同待上传',
-            'atw_cancel'=>'安特威取消',
-            'atw_sure'=>'安特威确定',
-            'upload_contract' => '合同待审核',
-            'contract_pass' => '合同审核通过',
-            'contract_refuse' => '合同审核拒绝',
+            'sup_sure' => '待上传',
+            'sup_edit' => '修改交期',
+            'atw_cancel'=>'已取消 ',
+            'atw_sure'=>'已确定',
+            'upload_contract' => '待审核',
+            'contract_pass' => '审核通过',
+            'contract_refuse' => '审核拒绝',
             'executing' => '执行中',
-            'finish' => '结束',
+            'finish' => '关闭',
+            'zr_close' => '自然关闭',
+            'dq_close' => '短缺关闭',
+            'ce_close' => '超额关闭',
         ];
         // var_dump($list);
         foreach($list as $k => $v){
@@ -78,6 +96,15 @@ class Order extends Base{
             $returnInfo[$k]['order_code'] = $v['order_code'];
             //$returnInfo[$k]['pr_code'] = $v['pr_code'];
             //  $returnInfo[$k]['pr_date'] = date('Y-m-d',$offerLogic->getPrDate($v['pr_code']));
+            if($v['status'] == 'finish'){
+                if($v['u9_status'] == 3){
+                    $v['status'] ='zr_close';
+                }elseif($v['u9_status'] == 4){
+                    $v['status'] ='dq_close';
+                }elseif($v['u9_status'] == 5){
+                    $v['status'] ='ce_close';
+                }
+            }
             $returnInfo[$k]['create_at'] = date('Y-m-d', $v['create_at']);
             $returnInfo[$k]['status'] = $status[$v['status']];
             $returnInfo[$k]['contract_time'] = empty($v['contract_time']) ? '--' : date('Y-m-d', $v['contract_time']);
@@ -95,16 +122,19 @@ class Order extends Base{
 
     public function index(){
         $orderStatus = array(
-            'init' => '待签订',
-            'sup_cancel' => '供应商取消',
-            'sup_edit' => '供应商修改',
-            'atw_sure' => '安特威确定',
-            'sup_sure' => '待上传合同',
-            'upload_contract' => '已经上传合同',
-            'contract_pass' => '合同审核通过',
-            'contract_refuse' => '合同审核拒绝',
+            'init' => '待确认',
+            //'sup_cancel' => '已取消',
+            //'sup_edit' => '修改交期',
+            //'atw_sure' => '待上传',
+            'sup_sure' => '待上传',
+            //'atw_cancel'=>'已取消 ',
+            'upload_contract' => '待审核',
+            'contract_pass' => '审核通过',
+            'contract_refuse' => '审核拒绝',
             'executing' => '执行中',
-            'finish' => '结束'
+            'zr_close' => '自然关闭',
+            'dq_close' => '短缺关闭',
+            'ce_close' => '超额关闭',
         );
         $this->assign('orderstatus', $orderStatus);
         $this->assign('title', $this->title);

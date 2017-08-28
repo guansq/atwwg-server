@@ -33,7 +33,13 @@ class Io extends BaseLogic{
             ->order('pr.update_at desc')
             ->group('pr_id');
         if(!empty($where)){
-            $list = $list->where($where);
+            if(!key_exists('pr.status',$where)){
+                $list = $list->where($where)->where('pr.status','in',['inquiry','quoted','flow','wait','order']);
+            }else{
+                $list = $list->where($where);
+            }
+        }else{
+            $list = $list->where('pr.status','in',['inquiry','quoted','flow','wait','order']);
         }
         $list = $list->select();
         if($list){
@@ -52,8 +58,17 @@ class Io extends BaseLogic{
             ->join('item b', 'a.item_code=b.code', 'LEFT')
             ->join('u9_pr pr', 'pr.id = a.pr_id', 'LEFT')
             ->group('pr_id');
-        if(!empty($where)){
+/*        if(!empty($where)){
             $list = $list->where($where);
+        }*/
+        if(!empty($where)){
+            if(!key_exists('pr.status',$where)){
+                $list = $list->where($where)->where('pr.status','in',['inquiry','quoted','flow','wait','order']);
+            }else{
+                $list = $list->where($where);
+            }
+        }else{
+            $list = $list->where('pr.status','in',['inquiry','quoted','flow','wait','order']);
         }
         $list = $list->select();
         if($list){

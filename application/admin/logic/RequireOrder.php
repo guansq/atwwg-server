@@ -31,7 +31,7 @@ class RequireOrder extends BaseLogic{
                 $list = prModel::alias('a')
                     ->field('a.*,b.desc,b.pur_attr')
                     ->join('item b', 'a.item_code=b.code', 'LEFT')
-                    ->where($where)
+                    ->where($where)->where('a.status','in',['hang','inquiry','quoted','flow','wait'])
                     ->limit("$start,$length")
                     ->order('update_at desc')
                     ->select();
@@ -41,7 +41,7 @@ class RequireOrder extends BaseLogic{
             //->where('a.status','<>','close')
             $list = prModel::alias('a')
                 ->field('a.*,b.desc,b.pur_attr')
-                ->join('item b', 'a.item_code=b.code', 'LEFT')
+                ->join('item b', 'a.item_code=b.code', 'LEFT')->where('a.status','in',['hang','inquiry','quoted','flow','wait'])
                 ->limit("$start,$length")
                 ->order('update_at desc')
                 ->select();
@@ -104,7 +104,7 @@ class RequireOrder extends BaseLogic{
                 //->where('a.status','<>','close')
                 $count = prModel::alias('a')
                     ->field('a.*,b.desc,b.pur_attr')
-                    ->join('item b', 'a.item_code=b.code', 'LEFT')
+                    ->join('item b', 'a.item_code=b.code', 'LEFT')->where('a.status','in',['hang','inquiry','quoted','flow','wait'])
                     ->where($where)
                     ->count();
             }
@@ -113,7 +113,7 @@ class RequireOrder extends BaseLogic{
             //->where('a.status','<>','close')
             $count = prModel::alias('a')
                 ->field('a.*,b.desc,b.pur_attr')
-                ->join('item b', 'a.item_code=b.code', 'LEFT')
+                ->join('item b', 'a.item_code=b.code', 'LEFT')->where('a.status','in',['hang','inquiry','quoted','flow','wait'])
                 ->count();
         }
         return $count;

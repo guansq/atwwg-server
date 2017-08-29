@@ -82,10 +82,10 @@ class Order extends BaseController{
                 }else if($key == 'sup_name'){
                     $where['sup.name'] = ['like', "%{$get[$key]}%"];
                 }else if($key == 'status'){
-                    if($get['status'] != 'all'){
+                    /*if($get['status'] != 'all'){
                         $where['po.status'] = $get[$key];
                         continue;
-                    }
+                    }*/
                     if($get['status'] == 'zr_close'){
                         $where['po.status'] = 'finish';
                         $where['po.u9_status'] = 3;

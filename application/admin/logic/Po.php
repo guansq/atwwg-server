@@ -278,7 +278,6 @@ class Po extends BaseLogic{
                 //'pr_code' => $itemInfo['pr_code'],
                 'order_code' => $res['data']['DocNo'],
                 'sup_code' => $supCode,
-                'sup_name' => self::getSupName($supCode),
                 'doc_date' => $now,
                 'is_include_tax' => 1,      //是否含税
                 'status' => 'init',

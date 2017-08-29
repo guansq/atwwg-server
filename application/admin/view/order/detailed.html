@@ -23,14 +23,13 @@
 
           <td>供应商名称</td>
           <td>{$poInfo['sup_name']}</td>
-          <td class="col-sm-1">请购单号</td>
-          <td>{$poInfo['pr_code']}</td>
         </tr>
       </table>
       <table class="table table-bordered">
         <thead>
         <tr>
           <th>序号</th>
+          <th>请购单号</th>
           <th>料号</th>
           <th>物料描述</th>
           <th>项目号</th>
@@ -58,6 +57,7 @@
         <tr class="">
         {/if}
           <td>{$i}</td>
+          <td>{$vo['pr_code']}</td>
           <td>{$vo['item_code']}</td>
           <td>{$vo['item_name']}</td>
           <td>{$vo['pro_no']}</td>
@@ -76,7 +76,7 @@
         <tr>
           <td colspan="2">合并</td>
           <td colspan="8"></td>
-          <td colspan="4" class="text-right">{$allAmount|atwMoney}</td>
+          <td colspan="5" class="text-right">{$allAmount|atwMoney}</td>
         </tr>
         </tbody>
       </table>

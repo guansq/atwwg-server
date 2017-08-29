@@ -328,7 +328,6 @@ class Order extends BaseController{
         $where = ['code' => $poInfo['sup_code']];
         $poInfo['sup_name'] = $supLogic->getSupName($where);
         $poItemInfo = $poLogic->getPoItemInfo($id);
-        $poInfo['pr_code'] = $poItemInfo[0]['pr_code'];
         $allAmount = 0;
         foreach($poItemInfo as $k => $v){
             $allAmount += $v['amount'];

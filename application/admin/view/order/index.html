@@ -16,7 +16,13 @@
   <div class="mt_box">
     <div class="inquiry_box">
       <form id="search_form" class="form-inline animated form-search" action='{:url("$classuri/index")}' onsubmit="return false" method="get">
-        <input type="hidden" id="status_ipt" name="status" value="{$Think.get.status}">
+        <!--<input type="hidden" id="status_ipt" name="status" value="{$Think.get.status}">-->
+        <span>合同状态:
+        <select class="form-control" name="status" id="status">
+          <option value="all">全部</option>
+          {volist name='orderstatus' id='pstatus'}
+            <option value="{$key}" {eq name="$key" value="$Think.get.status" }selected{/eq}>{$pstatus}</option>
+          {/volist}</select></span>
         <input type="text" id="order_code" name="order_code" value="{$Think.get.order_code}" class="form-control" placeholder="订单编号">
         <input type="text" id="sup_code" name="sup_code" value="{$Think.get.sup_code}" class="form-control" placeholder="供应商编码">
         <input type="text" id="sup_name" name="sup_name" value="{$Think.get.sup_name}" class="form-control" placeholder="供应商名称">
@@ -93,7 +99,7 @@
             parameter.pr_code = $("#pr_code").val();
             parameter.sup_code = $("#sup_code").val();
             parameter.sup_name = $("#sup_name").val();
-            parameter.status = $("#status_ipt").val();
+            parameter.status = $("#status").val();
           }
         },
         "columnDefs":[
@@ -246,7 +252,8 @@
       var order_code = $("#order_code").val() || '';
       var sup_code = $("#sup_code").val() || '';
       var sup_name = $("#sup_name").val() || '';
-      var str = "{:url('Order/exportPoExcel')}" + '?order_code=' + order_code + '&sup_code=' + sup_code + '&sup_name=' + sup_name;
+      var status = $("#status").val() || '';
+      var str = "{:url('Order/exportPoExcel')}" + '?order_code=' + order_code + '&sup_code=' + sup_code + '&sup_name=' + sup_name + '&status=' + status;
       window.open(str);
       //console.log(str);
     });

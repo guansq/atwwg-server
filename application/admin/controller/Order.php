@@ -45,8 +45,23 @@ class Order extends BaseController{
         $this->title = '采购订单';
         $poLogic = model('Po', 'logic');
         $allNums = $poLogic->getPoCount();
+        $orderStatus = array(
+            'init' => '待确认',
+            //'sup_cancel' => '已取消',
+            //'sup_edit' => '修改交期',
+            //'atw_sure' => '待上传',
+            'sup_sure' => '待上传',
+            //'atw_cancel'=>'已取消 ',
+            'upload_contract' => '待审核',
+            'contract_pass' => '审核通过',
+            'contract_refuse' => '审核拒绝',
+            'executing' => '执行中',
+            'zr_close' => '自然关闭',
+            'dq_close' => '短缺关闭',
+            'ce_close' => '超额关闭',
+        );
+        $this->assign('orderstatus', $orderStatus);
         $this->assign('allNums', $allNums);
-        //echo $allNums;
         $this->assign('title', $this->title);
         return view();
     }
@@ -58,7 +73,7 @@ class Order extends BaseController{
         //dump($requestInfo);die;
         $where = [];
         // 应用搜索条件
-        foreach(['order_code', 'sup_code', 'sup_name'] as $key){
+        foreach(['order_code', 'sup_code', 'sup_name','status'] as $key){
             if(isset($get[$key]) && $get[$key] !== ''){
                 if($key == 'order_code'){
                     $where['po.order_code'] = ['like', "%{$get[$key]}%"];
@@ -66,6 +81,26 @@ class Order extends BaseController{
                     $where['po.sup_code'] = ['like', "%{$get[$key]}%"];
                 }else if($key == 'sup_name'){
                     $where['sup.name'] = ['like', "%{$get[$key]}%"];
+                }else if($key == 'status'){
+                    if($get['status'] != 'all'){
+                        $where['po.status'] = $get[$key];
+                        continue;
+                    }
+                    if($get['status'] == 'zr_close'){
+                        $where['po.status'] = 'finish';
+                        $where['po.u9_status'] = 3;
+                        continue;
+                    }
+                    if($get['status'] == 'dq_close'){
+                        $where['po.status'] = 'finish';
+                        $where['po.u9_status'] = 4;
+                        continue;
+                    }
+                    if($get['status'] == 'ce_close'){
+                        $where['po.status'] = 'finish';
+                        $where['po.u9_status'] = 5;
+                        continue;
+                    }
                 }
                 //$where[$key] = ['like', "%{$get[$key]}%"];
             }
@@ -73,14 +108,15 @@ class Order extends BaseController{
         //逾期状态
         $isCheckExceed = false;
         if(!empty($get['status']) && $get['status'] == 'exceed'){
-            $where['status'] = ['NOT IN', ['finish', 'sup_cancel','atw_cancel']];
+            $where['po.status'] = ['NOT IN', ['finish', 'sup_cancel','atw_cancel']];
             $isCheckExceed = true;
         }
         if(!empty($get['status']) && in_array($get['status'],['sup_cancel','sup_sure','upload_contract'])){
-            $where['status'] = $get['status'];
+            $where['po.status'] = $get['status'];
         }
-
+        //dump($where);die;
         $list = $poLogic->getPolist($where);
+        //dump($list);
         $retList = [];
         $status = [
             '' => '',

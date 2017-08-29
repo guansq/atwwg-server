@@ -31,11 +31,12 @@ class Po extends BaseLogic{
     function getPolist($where){
 
         if(empty($where)){
-            $list = PoModel::alias('po')->field('po.*,name as sup_name')->join('supplier_info sup','po.sup_code = sup.code')->order('po.update_at DESC')->select();
+            $list = PoModel::alias('po')->field('po.*,sup.name as sup_name')->join('supplier_info sup','po.sup_code = sup.code','LEFT')->order('po.update_at DESC')->select();
         }else{
-            $list = PoModel::alias('po')->field('po.*,name as sup_name')->where($where)->join('supplier_info sup','po.sup_code = sup.code')->order('po.update_at DESC')->select();
+            $list = PoModel::alias('po')->field('po.*,sup.name as sup_name')->where($where)->join('supplier_info sup','po.sup_code = sup.code','LEFT')->order('po.update_at DESC')->select();
             //$list = PoModel::where($where)->order('update_at DESC')->select();
         }
+        //echo $list;die;
         return $list;
     }
 

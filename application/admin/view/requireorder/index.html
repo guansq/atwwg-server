@@ -204,7 +204,7 @@
           //parameter.check_status = $('#check_status').val();
         }
       },
-      "pageLength":100,
+      "pageLength":10,
       "columns":[
         {"data":"pr_code"},
         {"data":"pr_date"},
@@ -378,7 +378,11 @@
         $("input[data-pr_id^=" + pr_id + "]").parent().next().html(res.data.sup_name)
         //var str = '<a href="javascript:;" onclick="checkStatus(\'agree\','+pr_id+')">通过</a>&nbsp;&nbsp;<a href="javascript:;" onclick="checkStatus(\'refuse\','+pr_id+')">拒绝</a>';
         //$("input[data-pr_id^="+pr_id+"]") .parent().next().next().html(str)
-        $.form.reload();
+        //prTable.ajax.reload();
+        info = prTable.page.info();
+        var page = info.page;
+        $('#example').dataTable().fnPageChange(page);
+        //$.form.reload();
       }else{
         layer.alert(res.msg);
       }

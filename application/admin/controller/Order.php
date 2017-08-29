@@ -73,11 +73,11 @@ class Order extends BaseController{
         //逾期状态
         $isCheckExceed = false;
         if(!empty($get['status']) && $get['status'] == 'exceed'){
-            $where['status'] = ['NOT IN', ['finish', 'sup_cancel','atw_cancel']];
+            $where['po.status'] = ['NOT IN', ['finish', 'sup_cancel','atw_cancel']];
             $isCheckExceed = true;
         }
         if(!empty($get['status']) && in_array($get['status'],['sup_cancel','sup_sure','upload_contract'])){
-            $where['status'] = $get['status'];
+            $where['po.status'] = $get['status'];
         }
 
         $list = $poLogic->getPolist($where);

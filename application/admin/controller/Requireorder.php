@@ -333,6 +333,7 @@ class Requireorder extends BaseController{
                 'pr_code' => $prInfo['pr_code'],
                 'pr_id' => $prInfo['id'],
                 'pr_ln' => $prInfo['pr_ln'],
+                'pro_no' => $prInfo['pro_no'],
                 'sup_confirm_date' => $data['point_date'],
                 'req_date' => $prInfo['req_date'],
                 'price' => $data['point_price'],

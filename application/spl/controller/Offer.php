@@ -131,7 +131,7 @@ class Offer extends Base {
             'status' => $status,//改变 状态
             'read_at' => $now,//记录阅读时间
         ];
-        $io = $offerLogic->find($key);
+        // $io = $offerLogic->find($key);
         if ($io['quote_endtime'] <  strtotime(date('Y-m-d'))) {
             returnJson(4000, '报价期限已过。');
         }
@@ -184,6 +184,11 @@ class Offer extends Base {
                 if (empty($io)) {
                     return json(['code' => 4001, 'msg' => "成功：" . ($success) . "条<br/> 失败：" . ($totalItems - $success) . "条<br/> 失败原因：未查询到报价单号", 'data' => []]);
                 }
+
+                if (!in_array($io['status'], ['init', 'quoted', 'winbid_uncheck'])) {
+                    continue ;
+                }
+
                 $total = $offerLogic->where('pr_id', $io['pr_id'])->count(); // 询价总数
                 $status = $total == 1 ? 'winbid_uncheck' : 'quoted';
 
@@ -195,7 +200,7 @@ class Offer extends Base {
                     'status' => $status,//改变 状态
                     'read_at' => $now,//记录阅读时间
                 ];
-                $io = $offerLogic->find($key);
+                // $io = $offerLogic->find($key);
                 if ($io['quote_endtime'] <  strtotime(date('Y-m-d'))) {
                     returnJson(4000, "成功：" . ($success) . "条<br/> 失败：" . ($totalItems - $success) . "条<br/> 失败原因：报价期限已过。<br/> 失败料号：" . (isset($io['item_code']) ? $io['item_code'] : ''));
                 }

@@ -86,6 +86,7 @@ class Order extends BaseController{
                         $where['po.status'] = $get[$key];
                         continue;
                     }*/
+                    $where['po.status'] = $get['status'];
                     if($get['status'] == 'zr_close'){
                         $where['po.status'] = 'finish';
                         $where['po.u9_status'] = 3;
@@ -320,9 +321,7 @@ class Order extends BaseController{
         $prLogic = model('RequireOrder', 'logic');
         //dump($id);die;
         //$where = ['pr_code' => $poInfo['pr_code']];
-        if($poInfo['status'] == 'upload_contract'){//供应商已经上传合同
 
-        }
         //$poInfo['pr_date'] = $prLogic->getPrDate($where);
         $supLogic = model('Supporter', 'logic');
         $where = ['code' => $poInfo['sup_code']];

@@ -16,11 +16,11 @@ class Offer extends Base {
     const STATUS_ARR = [
         'init' => '未报价',
         'quoted' => '已报价',
-        'winbid' => '中标',
+        'winbid' => '中标',  //
         'losebid' => '未中标',
-        'winbid_uncheck' => '待审核',
-        'wait' => '待下单',
-        'un_tender' => '未投标',
+        'winbid_uncheck' => '已报价',
+        'wait' => '中标',
+        'un_tender' => '未中标',
         'close' => '关闭', //废弃
     ];
 
@@ -31,7 +31,7 @@ class Offer extends Base {
             'quoted' => '已报价',
             'winbid' => '中标',
             'losebid' => '未中标',
-            'un_tender' => '未投标',
+            //'un_tender' => '未投标',
         ];
         $queryStatus = input('tag') == 'un_quote' ? 'init' : '';
         $this->assign('status', $status);
@@ -51,21 +51,39 @@ class Offer extends Base {
         }
         // 应用搜索条件
         if (!empty($data)) {
-            foreach (['status', 'tag'] as $key) {
-                if (isset($data[$key]) && $data[$key] !== '') {
-                    if ($key == 'status' && $data[$key] == 'all') {
-                        continue;
-                    }
-                    if ($data[$key] == 'quoted') {
-                        $where[$key] = ['in', ['quoted', 'winbid_uncheck', 'winbid_checked']];
-                    } else {
-                        $where[$key] = $data[$key];
-                    }
+
+            // 如果有status 按照status筛选
+            if($data['status']){
+                $where['status'] = $data['status'];
+                if($data['status']== 'all'){
+                    unset($where['status']);
+                }elseif($data['status']== 'quoted'){
+                    $where['status'] = ['IN', ['quoted', 'winbid_uncheck']];
+                }elseif($data['status']== 'winbid'){
+                    $where['status'] = ['IN', ['winbid', 'wait']];
+                }elseif($data['status']== 'losebid'){
+                    $where['status'] = ['IN', ['losebid', 'un_tender']];
                 }
-                if ($key = 'tag' && isset($data[$key]) && $data[$key] = 'un_quote') {
-                    $where['status'] = 'init';
-                }
+            }elseif($data['tag'] == 'un_quote'){
+                $where['status'] = 'init';
             }
+
+
+//            foreach (['status', 'tag'] as $key) {
+//                if (isset($data[$key]) && $data[$key] !== '') {
+//                    if ($key == 'status' && $data[$key] == 'all') {
+//                        continue;
+//                    }
+//                    if ($data[$key] == 'quoted') {
+//                        $where[$key] = ['in', ['quoted', 'winbid_uncheck', 'winbid_checked']];
+//                    } else {
+//                        $where[$key] = $data[$key];
+//                    }
+//                }
+//                if ($key = 'tag' && isset($data[$key]) && $data[$key] = 'un_quote') {
+//                    $where['status'] = 'init';
+//                }
+//            }
             if (!empty($data['quote_begintime']) && !empty($data['quote_endtime'])) {
                 $where['create_at'] = array(
                     'between',
@@ -77,6 +95,7 @@ class Offer extends Base {
                 $where['create_at'] = array('elt', strtotime($data['quote_endtime']));
             }
         }
+        // exit(json_encode($where));
         $list = $offerLogic->getOfferInfo($sup_code, $where, $orderby);
         //状态init=未报价  quoted=已报价  winbid=中标 giveupbid=弃标  close=已关闭
         foreach ($list as $k => $v) {

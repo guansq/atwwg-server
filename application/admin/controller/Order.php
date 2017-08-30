@@ -157,41 +157,50 @@ class Order extends BaseController{
             switch($v['status']){
                 case 'init'://初始
                     $action = [];
-                    $statusStr = '待供应商确定订单';
+                    $statusStr = '待确认';
                     break;
                 case 'sup_cancel'://供应商取消
                     $action = [];
-                    $statusStr = '供应商取消了订单';
+                    $statusStr = '已取消';
                     break;
                 case 'atw_cancel':// 安特威取消
                     $action = [];
-                    $statusStr = '已取消订单';
+                    $statusStr = '已取消';
                     break;
                 case 'sup_edit'://供应商修改
                     $statusStr = '<a href="javascript:;" onclick="verifyOrder('.$v['id'].',\'atw_sure\',this);">供应商修改交期，请确认</a>';
                     break;
                 case 'atw_sure'://安特威确定 以及init
-                    $statusStr = '待供应商确定订单';
+                    $statusStr = '待确认';
                     break;
                 case 'sup_sure'://供应商确定/待上传合同
-                    $statusStr = '供应商确定/待上传合同';
+                    $statusStr = '待上传';
                     break;
                 case 'upload_contract'://供应商已经上传合同
-                    $statusStr = '合同待审核';
+                    $statusStr = '待审核';
                     /*$returnInfo[$k]['status'] = '<a href="javascript:;" onclick="verifyOrder('.$v['id'].',\'contract_pass\',this);">合同审核通过</a>
                     <a href="javascript:;" onclick="verifyOrder('.$v['id'].',\'contract_refuse\',this);">拒绝该合同</a>';*/
                     break;
                 case 'contract_pass'://合同审核通过
-                    $statusStr = '合同审核通过';
+                    $statusStr = '审核通过';
                     break;
                 case 'contract_refuse'://合同审核拒绝
-                    $statusStr = '合同已被拒绝';
+                    $statusStr = '审核拒绝';
                     break;
                 case 'executing'://合同审核拒绝
                     $statusStr = '执行中';
                     break;
                 case 'finish'://合同审核拒绝 '' => '结束',
-                    $statusStr = '结束';
+                    $statusStr = '关闭';
+                    if($v['u9_status'] == 3){
+                        $statusStr = '自然关闭';
+                    }
+                    if($v['u9_status'] == 4){
+                        $statusStr = '短缺关闭';
+                    }
+                    if($v['u9_status'] == 5){
+                        $statusStr = '超频关闭';
+                    }
                     break;
             }
 

@@ -53,14 +53,14 @@
     <button class="btn btn-warning" id="excel_out">导出询价单</button>
 
     <button class="btn btn-warning" id="excel_in1" data-modal='{:url("$classuri/add")}'>导入报价单</button>
-    <button class="btn btn-primary" id="save_price" disabled>提交报价</button>
+    <button class="btn btn-primary" id="save_price" >提交报价</button>
   </div>
   <div class="table-responsive">
     <table class="table table-bordered" id="example">
       <thead>
       <tr class="active">
         <td>
-          <input type="checkbox" class="all">
+          <input type="checkbox" class="all" checked>
         </td>
         <td>物料编号</td>
         <td>物料名称</td>
@@ -155,7 +155,7 @@
           {"data":"statusStr"}
         ],
         "createdRow":function(row, data, index){
-          $('td', row).eq(0).html('<input type="checkbox" id="ck_quote_' + data.id + '" class="check" value="' + $('td', row).eq(0).html() + '"> ');
+          $('td', row).eq(0).html('<input type="checkbox" id="ck_quote_' + data.id + '" class="check" value="' + $('td', row).eq(0).html() + '" checked > ');
           $('td', row).eq(1).html($('td', row).eq(1).html() + '<input type="hidden" name="id" value="' + data.id + '">');
           $('td', row).eq(2).attr('style', 'text-align: left;');
           $('td', row).eq(4).attr('id', 'num_' + data.id);
@@ -193,8 +193,8 @@
           $(row).attr('id', 'io-' + data.id);
           $(row).addClass("layui-form");
           //console.log(data.status.indexOf('winbid'));
-          $(row).addClass(data.status && data.status.indexOf('winbid') >= 0 ? 'success' : '');
-          $(row).addClass(data.status && data.status.indexOf('wait') >= 0 ? 'success' : '');
+          $(row).addClass(data.status && data.status == 'winbid' ? 'success' : '');
+          $(row).addClass(data.status && data.status == 'wait' ? 'success' : '');
 
         },
         "drawCallback":function(settings){
@@ -241,6 +241,7 @@
               }
             });
           });
+
         },
       });
       $("div.toolbar")
@@ -298,7 +299,6 @@
         $("#save_price").attr('disabled', true);
       }
     });
-
   }
 
   //监听文本框更改

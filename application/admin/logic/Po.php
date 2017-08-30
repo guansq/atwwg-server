@@ -55,7 +55,7 @@ class Po extends BaseLogic{
         $info = PoModel::where('id', $id)->find();
         if($info){
             $info = $info->toArray();
-            $info['contract'] = empty($info['contract']) ? [] : explode(',', $info['contract']);
+            $info['contract'] = empty($info['contract']) ? [] : explode('|', $info['contract']);
         }
         return $info;
     }
@@ -123,12 +123,14 @@ class Po extends BaseLogic{
      */
     public function getPoItemList($where){
         if(empty($where)){
-            $list = PiModel::where('status', 'init')->order('update_at DESC')->field('*, "" AS pro_no ')->select();
+            $list = PiModel::where('status', 'init')->order('update_at DESC')
+                //->field('*, "" AS pro_no ')
+                ->select();
         }else{
             $list = PiModel::where($where)
                 ->where('status', 'init')
                 ->order('update_at DESC')
-                ->field('*, "" AS pro_no ')
+                //->field('*, "" AS pro_no ')
                 ->select();
         }
         foreach($list as &$pi){

@@ -89,7 +89,7 @@ class Suppliercenter extends Base{
                 }
             }
         }
-        $imgInfos = explode(',', $sup_info['purch_contract']);
+        $imgInfos = explode('|', $sup_info['purch_contract']);
         $imgInfos = array_filter($imgInfos);
         $this->assign('supqualilist', $supQualiList);
         $this->assign('qualilist', $qualilist);

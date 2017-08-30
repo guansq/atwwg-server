@@ -19,7 +19,10 @@ class Order extends Base{
     public function getPoList(){
         $orderLogic = model('Order', 'logic');
         $sup_code = session('spl_user')['sup_code'];
-        $where = ['sup_code' => $sup_code];
+        $where = [
+            'status' => ['NOT IN',['sup_cancel','atw_cancel']],  //已经取消的不显示在 供应商端
+            'sup_code' => $sup_code
+        ];
         $data = input('param.');
         $tag = input('tag');
         //        var_dump( $data);
@@ -170,7 +173,7 @@ class Order extends Base{
             'confirmorderable' => $confirmorderable,
             'printRcvAble' => $printRcvAble
         );
-        $imgInfos = explode(',', $codeInfo[0]['contract']);
+        $imgInfos = explode('|', $codeInfo[0]['contract']);
         $imgInfos = array_filter($imgInfos);
         $this->assign('statusButton', $statusButton);
         $this->assign('imgInfos', $imgInfos);
@@ -419,7 +422,7 @@ class Order extends Base{
             $data = input('param.');
             $id = $data['id'];
             $contract = input('contract');
-            $src = empty($contract) ? $data['src'] : $contract.','.$data['src'];
+            $src = empty($contract) ? $data['src'] : $contract.'|'.$data['src'];
             $offerLogic = model('Order', 'logic');
             $result = $offerLogic->updatecontract($id, $src, 'upload_contract');
             $result !== false ? $this->success('恭喜，保存成功哦！', '') : $this->error('保存失败，请稍候再试！');

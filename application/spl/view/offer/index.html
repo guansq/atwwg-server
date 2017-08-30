@@ -53,7 +53,7 @@
     <button class="btn btn-warning" id="excel_out">导出询价单</button>
 
     <button class="btn btn-warning" id="excel_in1" data-modal='{:url("$classuri/add")}'>导入报价单</button>
-    <button class="btn btn-primary" id="save_price">提交报价</button>
+    <button class="btn btn-primary" id="save_price" disabled>提交报价</button>
   </div>
   <div class="table-responsive">
     <table class="table table-bordered" id="example">
@@ -332,7 +332,7 @@
       var req_date_item = $('#io-' + id).find("[name = 'req_date']").val();
       var req_quote_price = $('#io-' + id).find("[name = 'quote_price']").val();
       var req_remark = $('#io-' + id).find("[name = 'remark']").val();
-      if(req_date_item == '' || req_date_item == undefined){
+      if(!req_date_item){
         // $('#io-'+id).find("[name='req_date']").css('border','1px red solid');
         // layer.alert('可供货日期不能为空');
         //layer.closeAll("loading");
@@ -358,14 +358,11 @@
     quoteinfo = quoteinfo.substr(0, quoteinfo.length - 4);
     if(!quoteinfo){
       layer.alert('请填写报价数据');
+      layer.close(loader);
       return false;
     }
-    console.log(quoteinfo);
-    layer.close(loader);
-    return false;
-    if(quoteinfo == '' || flagsubmit == 0){
-      return false;
-    }
+    // console.log(quoteinfo);
+
     var url = "{:url('Offer/savePriceAll')}";
     var data = {
       'quoteinfo':quoteinfo
@@ -374,16 +371,16 @@
       layer.closeAll();
       if(res.code == '2000'){
         layer.alert('报价成功');
-        location.reload();
+        layer.close(loader);
+        orderTables.ajax.reload();
       }else{
+        layer.close(loader);
         var msg = res.msg;
         layer.alert(msg);
+        //return false;
       }
     });
-    //}else{
 
-    //}
-    //}); 确定批量提交报价吗
   });
   $("#searchVal").on('click', function(){
     //console.log(orderTables);

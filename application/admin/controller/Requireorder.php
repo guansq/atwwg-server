@@ -58,7 +58,7 @@ class Requireorder extends BaseController{
             'flow' => '流标',
             'winbid' => '中标',
             'wait' => '待下单',
-            'order' => '已下单',
+            'order' => '关闭', //文案展示客户要求
             'close' => '关闭',
         ];
 
@@ -485,7 +485,7 @@ class Requireorder extends BaseController{
             'flow' => '流标',
             'winbid' => '中标',
             'wait' => '待下单',
-            'order' => '已下单',
+            'order' => '关闭', // 客户要求
             'close' => '关闭',
         ];
 

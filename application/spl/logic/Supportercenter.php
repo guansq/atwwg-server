@@ -123,7 +123,7 @@ class Supportercenter extends BaseLogic{
     function updatecontract($code, $src){
         $list = supModel::where(['code' => $code])->update([
             'is_agree_purch_contract' => 1,
-            'purch_contract' => ['exp', 'concat(IFNULL(purch_contract,\'\'),\''.','.$src.'\')']
+            'purch_contract' => $src
         ]);
         //echo $this->getLastSql();
         //die();

@@ -473,6 +473,8 @@ class Order extends BaseController{
         ];
 
         foreach($itemList as $k => $v){
+            $po = $poLogic->getPoById($v['po_id']);
+
             $returnInfo[$k]['checked'] = $v['id'];
             $exec_desc = '';
             $v['arv_goods_num'] = $v['arv_goods_num'] == '' ? 0 : $v['arv_goods_num'];
@@ -481,7 +483,9 @@ class Order extends BaseController{
             $returnInfo[$k]['exec_desc'] = $exec_desc;
             $returnInfo[$k]['po_id'] = $v['po_id'];//合并订单编号
             $returnInfo[$k]['pr_code'] = $v['pr_code'];//请购单编号
+            $returnInfo[$k]['item_name'] = $v['item_name'];//物料名称
             $returnInfo[$k]['pr_date'] = atwDate($poLogic->getPrDate($v['pr_code']));
+            $returnInfo[$k]['pro_no'] = $po['pro_no'];
             $returnInfo[$k]['create_at'] = '';//合并订单日期  date('Y-m-d', $v['create_at'])
             $returnInfo[$k]['sup_name'] = $v['sup_name'];
             $returnInfo[$k]['item_code'] = $v['item_code'];
@@ -503,27 +507,31 @@ class Order extends BaseController{
         $PHPSheet->setTitle('待下订单列表'); //给当前活动sheet设置名称
         $PHPSheet->setCellValueExplicit('A1', '请购单编号');
         $PHPSheet->setCellValueExplicit('B1', '物料编号');
-        $PHPSheet->setCellValueExplicit('C1', '请购日期');
-        $PHPSheet->setCellValueExplicit('D1', '评标日期');
-        $PHPSheet->setCellValueExplicit('E1', '供应商名称');
-        $PHPSheet->setCellValueExplicit('F1', '要求交期');
-        $PHPSheet->setCellValueExplicit('G1', '承诺交期');
-        $PHPSheet->setCellValueExplicit('H1', '采购数量');
-        $PHPSheet->setCellValueExplicit('I1', '报价');
-        $PHPSheet->setCellValueExplicit('J1', '小计');
+        $PHPSheet->setCellValueExplicit('C1', '物料描述');
+        $PHPSheet->setCellValueExplicit('D1', '项目号');
+        $PHPSheet->setCellValueExplicit('E1', '请购日期');
+        $PHPSheet->setCellValueExplicit('F1', '评标日期');
+        $PHPSheet->setCellValueExplicit('G1', '供应商名称');
+        $PHPSheet->setCellValueExplicit('H1', '要求交期');
+        $PHPSheet->setCellValueExplicit('I1', '承诺交期');
+        $PHPSheet->setCellValueExplicit('J1', '采购数量');
+        $PHPSheet->setCellValueExplicit('K1', '报价');
+        $PHPSheet->setCellValueExplicit('L1', '小计');
         $num = 1;
         foreach($list as $k => $v){
             $num = $num + 1;
             $PHPSheet->setCellValueExplicit('A'.$num, $v['pr_code'])
                 ->setCellValueExplicit('B'.$num, $v['item_code'])
-                ->setCellValueExplicit('C'.$num, $v['pr_date'])
-                ->setCellValueExplicit('D'.$num, $v['winbid_time'])
-                ->setCellValueExplicit('E'.$num, $v['sup_name'])
-                ->setCellValueExplicit('F'.$num, $v['req_date'])
-                ->setCellValueExplicit('G'.$num, $v['sup_confirm_date'])
-                ->setCellValueExplicit('H'.$num, $v['price_num'])
-                ->setCellValueExplicit('I'.$num, $v['price'])
-                ->setCellValueExplicit('J'.$num, $v['total_price']);
+                ->setCellValueExplicit('C'.$num, $v['item_name'])
+                ->setCellValueExplicit('D'.$num, $v['pro_no'])
+                ->setCellValueExplicit('E'.$num, $v['pr_date'])
+                ->setCellValueExplicit('F'.$num, $v['winbid_time'])
+                ->setCellValueExplicit('G'.$num, $v['sup_name'])
+                ->setCellValueExplicit('H'.$num, $v['req_date'])
+                ->setCellValueExplicit('I'.$num, $v['sup_confirm_date'])
+                ->setCellValueExplicit('J'.$num, $v['price_num'])
+                ->setCellValueExplicit('K'.$num, $v['price'])
+                ->setCellValueExplicit('L'.$num, $v['total_price']);
         }
         $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel, 'Excel2007');//按照指定格式生成Excel文件，'Excel2007’表示生成2007版本的xlsx，
         $PHPWriter->save($path.'/poItemList.xlsx'); //表示在$path路径下面生成ioList.xlsx文件

@@ -198,6 +198,14 @@ class Po extends BaseLogic{
     }
 
     /*
+     * 得到poitemInfo
+     */
+    public function getPoById($id){
+        $info = PoModel::where('id', $id)->find();
+        return $info;
+    }
+
+    /*
      * 得到OrderId
      */
     public function insertOrGetId($poData){

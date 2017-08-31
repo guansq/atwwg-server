@@ -554,7 +554,7 @@ class Order extends Base{
                 ->setCellValue('O'.$num, $v['return_goods_num'])
                 ->setCellValueExplicit('P'.$num, $v['purch_name'])
                 ->setCellValueExplicit('Q'.$num, $v['pro_no'])
-                ->setCellValueExplicit('R'.$num, $v['u9_status']);
+                ->setCellValueExplicit('R'.$num, empty($v['u9_status'])?'执行中':$v['u9_status']);
             $PHPSheet ->getStyle('J'.$num)->getNumberFormat()
                 ->setFormatCode('#,##0.00');
             $PHPSheet ->getStyle('K'.$num)->getNumberFormat()

@@ -1,4 +1,4 @@
-<form class="layui-form layui-box" style='padding:25px 30px 20px 0' action='{:url("$classuri/printRcv")}' data-auto="true" method="post" data-callback="callback" >
+<form class="layui-form layui-box" style='padding:10px' action='{:url("$classuri/printRcv")}' data-auto="true" method="post" data-callback="callback" >
   <input type="hidden" name="id" value="{$id}">
   <div class="layui-form-item">
     <table class="table table-bordered atw-orddet-tab">
@@ -6,6 +6,8 @@
       <tr class="active">
         <th class="hidden">id</th>
         <th class="text-center">物料名称</th>
+        <th class="text-center">项目号</th>
+        <th class="text-center">未到货数量</th>
         <th class="text-center">送货数量</th>
         <th class="text-center">送货单位</th>
         <th class="text-center">炉/批号</th>
@@ -17,9 +19,11 @@
       <tr>
         <td class="hidden"><input type="text" name="rcv[{$pi.id}][id]" value="{$pi.id}"></td>
         <td>{$pi.item_name}</td>
-        <td><input name="rcv[{$pi.id}][num]"  type="text"></td>
+        <td>{$pi.pro_no}</td>
+        <td>{$pi.pro_goods_num}</td>
+        <td><input name="rcv[{$pi.id}][num]"  type="number" style="width: 8em;"></td>
         <td>{$pi.tc_uom}</td>
-        <td><input name="rcv[{$pi.id}][heat_code]"  type="text"></td>
+        <td><input name="rcv[{$pi.id}][heat_code]"  style="width: 8em;"></td>
         <td><input name="rcv[{$pi.id}][remark]"  type="text"></td>
       </tr>
       {/volist}

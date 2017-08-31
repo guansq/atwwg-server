@@ -125,14 +125,13 @@ class Order extends BaseLogic{
     function getOrderDetailInfo($po_id, $item_code = ''){
         if(!empty($po_id)){
             if(empty($item_code)){
-                $list = PoItem::where(['po_id' => $po_id])->field('*, "" AS pro_no ')->select();
+                $list = PoItem::where(['po_id' => $po_id])
+                    //->field('*, "" AS pro_no ')
+                ->select();
             }else{
                 $list = PoItem::where(['po_id' => $po_id, 'item_code' => $item_code])
-                    ->field('*, "" AS pro_no ')
+                    //->field('*, "" AS pro_no ')
                     ->select();
-            }
-            foreach($list as &$pi){
-                $pi['pro_no'] = model('PR', 'logic')->where('id', $pi->pr_id)->value('pro_no');
             }
             return $list;
         }

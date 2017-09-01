@@ -145,10 +145,10 @@ class Order extends Base{
     }
 
     public function detail(){
-        $pr_id = input('id');
+        $po_id = input('id');
         //$pr_code = '1111222';
         $offerLogic = model('Order', 'logic');
-        $piList = $offerLogic->getOrderDetailInfo($pr_id);
+        $piList = $offerLogic->getOrderDetailInfo($po_id);
         $orderamount = 0;
         foreach($piList as $key => &$item){
             $orderamount += $item['amount'];
@@ -156,7 +156,7 @@ class Order extends Base{
             $piList[$key]['times'] = (!empty($result) ? count($result) : 0);
             $item['sup_update_date_str'] = empty($item['sup_update_date']) ? '' : date('Y-m-d', $item['sup_update_date']);
         }
-        $codeInfo = $offerLogic->getOrderListOneInfo($pr_id);
+        $codeInfo = $offerLogic->getOrderListOneInfo($po_id);
         $contractable = in_array($codeInfo[0]['status'], array(
             'sup_sure',
             'upload_contract',
@@ -188,6 +188,34 @@ class Order extends Base{
         }else{
             $codeInfo[0]['contract_time'] = atwDate($codeInfo[0]['contract_time']);
         }
+
+
+        $statusArr = [
+            '' => '',
+            'init' => '待确认',
+            'sup_cancel' => '已取消',
+            'sup_sure' => '待上传',
+            'sup_edit' => '修改交期',
+            'atw_cancel'=>'已取消 ',
+            'atw_sure'=>'已确定',
+            'upload_contract' => '待审核',
+            'contract_pass' => '审核通过',
+            'contract_refuse' => '审核拒绝',
+            'executing' => '执行中',
+            'finish' => '关闭',
+        ];
+        $u9statusArr = [
+            '' => '',
+            '3' => '自然关闭',
+            '4' => '短缺关闭',
+            '5' => '超额关闭',
+        ];
+
+        $statusStr = $statusArr[$codeInfo[0]['status']];
+        if($codeInfo[0]['u9_status']){
+            $statusStr = $u9statusArr[$codeInfo[0]['u9_status']];
+        }
+        $codeInfo[0]['statusStr'] = $statusStr;
         $this->assign('codeInfo', $codeInfo[0]);
         return view();
     }

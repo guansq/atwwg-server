@@ -41,9 +41,12 @@
       <img src="/static/spl/img/add.png" alt="" class="uploadImg" data-modal='{:url("$classuri/add")}?id={$codeInfo.id}&contract={$codeInfo.contract}'  >
       <!--<a class="btn btn-link" data-file="one" data-type="jpg|pdf|png" data-field="src" data-callback="">添加</a>-->
       <button id="re_upload_btn" class="btn btn-danger" style="margin-left: 20px;">清空影像</button>
-      <span>*下载合同模版后请 打印 盖公章后 扫描或者拍照上传由平台运营人员审核通过后会通过绑定邮箱和手机通知到您。</span>
       {/if}
-
+      {if $codeInfo.status eq 'sup_sure'}
+      <span>*下载合同模版后请 打印 盖公章后 扫描或者拍照上传由平台运营人员审核通过后会通过绑定邮箱和手机通知到您。</span>
+      {else}
+      <span>*{$codeInfo.statusStr}</span>
+      {/if}
 
     </div>
     <div class="bottom">订单采购内容

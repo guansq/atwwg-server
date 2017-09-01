@@ -37,10 +37,10 @@ class Order extends BaseLogic{
             $hasExceed = false;
             $piList = $this->getPoItemInfo($po['id']);
             foreach($piList as $pi){
-                $hasExceed = $hasExceed || ($pi['sup_confirm_date'] < $now) && ($pi['pro_goods_num'] > 0) && !in_array($po['status'], [
+                $hasExceed = $hasExceed || (($pi['sup_confirm_date'] < $now) && ($pi['pro_goods_num'] > 0) && !in_array($po['status'], [
                         'finish',
                         'sup_cancel'
-                    ]);
+                    ]));
             }
             if($hasExceed){
                 $retList[] = $po;
@@ -167,6 +167,25 @@ class Order extends BaseLogic{
             ->where('pi.sup_confirm_date', '<', time())
             ->group('po.id')
             ->count();//得到执行中的订单，和订单未到货数量>0
+    }
+
+    /*
+     * 得到过期的PO数量
+     */
+    function getExceedPoNum($sup_code){
+        $cnt =$this->alias('po')
+            ->join('atw_po_item pi', 'pi.po_id = po.id')
+            ->where('po.status', 'NOT IN', [
+                'finish',
+                'sup_cancel'
+            ])
+            ->where('pro_goods_num', '>', 0)
+            ->where('pi.sup_code', $sup_code)
+            ->where('pi.sup_confirm_date', '<', time())
+            ->group('po.id')
+            ->count();//得到执行中的订单，和订单未到货数量>0
+        //exit($this->getLastSql());
+        return $cnt;
     }
 
     /*

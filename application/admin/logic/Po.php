@@ -380,12 +380,13 @@ class Po extends BaseLogic{
                 'RequireDate' => $v['req_date'],//请购时间
                 'SupConfirmDate' => $v['sup_confirm_date'],//供应商供货日期
                 'TaxRate' => $v['tax_rate']*100,//税率
-                'TradeUOM' => $v['tc_uom'],//交易单位
+                'TradeUOM' => $v['tc_uom_code'],//交易单位
                 'ValuationQty' => $v['tc_num'],//
-                'ValuationUnit' => $v['price_uom'],//
+                'ValuationUnit' => $v['price_uom_code'],//
                 'srcDocPRLineNo' => $v['pr_ln'],
                 'ProCode' => $prLogic->where('id', $v['pr_id'])->value('pro_no'),
                 'srcDocPRNo' => $v['pr_code'],
+                'IsSpilt' => $itemInfo['is_spilt']
 
             ];
         }

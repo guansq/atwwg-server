@@ -746,12 +746,13 @@ function placeOrder($itemInfo){
         'RequireDate' => $itemInfo['req_date'],//请购时间-需求日期
         'SupConfirmDate' => $itemInfo['sup_confirm_date'],//供应商供货日期
         'TaxRate' => $itemInfo['tax_rate']*100,//税率
-        'TradeUOM' => $itemInfo['tc_uom'],//交易单位
+        'TradeUOM' => $itemInfo['tc_uom_code'],//交易单位
         'ValuationQty' => $itemInfo['tc_num'],//
-        'ValuationUnit' => $itemInfo['price_uom'],//
+        'ValuationUnit' => $itemInfo['price_uom_code'],//
         'srcDocPRLineNo' => $itemInfo['pr_ln'],
         'ProCode' => $itemInfo['pro_no'],
-        'srcDocPRNo' => $itemInfo['pr_code']
+        'srcDocPRNo' => $itemInfo['pr_code'],
+        'IsSpilt' => $itemInfo['is_spilt']
     ];
     $sendData['lines'] = $lines;
     //dd($sendData);

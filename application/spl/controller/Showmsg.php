@@ -28,7 +28,7 @@ class Showmsg extends Base{
         ];
         $waitQuoteNum = $quoteLogic->getWaitQuoteNum($where);
         //订单逾期警告
-        $poItemNum = $poLogic->getPoItemNum($sup_code);
+        $poItemNum = $poLogic->getExceedPoNum($sup_code);
         //资质过期提醒
         $pastSuppNum = $suppLogic->getPastSuppNum($current_time,$sup_code);
         //新订单

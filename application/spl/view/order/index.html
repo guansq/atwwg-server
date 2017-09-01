@@ -51,15 +51,13 @@
       <thead>
       <tr class="active">
         <td>订单编号</td>
-        <td>物料交付情况</td>
-        <td>合同签订情况</td>
-        <td>合同签订日期</td>
+        <td>下单时间</td>
+        <td>状态</td>
         <td>操作</td>
       </tr>
       </thead>
       <tbody>
       <tr>
-        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -82,7 +80,7 @@
         initPage();
         $.fn.dataTable.ext.errMode = 'none';
       });
-    })
+    });
 
     function initPage(){
       // datatable
@@ -120,19 +118,13 @@
         },
         "columns":[
           {"data":"order_code"},
-          {"data":"exec_desc"},
+          {"data":"create_at"},
           {"data":"status"},
-          {"data":"contract_time"},
           {"data":"id"},
         ],
-        "drawCallback":function(settings){
-        },
-        "createdRow":function(row, data, index){
-          $('td', row).eq(1).attr('style', 'text-align: left;');
-        },
         "columnDefs":[
           {
-            "targets":4,
+            "targets":3,
             "data":null,
             "render":function(data){
               var url = '{:url(\'Order/detail\')}?id=' + data;

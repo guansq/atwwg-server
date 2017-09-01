@@ -23,17 +23,27 @@ class Po extends BaseLogic{
         '3' => 'PO12',  //工序外协
     ];
 
-    const TITLE = '安特威订单';
+    const TITLE   = '安特威订单';
     const CONTENT = '您有新的订单，请注意查收。';
+
     /*
      * 得到订单列表
      */
     function getPolist($where){
 
         if(empty($where)){
-            $list = PoModel::alias('po')->field('po.*,sup.name as sup_name')->join('supplier_info sup','po.sup_code = sup.code','LEFT')->order('po.update_at DESC')->select();
+            $list = PoModel::alias('po')
+                ->field('po.*,sup.name as sup_name')
+                ->join('supplier_info sup', 'po.sup_code = sup.code', 'LEFT')
+                ->order('po.update_at DESC')
+                ->select();
         }else{
-            $list = PoModel::alias('po')->field('po.*,sup.name as sup_name')->where($where)->join('supplier_info sup','po.sup_code = sup.code','LEFT')->order('po.update_at DESC')->select();
+            $list = PoModel::alias('po')
+                ->field('po.*,sup.name as sup_name')
+                ->where($where)
+                ->join('supplier_info sup', 'po.sup_code = sup.code', 'LEFT')
+                ->order('po.update_at DESC')
+                ->select();
             //$list = PoModel::where($where)->order('update_at DESC')->select();
         }
         //echo $list;die;
@@ -123,14 +133,12 @@ class Po extends BaseLogic{
      */
     public function getPoItemList($where){
         if(empty($where)){
-            $list = PiModel::where('status', 'init')->order('update_at DESC')
-                //->field('*, "" AS pro_no ')
+            $list = PiModel::where('status', 'init')->order('update_at DESC')//->field('*, "" AS pro_no ')
                 ->select();
         }else{
             $list = PiModel::where($where)
                 ->where('status', 'init')
-                ->order('update_at DESC')
-                //->field('*, "" AS pro_no ')
+                ->order('update_at DESC')//->field('*, "" AS pro_no ')
                 ->select();
         }
         foreach($list as &$pi){
@@ -299,7 +307,7 @@ class Po extends BaseLogic{
             if(!empty($oldPo)){
                 PoModel::deletePoPi($res['data']['DocNo']);
             }
-            $po_id =  $this->insertOrGetId($poData);
+            $po_id = $this->insertOrGetId($poData);
             //生成关联关系
             $list = [];
             $rtnPoLine = empty($res['data']['rtnLines']['rtnPoLine']) ? [] : $res['data']['rtnLines']['rtnPoLine'];
@@ -333,22 +341,17 @@ class Po extends BaseLogic{
         if(empty($sup_id)){
             return resultArray(5000, "下订单成功，消息发送失败。 code:$supCode 未绑定账号。", $data);
         }
-        sendMsg($sup_id, self::TITLE, self::CONTENT);//发送消息
-        $logicSupInfo = Model('Supporter', 'logic');
-        if(!config('app_debug')){//没有开启app_debug--->发送短信
-            $sendInfo = $logicSupInfo->getSupSendInfo(['code' => $supCode]);
-            //通过sup_code得到发送信息
-            if($sendInfo['phone']){ //发送消息
-                //sendSMS('18451847701',$content);
-                sendSMS($sendInfo['phone'], self::CONTENT);
-            }
-            if($sendInfo['email']){ //发送邮件
-                //sendMail('94600115@qq.com',$title,$content);
-                sendMail($sendInfo['email'],self::TITLE, self::CONTENT);
-            }
-            if($sendInfo['push_token']){ //发送token
-                pushInfo($sendInfo['push_token'], self::TITLE, self::CONTENT);
-            }
+        saveMsg($sup_id, self::TITLE, self::CONTENT);//发送消息
+        $sendInfo = $supLogic->getSupSendInfo(['code' => $supCode]);
+        //通过sup_code得到发送信息
+        if($sendInfo['phone'] ||  getenv('APP_DEBUG') ){ //发送消息
+            sendSMS($sendInfo['phone'], self::CONTENT);
+        }
+        if($sendInfo['email'] ||  getenv('APP_DEBUG') ){ //发送邮件
+            sendMail($sendInfo['email'], self::TITLE, self::CONTENT);
+        }
+        if($sendInfo['push_token'] ||  getenv('APP_DEBUG')){ //发送token
+            pushInfo($sendInfo['push_token'], self::TITLE, self::CONTENT);
         }
         return resultArray(2000, '下订单成功', $data);
 

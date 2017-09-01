@@ -569,7 +569,7 @@ function keepdecimal($num){
 /*
  * 发送信息
  */
-function sendMsg($sendeeId, $title, $content, $type = 'single', $pri = 3){
+function saveMsg($sendeeId, $title, $content, $type = 'single', $pri = 3){
     $data = [
         'title' => $title,
         'content' => $content,
@@ -657,32 +657,41 @@ function getMonthBetweenTime($smonth, $emonth){
     return $resArr;
 }
 
-
 /*
  * 发送短信
  */
 function sendSMS($phone, $content){
+    $phone = getenv('APP_DEBUG') ? getenv('APP_DEBUG_MOBILE','18068015721'):$phone;
     $sendData = [
         'mobile' => $phone,
         'rt_appkey' => 'atw_wg',
         'text' => $content,
     ];
-    HttpService::curl(getenv('APP_API_MSG').'SendSms/sendText', $sendData);//sendSms($data)
+    trace("发送短信 =========== 参数：");
+    trace($sendData);
+    $ret = HttpService::curl(getenv('APP_API_MSG').'SendSms/sendText', $sendData);//sendSms($data)
+    trace("发送短信 =========== ret:");
+    trace($ret);
 }
 
 /*
  * 发送邮件
  */
 function sendMail($to, $title, $content){
+    $to = getenv('APP_DEBUG') ? getenv('APP_DEBUG_EMAIL','314112362@qq.com'):$to;
     $sendData = [
         'rt_appkey' => 'atw_wg',
         'fromName' => '安特威物供平台',//发送人名
         'to' => $to,
         'subject' => $title,
         'html' => $content,
-        'from' => 'tan3250204@sina.com',//平台的邮件头
+        'from' => 'info@antiwearvalve.com',//平台的邮件头
     ];
-    HttpService::curl(getenv('APP_API_MSG').'SendEmail/sendHtml', $sendData);
+    trace("发送邮件 =========== 参数：");
+    trace($sendData);
+    $ret = HttpService::curl(getenv('APP_API_MSG').'SendEmail/sendHtml', $sendData);
+    trace("发送短信 =========== ret:");
+    trace($ret);
 }
 
 /*
@@ -708,7 +717,11 @@ function pushInfo($token, $title, $content){
             ]
         ]
     ];
-    HttpService::curl(getenv('APP_API_MSG').'push', $sendData);
+    trace("推送信息 =========== 参数：");
+    trace($sendData);
+    $ret =  HttpService::curl(getenv('APP_API_MSG').'push', $sendData);
+    trace("推送信息 =========== ret:");
+    trace($ret);
 }
 
 /*

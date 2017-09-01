@@ -177,7 +177,7 @@ class Enquiryorder extends BaseController{
                 $where = ['id' => $info['sup_id']];//获取token条件
                 $sendInfo['token'] = $logicSystemUser->getPushToken($where);
             }
-            sendMsg($info['sup_id'], self::MSGTITLE, self::MSGCONTENT);//发送消息
+            saveMsg($info['sup_id'], self::MSGTITLE, self::MSGCONTENT);//发送消息
             if(!empty($sendInfo['email'])){
                 $sendData = [
                     'rt_appkey' => 'atw_wg',
@@ -243,7 +243,7 @@ class Enquiryorder extends BaseController{
             $where = ['id' => $info['sup_id']];//获取token条件
             $sendInfo['token'] = $logicSystemUser->getPushToken($where);
         }
-        sendMsg($info['sup_id'], self::MSGTITLE, self::MSGCONTENT);//发送消息
+        saveMsg($info['sup_id'], self::MSGTITLE, self::MSGCONTENT);//发送消息
         if(!empty($sendInfo['email'])){
             $sendData = [
                 'rt_appkey' => 'atw_wg',

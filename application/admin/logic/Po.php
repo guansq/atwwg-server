@@ -24,7 +24,7 @@ class Po extends BaseLogic{
     ];
 
     const TITLE   = '安特威订单';
-    const CONTENT = '您有新的订单，请注意查收。';
+    const CONTENT = '您有新的订单，请注意查收。传送门：http://atwwg.spl.antiwearvalve.com';
 
     /*
      * 得到订单列表

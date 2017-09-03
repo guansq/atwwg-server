@@ -2,6 +2,7 @@
 
 {block name="style"}
 <link rel="stylesheet" href="/static/admin/dataTables.bootstrap.css">
+<link rel="stylesheet" href="/static/admin/minimal.css">
 <link rel="stylesheet" href="/static/admin/smallcommon.css">
 {/block}
 
@@ -25,18 +26,24 @@
         </div>
         <div>
           <select id="status" class="form-control">
-            <option value="" >全部</option>
+            <option value="">全部</option>
             <!--<option value="init" {eq name="$Think.get.status" value="init"}selected{/eq} >待询价</option>-->
-            <option value="hang" {eq name="$Think.get.status" value="hang"}selected{/eq} >挂起</option>
-            <option value="inquiry" {eq name="$Think.get.status" value="inquiry"}selected{/eq} >询价中</option>
-            <option value="quoted" {eq name="$Think.get.status" value="quoted"}selected{/eq} >待评标</option>
-            <option value="flow" {eq name="$Think.get.status" value="flow"}selected{/eq} >流标</option>
+            <option value="hang" {eq name="$Think.get.status" value="hang" }selected{
+            /eq} >挂起</option>
+            <option value="inquiry" {eq name="$Think.get.status" value="inquiry" }selected{
+            /eq} >询价中</option>
+            <option value="quoted" {eq name="$Think.get.status" value="quoted" }selected{
+            /eq} >待评标</option>
+            <option value="flow" {eq name="$Think.get.status" value="flow" }selected{
+            /eq} >流标</option>
             <!--<option value="winbid" {eq name="$Think.get.status" value="winbid"}selected{/eq} >中标</option>-->
-            <option value="wait" {eq name="$Think.get.status" value="wait"}selected{/eq} >待下单</option>
-            <option value="order" {eq name="$Think.get.status" value="order"}selected{/eq} >关闭</option>
+            <option value="wait" {eq name="$Think.get.status" value="wait" }selected{
+            /eq} >待下单</option>
+            <option value="order" {eq name="$Think.get.status" value="order" }selected{
+            /eq} >关闭</option>
             <!--<option value="close" {eq name="$Think.get.status" value="close"}selected{/eq} >关闭</option>-->
           </select>
-          <select class="form-control" id="is_appoint_sup">
+          <select class="form-control hidden" id="is_appoint_sup">
             <option value="">是否指定供应商</option>
             <option value="1">是</option>
             <option value="0">否</option>
@@ -46,6 +53,7 @@
             <option value="agree">已审批</option>
             <option value="refuse">已拒绝</option>
           </select>-->
+          <label for="is_need_appoint_sup_ck" style="cursor: pointer;"><input type="checkbox" id="is_need_appoint_sup_ck"> 需要指定供应商</label>
           <button type="button" class="btn btn-info" id="searchVal">查询</button>
         </div>
       </form>
@@ -55,12 +63,16 @@
         <!--<button type="button" id="synchronization_btn" class="btn btn-info" style="margin-right: 15px;">立即同步ERP</button>-->
         <button type="button" id="excel_out" class="btn btn-info" style="margin-right: 15px;">导出Excel</button>
         <button type="button" id="btn_reinquiry" class="btn btn-info" style="margin-right: 15px;">无供应商重新询价</button>
+        <!--<button type="button" id="appoint_sup_btn" class="btn btn-info " style="margin-right: 15px;" disabled>指定供应商</button>-->
         <!--<span style="margin-right: 25px;" class="layui-nav-item">*当前总记录数{$allNums}条</span>-->
       </div>
       <div>
         <table id="example" class="display table table-bordered" cellspacing="0" width="100%">
           <thead>
           <tr>
+            <!--<th>-->
+              <!--<input type="checkbox" class="all">-->
+            <!--</th>-->
             <th>请购单号</th>
             <th>请购日期</th>
             <th width="50">料号</th>
@@ -126,7 +138,8 @@
    * Created by Administrator on 2017/5/11.
    */
   var prTable;
-  require(["jquery.dataTables", "laydate"], function(){
+  var isNeedAppointSupQuery = false;  //标记是否是 需要指定供应商 查询
+  require(["jquery.dataTables", "laydate", "icheck"], function(){
     require(["dataTables.bootstrap"], function(){
       $(document).ready(function(){
         initPage();
@@ -167,7 +180,9 @@
       });
     });
   }
+
   function initPage(){
+
     $.fn.dataTable.ext.errMode = 'none';
     prTable = $('#example').DataTable({
       //paging: false, //设置是否分页
@@ -175,8 +190,8 @@
       "lengthChange":true, //是否允许用户改变表格每页显示的记录数
       "ordering":false, //是否允许Datatables开启排序
       "searching":false,  //是否允许Datatables开启本地搜索
-      "lengthMenu": [[100, 200, 300], [100, 200, 300]],
-      "dom": 'rt<"bottom"fp<"Lengthchanging"l><"Total"i><"toolbar">><"clear">',
+      "lengthMenu":[[100, 200, 300], [100, 200, 300]],
+      "dom":'rt<"bottom"fp<"Lengthchanging"l><"Total"i><"toolbar">><"clear">',
       language:{
         "oPaginate":{
           "sFirst":"首页",
@@ -185,7 +200,7 @@
           "sLast":"末页"
         },
         "info":"当前总记录数_TOTAL_条",
-        "lengthMenu": "每页 _MENU_ 条记录"
+        "lengthMenu":"每页 _MENU_ 条记录"
       },
       "processing":true,
       "serverSide":true,
@@ -201,11 +216,17 @@
           parameter.pur_attr = $('#pur_attr').val();
           parameter.status = $('#status').val();
           parameter.is_appoint_sup = $('#is_appoint_sup').val();
+          parameter.is_need_appoint_sup = is_need_appoint_sup_ck.checked ? 1 : 0;
           //parameter.check_status = $('#check_status').val();
         }
       },
       "pageLength":100,
       "columns":[
+        // {
+        //   "data":"id", "render":function(data){
+        //   return '<input type="checkbox" id="table_ck_' + data + '" class="check" value="' + data + '" > ';
+        // }
+        // },
         {"data":"pr_code"},
         {"data":"pr_date"},
         {"data":"item_code"},
@@ -222,8 +243,8 @@
         {
           "data":"inquiry_way",
           "render":function(data, type, row, meta){
-            if(data == '无匹配供应商' && row.status!='关闭'){
-              return '<span>'+data+'</span><a href="javascript:reInquiry('+row.id+');"> 重新询价</a>';
+            if(data == '无匹配供应商' && row.status != '关闭'){
+              return '<span>' + data + '</span><a href="javascript:reInquiry(' + row.id + ');"> 重新询价</a>';
             }
             return data;
           }
@@ -231,6 +252,35 @@
         //{ "data": "check_status" },
       ],
       "drawCallback":function(settings){
+
+        $('input[type="checkbox"]').iCheck({
+          checkboxClass:'icheckbox_minimal',
+          radioClass:'iradio_minimal',
+          increaseArea:'20%' // optional
+        });
+
+        var checkAll = $('input.all');
+        var checkboxs = $('input.check');
+        checkAll.unbind('ifChecked ifUnchecked').on('ifChecked ifUnchecked', function(event){
+          if(event.type == 'ifChecked'){
+            checkboxs.iCheck('check');
+          }else{
+            checkboxs.iCheck('uncheck');
+          }
+        });
+        checkboxs.unbind('ifChecked').on('ifChecked', function(event){
+          if(isNeedAppointSupQuery){
+            $("#appoint_sup_btn").attr('disabled', false);
+          }
+
+        });
+        checkboxs.unbind('ifUnchecked').on('ifUnchecked', function(event){
+          if(checkboxs.filter(':checked').length === 0){
+            $("#appoint_sup_btn").attr('disabled', true);
+          }
+        });
+
+
         is_appoint_sup = 1;
         $("#example input").click(function(){
           var _this = $(this);
@@ -277,8 +327,9 @@
       }
     });
 
-    $("div.toolbar").html(' <span>第</span><input type="number" id="searchNumber" min="1" style="width: 40px;text-align: center; margin: 1em;"/><span>页&nbsp;&nbsp;</span><button id="btn-jump" onclick="changejump()" class="layui-btn layui-btn-small">跳转</button>');
-    prTable.on('draw.dt', function (e, settings, data) {
+    $("div.toolbar")
+        .html(' <span>第</span><input type="number" id="searchNumber" min="1" style="width: 40px;text-align: center; margin: 1em;"/><span>页&nbsp;&nbsp;</span><button id="btn-jump" onclick="changejump()" class="layui-btn layui-btn-small">跳转</button>');
+    prTable.on('draw.dt', function(e, settings, data){
       var info = prTable.page.info();
       //此处的page为0开始计算
       // console.info('Showing page: ' + info.page + ' of ' + info.pages);
@@ -295,6 +346,7 @@
     var oTable = $('#example').dataTable();
     oTable.fnPageChange(page);
   }
+
   // 打开弹框
 
   function bomb_box(event, pr_code, item_code, item_id){
@@ -388,6 +440,7 @@
       }
     });
   })
+
   function checkStatus(status, id){
     var url = "{:URL('Requireorder/checkStatus')}";
 
@@ -424,11 +477,14 @@
     });
 
   }
+
   // 关闭条形码的弹出框
   $(".close_box").click(function(){
     $(".barcode_box").css("display", "none");
   });
   $('#searchVal').click(function(){
+    isNeedAppointSupQuery = is_need_appoint_sup_ck.checked;
+    $("#appoint_sup_btn").attr('disabled', true);
     prTable.ajax.reload();
   });
 
@@ -455,6 +511,7 @@
       //console.log(str);
     });
   })
+
   /*
    新增取消指定供应商
    */
@@ -467,12 +524,12 @@
       $.form.reload();
     });
   }
-  
-  
+
+
   $("#btn_reinquiry").click(function(){
     return reInquiry('all');
   });
-  
+
   function reInquiry(prId){
     if(!prId){
       return false;

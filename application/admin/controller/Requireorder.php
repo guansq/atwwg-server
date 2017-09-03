@@ -34,19 +34,22 @@ class Requireorder extends BaseController{
         $start = input('start') == '' ? 0 : input('start');
         $length = input('length') == '' ? 10 : input('length');
         $whereInfo = ['pr_code','pr_date','item_code','item_name','pro_no','pur_attr','status','is_appoint_sup','check_status'];//继续筛选操作
-        $get = input('param.');
-        if(isset($get['pr_date']) && $get['pr_date'] !== ''){
-            $get['pr_date'] = strtotime($get['pr_date']);
+        $reqParams = $this->getReqParams($whereInfo);
+        $isNeedAppointSup = input('is_need_appoint_sup');
+
+        if(isset($reqParams['pr_date']) && $reqParams['pr_date'] !== ''){
+            $reqParams['pr_date'] = strtotime($reqParams['pr_date']);
         }
         $where = [];
         // 应用搜索条件
         foreach ($whereInfo as $key) {
-            if (isset($get[$key]) && $get[$key] !== '') {
-                $where[$key] = ['like',"%{$get[$key]}%"];
+            if (isset($reqParams[$key]) && $reqParams[$key] !== '') {
+                $where[$key] = ['like',"%{$reqParams[$key]}%"];
             }
         }
+
         $logicPrInfo = Model('RequireOrder','logic');
-        $list = $logicPrInfo->getPrList($start,$length,$where);
+        $list = $logicPrInfo->getPrList($start,$length,$where,$isNeedAppointSup);
         $returnArr = [];
         //dump($list);die;
         //init=初始,hang=挂起,inquiry=询价中,quoted = 供应商全部报价完毕,flow = 流标,winbid=中标,order=已下单,close = 关闭
@@ -190,7 +193,7 @@ class Requireorder extends BaseController{
 
         }
 
-        $info = ['draw'=>time(),'recordsTotal'=>$logicPrInfo->getListNum($where),'recordsFiltered'=>$logicPrInfo->getListNum($where),'data'=>$returnArr];
+        $info = ['draw'=>time(),'recordsTotal'=>$logicPrInfo->getListNum($where,$isNeedAppointSup),'recordsFiltered'=>$logicPrInfo->getListNum($where,$isNeedAppointSup),'data'=>$returnArr];
 
         return json($info);
     }

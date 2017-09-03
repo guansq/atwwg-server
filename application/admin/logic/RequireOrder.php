@@ -16,36 +16,25 @@ class RequireOrder extends BaseLogic{
     /*
      * 得到请购单信息
      */
-    function getPrList($start, $length, $where){
-        if(!empty($where)){
-            if(key_exists('status', $where)){
-                $list = prModel::alias('a')
-                    ->field('a.*,b.desc,b.pur_attr')
-                    ->join('item b', 'a.item_code=b.code', 'LEFT')
-                    ->where($where)
-                    ->limit("$start,$length")
-                    ->order('update_at desc')
-                    ->select();
-            }else{
-                //->where('a.status','<>','close')
-                $list = prModel::alias('a')
-                    ->field('a.*,b.desc,b.pur_attr')
-                    ->join('item b', 'a.item_code=b.code', 'LEFT')
-                    ->where($where)->where('a.status','in',['hang','inquiry','quoted','flow','wait'])
-                    ->limit("$start,$length")
-                    ->order('update_at desc')
-                    ->select();
-            }
+    function getPrList($start, $length, $where, $isNeedAppointSup = 0){
+        $where = empty($where) ? [] : $where;
 
-        }else{
-            //->where('a.status','<>','close')
-            $list = prModel::alias('a')
-                ->field('a.*,b.desc,b.pur_attr')
-                ->join('item b', 'a.item_code=b.code', 'LEFT')->where('a.status','in',['hang','inquiry','quoted','flow','wait'])
-                ->limit("$start,$length")
-                ->order('update_at desc')
-                ->select();
+        $sqlBuilder = prModel::alias('a')
+            ->field('a.*,b.desc,b.pur_attr')
+            ->join('item b', 'a.item_code=b.code', 'LEFT')
+            ->where($where)
+            ->limit("$start,$length")
+            ->order('a.update_at desc');
+
+        if($isNeedAppointSup == 1){
+            // 需要手动指定供应商的 有： status=hang 挂起的、status='flow' &&  inquiry_way in[assign,exclusive,compete]
+            $sqlBuilder->where("a.status='hang' OR (status='flow' AND a.inquiry_way IN ('assign','exclusive','compete'))");
         }
+        if(!key_exists('status', $where)){
+            $sqlBuilder->where('a.status', 'in', ['hang', 'inquiry', 'quoted', 'flow', 'wait']);
+
+        }
+        $list = $sqlBuilder->select();
 
         //        echo $this->getLastSql();
         if($list){
@@ -92,31 +81,19 @@ class RequireOrder extends BaseLogic{
     /*
      * 得到列表数量
      */
-    function getListNum($where = []){
-        if(!empty($where)){
-            if(key_exists('status', $where)){
-                $count = prModel::alias('a')
-                    ->field('a.*,b.desc,b.pur_attr')
-                    ->join('item b', 'a.item_code=b.code', 'LEFT')
-                    ->where($where)
-                    ->count();
-            }else{
-                //->where('a.status','<>','close')
-                $count = prModel::alias('a')
-                    ->field('a.*,b.desc,b.pur_attr')
-                    ->join('item b', 'a.item_code=b.code', 'LEFT')->where('a.status','in',['hang','inquiry','quoted','flow','wait'])
-                    ->where($where)
-                    ->count();
-            }
+    function getListNum($where = [],$isNeedAppointSup = 0){
 
-        }else{
-            //->where('a.status','<>','close')
-            $count = prModel::alias('a')
-                ->field('a.*,b.desc,b.pur_attr')
-                ->join('item b', 'a.item_code=b.code', 'LEFT')->where('a.status','in',['hang','inquiry','quoted','flow','wait'])
-                ->count();
+        $sqlBuilder = prModel::alias('a')
+            ->field('a.*,b.desc,b.pur_attr')
+            ->join('item b', 'a.item_code=b.code', 'LEFT')
+            ->where($where)
+            ->order('a.update_at desc');
+
+        if($isNeedAppointSup == 1){
+            // 需要手动指定供应商的 有： status=hang 挂起的、status='flow' &&  inquiry_way in[assign,exclusive,compete]
+            $sqlBuilder->where("a.status='hang' OR (status='flow' AND a.inquiry_way IN ('assign','exclusive','compete'))");
         }
-        return $count;
+        return $sqlBuilder->count();
     }
 
     /*
@@ -189,14 +166,14 @@ class RequireOrder extends BaseLogic{
      * 待询价请购单 = 待询价+挂起的
      */
     function getUnQuoteNum(){
-        return $this->where('status', 'IN' ,['init','hang'])->count();
+        return $this->where('status', 'IN', ['init', 'hang'])->count();
     }
 
     /**
      * 统计流标的请购单
      */
     function countFlow(){
-        $count =  $this->where('status','flow')->count();
+        $count = $this->where('status', 'flow')->count();
         return $count;
     }
 
@@ -204,11 +181,12 @@ class RequireOrder extends BaseLogic{
      * 统计流标的询价单
      */
     function countFlowIo(){
-        $count = model('Io','logic')->alias('a')
+        $count = model('Io', 'logic')
+            ->alias('a')
             ->field('a.id')
             ->join('item b', 'a.item_code=b.code', 'LEFT')
             ->join('u9_pr pr', 'pr.id = a.pr_id', 'LEFT')
-            ->where('pr.status','flow')
+            ->where('pr.status', 'flow')
             ->group('pr_id')
             ->count();
         return $count;

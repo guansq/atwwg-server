@@ -168,12 +168,14 @@
           //console.log(resdata);
           layer.closeAll();
           //var obj = JSON.parse(resdata);
-          $.form.reload();
-          //if(resdata.prToIo.code == 2000){
-          //  $.form.reload();
-          //}else{
-          //  alert("更新失败");
-          //}
+          if(resdata.code == 5001){
+            layer.alert("其他操作人员正在同步ERP数据，请耐心等待",function(i){
+              layer.close(i);
+            });
+          }else{
+            $.form.reload();
+          }
+
         })
       });
     });

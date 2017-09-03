@@ -350,13 +350,16 @@
             if(res.result && res.result.Message){
               msg += '<br/> 异常原因：' + res.result.Message;
             }
-            layer.alert(msg);
+            layer.alert(msg,function(index){
+              orderTables.ajax.reload();
+              layer.close(index)
+            });
           }
           //layer.alert(res.msg);
         });
       }else{
         layer.alert('请选择订单');
-        return;
+        return false;
       }
     });
   });

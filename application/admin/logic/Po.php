@@ -339,7 +339,7 @@ class Po extends BaseLogic{
         //发消息通过$sup_code $sup_name得到$sup_id
         $sup_id = $supLogic->getSupIdVal(['code' => $supCode]);
         if(empty($sup_id)){
-            return resultArray(5000, "下订单成功，消息发送失败。 code:$supCode 未绑定账号。", $data);
+            return resultArray(5000, "下订单成功，推送消息失败。 供应商编号:$supCode 未导入账号。", $data);
         }
         saveMsg($sup_id, self::TITLE, self::CONTENT);//发送消息
         $sendInfo = $supLogic->getSupSendInfo(['code' => $supCode]);
@@ -386,7 +386,7 @@ class Po extends BaseLogic{
                 'srcDocPRLineNo' => $v['pr_ln'],
                 'ProCode' => $prLogic->where('id', $v['pr_id'])->value('pro_no'),
                 'srcDocPRNo' => $v['pr_code'],
-                'IsSpilt' => $itemInfo['is_spilt']
+                'IsSpilt' => $v['is_spilt']
 
             ];
         }

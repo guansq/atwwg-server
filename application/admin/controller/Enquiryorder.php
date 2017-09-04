@@ -523,6 +523,8 @@ class Enquiryorder extends BaseController{
             'price' => $io['quote_price'],
             'tax_price' => round($io['quote_price']*(1 + floatval($io['tax_rate'])), 2),
             'amount' => round($io['quote_price']*(1 /*+ floatval($io['tax_rate'])*/)*$io['price_num'], 2),
+            'tc_uom_code' => $io['tc_uom_code'],          //交易单位编码
+            'price_uom_code' =>$io['price_uom_code'],     //计价单位编码
             'tax_rate' => $io['tax_rate'],
             'pro_goods_num' => $io['price_num'],
             'winbid_time' => $now,

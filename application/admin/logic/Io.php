@@ -33,13 +33,13 @@ class Io extends BaseLogic{
             ->order('pr.update_at desc')
             ->group('pr_id');
         if(!empty($where)){
-            if(!key_exists('pr.status',$where)){
-                $list = $list->where($where)->where('pr.status','in',['inquiry','quoted','flow','wait','order']);
+            if(!key_exists('pr.status', $where)){
+                $list = $list->where($where)->where('pr.status', 'in', ['inquiry', 'quoted', 'flow', 'wait', 'order']);
             }else{
                 $list = $list->where($where);
             }
         }else{
-            $list = $list->where('pr.status','in',['inquiry','quoted','flow','wait','order']);
+            $list = $list->where('pr.status', 'in', ['inquiry', 'quoted', 'flow', 'wait', 'order']);
         }
         $list = $list->select();
         if($list){
@@ -58,17 +58,17 @@ class Io extends BaseLogic{
             ->join('item b', 'a.item_code=b.code', 'LEFT')
             ->join('u9_pr pr', 'pr.id = a.pr_id', 'LEFT')
             ->group('pr_id');
-/*        if(!empty($where)){
-            $list = $list->where($where);
-        }*/
+        /*        if(!empty($where)){
+                    $list = $list->where($where);
+                }*/
         if(!empty($where)){
-            if(!key_exists('pr.status',$where)){
-                $list = $list->where($where)->where('pr.status','in',['inquiry','quoted','flow','wait','order']);
+            if(!key_exists('pr.status', $where)){
+                $list = $list->where($where)->where('pr.status', 'in', ['inquiry', 'quoted', 'flow', 'wait', 'order']);
             }else{
                 $list = $list->where($where);
             }
         }else{
-            $list = $list->where('pr.status','in',['inquiry','quoted','flow','wait','order']);
+            $list = $list->where('pr.status', 'in', ['inquiry', 'quoted', 'flow', 'wait', 'order']);
         }
         $list = $list->select();
         if($list){
@@ -153,9 +153,15 @@ class Io extends BaseLogic{
      */
     function getIoRecord($where){
         $info = IoModel::where($where)->find();
-        if($info){
-            $info = $info->toArray();
+        if(empty($info)){
+            return null;
         }
+        $info = $info->toArray();
+        $prLogic = new RequireOrder();
+        $pr = $prLogic->where('id', $info['pr_id'])->find();
+        $info['tc_uom_code'] = $pr['tc_uom_code'];
+        $info['price_uom_code'] = $pr['price_uom_code'];
+        $info['is_spilt'] = $pr['is_spilt'];
         return $info;
     }
 
@@ -176,14 +182,14 @@ class Io extends BaseLogic{
 
         foreach($dbList as $k => &$v){
             $v['statusStr'] = self::STATUS_ARR[$v['status']];
-            $v['pro_no'] = $prLogic->where('id',$v['pr_id'])->value('pro_no');
-            $v['promise_date_fmt'] =  date('Y-m-d', $v['promise_date']);
+            $v['pro_no'] = $prLogic->where('id', $v['pr_id'])->value('pro_no');
+            $v['promise_date_fmt'] = date('Y-m-d', $v['promise_date']);
             $v['create_at_fmt'] = date('Y-m-d', $v['create_at']);
             $v['quote_date_fmt'] = date('Y-m-d', $v['quote_date']);
             $v['quote_endtime_fmt'] = date('Y-m-d', $v['quote_endtime']);
             $v['req_date_fmt'] = date('Y-m-d', $v['req_date']);
             $v['total_price'] = number_format($v['price_num']*$v['quote_price'], 2);
-            $v['quote_price'] =  number_format($v['quote_price'], 2);
+            $v['quote_price'] = number_format($v['quote_price'], 2);
             $v['remark'] = empty($v['remark']) ? '' : $v['remark'];
         }
 

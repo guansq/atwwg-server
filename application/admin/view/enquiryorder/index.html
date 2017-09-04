@@ -132,6 +132,8 @@
         if(resdata.code == 2000){
           //alert("立即评标成功");
           $.form.reload();
+        }else if(resdata.code == 4004){
+          alert("没有要评标的数据。");
         }else{
           alert("更新失败");
         }

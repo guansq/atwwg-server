@@ -9,9 +9,7 @@
 namespace app\admin\controller;
 
 use PHPExcel;
-use PHPExcel_Cell_DataType;
 use PHPExcel_IOFactory;
-use PHPExcel_Style_NumberFormat;
 use Qiniu\Auth as QiniuAuth;
 use service\HttpService;
 use think\Request;
@@ -70,10 +68,9 @@ class Order extends BaseController{
         $now = time();
         $poLogic = model('Po', 'logic');
         $get = input('param.');
-        //dump($requestInfo);die;
         $where = [];
         // 应用搜索条件
-        foreach(['order_code', 'sup_code', 'sup_name','status'] as $key){
+        foreach(['order_code', 'sup_code', 'sup_name', 'status'] as $key){
             if(isset($get[$key]) && $get[$key] !== ''){
                 if($key == 'order_code'){
                     $where['po.order_code'] = ['like', "%{$get[$key]}%"];
@@ -82,10 +79,6 @@ class Order extends BaseController{
                 }else if($key == 'sup_name'){
                     $where['sup.name'] = ['like', "%{$get[$key]}%"];
                 }else if($key == 'status'){
-                    /*if($get['status'] != 'all'){
-                        $where['po.status'] = $get[$key];
-                        continue;
-                    }*/
                     $where['po.status'] = $get['status'];
                     if($get['status'] == 'zr_close'){
                         $where['po.status'] = 'finish';
@@ -103,16 +96,20 @@ class Order extends BaseController{
                         continue;
                     }
                 }
+
                 //$where[$key] = ['like', "%{$get[$key]}%"];
             }
         }
         //逾期状态
         $isCheckExceed = false;
+        if(empty($get['status'])){
+            $where['po.status'] = ['NOT IN', [ 'sup_cancel', 'atw_cancel']];
+        }
         if(!empty($get['status']) && $get['status'] == 'exceed'){
-            $where['po.status'] = ['NOT IN', ['finish', 'sup_cancel','atw_cancel']];
+            $where['po.status'] = ['NOT IN', ['finish', 'sup_cancel', 'atw_cancel']];
             $isCheckExceed = true;
         }
-        if(!empty($get['status']) && in_array($get['status'],['sup_cancel','sup_sure','upload_contract'])){
+        if(!empty($get['status']) && in_array($get['status'], ['sup_cancel', 'sup_sure', 'upload_contract'])){
             $where['po.status'] = $get['status'];
         }
         //dump($where);die;
@@ -294,9 +291,9 @@ class Order extends BaseController{
 
         // 申请资源 获取参数
         $poLogic = model('Po', 'logic');
-        $reqParams = $this->getReqParams(['start'=>0,'length'=>10,'searchKwd'=>[]]);
-        $pageIndex = ceil($reqParams['start']/$reqParams['length'])+1;
-        $piPage = $poLogic->getPoItemPage($reqParams['searchKwd'],$pageIndex, $reqParams['length']);
+        $reqParams = $this->getReqParams(['start' => 0, 'length' => 10, 'searchKwd' => []]);
+        $pageIndex = ceil($reqParams['start']/$reqParams['length']) + 1;
+        $piPage = $poLogic->getPoItemPage($reqParams['searchKwd'], $pageIndex, $reqParams['length']);
         $info = [
             'draw' => time(),
             'data' => $piPage->itemList,
@@ -634,6 +631,7 @@ class Order extends BaseController{
         header("Content-Disposition: attachment; filename=".$file_name);
         exit($contents);
     }
+
     /*
      * 导出excel采购订单列表
      */
@@ -641,16 +639,16 @@ class Order extends BaseController{
 
         // 申请资源 获取参数
         $poLogic = model('Po', 'logic');
-        $reqParams = $this->getReqParams(['pr'=>'','po'=>'','item'=>'','sup'=>'','pro'=>'']);
+        $reqParams = $this->getReqParams(['pr' => '', 'po' => '', 'item' => '', 'sup' => '', 'pro' => '']);
 
-        $piPage = $poLogic->getPoItemPage($reqParams,1,PHP_INT_MAX);
+        $piPage = $poLogic->getPoItemPage($reqParams, 1, PHP_INT_MAX);
         $list = $piPage->getItemList();
 
         $path = ROOT_PATH.'public'.DS.'upload'.DS;
         //dump($list);die;请购单编号-物料编号-请购日期-评标日期-供应商名称-要求交期-承诺交期-采购数量-报价-小计-状态
         $PHPExcel = new PHPExcel(); //实例化PHPExcel类，类似于在桌面上新建一个Excel表格
         $PHPSheet = $PHPExcel->getActiveSheet(); //获得当前活动sheet的操作对象
-        foreach(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'] as $cl ){
+        foreach(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'] as $cl){
             //設置列寬自適應
             $PHPSheet->getColumnDimension($cl)->setAutoSize(true);
         }
@@ -686,7 +684,7 @@ class Order extends BaseController{
                 ->setCellValueExplicit('H'.$num, $v['sup_confirm_date_fmt'])
                 ->setCellValueExplicit('I'.$num, $v['sup_update_date_fmt'])
                 ->setCellValueExplicit('J'.$num, $v['tc_num_fmt'])
-                ->setCellValueExplicit('K'.$num, $v['price_fmt'])  //$v['price_fmt']
+                ->setCellValueExplicit('K'.$num, $v['price_fmt'])//$v['price_fmt']
 
                 ->setCellValueExplicit('L'.$num, $v['price_subtotal_fmt'])
                 ->setCellValueExplicit('M'.$num, $v['arv_goods_num_fmt'])
@@ -695,10 +693,10 @@ class Order extends BaseController{
                 ->setCellValueExplicit('P'.$num, $v['purch_name'])
                 ->setCellValueExplicit('Q'.$num, $v['pro_no'])
                 ->setCellValueExplicit('R'.$num, $v['u9_status']);
-          //  echo $v['price_fmt'].'<br/>';
+            //  echo $v['price_fmt'].'<br/>';
         }
 
-//        dd(1);
+        //        dd(1);
 
         $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel, 'Excel2007');//按照指定格式生成Excel文件，'Excel2007’表示生成2007版本的xlsx，
         $PHPWriter->save($path.'/poItemList.xlsx'); //表示在$path路径下面生成ioList.xlsx文件
@@ -717,11 +715,11 @@ class Order extends BaseController{
      * Describe: 取消订单
      */
     public function cancelPo(Request $request){
-        $reqParams = $this->getReqParams(['poCodes'=>[],'cancelCause'=>'']);
+        $reqParams = $this->getReqParams(['poCodes' => [], 'cancelCause' => '']);
         if(empty($reqParams['poCodes'])){
             returnJson(4001);
         }
         $poLogic = model('Po', 'logic');
-        returnJson($poLogic->cancelPo($reqParams['poCodes'],$reqParams['cancelCause']));
+        returnJson($poLogic->cancelPo($reqParams['poCodes'], $reqParams['cancelCause']));
     }
 }

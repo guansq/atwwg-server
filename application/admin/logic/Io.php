@@ -113,7 +113,7 @@ class Io extends BaseLogic{
             $item['statusStr'] = self::STATUS_ARR[$item['status']];
             $item['totalPrice'] = '';
             if(!empty($item['quote_price'])){
-                $item['totalPrice'] = atwMoney($item['quote_price']*$item['price_num']);
+                $item['totalPrice'] = atwMoney($item['quote_price']*$item['tc_num']);
             }
         }
         return $list;
@@ -188,7 +188,7 @@ class Io extends BaseLogic{
             $v['quote_date_fmt'] = date('Y-m-d', $v['quote_date']);
             $v['quote_endtime_fmt'] = date('Y-m-d', $v['quote_endtime']);
             $v['req_date_fmt'] = date('Y-m-d', $v['req_date']);
-            $v['total_price'] = number_format($v['price_num']*$v['quote_price'], 2);
+            $v['total_price'] = number_format($v['price_num']*$v['tc_num'], 2);
             $v['quote_price'] = number_format($v['quote_price'], 2);
             $v['remark'] = empty($v['remark']) ? '' : $v['remark'];
         }

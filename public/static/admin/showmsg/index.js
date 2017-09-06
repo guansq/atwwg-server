@@ -82,7 +82,7 @@ function initIoTable(){
       {"data":"item_code"},
       {"data":"item_name"},
       {"data":"pro_no"},
-      {"data":"price_num"},
+      {"data":"tc_num"},
       {"data":"price_uom"},
       {"data":"tc_uom"},
       {"data":"create_at_fmt"},

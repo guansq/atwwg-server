@@ -276,9 +276,9 @@ class Order extends BaseController{
             $returnInfo[$k]['winbid_time'] = atwDate($v['winbid_time']);
             $returnInfo[$k]['req_date'] = atwDate($v['req_date']);//要求交期
             $returnInfo[$k]['sup_confirm_date'] = atwDate($v['sup_confirm_date']);//承诺交期
-            $returnInfo[$k]['price_num'] = $v['price_num'];//采购数量
+            $returnInfo[$k]['tc_num'] = $v['tc_num'];//采购数量
             $returnInfo[$k]['price'] = atwMoney($v['price']);//报价
-            $returnInfo[$k]['total_price'] = atwMoney($v['price']*$v['price_num']);//小计
+            $returnInfo[$k]['total_price'] = atwMoney($v['price']*$v['tc_num']);//小计
             $returnInfo[$k]['status'] = $itemStatus[$v['status']];
         }
         //dump($itemList);
@@ -492,9 +492,9 @@ class Order extends BaseController{
             $returnInfo[$k]['winbid_time'] = atwDate($v['winbid_time']);
             $returnInfo[$k]['req_date'] = atwDate($v['req_date']);//要求交期
             $returnInfo[$k]['sup_confirm_date'] = atwDate($v['sup_confirm_date']);//承诺交期
-            $returnInfo[$k]['price_num'] = $v['price_num'];//采购数量
+            $returnInfo[$k]['tc_num'] = $v['tc_num'];//采购数量
             $returnInfo[$k]['price'] = atwMoney($v['price']);//报价
-            $returnInfo[$k]['total_price'] = atwMoney($v['price']*$v['price_num']);//小计
+            $returnInfo[$k]['total_price'] = atwMoney($v['price']*$v['tc_num']);//小计
             $returnInfo[$k]['status'] = $itemStatus[$v['status']];
         }
 
@@ -529,7 +529,7 @@ class Order extends BaseController{
                 ->setCellValueExplicit('G'.$num, $v['sup_name'])
                 ->setCellValueExplicit('H'.$num, $v['req_date'])
                 ->setCellValueExplicit('I'.$num, $v['sup_confirm_date'])
-                ->setCellValueExplicit('J'.$num, $v['price_num'])
+                ->setCellValueExplicit('J'.$num, $v['tc_num'])
                 ->setCellValueExplicit('K'.$num, $v['price'])
                 ->setCellValueExplicit('L'.$num, $v['total_price']);
         }
@@ -685,7 +685,7 @@ class Order extends BaseController{
                 ->setCellValueExplicit('G'.$num, $v['req_date_fmt'])
                 ->setCellValueExplicit('H'.$num, $v['sup_confirm_date_fmt'])
                 ->setCellValueExplicit('I'.$num, $v['sup_update_date_fmt'])
-                ->setCellValueExplicit('J'.$num, $v['price_num_fmt'])
+                ->setCellValueExplicit('J'.$num, $v['tc_num_fmt'])
                 ->setCellValueExplicit('K'.$num, $v['price_fmt'])  //$v['price_fmt']
 
                 ->setCellValueExplicit('L'.$num, $v['price_subtotal_fmt'])

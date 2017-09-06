@@ -741,8 +741,8 @@ function placeOrder($itemInfo){
     $lines[0] = [
         'ItemCode' => $itemInfo['item_code'],//料品号
         'OrderPriceTC' => $itemInfo['price'],//采购单价
-        'OrderTotalTC' => $itemInfo['price']*$itemInfo['price_num'],//采购总金额
-        'ReqQty' => $itemInfo['price_num'],//采购数量
+        'OrderTotalTC' => $itemInfo['price']*$itemInfo['tc_num'],//采购总金额
+        'ReqQty' => $itemInfo['tc_num'],//采购数量
         'RequireDate' => $itemInfo['req_date'],//请购时间-需求日期
         'SupConfirmDate' => $itemInfo['sup_confirm_date'],//供应商供货日期
         'TaxRate' => $itemInfo['tax_rate']*100,//税率

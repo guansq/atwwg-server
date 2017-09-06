@@ -464,7 +464,7 @@ class Enquiryorder extends BaseController{
                 ->setCellValueExplicit('C'.$num, $v['item_code'])
                 ->setCellValueExplicit('D'.$num, $v['tc_uom'])
                 ->setCellValueExplicit('E'.$num, $v['price_uom'])
-                ->setCellValueExplicit('F'.$num, $v['price_num'])
+                ->setCellValueExplicit('F'.$num, $v['tc_num'])
                 ->setCellValueExplicit('G'.$num, $v['req_date'])
                 ->setCellValueExplicit('H'.$num, $v['quote_date'])
                 ->setCellValueExplicit('I'.$num, $v['quote_endtime'])
@@ -522,11 +522,11 @@ class Enquiryorder extends BaseController{
             'req_date' => $io['req_date'],
             'price' => $io['quote_price'],
             'tax_price' => round($io['quote_price']*(1 + floatval($io['tax_rate'])), 2),
-            'amount' => round($io['quote_price']*(1 /*+ floatval($io['tax_rate'])*/)*$io['price_num'], 2),
+            'amount' => round($io['quote_price']*(1 /*+ floatval($io['tax_rate'])*/)*$io['tc_num'], 2),
             'tc_uom_code' => $io['tc_uom_code'],          //交易单位编码
             'price_uom_code' =>$io['price_uom_code'],     //计价单位编码
             'tax_rate' => $io['tax_rate'],
-            'pro_goods_num' => $io['price_num'],
+            'pro_goods_num' => $io['tc_num'],
             'winbid_time' => $now,
             'create_at' => $now,
             'update_at' => $now

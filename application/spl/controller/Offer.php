@@ -112,7 +112,7 @@ class Offer extends Base {
             $list[$k]['quote_date'] = empty($v['quote_date']) ? '--' : date('Y-m-d', $v['quote_date']);
             $list[$k]['quote_endtime'] = empty($v['quote_endtime']) ? '--' : date('Y-m-d', $v['quote_endtime']);
             $list[$k]['req_date'] = empty($v['req_date']) ? '--' : date('Y-m-d', $v['req_date']);
-            $list[$k]['total_price'] = number_format($v['price_num'] * $v['quote_price'], 2);
+            $list[$k]['total_price'] = number_format($v['tc_num'] * $v['quote_price'], 2);
             $list[$k]['quote_price'] = empty($v['quote_price']) ? '' : number_format($v['quote_price'], 2);
             $list[$k]['remark'] = empty($v['remark']) ? '' : $v['remark'];
         }
@@ -161,7 +161,7 @@ class Offer extends Base {
         //dump($list);die;
         if ($list !== false) {
             $info = $offerLogic->getOneById($key);
-            $total_price = number_format($info['price_num'] * $info['quote_price'], 2);
+            $total_price = number_format($info['tc_num'] * $info['quote_price'], 2);
             //dump($offerLogic->toArray());die;
             // 如果请购单的 供应商已经全部报完价了，则该状态为 已报价
             $offerLogic->updatePrStatusById($key);
@@ -233,7 +233,7 @@ class Offer extends Base {
                 //dump($list);die;
                 if ($list !== false) {
                     $info = $offerLogic->getOneById($key);
-                    $total_price = number_format($info['price_num'] * $info['quote_price'], 2);
+                    $total_price = number_format($info['tc_num'] * $info['quote_price'], 2);
                     //dump($offerLogic->toArray());die;
                     // 如果请购单的 供应商已经全部报完价了，则该状态为 已报价
                     $offerLogic->updatePrStatusById($key);
@@ -276,7 +276,7 @@ class Offer extends Base {
                 ->setCellValueExplicit('B' . $num, $v['pr_code'])
                 ->setCellValueExplicit('C' . $num, $v['pr_ln'])
                 ->setCellValueExplicit('D' . $num, $v['item_name'])
-                ->setCellValueExplicit('E' . $num, $v['price_num'])
+                ->setCellValueExplicit('E' . $num, $v['tc_num'])
                 ->setCellValueExplicit('F' . $num, $v['price_uom'])
                 ->setCellValueExplicit('G' . $num, $v['tc_uom'])
                 ->setCellValueExplicit('H' . $num, date('Y-m-d', $v['create_at']))
@@ -284,7 +284,7 @@ class Offer extends Base {
                 ->setCellValueExplicit('J' . $num, date('Y-m-d', $v['req_date']))
                 ->setCellValueExplicit('K' . $num, empty($v['promise_date']) ? '' : date('Y-m-d', $v['promise_date']))
                 ->setCellValueExplicit('L' . $num, $v['quote_price'])
-                ->setCellValueExplicit('M' . $num, ($v['price_num'] * $v['quote_price']))
+                ->setCellValueExplicit('M' . $num, ($v['tc_num'] * $v['quote_price']))
                 ->setCellValueExplicit('N' . $num, $v['remark']);
 
         }
@@ -393,7 +393,7 @@ class Offer extends Base {
                     $list = $offerLogic->updateData($key, $dataArr);
                     if ($list !== false) {
                         $info = $offerLogic->getOneById($key);
-                        $total_price = number_format($info['price_num'] * $info['quote_price'], 2);
+                        $total_price = number_format($info['tc_num'] * $info['quote_price'], 2);
                         //dump($offerLogic->toArray());die;
                         // 如果请购单的 供应商已经全部报完价了，则该状态为 已报价
                         $offerLogic->updatePrStatusById($key);

@@ -423,15 +423,15 @@ EOD;
         foreach($piList as $i => $pi){
             $confirmDate = date('Y-m-d', $pi['req_date']);//管少秋2017-8-23更改sup_confirm_date->req_date
             $price = number_format($pi['price'], 2);
-            $subTotal = number_format($pi['price_num']*$pi['price'], 2);
+            $subTotal = number_format($pi['tc_num']*$pi['price'], 2);
 
             //双单位的物料 不计算总价。
             if($pi['price_uom'] != $pi['tc_uom']){
                 $pi['price'] =0;
-                $pi['price_num'] ='';
+                $pi['tc_num'] ='';
                 $subTotal='实际重量结算';
             }else{
-                $po['price_total'] += $pi['price_num']*$pi['price'];
+                $po['price_total'] += $pi['tc_num']*$pi['price'];
             }
             $l_height = mb_strlen($pi['item_name'],'utf8')>30?"14":"20";
             $ln = $i + 1;
@@ -441,7 +441,7 @@ EOD;
                 <td width=\"180\" class=\"content-center pi-tab-td\" >$pi[item_name]</td>
                 <td width=\"75\" class=\"content-center pi-tab-td\" >$pi[pro_no]</td>
                 <td width=\"50\" class=\"content-center pi-tab-td\">$confirmDate</td>
-                <td width=\"26\" class=\"content-center pi-tab-td\">$pi[price_num]</td>
+                <td width=\"26\" class=\"content-center pi-tab-td\">$pi[tc_num]</td>
                 <td width=\"26\" class=\"content-center pi-tab-td\">$pi[tc_uom]</td>
                 <td width=\"40\" class=\"content-center pi-tab-td\">$price</td>
                 <td width=\"70\" class=\"content-center pi-tab-td\" style=\"border-right: 2px solid black\">$subTotal</td>

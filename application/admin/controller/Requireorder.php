@@ -341,8 +341,8 @@ class Requireorder extends BaseController{
                 'req_date' => $prInfo['req_date'],
                 'price' => $data['point_price'],
                 'tax_price' => $data['point_price']+($prInfo['tax_rate']*$data['point_price']),//
-                'amount' => $data['point_price']*$prInfo['price_num'],
-                'pro_goods_num' => $prInfo['price_num'],
+                'amount' => $data['point_price']*$prInfo['tc_num'],
+                'pro_goods_num' => $prInfo['tc_num'],
                 'tc_uom_code' => $prInfo['tc_uom_code'],          //交易单位编码
                 'price_uom_code' =>$prInfo['price_uom_code'],     //计价单位编码
                 'tax_rate' => $prInfo['tax_rate'],
@@ -400,12 +400,12 @@ class Requireorder extends BaseController{
             'req_date' => $prInfo['req_date'],
             'price' => $data['point_price'],
             'tax_price' => $data['point_price']+($prInfo['tax_rate']*$data['point_price']),//
-            'amount' => $data['point_price']*$prInfo['price_num'],
+            'amount' => $data['point_price']*$prInfo['tc_num'],
             'tc_uom_code' => $prInfo['tc_uom_code'],          //交易单位编码
             'price_uom_code' =>$prInfo['price_uom_code'],     //计价单位编码
             'tax_rate' => $prInfo['tax_rate'],
             'status' => 'init',
-            'pro_goods_num' => $prInfo['price_num'],
+            'pro_goods_num' => $prInfo['tc_num'],
             'create_at' => $now,
             'update_at' => $now,
         ];

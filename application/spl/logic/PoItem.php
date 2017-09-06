@@ -114,9 +114,9 @@ class PoItem extends BaseLogic{
             $item['req_date_fmt'] = empty($item['req_date']) ? "" : date('Y-m-d', $item['req_date']);
             $item['sup_confirm_date_fmt'] = empty($item['sup_confirm_date']) ? "" : date('Y-m-d', $item['sup_confirm_date']);
             $item['sup_update_date_fmt'] = empty($item['sup_update_date']) ? "" : date('Y-m-d', $item['sup_update_date']);
-            $item['price_num_fmt'] = number_format($item['price_num'], 2);
+            $item['tc_num_fmt'] = number_format($item['tc_num'], 2);
             $item['price_fmt'] = number_format($item['price'], 2);
-            $item['price_subtotal_fmt'] = number_format($item['price']*$item['price_num'], 2);
+            $item['price_subtotal_fmt'] = number_format($item['price']*$item['tc_num'], 2);
             $item['arv_goods_num_fmt'] = number_format($item['arv_goods_num'], 2);
             $item['pro_goods_num_fmt'] = number_format($item['pro_goods_num'], 2);
         }

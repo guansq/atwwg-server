@@ -661,7 +661,7 @@ function getMonthBetweenTime($smonth, $emonth){
  * 发送短信
  */
 function sendSMS($phone, $content){
-    $phone = getenv('APP_DEBUG') ? getenv('APP_DEBUG_MOBILE','18068015721'):$phone;
+    $phone = getenv('APP_DEBUG') ? getenv('APP_DEBUG_MOBILE'):$phone;
     $sendData = [
         'mobile' => $phone,
         'rt_appkey' => 'atw_wg',
@@ -678,7 +678,7 @@ function sendSMS($phone, $content){
  * 发送邮件
  */
 function sendMail($to, $title, $content){
-    $to = getenv('APP_DEBUG') ? getenv('APP_DEBUG_EMAIL','314112362@qq.com'):$to;
+    $to = getenv('APP_DEBUG') ? getenv('APP_DEBUG_EMAIL'):$to;
     $sendData = [
         'rt_appkey' => 'atw_wg',
         'fromName' => '安特威物供平台',//发送人名

@@ -30,10 +30,9 @@ class RequireOrder extends BaseLogic{
             // 需要手动指定供应商的 有： status=hang 挂起的、status='flow' &&  inquiry_way in[assign,exclusive,compete]
             $sqlBuilder->where("a.status='hang' OR (status='flow' AND a.inquiry_way IN ('assign','exclusive','compete'))");
         }
-        if(!key_exists('status', $where)){
-            $sqlBuilder->where('a.status', 'in', ['hang', 'inquiry', 'quoted', 'flow', 'wait']);
-
-        }
+       // if(!key_exists('status', $where)){
+       //     $sqlBuilder->where('a.status', 'in', ['hang', 'inquiry', 'quoted', 'flow', 'wait']);
+       // }
         $list = $sqlBuilder->select();
 
         //        echo $this->getLastSql();

@@ -37,10 +37,7 @@ class Order extends BaseLogic{
             $hasExceed = false;
             $piList = $this->getPoItemInfo($po['id']);
             foreach($piList as $pi){
-                $hasExceed = $hasExceed || (($pi['sup_confirm_date'] < $now) && ($pi['pro_goods_num'] > 0) && !in_array($po['status'], [
-                        'finish',
-                        'sup_cancel'
-                    ]));
+                $hasExceed = $hasExceed || (($pi['sup_confirm_date'] < $now) && ($pi['pro_goods_num'] > 0) && $pi['status']== 'init');
             }
             if($hasExceed){
                 $retList[] = $po;
@@ -175,10 +172,7 @@ class Order extends BaseLogic{
     function getExceedPoNum($sup_code){
         $cnt =$this->alias('po')
             ->join('atw_po_item pi', 'pi.po_id = po.id')
-            ->where('po.status', 'NOT IN', [
-                'finish',
-                'sup_cancel'
-            ])
+            ->where('pi.status', 'init')
             ->where('pro_goods_num', '>', 0)
             ->where('pi.sup_code', $sup_code)
             ->where('pi.sup_confirm_date', '<', time())

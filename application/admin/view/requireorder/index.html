@@ -57,16 +57,16 @@
         <!--<button type="button" id="synchronization_btn" class="btn btn-info" style="margin-right: 15px;">立即同步ERP</button>-->
         <button type="button" id="excel_out" class="btn btn-info" style="margin-right: 15px;">导出Excel</button>
         <button type="button" id="btn_reinquiry" class="btn btn-info" style="margin-right: 15px;">无供应商重新询价</button>
-        <!--<button type="button" id="appoint_sup_btn" class="btn btn-info " style="margin-right: 15px;" disabled>指定供应商</button>-->
+        <button type="button" id="appoint_sup_btn" class="btn btn-info " style="margin-right: 15px;" disabled>指定供应商</button>
         <!--<span style="margin-right: 25px;" class="layui-nav-item">*当前总记录数{$allNums}条</span>-->
       </div>
       <div>
         <table id="example" class="display table table-bordered" cellspacing="0" width="100%">
           <thead>
           <tr>
-            <!--<th>-->
-              <!--<input type="checkbox" class="all">-->
-            <!--</th>-->
+            <th>
+              <input type="checkbox" class="all">
+            </th>
             <th>请购单号</th>
             <th>请购日期</th>
             <th width="50">料号</th>
@@ -95,7 +95,7 @@
 <div class="barcode_box" style="">
   <div class="bomb_table">
     <p><i class="close_box"></i></p>
-    <h5>根据物流可选属性筛选出可选供应商</h5>
+    <h5>请选择供应商</h5>
     <table class="table table-bordered">
       <thead>
       <tr>
@@ -216,11 +216,11 @@
       },
       "pageLength":100,
       "columns":[
-        // {
-        //   "data":"id", "render":function(data){
-        //   return '<input type="checkbox" id="table_ck_' + data + '" class="check" value="' + data + '" > ';
-        // }
-        // },
+        {
+          "data":"id", "render":function(data){
+          return '<input type="checkbox" id="table_ck_' + data + '" class="check table-id-ck" value="' + data + '" > ';
+        }
+        },
         {"data":"pr_code"},
         {"data":"pr_date"},
         {"data":"item_code"},
@@ -263,7 +263,7 @@
           }
         });
         checkboxs.unbind('ifChecked').on('ifChecked', function(event){
-            $("#appoint_sup_btn").attr('disabled', false);
+          $("#appoint_sup_btn").attr('disabled', false);
         });
         checkboxs.unbind('ifUnchecked').on('ifUnchecked', function(event){
           if(checkboxs.filter(':checked').length === 0){
@@ -503,9 +503,20 @@
     });
   })
 
-
+  /**
+   * 批量下单
+   */
   $("#appoint_sup_btn").click(function(){
-    console.log(checkboxs.filter(':checked'));
+    var checkboxs = $('input.table-id-ck:checked');
+    var prIds = [];
+    checkboxs.map(function(k, v){
+      prIds.push(v.value);
+    });
+    //console.log(prIds);
+    $.post("{:url('Requireorder/cancelPoint')}", {'pr_id':pr_id}, function(){
+      layer.closeAll();
+      $.form.reload();
+    });
   });
 
   /*

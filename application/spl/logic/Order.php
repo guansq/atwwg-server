@@ -271,6 +271,7 @@ footer, header, hgroup, menu, nav, section {
     display: block;
 }
 body {
+    font-size: 0.8em;
     line-height: 1;
 }
 ol, ul , li {
@@ -312,7 +313,7 @@ tr>th{
 }
 
 .text-small{
-  font-size: 0.8em;
+  font-size: 0.9em;
 }
 
 .pi-tab-th{
@@ -395,14 +396,15 @@ tr>th{
         </table>
       </div>
         
-        <div>1、订单文件：<br>本订单所附下列文件是构成合同不可分割的部分</div>
-        <div>2、订单明细（以下价格已经包含17%增值税、运输费用及其他所有税费）：</div>
-        <table id="pi_tab" style="width: 100% ">
+        <div>1、订单文件：本订单所附下列文件是构成合同不可分割的部分。<br/>
+        2、订单明细（以下价格已经包含17%增值税、运输费用及其他所有税费）：<br/>
+        </div>
+        <table id="pi_tab">
             <thead >
             <tr >
                 <th width="26" class="pi-tab-th" style="border-left: 2px solid black">行号</th>
-                <th width="55" class="pi-tab-th" >料号</th>
-                <th width="180" class="pi-tab-th">物料名称</th>
+                <th width="60" class="pi-tab-th" >料号</th>
+                <th width="200" class="pi-tab-th">物料名称</th>
                 <th width="75" class="pi-tab-th">项目号</th>
                 <th width="50" class="pi-tab-th">交期</th>
                 <th width="26" class="pi-tab-th">数量</th>
@@ -431,8 +433,8 @@ EOD;
             $ln = $i + 1;
             $html .= "<tr class=\"text-small\" style=\"line-height: {$l_height}px;\">
                 <td width=\"26\" class=\"content-center pi-tab-td\" style=\"border-left: 2px solid black; padding: 10px;\">$ln</td>
-                <td width=\"55\" class=\"content-center pi-tab-td\">$pi[item_code]</td>
-                <td width=\"180\" class=\"content-center pi-tab-td\" >$pi[item_name]</td>
+                <td width=\"60\" class=\"content-center pi-tab-td\">$pi[item_code]</td>
+                <td width=\"200\" class=\"content-center pi-tab-td\" >$pi[item_name]</td>
                 <td width=\"75\" class=\"content-center pi-tab-td\" >$pi[pro_no]</td>
                 <td width=\"50\" class=\"content-center pi-tab-td\">$confirmDate</td>
                 <td width=\"26\" class=\"content-center pi-tab-td\">$pi[tc_num]</td>
@@ -469,23 +471,20 @@ EOD;
             </tr>
             </tfoot>
         </table>
-        <div>3、付款条件：$supInfo[pay_way]</div>
-        <div>4、卖方产品质量保证：<br> 
-            &nbsp;a.卖方需要提供产品合格证书，产品质量符合我厂要求，质保期从使用之日起一年，或发货之日起18个月，如在质保期内发生质量问题问题，卖方接受无条件退货，并承担相应损失；<br>
-            &nbsp;b.按买方图纸要求和材料采购规范《ATW/GF-CLCGGF-2015》生产、检验；<br>
-            &nbsp;c.涉及铸造、锻造和热处理的原材料类产品出货需在材料和产品标注“炉号”、材质； 
+        <br/>
+        <div>3、付款条件：$supInfo[pay_way]。<br/> 
+         4、卖方产品质量保证：<br>
+         &nbsp;&nbsp;&nbsp;a.卖方需要提供产品合格证书，产品质量符合我厂要求，质保期从使用之日起一年，或发货之日起18个月，如在质保期内发生质量问题问题，卖方接受无条件退货，并承担相应损失；<br> 
+         &nbsp;&nbsp;&nbsp;b.按买方图纸要求和材料采购规范《ATW/GF-CLCGGF-2015》生产、检验；<br> 
+         &nbsp;&nbsp;&nbsp;c.涉及铸造、锻造和热处理的原材料类产品出货需在材料和产品标注“炉号”、材质；<br/> 
+         5、产品的交货单位、交货方法、运输方式、到达地点（包括专用线、码头）<br>
+          &nbsp;&nbsp;&nbsp;a.产品的收货单位：{$orgName}；<br>
+          &nbsp;&nbsp;&nbsp;b.包装、交货方法：卖方承担货物最终运达到买方到货地点之间的所有运费，并提供坚固、适合长途运输的包装；<br>
+          &nbsp;&nbsp;&nbsp;c.运输方式：快递，送货上门；<br>
+          &nbsp;&nbsp;&nbsp;d.到货地点和接货单位（或接货人）：{$orgReceiveAddress}，{$orgReceiver}，{$orgReceiverMobile};<br/> 
+        6、订单生效：本订单应在双方授权代表签字盖章后立即生效。 <br/> 
+        7、此订单其他未尽条款按照买卖双方签订的合同条款执行。
         </div>
-        <div>5、产品的交货单位、交货方法、运输方式、到达地点（包括专用线、码头）
-          <div style="padding-left: 3em; ">
-            &nbsp;a.产品的收货单位：{$orgName}；<br>
-            &nbsp;b.包装、交货方法：卖方承担货物最终运达到买方到货地点之间的所有运费，并提供坚固、适合长途运输的包装；<br>
-            &nbsp;c.运输方式：快递，送货上门；<br>
-            &nbsp;d.到货地点和接货单位（或接货人）：{$orgReceiveAddress}，{$orgReceiver}，{$orgReceiverMobile};
-          </div>
-        </div>
-        <div>6、订单生效：本订单应在双方授权代表签字盖章后立即生效。</div>
-        <div>7、此订单其他未尽条款按照买卖双方签订的合同条款执行。</div>
-
     </div>
 </body>
 </html>

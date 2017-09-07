@@ -434,64 +434,81 @@ class Requireorder extends BaseController{
 
     /*
      * 批量指定供应商下单
+     *
+     * date:"2017-09-20"
+     * prIds:"24548,2322"
+     * price:"12"
+     * supCode:"PC-014"
      */
     public function batchSavePr(){
-        $data=input('param.');
-        returnJson(2000,'',$data);
-
-        $logicPrInfo = Model('RequireOrder','logic');
-        $data['point_date'] = strtotime($data['point_date']);
-        $item_id = $data['item_id'];
-        //得到pr_info
-        $prInfo = $logicPrInfo->getPrInfo(['id'=>$data['item_id']]);
-        $poLogic = model('Po', 'logic');
+        $reqParams = $this->getReqParams(['date','prIds','price','supCode','supName']);
+        $rule = [
+            'date' => 'require|length:10,11',
+            'prIds' => 'require',
+            'price' => 'require|min:0.01',
+            'supCode' => 'require',
+            'supName' => 'require',
+        ];
+        validateData($reqParams,$rule);
+        $reqParams['point_date'] = strtotime($reqParams['date']);
+        $reqParams['point_price'] = floatval($reqParams['price']);
         $now = time();
-        //生成poItem
-        $poItemData = [
-            'item_code' => $prInfo['item_code'],
-            'item_name' => $prInfo['item_name'],
-            'sup_code' => $data['appoint_sup_code'],
-            'sup_name' => $data['appoint_sup_name'],
-            'price_num' => $prInfo['price_num'],
-            'price_uom' => $prInfo['price_uom'],
-            'tc_num' => $prInfo['tc_num'],
-            'tc_uom' => $prInfo['tc_uom'],
-            'pr_code' => $prInfo['pr_code'],
-            'pr_id' => $prInfo['id'],
-            'pr_ln' => $prInfo['pr_ln'],
-            'sup_confirm_date' => $data['point_date'],
-            'req_date' => $prInfo['req_date'],
-            'price' => $data['point_price'],
-            'tax_price' => $data['point_price']+($prInfo['tax_rate']*$data['point_price']),//
-            'amount' => $data['point_price']*$prInfo['tc_num'],
-            'tc_uom_code' => $prInfo['tc_uom_code'],          //交易单位编码
-            'price_uom_code' =>$prInfo['price_uom_code'],     //计价单位编码
-            'tax_rate' => $prInfo['tax_rate'],
-            'status' => 'init',
-            'pro_goods_num' => $prInfo['tc_num'],
-            'create_at' => $now,
-            'update_at' => $now,
-        ];
-        //dd($poItemData);
+        $prLogic = Model('RequireOrder','logic');
+        $poLogic = model('Po', 'logic');
 
-        $res = $poLogic->savePoItem($poItemData);
-        if($res === false){
-            return json(['code'=>6000,'msg'=>'生成未下单订单失败','data'=>['sup_name' => $data['appoint_sup_name']]]);
+        //得到pr_info
+        $prInfo = $prLogic->where("id IN ($reqParams[prIds])")->select();
+        if(empty($prInfo)){
+            returnJson(4002,"无效的prids=$reqParams[prIds]");
         }
 
-        $where = ['id'=>$item_id];
-        $dataArr = [
-            'is_appoint_sup' => $data['is_appoint_sup'],
-            'appoint_sup_code' => $data['appoint_sup_code'],
-            'appoint_sup_name' => $data['appoint_sup_name'],
-            'status' => 'wait'
-        ];
-        $ret = $logicPrInfo->updatePr($where,$dataArr);
-        if($ret === false){
-            return json(['code'=>6000,'msg'=>'更改PR表失败','data'=>['sup_name' => $data['appoint_sup_name']]]);
-        }
+        foreach($prInfo as $pr){
+            //生成poItem
+            $poItemData = [
+                'item_code' => $pr['item_code'],
+                'item_name' => $pr['item_name'],
+                'sup_code' => $reqParams['supCode'],
+                'sup_name' => $reqParams['supName'],
+                'price_num' => $pr['price_num'],
+                'price_uom' => $pr['price_uom'],
+                'tc_num' => $pr['tc_num'],
+                'tc_uom' => $pr['tc_uom'],
+                'pr_code' => $pr['pr_code'],
+                'pr_id' => $pr['id'],
+                'pr_ln' => $pr['pr_ln'],
+                'sup_confirm_date' => $reqParams['point_date'],
+                'req_date' => $pr['req_date'],
+                'price' => $reqParams['point_price'],
+                'tax_price' => $reqParams['point_price']+($pr['tax_rate']*$reqParams['point_price']),//
+                'amount' => $reqParams['point_price']*$pr['tc_num'],
+                'tc_uom_code' => $pr['tc_uom_code'],          //交易单位编码
+                'price_uom_code' =>$pr['price_uom_code'],     //计价单位编码
+                'pro_no' =>$pr['pro_no'],                     //项目号
+                'tax_rate' => $pr['tax_rate'],
+                'status' => 'init',
+                'pro_goods_num' => $pr['tc_num'],
+                'create_at' => $now,
+                'update_at' => $now,
+            ];
+            //dd($poItemData);
 
-        return json(['code'=>2000,'msg'=>'成功','data'=>['sup_name' => $data['appoint_sup_name']]]);
+            $res = $poLogic->savePoItem($poItemData);
+            if(empty($res)){
+                returnJson(5020,'savePoItem fail');
+            }
+            $where = ['id'=>$pr['id']];
+            $dataArr = [
+                'is_appoint_sup' => 1,
+                'appoint_sup_code' => $reqParams['supCode'],
+                'appoint_sup_name' => $reqParams['supName'],
+                'status' => 'wait'
+            ];
+            $ret = $prLogic->updatePr($where,$dataArr);
+            if(empty($ret)){
+                returnJson(5020,'更改PR表失败');
+            }
+        }
+        returnJson(2000,'',$reqParams);
     }
 
     /*

@@ -355,8 +355,7 @@
       }
     });
 
-    $("div.toolbar")
-        .html(' <span>第</span><input type="number" id="searchNumber" min="1" style="width: 40px;text-align: center; margin: 1em;"/><span>页&nbsp;&nbsp;</span><button id="btn-jump" onclick="changejump()" class="layui-btn layui-btn-small">跳转</button>');
+    $("div.toolbar").html(' <span>第</span><input type="number" id="searchNumber" min="1" style="width: 40px;text-align: center; margin: 1em;"/><span>页&nbsp;&nbsp;</span><button id="btn-jump" onclick="changejump()" class="layui-btn layui-btn-small">跳转</button>');
     prTable.on('draw.dt', function(e, settings, data){
       var info = prTable.page.info();
       //此处的page为0开始计算
@@ -478,6 +477,7 @@
       return false;
     }
     var supCode = $ckBox[0].value;
+    var supName = $($ckBox[0]).data('sup-name');
     var prIds = $("#batch_select_sup_prids").val();
     var price = $('#point_price_' + supCode).val();
     var date = $('#point_date_' + supCode).val();
@@ -493,11 +493,13 @@
 
     var sendObj = {
       'supCode':supCode,
+      'supName':supName,
       'prIds':prIds,
       'price':price,
       'date':date
     };
 
+    //console.log(sendObj); return false;
     var loader = layer.load();
     $.post("{:url('Requireorder/batchSavePr')}", sendObj, function(res){
       layer.closeAll();
@@ -635,7 +637,7 @@
         var resData = resDataList[i];
 
         tmphtml += '<tr><td>' +
-            '<input class="listcheck" name="listcheck" type="checkbox" ' + '" value="' + resData.sup_code + '"></td>' +
+            '<input class="listcheck" name="listcheck" type="checkbox" ' + '" value="' + resData.sup_code + '" data-sup-name="'+ resData.sup_name+'"></td>' +
             '<td>' + resData.sup_code + '</td><td>' + resData.sup_name + '</td>' +
             '<td><input type="number" class="form-control" required="required" id="point_price_' + resDataList[i]["sup_code"] + '" placeholder="价格"></td>' +
             '<td><input type="text" class="form-control date_time" required="required" id="point_date_' + resDataList[i]["sup_code"] + '" placeholder="格式为2000-10-03"></td><td>' + status + '</td></tr>';

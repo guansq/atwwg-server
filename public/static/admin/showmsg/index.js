@@ -79,6 +79,7 @@ function initIoTable(){
     },
 
     "columns":[
+      {"data":"sup_name"},
       {"data":"item_code"},
       {"data":"item_name"},
       {"data":"pro_no"},
@@ -86,7 +87,6 @@ function initIoTable(){
       {"data":"price_uom"},
       {"data":"tc_uom"},
       {"data":"create_at_fmt"},
-      {"data":"quote_endtime_fmt"},
       {"data":"req_date_fmt"},
       {"data":"promise_date_fmt"},
       {"data":"quote_price"},

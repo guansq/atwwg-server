@@ -20,7 +20,7 @@ class Order extends Base{
         $orderLogic = model('Order', 'logic');
         $sup_code = session('spl_user')['sup_code'];
         $where = [
-            'status' => ['NOT IN',['sup_cancel','atw_cancel']],  //已经取消的不显示在 供应商端
+            'status' => ['NOT IN', ['sup_cancel', 'atw_cancel']],  //已经取消的不显示在 供应商端
             'sup_code' => $sup_code
         ];
         $data = input('param.');
@@ -71,8 +71,8 @@ class Order extends Base{
             'sup_cancel' => '已取消',
             'sup_sure' => '待上传',
             'sup_edit' => '修改交期',
-            'atw_cancel'=>'已取消 ',
-            'atw_sure'=>'已确定',
+            'atw_cancel' => '已取消 ',
+            'atw_sure' => '已确定',
             'upload_contract' => '待审核',
             'contract_pass' => '审核通过',
             'contract_refuse' => '审核拒绝',
@@ -101,11 +101,11 @@ class Order extends Base{
             //  $returnInfo[$k]['pr_date'] = date('Y-m-d',$offerLogic->getPrDate($v['pr_code']));
             if($v['status'] == 'finish'){
                 if($v['u9_status'] == 3){
-                    $v['status'] ='zr_close';
+                    $v['status'] = 'zr_close';
                 }elseif($v['u9_status'] == 4){
-                    $v['status'] ='dq_close';
+                    $v['status'] = 'dq_close';
                 }elseif($v['u9_status'] == 5){
-                    $v['status'] ='ce_close';
+                    $v['status'] = 'ce_close';
                 }
             }
             $returnInfo[$k]['create_at'] = date('Y-m-d', $v['create_at']);
@@ -196,8 +196,8 @@ class Order extends Base{
             'sup_cancel' => '已取消',
             'sup_sure' => '待上传',
             'sup_edit' => '修改交期',
-            'atw_cancel'=>'已取消 ',
-            'atw_sure'=>'已确定',
+            'atw_cancel' => '已取消 ',
+            'atw_sure' => '已确定',
             'upload_contract' => '待审核',
             'contract_pass' => '审核通过',
             'contract_refuse' => '审核拒绝',
@@ -528,20 +528,26 @@ class Order extends Base{
 
         // 申请资源 获取参数
         $piLogic = model('PoItem', 'logic');
-        $reqParams = $this->getReqParams(['status'=>'','contract_begintime'=>'','contract_endtime'=>'','sup'=>'']);
-        $reqParams['sup']= session('spl_user')['sup_code'];
-        $piPage = $piLogic->getPoItemPage($reqParams,1,PHP_INT_MAX);
+        $reqParams = $this->getReqParams([
+            'status' => [],
+            'contract_begintime' => '',
+            'contract_endtime' => '',
+            'sup' => ''
+        ]);
+        $reqParams['sup'] = session('spl_user')['sup_code'];
+        if(empty($reqParams['status']) || $reqParams['status'] == 'all'){
+            $reqParams['status'] = ['NOT IN', ['finish', 'sup_cancel', 'atw_cancel']];
+        }
+        $piPage = $piLogic->getPoItemPage($reqParams, 1, PHP_INT_MAX);
         $list = $piPage->getItemList();
 
         $path = ROOT_PATH.'public'.DS.'upload'.DS;
         //dump($list);die;请购单编号-物料编号-请购日期-评标日期-供应商名称-要求交期-承诺交期-采购数量-报价-小计-状态
         $PHPExcel = new PHPExcel(); //实例化PHPExcel类，类似于在桌面上新建一个Excel表格
         $PHPSheet = $PHPExcel->getActiveSheet(); //获得当前活动sheet的操作对象
-        foreach(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'] as $cl ){
+        foreach(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'] as $cl){
             //設置列寬自適應
             $PHPSheet->getColumnDimension($cl)->setAutoSize(true);
-
-
         }
         $PHPSheet->setTitle('采购订单列表'); //给当前活动sheet设置名称
         $PHPSheet->setCellValueExplicit('A1', '采购订单号');
@@ -575,26 +581,20 @@ class Order extends Base{
                 ->setCellValueExplicit('H'.$num, $v['sup_confirm_date_fmt'])
                 ->setCellValueExplicit('I'.$num, $v['sup_update_date_fmt'])
                 ->setCellValue('J'.$num, $v['tc_num'])
-                ->setCellValue('K'.$num,$v['price'])
+                ->setCellValue('K'.$num, $v['price'])
                 ->setCellValue('L'.$num, $v['price']*$v['tc_num'])
                 ->setCellValue('M'.$num, $v['arv_goods_num'])
                 ->setCellValue('N'.$num, $v['pro_goods_num'])
                 ->setCellValue('O'.$num, $v['return_goods_num'])
                 ->setCellValueExplicit('P'.$num, $v['purch_name'])
                 ->setCellValueExplicit('Q'.$num, $v['pro_no'])
-                ->setCellValueExplicit('R'.$num, empty($v['u9_status'])?'执行中':$v['u9_status']);
-            $PHPSheet ->getStyle('J'.$num)->getNumberFormat()
-                ->setFormatCode('#,##0.00');
-            $PHPSheet ->getStyle('K'.$num)->getNumberFormat()
-                ->setFormatCode('#,##0.00');
-            $PHPSheet ->getStyle('L'.$num)->getNumberFormat()
-                ->setFormatCode('#,##0.00');
-            $PHPSheet ->getStyle('M'.$num)->getNumberFormat()
-                ->setFormatCode('#,##0.00');
-            $PHPSheet ->getStyle('N'.$num)->getNumberFormat()
-                ->setFormatCode('#,##0.00');
-            $PHPSheet ->getStyle('O'.$num)->getNumberFormat()
-                ->setFormatCode('#,##0.00');
+                ->setCellValueExplicit('R'.$num, empty($v['u9_status']) ? '执行中' : $v['u9_status']);
+            $PHPSheet->getStyle('J'.$num)->getNumberFormat()->setFormatCode('#,##0.00');
+            $PHPSheet->getStyle('K'.$num)->getNumberFormat()->setFormatCode('#,##0.00');
+            $PHPSheet->getStyle('L'.$num)->getNumberFormat()->setFormatCode('#,##0.00');
+            $PHPSheet->getStyle('M'.$num)->getNumberFormat()->setFormatCode('#,##0.00');
+            $PHPSheet->getStyle('N'.$num)->getNumberFormat()->setFormatCode('#,##0.00');
+            $PHPSheet->getStyle('O'.$num)->getNumberFormat()->setFormatCode('#,##0.00');
         }
 
         $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel, 'Excel2007');//按照指定格式生成Excel文件，'Excel2007’表示生成2007版本的xlsx，

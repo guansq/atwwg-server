@@ -8,6 +8,7 @@
 namespace app\admin\controller;
 
 
+use app\common\model\SupItem;
 use controller\BasicAdmin;
 use service\HttpService;
 use service\LogService;
@@ -303,6 +304,18 @@ class Material extends BaseController{
         $logicItemInfo = Model('Item','logic');
         $num = $logicItemInfo->getListNum(['update_cnt' => 0]);
         return $num;
+    }
+
+    /**
+     * Author: WILL<314112362@qq.com>
+     * Time: ${DAY}
+     * Describe: 根据itemcde  获取供应商
+     */
+    public function getSameSupByItemCode(){
+        $itemCode = input('item_code');
+        $itemSup = new SupItem();
+        $dbRet = $itemSup->where('item_code',$itemCode)->select();
+        returnJson(2000,'',$dbRet );
     }
 
 }

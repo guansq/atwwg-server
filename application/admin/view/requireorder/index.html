@@ -28,13 +28,19 @@
           <select id="status" class="form-control">
             <option value="">全部</option>
             <!--<option value="init" {eq name="$Think.get.status" value="init"}selected{/eq} >待询价</option>-->
-            <option value="hang" {eq name="$Think.get.status" value="hang" }selected{/eq} >挂起</option>
-            <option value="inquiry" {eq name="$Think.get.status" value="inquiry" }selected{/eq} >询价中</option>
-            <option value="quoted" {eq name="$Think.get.status" value="quoted" }selected{/eq} >待评标</option>
-            <option value="flow" {eq name="$Think.get.status" value="flow" }selected{/eq} >流标</option>
+            <option value="hang" {eq name="$Think.get.status" value="hang" }selected{
+            /eq} >挂起</option>
+            <option value="inquiry" {eq name="$Think.get.status" value="inquiry" }selected{
+            /eq} >询价中</option>
+            <option value="quoted" {eq name="$Think.get.status" value="quoted" }selected{
+            /eq} >待评标</option>
+            <option value="flow" {eq name="$Think.get.status" value="flow" }selected{
+            /eq} >流标</option>
             <!--<option value="winbid" {eq name="$Think.get.status" value="winbid"}selected{/eq} >中标</option>-->
-            <option value="wait" {eq name="$Think.get.status" value="wait" }selected{/eq} >待下单</option>
-            <option value="order" {eq name="$Think.get.status" value="order" }selected{/eq} >关闭</option>
+            <option value="wait" {eq name="$Think.get.status" value="wait" }selected{
+            /eq} >待下单</option>
+            <option value="order" {eq name="$Think.get.status" value="order" }selected{
+            /eq} >关闭</option>
             <!--<option value="close" {eq name="$Think.get.status" value="close"}selected{/eq} >关闭</option>-->
           </select>
           <select class="form-control hidden" id="is_appoint_sup">
@@ -92,10 +98,10 @@
     </div>
   </div>
 </main>
-<div class="barcode_box" style="">
+<div id="select_sup_box" class="barcode_box" style="">
   <div class="bomb_table">
     <p><i class="close_box"></i></p>
-    <h5>请选择供应商</h5>
+    <h5 id="select_sup_title">请选择供应商</h5>
     <table class="table table-bordered">
       <thead>
       <tr>
@@ -118,6 +124,36 @@
       <!--<span class="col_red mr_15 fs_13">选择指定供应商后提交申请，等待采购主管审核通过，审核信息可以在消息中心看到</span>-->
       <!--<button type="button" class="btn btn-primary fr resetbt">重置</button>-->
       <button type="button" class="btn btn-primary fr mr_15 submitbt">提交</button>
+    </section>
+  </div>
+</div>
+
+<div id="batch_select_sup_box" class="barcode_box" style="">
+  <div class="bomb_table">
+    <p><i class="close_box"></i></p>
+    <h5 id="batch_select_sup_title">请选择供应商</h5>
+    <table class="table table-bordered">
+      <thead>
+      <tr>
+        <th>选择</th>
+        <th>供应商编码</th>
+        <th>供应商名称</th>
+        <th>状态</th>
+      </tr>
+      </thead>
+      <tr>
+        <td>
+          <input type="checkbox">
+        </td>
+        <td></td>
+        <td></td>
+        <td>禁用</td>
+      </tr>
+    </table>
+    <section>
+      <!--<span class="col_red mr_15 fs_13">选择指定供应商后提交申请，等待采购主管审核通过，审核信息可以在消息中心看到</span>-->
+      <!--<button type="button" class="btn btn-primary fr resetbt">重置</button>-->
+      <button  id="batch_select_sup_submit" type="button" class="btn btn-primary fr mr_15">提交</button>
     </section>
   </div>
 </div>
@@ -344,7 +380,7 @@
     //event.preventDefault();
     $.post("{:url('Requireorder/showSelectSup')}", {pr_code:pr_code, item_code:item_code}, function(resDate){
       if(resDate.length > 0){
-        $(".barcode_box").css("display", "block");
+        $("#select_sup_box").css("display", "block");
         var tmphtml = '';
         for(var i = 0; i < resDate.length; i++){
           console.log(resDate[i]);
@@ -367,7 +403,7 @@
           $("[name='listcheck']").removeAttr("checked");//取消全选
           $(this).attr("checked", 'true');
         });
-        $(".barcode_box table").html("<thead><tr><th>选择</th><th>供应商编码</th><th>供应商名称</th><th>价格</th><th>交期</th><th>状态</th></tr></thead>" + tmphtml);
+        $("#select_sup_box table").html("<thead><tr><th>选择</th><th>供应商编码</th><th>供应商名称</th><th>价格</th><th>交期</th><th>状态</th></tr></thead>" + tmphtml);
         initTimePicker();
       }else{
         alert('暂无供应商可以选择');
@@ -501,7 +537,7 @@
       window.open(str);
       //console.log(str);
     });
-  })
+  });
 
   /**
    * 批量下单
@@ -509,13 +545,56 @@
   $("#appoint_sup_btn").click(function(){
     var checkboxs = $('input.table-id-ck:checked');
     var prIds = [];
-    checkboxs.map(function(k, v){
+    var itemCode  = false;
+    var itemName  = '';
+    var returnFlag = 0;
+    checkboxs.each(function(k,v){
       prIds.push(v.value);
+      var rowData = prTable.row($(v).parents('tr')).data();
+      if(!itemCode){
+        itemCode = rowData.item_code;
+        itemName = rowData.desc;
+        //console.log(rowData);
+      }
+      if(itemCode != rowData.item_code){
+        layer.alert('请选择相同的料号');
+        //console.log('请选择相同的料号'+itemCode);
+        returnFlag = 1;
+        return false;
+      };
     });
+    if(returnFlag){
+      return false;
+    }
+    //console.log(itemCode);
     //console.log(prIds);
-    $.post("{:url('Requireorder/cancelPoint')}", {'pr_id':pr_id}, function(){
-      layer.closeAll();
-      $.form.reload();
+    $.get("{:url('Material/getSameSupByItemCode')}", {item_code:itemCode}, function(ret){
+      if(!ret || ret.code!=2000){
+          layer.alert('网络异常，刷新重试。');
+          return false;
+      }
+      console.log(ret);
+      if(!ret.result || !ret.result.length ){
+        layer.alert('暂无供应商可以选择');
+        return false;
+      }
+      var resDataList = ret.result;
+      $("#batch_select_sup_box").show();
+      var tmphtml = '';
+      $("#batch_select_sup_title").text('料号:'+itemCode+' 物料名称:'+itemName);
+      for(var i = 0; i < resDataList.length; i++){
+        // console.log(resDate[i]);
+        var status = '正常';
+        var resData =resDataList[i];
+
+        tmphtml += '<tr><td>' +
+            '<input class="listcheck" name="listcheck" type="checkbox" ' +  '" value="' + resData.sup_code +'"></td>' +
+            '<td>' + resData.sup_code + '</td><td>' + resData.sup_name + '</td>' +
+            '<td><input type="text" class="form-control" required="required" id="point_price_' + resDataList[i]["sup_code"] + '" placeholder="价格"></td>' +
+            '<td><input type="text" class="form-control date_time" required="required" id="point_date_' + resDataList[i]["sup_code"] + '" placeholder="格式为2000-10-03"></td><td>' + status + '</td></tr>';
+      }
+      $("#batch_select_sup_box table").html("<thead><tr><th>选择</th><th>供应商编码</th><th>供应商名称</th><th>价格</th><th>交期</th><th>状态</th></tr></thead>" + tmphtml);
+      initTimePicker();
     });
   });
 

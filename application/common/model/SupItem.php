@@ -7,5 +7,5 @@
  */
 namespace app\common\model;
 class SupItem extends BaseModel{
-
+    protected $table ='atw_u9_sup_item';
 }

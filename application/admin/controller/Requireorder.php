@@ -605,7 +605,7 @@ class Requireorder extends BaseController{
      * 重新询价
      */
     public function reInquiry(){
-        $RequireLogic = model('RequireOrder','logic');
+        $prLogic = model('RequireOrder','logic');
 
         //更改当前状态为init
         $prId = input('get.id');
@@ -614,8 +614,9 @@ class Requireorder extends BaseController{
             'status' => 'init',
             'is_force_inquiry' => 1
         ];
-        $RequireLogic->updatePr($where,$data);
-        $resAll = json_decode(HttpService::curl(getenv('APP_API_HOME').'/u9api/syncAll'));//prToInquiry
+
+        $prLogic->updatePr($where,$data);
+        $resAll = json_decode(HttpService::get(getenv('APP_API_HOME').'/u9api/syncAll'));//prToInquiry
         return json($resAll);
     }
 }

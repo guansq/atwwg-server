@@ -263,10 +263,7 @@
           }
         });
         checkboxs.unbind('ifChecked').on('ifChecked', function(event){
-          if(isNeedAppointSupQuery){
             $("#appoint_sup_btn").attr('disabled', false);
-          }
-
         });
         checkboxs.unbind('ifUnchecked').on('ifUnchecked', function(event){
           if(checkboxs.filter(':checked').length === 0){
@@ -505,6 +502,11 @@
       //console.log(str);
     });
   })
+
+
+  $("#appoint_sup_btn").click(function(){
+    console.log(checkboxs.filter(':checked'));
+  });
 
   /*
    新增取消指定供应商

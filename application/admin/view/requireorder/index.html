@@ -131,7 +131,8 @@
 <div id="batch_select_sup_box" class="barcode_box" style="">
   <div class="bomb_table">
     <p><i class="close_box"></i></p>
-    <h5 id="batch_select_sup_title">请选择供应商</h5>
+    <h5 id="batch_select_sup_title"></h5>
+    <input type="hidden" id="batch_select_sup_prids">
     <table class="table table-bordered">
       <thead>
       <tr>
@@ -153,7 +154,7 @@
     <section>
       <!--<span class="col_red mr_15 fs_13">选择指定供应商后提交申请，等待采购主管审核通过，审核信息可以在消息中心看到</span>-->
       <!--<button type="button" class="btn btn-primary fr resetbt">重置</button>-->
-      <button  id="batch_select_sup_submit" type="button" class="btn btn-primary fr mr_15">提交</button>
+      <button id="batch_select_sup_submit" type="button" class="btn btn-primary fr mr_15">提交</button>
     </section>
   </div>
 </div>
@@ -453,7 +454,7 @@
     $.post("{:url('Requireorder/savePr')}", sendObj, function(res){
       layer.closeAll();
       if(res.code == 2000){
-        $(".barcode_box").css("display", "none");
+        $("#select_sup_box").css("display", "none");
         $("input[data-pr_id^=" + pr_id + "]").parent().next().html(res.data.sup_name)
         //var str = '<a href="javascript:;" onclick="checkStatus(\'agree\','+pr_id+')">通过</a>&nbsp;&nbsp;<a href="javascript:;" onclick="checkStatus(\'refuse\','+pr_id+')">拒绝</a>';
         //$("input[data-pr_id^="+pr_id+"]") .parent().next().next().html(str)
@@ -466,7 +467,50 @@
         layer.alert(res.msg);
       }
     });
-  })
+  });
+
+  // 批量提交
+  $("#batch_select_sup_submit").click(function(){
+    var $ckBox = $('#batch_select_sup_box input[name="listcheck"]:checked');
+    // console.log($ckBox.length);
+    if($ckBox.length != 1){
+      alert('选中一个才能提交');
+      return false;
+    }
+    var supCode = $ckBox[0].value;
+    var prIds = $("#batch_select_sup_prids").val();
+    var price = $('#point_price_' + supCode).val();
+    var date = $('#point_date_' + supCode).val();
+
+    if(!price){
+      alert('填写的价格不能为空！');
+      return false;
+    }
+    if(!date){
+      alert('填写的日期不能为空！');
+      return false;
+    }
+
+    var sendObj = {
+      'supCode':supCode,
+      'prIds':prIds,
+      'price':price,
+      'date':date
+    };
+
+    var loader = layer.load();
+    $.post("{:url('Requireorder/batchSavePr')}", sendObj, function(res){
+      layer.closeAll();
+      if(!res || res.code != 2000){
+        alert('网络异常请稍后再试');
+        return false;
+      }
+      $("#batch_select_sup_box").hide();
+      info = prTable.page.info();
+      var page = info.page;
+      $('#example').dataTable().fnPageChange(page);
+    });
+  });
 
   function checkStatus(status, id){
     var url = "{:URL('Requireorder/checkStatus')}";
@@ -540,15 +584,16 @@
   });
 
   /**
-   * 批量下单
+   * 批量选择供应商 弹出选择框
    */
   $("#appoint_sup_btn").click(function(){
+    $("#batch_select_sup_prids").val('');
     var checkboxs = $('input.table-id-ck:checked');
     var prIds = [];
-    var itemCode  = false;
-    var itemName  = '';
+    var itemCode = false;
+    var itemName = '';
     var returnFlag = 0;
-    checkboxs.each(function(k,v){
+    checkboxs.each(function(k, v){
       prIds.push(v.value);
       var rowData = prTable.row($(v).parents('tr')).data();
       if(!itemCode){
@@ -561,7 +606,8 @@
         //console.log('请选择相同的料号'+itemCode);
         returnFlag = 1;
         return false;
-      };
+      }
+      ;
     });
     if(returnFlag){
       return false;
@@ -569,28 +615,29 @@
     //console.log(itemCode);
     //console.log(prIds);
     $.get("{:url('Material/getSameSupByItemCode')}", {item_code:itemCode}, function(ret){
-      if(!ret || ret.code!=2000){
-          layer.alert('网络异常，刷新重试。');
-          return false;
+      if(!ret || ret.code != 2000){
+        layer.alert('网络异常，刷新重试。');
+        return false;
       }
       console.log(ret);
-      if(!ret.result || !ret.result.length ){
+      if(!ret.result || !ret.result.length){
         layer.alert('暂无供应商可以选择');
         return false;
       }
       var resDataList = ret.result;
       $("#batch_select_sup_box").show();
       var tmphtml = '';
-      $("#batch_select_sup_title").text('料号:'+itemCode+' 物料名称:'+itemName);
+      $("#batch_select_sup_title").text('料号:' + itemCode + ' 物料名称:' + itemName);
+      $("#batch_select_sup_prids").val(prIds);
       for(var i = 0; i < resDataList.length; i++){
         // console.log(resDate[i]);
         var status = '正常';
-        var resData =resDataList[i];
+        var resData = resDataList[i];
 
         tmphtml += '<tr><td>' +
-            '<input class="listcheck" name="listcheck" type="checkbox" ' +  '" value="' + resData.sup_code +'"></td>' +
+            '<input class="listcheck" name="listcheck" type="checkbox" ' + '" value="' + resData.sup_code + '"></td>' +
             '<td>' + resData.sup_code + '</td><td>' + resData.sup_name + '</td>' +
-            '<td><input type="text" class="form-control" required="required" id="point_price_' + resDataList[i]["sup_code"] + '" placeholder="价格"></td>' +
+            '<td><input type="number" class="form-control" required="required" id="point_price_' + resDataList[i]["sup_code"] + '" placeholder="价格"></td>' +
             '<td><input type="text" class="form-control date_time" required="required" id="point_date_' + resDataList[i]["sup_code"] + '" placeholder="格式为2000-10-03"></td><td>' + status + '</td></tr>';
       }
       $("#batch_select_sup_box table").html("<thead><tr><th>选择</th><th>供应商编码</th><th>供应商名称</th><th>价格</th><th>交期</th><th>状态</th></tr></thead>" + tmphtml);

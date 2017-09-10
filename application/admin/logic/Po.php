@@ -396,6 +396,9 @@ class Po extends BaseLogic{
         $res = json_decode($httpRet, true);//成功回写数据库
         trace('placeOrderAll ====');
         trace($res);
+        if(empty($res)){
+            return resultArray(6000);
+        }
         if($res['code'] != 2000){
             return resultArray($res);
         }

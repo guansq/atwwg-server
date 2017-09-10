@@ -33,8 +33,9 @@
       <div class="pb_15">
         <!--<button type="button" id="remove_btn" class="btn btn-info">删除</button>-->
         <button type="button" id="excel_out" class="btn btn-info" style="margin-right: 15px;">导出Excel</button>
-        <button type="button" id="sync_erp" class="btn btn-info" style="margin-right: 15px;">同步订单状态</button>
-        <button type="button" id="cancel_btn" class="btn btn-info" disabled>取消订单</button>
+        <button type="button" id="sync_po_status" class="btn btn-info" style="margin-right: 15px;">同步订单执行状态</button>
+        <button type="button" id="sync_po" class="btn btn-info" style="margin-right: 15px;">同步订单</button>
+        <!--<button type="button" id="cancel_btn" class="btn btn-info" disabled>取消订单</button>-->
       </div>
       <div class="order_box">
         <table id="example" class="display table table-bordered" cellspacing="0" width="100%">
@@ -265,13 +266,31 @@
   });
 
   //立即同步ERP
-  $("#sync_erp").click(function(){
+  $("#sync_po_status").click(function(){
     layer.msg('加载中', {
       icon:16,
       shade:0.01,
       time:9999000,
     });
     $.get('{:url("Order/syncErp")}', function(ret){
+      if(!ret){
+        layer.alert('网络异常请稍后再试。', {icon:6});
+      }
+      if(ret.code !== 2000){
+        layer.alert(ret.msg, {icon:6});
+      }
+      layer.closeAll();
+    });
+  });
+
+  //立即同步ERP
+  $("#sync_po").click(function(){
+    layer.msg('加载中', {
+      icon:16,
+      shade:0.01,
+      time:9999000,
+    });
+    $.get('{:url("Order/syncPO")}', function(ret){
       if(!ret){
         layer.alert('网络异常请稍后再试。', {icon:6});
       }

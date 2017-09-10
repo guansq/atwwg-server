@@ -557,6 +557,21 @@ class Order extends BaseController{
         returnJson($httpRet);
     }
 
+    /**
+     * Author: WILL<314112362@qq.com>
+     * Time: ${DAY}
+     * Describe: 同步PO执行状态
+     */
+    public function syncPO(){
+        $httpRet = HttpService::get(getenv('APP_API_HOME').'/u9api/syncPo');
+        $httpRet = json_decode($httpRet, true);
+        if(empty($httpRet)){
+            returnJson(6000);
+        }
+
+        returnJson($httpRet);
+    }
+
     /*
      * 合并生成订单
      */

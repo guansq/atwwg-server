@@ -539,7 +539,7 @@ class Enquiryorder extends BaseController{
         //更改pr表状态为待下单wait
         model('RequireOrder', 'logic')->updatePr(['id' => $io['pr_id']], ['status' => 'wait']);
         //更改io表状态为中标winbid
-        model('Io', 'logic')->updateIo(['id' => $io_id], ['status' => 'wait', 'winbid_date' => time()]);
+        model('Io', 'logic')->updateIo(['id' => $io_id], ['status' => 'wait', 'winbid_date' => time(),'refuse_cause'=>'']);
         return json(['code' => 2000, 'msg' => '成功', 'data' => []]);
     }
 

@@ -70,13 +70,13 @@
           <td>{$vo['arv_goods_num']|0}</td>
           <td>{$vo['pro_goods_num']|0}</td>
           <td>{$vo['price']|atwMoney}</td>
-          <td>{$vo['amount']|atwMoney}</td>
+          <td>{$vo['amount']}</td>
         </tr>
         {/volist}
         <tr>
           <td colspan="2">合计</td>
           <td colspan="8"></td>
-          <td colspan="5" class="text-right">{$allAmount|atwMoney}</td>
+          <td colspan="5" class="text-right">{$allAmount}</td>
         </tr>
         </tbody>
       </table>
@@ -105,7 +105,7 @@
       </section>
       {elseif $poInfo['status'] eq 'contract_pass' /}
       <p class="h2">合同已审核通过
-        <button class="layui-btn" onclick="placeOrder({$poInfo['id']})">ERP下单</button>
+        <!--<button class="layui-btn" onclick="placeOrder({$poInfo['id']})">ERP下单</button>-->
       </p>
 
       {elseif $poInfo['status'] eq 'contract_refuse' /}

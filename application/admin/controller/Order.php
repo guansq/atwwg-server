@@ -334,8 +334,18 @@ class Order extends BaseController{
         $poInfo['sup_name'] = $supLogic->getSupName($where);
         $poItemInfo = $poLogic->getPoItemInfo($id);
         $allAmount = 0;
+        $hasDoubleUom = 0;
         foreach($poItemInfo as $k => $v){
-            $allAmount += $v['amount'];
+            //双单位的物料 不计算总价。
+            if($v['price_uom'] != $v['tc_uom']){
+                $pi['price'] =0;
+                $pi['tc_num'] ='';
+                $v['amount'] ='实际重量结算';
+                $hasDoubleUom = 1;
+            }else{
+                $allAmount += $v['tc_num']*$v['price'];
+            }
+
             $v['arv_goods_num'] = empty($v['arv_goods_num']) ? 0 : $v['arv_goods_num'];
             $v['pro_goods_num'] = empty($v['pro_goods_num']) ? 0 : $v['pro_goods_num'];
             //送货剩余天数
@@ -347,7 +357,7 @@ class Order extends BaseController{
         }
         $this->assign('poInfo', $poInfo);
         $this->assign('poItemInfo', $poItemInfo);
-        $this->assign('allAmount', $allAmount);
+        $this->assign('allAmount', $hasDoubleUom? '实际重量结算':$allAmount);
         return view();
     }
 

@@ -663,7 +663,7 @@ class Order extends BaseController{
         //dump($list);die;请购单编号-物料编号-请购日期-评标日期-供应商名称-要求交期-承诺交期-采购数量-报价-小计-状态
         $PHPExcel = new PHPExcel(); //实例化PHPExcel类，类似于在桌面上新建一个Excel表格
         $PHPSheet = $PHPExcel->getActiveSheet(); //获得当前活动sheet的操作对象
-        foreach(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'] as $cl){
+        foreach(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S'] as $cl){
             //設置列寬自適應
             $PHPSheet->getColumnDimension($cl)->setAutoSize(true);
         }
@@ -679,13 +679,14 @@ class Order extends BaseController{
         $PHPSheet->setCellValueExplicit('I1', '修改交期');
         $PHPSheet->setCellValueExplicit('J1', '采购数量');
         $PHPSheet->setCellValueExplicit('K1', '单价');
-        $PHPSheet->setCellValueExplicit('L1', '小计');
-        $PHPSheet->setCellValueExplicit('M1', '到货数量');
-        $PHPSheet->setCellValueExplicit('N1', '未交数量');
-        $PHPSheet->setCellValueExplicit('O1', '退货数量');
-        $PHPSheet->setCellValueExplicit('P1', '采购员');
-        $PHPSheet->setCellValueExplicit('Q1', '项目号');
-        $PHPSheet->setCellValueExplicit('R1', '状态');
+        $PHPSheet->setCellValueExplicit('L1', '交易单位');
+        $PHPSheet->setCellValueExplicit('M1', '小计');
+        $PHPSheet->setCellValueExplicit('N1', '到货数量');
+        $PHPSheet->setCellValueExplicit('O1', '未交数量');
+        $PHPSheet->setCellValueExplicit('P1', '退货数量');
+        $PHPSheet->setCellValueExplicit('Q1', '采购员');
+        $PHPSheet->setCellValueExplicit('R1', '项目号');
+        $PHPSheet->setCellValueExplicit('S1', '状态');
         $num = 1;
         foreach($list as $k => $v){
             $num++;
@@ -700,14 +701,14 @@ class Order extends BaseController{
                 ->setCellValueExplicit('I'.$num, $v['sup_update_date_fmt'])
                 ->setCellValueExplicit('J'.$num, $v['tc_num_fmt'])
                 ->setCellValueExplicit('K'.$num, $v['price_fmt'])//$v['price_fmt']
-
-                ->setCellValueExplicit('L'.$num, $v['price_subtotal_fmt'])
-                ->setCellValueExplicit('M'.$num, $v['arv_goods_num_fmt'])
-                ->setCellValueExplicit('N'.$num, $v['pro_goods_num_fmt'])
-                ->setCellValueExplicit('O'.$num, $v['return_goods_num'])
-                ->setCellValueExplicit('P'.$num, $v['purch_name'])
-                ->setCellValueExplicit('Q'.$num, $v['pro_no'])
-                ->setCellValueExplicit('R'.$num, empty($v['u9_status'])?'执行中':$v['u9_status']);
+                ->setCellValueExplicit('L'.$num, $v['tc_uom'])
+                ->setCellValueExplicit('M'.$num, $v['price_subtotal_fmt'])
+                ->setCellValueExplicit('N'.$num, $v['arv_goods_num_fmt'])
+                ->setCellValueExplicit('O'.$num, $v['pro_goods_num_fmt'])
+                ->setCellValueExplicit('P'.$num, $v['return_goods_num'])
+                ->setCellValueExplicit('Q'.$num, $v['purch_name'])
+                ->setCellValueExplicit('R'.$num, $v['pro_no'])
+                ->setCellValueExplicit('S'.$num, empty($v['u9_status'])?'执行中':$v['u9_status']);
             //  echo $v['price_fmt'].'<br/>';
         }
 

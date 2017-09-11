@@ -384,9 +384,10 @@ class Po extends BaseLogic{
                 'ValuationQty' => $v['tc_num'],//
                 'ValuationUnit' => $v['price_uom_code'],//
                 'srcDocPRLineNo' => $v['pr_ln'],
-                'ProCode' => $prLogic->where('id', $v['pr_id'])->value('pro_no'),
+                'ProCode' => $v['pro_no'],
                 'srcDocPRNo' => $v['pr_code'],
-                'IsSpilt' => $v['is_spilt']
+                'IsSpilt' => $v['is_spilt'],
+                'IsPersent' => $v['is_persent']
 
             ];
         }

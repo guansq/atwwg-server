@@ -147,7 +147,7 @@ class Requireorder extends BaseController{
                         }else{//非指定状态下无供应商名称---->选择供应商 && 无审核状态
                             $v['check_status'] = '';
                             $inquiry = '<a class="select_sell" href="javascript:void(0);" 
-                            onclick="bomb_box(event,\''.$v['pr_code'].'\',\''.$v['item_code'].'\',\''.$v['id'].'\');" data-url="'.url('requireorder/selectSup', array(
+                            onclick="bomb_box(event,\''.$v['pr_code'].'\',\''.$v['item_code'].'\',\''.$v['id'].'\',\''.$v['item_name'].'\');" data-url="'.url('requireorder/selectSup', array(
                                     'pr_code' => $v['pr_code'],
                                     'item_code' => $v['item_code']
                                 )).'">选择供应商</a>';
@@ -445,6 +445,8 @@ class Requireorder extends BaseController{
             'tc_uom_code' => $prInfo['tc_uom_code'],          //交易单位编码
             'price_uom_code' => $prInfo['price_uom_code'],     //计价单位编码
             'tax_rate' => $prInfo['tax_rate'],
+            'is_spilt' => $prInfo['is_spilt'],
+            'is_persent' => $data['is_persent'],
             'status' => 'init',
             'pro_goods_num' => $prInfo['tc_num'],
             'create_at' => $now,

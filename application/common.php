@@ -113,19 +113,18 @@ function getSysconf($name, $defaultValue = ''){
 }
 
 /**
- * 设置设备或配置系统参数 基于数据库
+ * 设置设备或配置系统参数
  * @param string $name 参数名称
  */
 function setSysconf($name, $value = '', $group = 'app', $remark = ''){
     $data = ['name' => $name, 'value' => $value, 'group' => $group, 'remark' => $remark];
-    $oldData = getSysconf($name);
     $logic = model('SystemConfig', 'logic');
+    $oldData = $logic->where('name', $name)->find();
     if(empty($oldData)){
         return $logic->create($data);
     }else{
         return $logic->update($data, ['name' => $name]);
     }
-
 }
 
 

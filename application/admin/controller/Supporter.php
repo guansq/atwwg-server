@@ -86,8 +86,9 @@ class Supporter extends BaseController{
 
         //高信用风险的
         if(!empty($tag) && $tag == 'credit_risk'){
-            $where['credit_total'] = ['BETWEEN', [1,85]];
-
+            $where['credit_total'] = ['<=', 85];
+            $where['arv_rate'] = ['>', 0];
+            $where['pass_rate'] = ['>', 0];
         }
 
         //高供应风险的

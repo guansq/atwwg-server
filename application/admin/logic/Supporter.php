@@ -243,8 +243,8 @@ class Supporter extends BaseLogic{
      * 統計高信用風險供应商数量
      */
     public function countCreditRisk(){
-        return $this->where('credit_total','<=',85)->where('credit_total','<>',0)->count();
-        //echo $this->getLastSql();//return
+        $count = $this->where('credit_total','<=',85)->where('pass_rate','>',0)->where('arv_rate','>',0)->count();
+        return empty($count)?0:$count;
     }
 
     /*

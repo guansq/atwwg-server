@@ -145,6 +145,7 @@
     });
     //console.log(chekVal);
   }
+
   //单发消息
   function sendOneMsg($ioId){
     $.msg.loading();
@@ -163,6 +164,7 @@
       }
     });
   }
+
   //通过并生成IO
   function passAndCreateIo($ioId){
     $.msg.loading();
@@ -181,22 +183,35 @@
       }
     });
   }
+
   //拒绝并清空PR状态 清空IO字段
   function refuseAndClear($ioId){
-    $.msg.loading();
-    if($ioId == ''){
-      layer.alert('抱歉，请重试');
-      return;
-    }
-    url = "{:url('Enquiryorder/refuseAndClear')}";
-    data = {
-      'io_id':$ioId
-    }
-    $.post(url, data, function(res){
-      $.msg.close();
-      if(res.code == 2000){
-        $.form.reload();
+
+    //例子1
+    layer.prompt({
+      formType:2,
+      title:'拒绝原因',
+      value:'',
+      area:['500px', '200px'] //自定义文本域宽高
+    }, function(refuseCause, index, elem){
+
+      $.msg.loading();
+      if($ioId == ''){
+        layer.alert('抱歉，请重试');
+        return;
       }
+      url = "{:url('Enquiryorder/refuseAndClear')}";
+      data = {
+        'io_id':$ioId,
+        'refuse_cause':refuseCause
+      };
+      $.post(url, data, function(res){
+        $.msg.close();
+        if(res.code == 2000){
+          $.form.reload();
+        }
+      });
+      layer.close(index);
     });
   }
 </script>

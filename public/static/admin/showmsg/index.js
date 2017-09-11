@@ -143,23 +143,35 @@ function checkIoPass(){
  * 审核 报价单
  */
 function checkIoRefuse(){
-
   var ioId = this.value;
-  $.msg.loading();
-  if(!ioId){
-    layer.alert('刷新后重试。');
-    return false;
-  }
-  var url = "/Enquiryorder/refuseAndClear";
-  var reqData = {
-    'io_id':ioId
-  };
-  $.post(url, reqData, function(res){
-    $.msg.close();
-    if(res.code != 2000){
-      layer.alert(res.msg);
+  //例子1
+  layer.prompt({
+    formType:2,
+    title:'拒绝原因',
+    value:'',
+    area:['500px', '200px'] //自定义文本域宽高
+  }, function(refuseCause, index, elem){
+
+
+    $.msg.loading();
+    if(!ioId){
+      layer.alert('刷新后重试。');
+      return false;
     }
-    orderTables.ajax.reload();
+    var url = "/Enquiryorder/refuseAndClear";
+    var reqData = {
+      'io_id':ioId,
+      'refuse_cause':refuseCause
+    };
+    $.post(url, reqData, function(res){
+      $.msg.close();
+      if(res.code != 2000){
+        layer.alert(res.msg);
+      }
+      orderTables.ajax.reload();
+    });
+
+    layer.close(index);
   });
 
 }

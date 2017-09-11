@@ -545,12 +545,14 @@ class Enquiryorder extends BaseController{
 
     public function refuseAndClear(){
         $io_id = input('param.io_id');
+        $refuse_cause = input('param.refuse_cause');
         $clearInfo = [
             'promise_date' => '',
             'quote_price' => '',
             'quote_date' => null,
             'remark' => '',
             'winbid_date' => '',
+            'refuse_cause' => $refuse_cause,
             'status' => 'init'
         ];
         $io = model('Io', 'logic')->where('id', $io_id)->find();

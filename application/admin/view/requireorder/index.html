@@ -388,7 +388,7 @@
         $("#select_sup_box").css("display", "block");
         var tmphtml = '';
         for(var i = 0; i < resDate.length; i++){
-         // console.log(resDate[i]);
+          // console.log(resDate[i]);
           var status = 0;
           var diabled = '';
           status = '正常';
@@ -446,13 +446,13 @@
       'appoint_sup_name':appoint_sup_name,
       'item_code':item_code,
       'item_id':item_id,
-      'point_price':price ,
+      'point_price':price,
       'point_date':date,
       'pr_code':pr_code,
       'is_persent':is_persent
     };
 
-    if(!price  && !is_persent){
+    if((!price || price <= 0) && !is_persent){
       alert('填写的价格不能为空！');
       return;
     }
@@ -495,7 +495,7 @@
     var price = $('#point_price_' + supCode).val();
     var date = $('#point_date_' + supCode).val();
 
-    if(!is_persent && !price){
+    if(!is_persent && (!price || price <= 0) ){
       alert('填写的价格不能为空！');
       return false;
     }

@@ -101,7 +101,7 @@
 <div id="select_sup_box" class="barcode_box" style="">
   <div class="bomb_table">
     <p><i class="close_box"></i></p>
-    <h5><span id="select_sup_title"></span> &nbsp;&nbsp; <label for="is_persent_ck"> <input type="checkbox" id="is_persent_ck"> 是否赠品</label></h5>
+    <h5><span id="select_sup_title"></span> &nbsp;&nbsp; <label for="is_persent_ck"> <input type="checkbox" id="is_persent_ck"> 赠品</label></h5>
     <table class="table table-bordered">
       <thead>
       <tr>
@@ -131,7 +131,7 @@
 <div id="batch_select_sup_box" class="barcode_box" style="">
   <div class="bomb_table">
     <p><i class="close_box"></i></p>
-    <h5><span id="batch_select_sup_title"></span> &nbsp;&nbsp; <label for="is_persent_ck_batch"> <input type="checkbox" id="is_persent_ck_batch"> 是否赠品</label></h5>
+    <h5><span id="batch_select_sup_title"></span> &nbsp;&nbsp; <label for="is_persent_ck_batch"> <input type="checkbox" id="is_persent_ck_batch"> 赠品</label></h5>
     <input type="hidden" id="batch_select_sup_prids">
     <table class="table table-bordered">
       <thead>
@@ -388,7 +388,7 @@
         $("#select_sup_box").css("display", "block");
         var tmphtml = '';
         for(var i = 0; i < resDate.length; i++){
-          console.log(resDate[i]);
+         // console.log(resDate[i]);
           var status = 0;
           var diabled = '';
           status = '正常';
@@ -399,7 +399,7 @@
           //            diabled = 'disabled="true"';
           //          }
           tmphtml += '<tr><td>' +
-              '<input class="listcheck" name="listcheck" type="checkbox" ' + diabled + ' data-pr_id="' + item_id + ' data-item_name="' + itemName + '" value="' + resDate[i]["item_code"] + '" data-pr_code="' + resDate[i]["pr_code"] + '"data-sup_code="' + resDate[i]["sup_code"] + '"></td>' +
+              '<input class="listcheck" name="listcheck" type="checkbox" ' + diabled + ' data-pr_id="' + item_id + '"data-item_name="' + itemName + '" value="' + resDate[i]["item_code"] + '" data-pr_code="' + resDate[i]["pr_code"] + '"data-sup_code="' + resDate[i]["sup_code"] + '"></td>' +
               '<td>' + resDate[i]["sup_code"] + '</td><td>' + resDate[i]["sup_name"] + '</td>' +
               '<td><input type="text" class="form-control" required="required" id="point_price_' + resDate[i]["sup_code"] + '" placeholder="价格"></td>' +
               '<td><input type="text" class="form-control date_time" required="required" id="point_date_' + resDate[i]["sup_code"] + '" placeholder="格式为2000-10-03"></td><td>' + status + '</td></tr>';
@@ -421,8 +421,6 @@
   });
   var flag = 0;
   $(".submitbt").click(function(){
-    $('#is_persent_ck_batch').iCheck('uncheck');
-    $('#is_persent_ck').iCheck('uncheck');
     var is_persent = $('#select_sup_box #is_persent_ck')[0].checked ? 1 : 0;
     $('input[name="listcheck"]:checked').each(function(){
       flag = 1;

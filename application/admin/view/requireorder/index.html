@@ -437,23 +437,26 @@
       alert('选中一个才能提交');
       return;
     }
+
+    var price = $('#point_price_' + appoint_sup_code).val();
+    var date = $('#point_date_' + appoint_sup_code).val();
     var sendObj = {
       'is_appoint_sup':1,
       'appoint_sup_code':appoint_sup_code,
       'appoint_sup_name':appoint_sup_name,
       'item_code':item_code,
       'item_id':item_id,
-      'point_price':$('#point_price_' + appoint_sup_code).val(),
-      'point_date':$('#point_date_' + appoint_sup_code).val(),
+      'point_price':price ,
+      'point_date':date,
       'pr_code':pr_code,
       'is_persent':is_persent
     };
 
-    if($.trim($('#point_price_' + appoint_sup_code).val()) == '' && !is_persent){
+    if(!price  && !is_persent){
       alert('填写的价格不能为空！');
       return;
     }
-    if($.trim($('#point_date_' + appoint_sup_code).val()) == ''){
+    if(!date){
       alert('填写的日期不能为空！');
       return;
     }

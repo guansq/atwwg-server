@@ -429,7 +429,7 @@ EOD;
             }else{
                 $po['price_total'] += $pi['tc_num']*$pi['price'];
             }
-            $l_height = mb_strlen($pi['item_name'],'utf8')>30?"14":"20";
+            $l_height = mb_strlen($pi['item_name'],'utf8')>35?"14":"20";
             $ln = $i + 1;
             $html .= "<tr class=\"text-small\" style=\"line-height: {$l_height}px;\">
                 <td width=\"26\" class=\"content-center pi-tab-td\" style=\"border-left: 2px solid black; padding: 10px;\">$ln</td>
@@ -464,7 +464,7 @@ EOD;
         $html .= <<<EOD
             </tbody>
             <tfoot>
-            <tr style="line-height: 20px">
+            <tr style="line-height: 20px;font-size: 0.9em;">
                 <td class="content-center"colspan="2" style="border-left: 2px solid black;border-bottom: 2px solid black">合计:</td>
                 <td class="content-left" colspan="5" style="border-bottom: 2px solid black">$yuan &nbsp;</td>
                 <td class="content-center" colspan="2" style="border-right: 2px solid black;border-bottom: 2px solid black">$po[price_total] </td>

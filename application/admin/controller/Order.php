@@ -354,6 +354,8 @@ class Order extends BaseController{
                 'finish',
                 'sup_cancel'
             ]) ? 999 : intval(($v['sup_confirm_date'] - $today)/(60*60*24));
+            $v['statusStr'] = empty($v['u9_status'])?'执行中':$v['u9_status'];
+
         }
         $this->assign('poInfo', $poInfo);
         $this->assign('poItemInfo', $poItemInfo);

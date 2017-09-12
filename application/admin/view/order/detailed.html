@@ -43,6 +43,7 @@
           <th>未到数量</th>
           <th>单价</th>
           <th>金额</th>
+          <th>状态</th>
         </tr>
         </thead>
         <tbody>
@@ -71,12 +72,14 @@
           <td>{$vo['pro_goods_num']|0}</td>
           <td>{$vo['price']|atwMoney}</td>
           <td>{$vo['amount']}</td>
+          <td>{$vo['statusStr']}</td>
         </tr>
         {/volist}
         <tr>
           <td colspan="2">合计</td>
           <td colspan="8"></td>
           <td colspan="5" class="text-right">{$allAmount}</td>
+          <td colspan="1" class="text-right"></td>
         </tr>
         </tbody>
       </table>

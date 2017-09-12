@@ -134,7 +134,7 @@ class Po extends BaseLogic{
     public function getPoItemList($where){
         if(empty($where)){
             $list = PiModel::where('status', 'init')->order('update_at DESC')//->field('*, "" AS pro_no ')
-                ->select();
+            ->select();
         }else{
             $list = PiModel::where($where)
                 ->where('status', 'init')
@@ -274,15 +274,13 @@ class Po extends BaseLogic{
      */
     function placePoOrder($idArr, $supCode){
         trace("u9下采购单 ====== placePoOrder");
-        trace("idArr ======".json_encode($idArr));
         $now = time();
         $supLogic = model('Supporter', 'logic');
         $prLogic = model('RequireOrder', 'logic');
         foreach(self::U9_BIZ_TYPES as $bizType => $docTypeCode){
             //进行生成订单
             $itemInfo = $this->getPiByIdsAndBizType($idArr, $bizType);//单个子订单信息
-
-            trace(json_encode($itemInfo));
+            //trace(json_encode($itemInfo));
             if(empty($itemInfo)){
                 continue;
             }
@@ -344,13 +342,13 @@ class Po extends BaseLogic{
         saveMsg($sup_id, self::TITLE, self::CONTENT);//发送消息
         $sendInfo = $supLogic->getSupSendInfo(['code' => $supCode]);
         //通过sup_code得到发送信息
-        if($sendInfo['phone'] ||  getenv('APP_DEBUG') ){ //发送消息
+        if($sendInfo['phone'] || getenv('APP_DEBUG')){ //发送消息
             sendSMS($sendInfo['phone'], self::CONTENT);
         }
-        if($sendInfo['email'] ||  getenv('APP_DEBUG') ){ //发送邮件
+        if($sendInfo['email'] || getenv('APP_DEBUG')){ //发送邮件
             sendMail($sendInfo['email'], self::TITLE, self::CONTENT);
         }
-        if($sendInfo['push_token'] ||  getenv('APP_DEBUG')){ //发送token
+        if($sendInfo['push_token'] || getenv('APP_DEBUG')){ //发送token
             pushInfo($sendInfo['push_token'], self::TITLE, self::CONTENT);
         }
         return resultArray(2000, '下订单成功', $data);
@@ -392,11 +390,12 @@ class Po extends BaseLogic{
             ];
         }
         $sendData['lines'] = $lines;
-        //exit(json_encode($sendData));
-        $httpRet = HttpService::curl(getenv('APP_API_U9').'index/po', $sendData);
+        trace('placeOrderAll ======== 参数：');
+        trace($sendData);
+        $httpRet = HttpService::post(getenv('APP_API_U9').'index/po', $sendData);
         $res = json_decode($httpRet, true);//成功回写数据库
-        trace('placeOrderAll ====');
-        trace($res);
+        trace('placeOrderAll ======== 结果：');
+        trace($httpRet);
         if(empty($res)){
             return resultArray(6000);
         }

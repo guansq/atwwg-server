@@ -321,6 +321,7 @@ class Requireorder extends BaseController{
             $sendInfo['tc_uom'] = $prInfo['tc_uom'];
             $sendInfo['tc_num'] = $prInfo['tc_num'];
             $sendInfo['price_uom'] = $prInfo['price_uom'];
+            $sendInfo['price_uom_code'] = $prInfo['price_uom_code'];
             $sendInfo['pr_ln'] = $prInfo['pr_ln'];
             $sendInfo['pr_code'] = $prInfo['pr_code'];
             $sendInfo['sup_code'] = $data['appoint_sup_code'];

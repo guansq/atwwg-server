@@ -100,6 +100,7 @@ class HttpService {
     static public function post($url, $data = [], $second = 30, $header = []) {
         self::_setUploadFile($data);
         $curl = curl_init();
+        $data = http_build_query($data);
         curl_setopt($curl, CURLOPT_TIMEOUT, $second);
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_HEADER, FALSE);

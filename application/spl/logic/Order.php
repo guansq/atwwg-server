@@ -37,7 +37,7 @@ class Order extends BaseLogic{
             $hasExceed = false;
             $piList = $this->getPoItemInfo($po['id']);
             foreach($piList as $pi){
-                $hasExceed = $hasExceed || (($pi['sup_confirm_date'] < $now) && ($pi['pro_goods_num'] > 0) && $pi['status']== 'init');
+                $hasExceed = $hasExceed || (($pi['sup_confirm_date'] < $now) && ($pi['pro_goods_num'] > 0) && $pi['status'] == 'init');
             }
             if($hasExceed){
                 $retList[] = $po;
@@ -122,12 +122,10 @@ class Order extends BaseLogic{
     function getOrderDetailInfo($po_id, $item_code = ''){
         if(!empty($po_id)){
             if(empty($item_code)){
-                $list = PoItem::where(['po_id' => $po_id])
-                    //->field('*, "" AS pro_no ')
-                ->select();
+                $list = PoItem::where(['po_id' => $po_id])//->field('*, "" AS pro_no ')
+                    ->select();
             }else{
-                $list = PoItem::where(['po_id' => $po_id, 'item_code' => $item_code])
-                    //->field('*, "" AS pro_no ')
+                $list = PoItem::where(['po_id' => $po_id, 'item_code' => $item_code])//->field('*, "" AS pro_no ')
                     ->select();
             }
             return $list;
@@ -170,7 +168,7 @@ class Order extends BaseLogic{
      * 得到过期的PO数量
      */
     function getExceedPoNum($sup_code){
-        $cnt =$this->alias('po')
+        $cnt = $this->alias('po')
             ->join('atw_po_item pi', 'pi.po_id = po.id')
             ->where('pi.status', 'init')
             ->where('pro_goods_num', '>', 0)
@@ -416,20 +414,21 @@ tr>th{
             <tbody  >
 EOD;
         $po['price_total'] = 0;
+        $hasDoubleUom = false;
         foreach($piList as $i => $pi){
             $confirmDate = date('Y-m-d', $pi['req_date']);//管少秋2017-8-23更改sup_confirm_date->req_date
             $price = number_format($pi['price'], 2);
             $subTotal = number_format($pi['tc_num']*$pi['price'], 2);
 
             //双单位的物料 不计算总价。
+
             if($pi['price_uom'] != $pi['tc_uom']){
-                $pi['price'] =0;
-                $pi['tc_num'] ='';
-                $subTotal='实际重量结算';
+                $hasDoubleUom = $hasDoubleUom || 1;
+                $subTotal = '实际重量结算';
             }else{
                 $po['price_total'] += $pi['tc_num']*$pi['price'];
             }
-            $l_height = mb_strlen($pi['item_name'],'utf8')>35?"14":"20";
+            $l_height = mb_strlen($pi['item_name'], 'utf8') > 35 ? "14" : "20";
             $ln = $i + 1;
             $html .= "<tr class=\"text-small\" style=\"line-height: {$l_height}px;\">
                 <td width=\"26\" class=\"content-center pi-tab-td\" style=\"border-left: 2px solid black; padding: 10px;\">$ln</td>
@@ -459,14 +458,14 @@ EOD;
             // }
         }
         //dd($html);
-        $yuan = numbToCnYuan($po['price_total']);
-        $po['price_total'] = number_format($po['price_total'], 2);
+        $yuan = $hasDoubleUom ? '实际重量结算' : numbToCnYuan($po['price_total']);
+        $po['price_total'] = $hasDoubleUom ? '实际重量结算' : number_format($po['price_total'], 2);
         $html .= <<<EOD
             </tbody>
             <tfoot>
             <tr style="line-height: 20px;font-size: 0.9em;">
                 <td class="content-center"colspan="2" style="border-left: 2px solid black;border-bottom: 2px solid black">合计:</td>
-                <td class="content-left" colspan="5" style="border-bottom: 2px solid black">$yuan &nbsp;</td>
+                <td class="content-left" colspan="5" style="border-bottom: 2px solid black"> $yuan &nbsp;</td>
                 <td class="content-center" colspan="2" style="border-right: 2px solid black;border-bottom: 2px solid black">$po[price_total] </td>
             </tr>
             </tfoot>

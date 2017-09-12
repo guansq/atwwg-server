@@ -18,15 +18,7 @@ class PoItem extends BaseLogic{
      * 得到订单下的item列表
      */
     public static function getListByPoId($po_id){
-        $field = [
-            'pi.*',
-            'pr.pro_no',
-        ];
-        $list = self::alias('pi')
-            ->join('u9_pr pr', 'pr.id = pi.pr_id','LEFT')
-            ->where('pi.po_id', $po_id)
-            ->field($field)
-            ->select();
+        $list = self::where('po_id', $po_id)->select();
         //dd(self::getLastSql());
         return $list;
     }

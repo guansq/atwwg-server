@@ -339,7 +339,6 @@ class Order extends BaseController{
             //双单位的物料 不计算总价。
             if($v['price_uom'] != $v['tc_uom']){
                 $pi['price'] =0;
-                $pi['tc_num'] ='';
                 $v['amount'] ='实际重量结算';
                 $hasDoubleUom = 1;
             }else{

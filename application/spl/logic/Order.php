@@ -235,7 +235,7 @@ class Order extends BaseLogic{
         //$pdf->setHeaderFont([$fontFamly, '', 5]);
         //$pdf->setFooterFont([$fontFamly, '', 6]);
         $pdf->setPrintHeader(false);
-        $pdf->SetMargins(10, 10, 10);
+        $pdf->SetMargins(5, 10, 5);
         // set auto page breaks
         $pdf->SetAutoPageBreak(TRUE, 0);
 

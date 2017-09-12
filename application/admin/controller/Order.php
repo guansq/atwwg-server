@@ -334,13 +334,12 @@ class Order extends BaseController{
         $poInfo['sup_name'] = $supLogic->getSupName($where);
         $poItemInfo = $poLogic->getPoItemInfo($id);
         $allAmount = 0;
-        $hasDoubleUom = 0;
-        foreach($poItemInfo as $k => $v){
+        $hasDoubleUom = false;
+        foreach($poItemInfo as $k => &$v){
             //双单位的物料 不计算总价。
             if($v['price_uom'] != $v['tc_uom']){
-                $pi['price'] =0;
+                $hasDoubleUom = $hasDoubleUom || true;
                 $v['amount'] ='实际重量结算';
-                $hasDoubleUom = 1;
             }else{
                 $allAmount += $v['tc_num']*$v['price'];
             }

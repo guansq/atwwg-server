@@ -129,7 +129,6 @@ class Order extends BaseController{
         }
         //dump($where);die;
         $list = $poLogic->getPolist($where);
-        //dump($list);
         $retList = [];
 
         //dump(collection($list)->toArray());die;
@@ -163,6 +162,8 @@ class Order extends BaseController{
                 'create_at' => atwDate($v['create_at']),
                 'sup_code' => $v['sup_code'],
                 'sup_name' => $v['sup_name'],//$poLogic->getSupName($v['sup_code']),
+                'is_biz_closed_str' => $v['is_biz_closed']?'是':'否',
+                'is_biz_closed' => $v['is_biz_closed'],
                 'status' => $statusStr
             ];
         }

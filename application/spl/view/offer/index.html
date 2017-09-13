@@ -113,7 +113,7 @@
         "searching":false,  //是否允许Datatables开启本地搜索
         "processing":true,
         "aaSorting":[[1, "asc"]], //默认的排序方式，第2列，升序排列
-        "aoColumnDefs":[{"bSortable":false, "aTargets":[0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,15]}],
+        "aoColumnDefs":[{"bSortable":false, "aTargets":[0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]}],
         //"serverSide": true,
         "ajax":{
           "url":'{:url("Offer/getOrderList")}',
@@ -176,9 +176,10 @@
           tmpstr = '￥<input  type="number" id="price_' + data.id + '" class="price sigprice" style="width:80%;float:right; -webkit-appearance：none;   text-align: right;" data-id="' + data.id + '" name="quote_price" lay-verify="required|float" value="' + data.quote_price.replace(',', '') + '"' + data.showinfo + ' placeholder="请输入单价" data-value="' + data.item_code + '" >';
           $('td', row).eq(11).html(tmpstr);
           //$('td', row).eq(9).attr('id','price_'+data.id);
+          //console.log(tmpstr);
           $('td', row).eq(12).attr('id', 'total_price_' + data.id);
           $('td', row).eq(12).attr('data-content', data.item_code);
-          $('td', row).eq(12).html('￥' + $('td', row).eq(12).html())
+          $('td', row).eq(12).html('￥' + $('td', row).eq(12).html());
           $('td', row).eq(12).addClass('active');
           tmpstr = '<input type="text" value="' + data.remark + '" name="remark" ' + data.showinfo + '>';
           $('td', row).eq(13).html(tmpstr);
@@ -202,15 +203,22 @@
         "drawCallback":function(settings){
           $('.price').bind("input propertychange", function(){
             var id = $(this).attr('data-id');
-            var num = $('#num_' + id).html();
             var price = $(this).val();
-            var total_price = num * price;
-            total_price = parseFloat(total_price).toFixed(2);
-            $('#total_price_' + id).html('¥' + total_price);
+            //price = parseFloat(price).toFixed(2);
             var code = $(this).attr('data-value');
-            ($("tr").find($('input[data-value="' + code + '"]'))).val(price);
-            ($("tr").find($('td[data-content="' + code + '"]'))).html('¥' + total_price);
-            //console.log($(this).val());//打印输入框字符长度
+            $("tr").find($('input[data-value="' + code + '"]')).val(price);
+            var changeRows = $('td[data-content="' + code + '"]').parents('tr');
+            if(!changeRows){
+              return false;
+            }
+            changeRows.each(function(k, v){
+              var rowData = orderTables.row(v).data();
+              var subTotal = (price * rowData.tc_num).toFixed(2);
+              console.log(subTotal);
+              $("#total_price_" + rowData.id).html('¥' + subTotal);
+            });
+
+            // console.log($(this).val());//打印输入框字符长度
           });
           initEvent();
           $(".laydate-icon").focus(function(){

@@ -287,6 +287,7 @@ class Order extends BaseController{
         $where = ['code' => $poInfo['sup_code']];
         $poInfo['sup_name'] = $supLogic->getSupName($where);
         $poInfo['statusStr'] = empty($poInfo['u9_status']) ? self::STATUS_ARR[$poInfo['status']] : $poInfo['u9_status'];
+        $poInfo['isBizClosedStr'] = empty($poInfo['is_biz_closed'])?'否':'是';
         $poItemInfo = $poLogic->getPoItemInfo($id);
         $allAmount = 0;
         $hasDoubleUom = false;

@@ -23,6 +23,21 @@ class Order extends BaseController{
     const MSGPASSCONTENT   = '合同审核通过';
     const MSGREFUSECONTENT = '合同审核拒绝';
 
+    const STATUS_ARR = [
+        '' => '',
+        'init' => '待确认',
+        'atw_cancel' => '已取消',
+        'sup_cancel' => '已取消',
+        'sup_edit' => '已修改',
+        'atw_sure' => '已确定',
+        'sup_sure' => '待上传',
+        'upload_contract' => '待审核',
+        'contract_pass' => '审核通过',
+        'contract_refuse' => '审核拒绝',
+        'executing' => '执行中',
+        'finish' => '结束',
+    ];
+
     /*
      * 待下订单列表
      */
@@ -103,7 +118,7 @@ class Order extends BaseController{
         //逾期状态
         $isCheckExceed = false;
         if(empty($get['status'])){
-            $where['po.status'] = ['NOT IN', [ 'sup_cancel', 'atw_cancel']];
+            $where['po.status'] = ['NOT IN', ['sup_cancel', 'atw_cancel']];
         }
         if(!empty($get['status']) && $get['status'] == 'exceed'){
             $where['po.status'] = ['NOT IN', ['finish', 'sup_cancel', 'atw_cancel']];
@@ -116,19 +131,7 @@ class Order extends BaseController{
         $list = $poLogic->getPolist($where);
         //dump($list);
         $retList = [];
-        $status = [
-            '' => '',
-            'init' => '初始',
-            'sup_cancel' => '供应商取消',
-            'sup_edit' => '供应商修改',
-            'atw_sure' => '安特威确定',
-            'sup_sure' => '供应商确定/待上传合同',
-            'upload_contract' => '供应商已经上传合同',
-            'contract_pass' => '合同审核通过',
-            'contract_refuse' => '合同审核拒绝',
-            'executing' => '执行中',
-            'finish' => '结束',
-        ];
+
         //dump(collection($list)->toArray());die;
         foreach($list as $k => $v){
 
@@ -150,57 +153,7 @@ class Order extends BaseController{
             if((!$hasExceed) && $isCheckExceed){
                 continue;
             }
-            $statusStr = '';
-            switch($v['status']){
-                case 'init'://初始
-                    $action = [];
-                    $statusStr = '待确认';
-                    break;
-                case 'sup_cancel'://供应商取消
-                    $action = [];
-                    $statusStr = '已取消';
-                    break;
-                case 'atw_cancel':// 安特威取消
-                    $action = [];
-                    $statusStr = '已取消';
-                    break;
-                case 'sup_edit'://供应商修改
-                    $statusStr = '<a href="javascript:;" onclick="verifyOrder('.$v['id'].',\'atw_sure\',this);">供应商修改交期，请确认</a>';
-                    break;
-                case 'atw_sure'://安特威确定 以及init
-                    $statusStr = '待确认';
-                    break;
-                case 'sup_sure'://供应商确定/待上传合同
-                    $statusStr = '待上传';
-                    break;
-                case 'upload_contract'://供应商已经上传合同
-                    $statusStr = '待审核';
-                    /*$returnInfo[$k]['status'] = '<a href="javascript:;" onclick="verifyOrder('.$v['id'].',\'contract_pass\',this);">合同审核通过</a>
-                    <a href="javascript:;" onclick="verifyOrder('.$v['id'].',\'contract_refuse\',this);">拒绝该合同</a>';*/
-                    break;
-                case 'contract_pass'://合同审核通过
-                    $statusStr = '审核通过';
-                    break;
-                case 'contract_refuse'://合同审核拒绝
-                    $statusStr = '审核拒绝';
-                    break;
-                case 'executing'://合同审核拒绝
-                    $statusStr = '执行中';
-                    break;
-                case 'finish'://合同审核拒绝 '' => '结束',
-                    $statusStr = '关闭';
-                    if($v['u9_status'] == 3){
-                        $statusStr = '自然关闭';
-                    }
-                    if($v['u9_status'] == 4){
-                        $statusStr = '短缺关闭';
-                    }
-                    if($v['u9_status'] == 5){
-                        $statusStr = '超频关闭';
-                    }
-                    break;
-            }
-
+            $statusStr = empty($v['u9_status']) ? self::STATUS_ARR[$v['status']] : $v['u9_status'];
             $retList[] = [
                 'detail' => '<a class="detail" data-open="'.url('order/detailed').'?id='.$v['id'].'">详情</a>',
                 'exec_desc' => $exec_desc,
@@ -210,7 +163,7 @@ class Order extends BaseController{
                 'create_at' => atwDate($v['create_at']),
                 'sup_code' => $v['sup_code'],
                 'sup_name' => $v['sup_name'],//$poLogic->getSupName($v['sup_code']),
-                'status' => empty($v['u9_status']) ? $statusStr : $v['u9_status']
+                'status' => $statusStr
             ];
         }
         return $retList;
@@ -332,6 +285,7 @@ class Order extends BaseController{
         $supLogic = model('Supporter', 'logic');
         $where = ['code' => $poInfo['sup_code']];
         $poInfo['sup_name'] = $supLogic->getSupName($where);
+        $poInfo['statusStr'] = empty($poInfo['u9_status']) ? self::STATUS_ARR[$poInfo['status']] : $poInfo['u9_status'];
         $poItemInfo = $poLogic->getPoItemInfo($id);
         $allAmount = 0;
         $hasDoubleUom = false;
@@ -339,7 +293,7 @@ class Order extends BaseController{
             //双单位的物料 不计算总价。
             if($v['price_uom'] != $v['tc_uom']){
                 $hasDoubleUom = $hasDoubleUom || true;
-                $v['amount'] ='实际重量结算';
+                $v['amount'] = '实际重量结算';
             }else{
                 $allAmount += $v['tc_num']*$v['price'];
             }
@@ -352,12 +306,12 @@ class Order extends BaseController{
                 'finish',
                 'sup_cancel'
             ]) ? 999 : intval(($v['sup_confirm_date'] - $today)/(60*60*24));
-            $v['statusStr'] = empty($v['u9_status'])?'执行中':$v['u9_status'];
+            $v['statusStr'] = empty($v['u9_status']) ? '执行中' : $v['u9_status'];
 
         }
         $this->assign('poInfo', $poInfo);
         $this->assign('poItemInfo', $poItemInfo);
-        $this->assign('allAmount', $hasDoubleUom? '实际重量结算':$allAmount);
+        $this->assign('allAmount', $hasDoubleUom ? '实际重量结算' : $allAmount);
         return view();
     }
 
@@ -718,7 +672,7 @@ class Order extends BaseController{
                 ->setCellValueExplicit('P'.$num, $v['return_goods_num'])
                 ->setCellValueExplicit('Q'.$num, $v['purch_name'])
                 ->setCellValueExplicit('R'.$num, $v['pro_no'])
-                ->setCellValueExplicit('S'.$num, empty($v['u9_status'])?'执行中':$v['u9_status']);
+                ->setCellValueExplicit('S'.$num, empty($v['u9_status']) ? '执行中' : $v['u9_status']);
             //  echo $v['price_fmt'].'<br/>';
         }
 

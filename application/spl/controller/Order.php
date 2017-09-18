@@ -213,7 +213,7 @@ class Order extends Base{
 
         $statusStr = $statusArr[$codeInfo[0]['status']];
         if($codeInfo[0]['u9_status']){
-            $statusStr = $u9statusArr[$codeInfo[0]['u9_status']];
+            $statusStr = empty($codeInfo[0]['u9_status'])? $statusStr : $codeInfo[0]['u9_status'];
         }
         $codeInfo[0]['statusStr'] = $statusStr;
         $this->assign('codeInfo', $codeInfo[0]);

@@ -152,7 +152,10 @@ class Order extends BaseController{
             if((!$hasExceed) && $isCheckExceed){
                 continue;
             }
-            $statusStr = empty($v['u9_status']) ? self::STATUS_ARR[$v['status']] : $v['u9_status'];
+            $statusStr = self::STATUS_ARR[$v['status']];
+            if(in_array($v['u9_status'], [3, 4, 5])){
+                $statusStr = $v['u9_status'];
+            }
             $retList[] = [
                 'detail' => '<a class="detail" data-open="'.url('order/detailed').'?id='.$v['id'].'">详情</a>',
                 'exec_desc' => $exec_desc,
@@ -162,7 +165,7 @@ class Order extends BaseController{
                 'create_at' => atwDate($v['create_at']),
                 'sup_code' => $v['sup_code'],
                 'sup_name' => $v['sup_name'],//$poLogic->getSupName($v['sup_code']),
-                'is_biz_closed_str' => $v['is_biz_closed']?'是':'否',
+                'is_biz_closed_str' => $v['is_biz_closed'] ? '是' : '否',
                 'is_biz_closed' => $v['is_biz_closed'],
                 'status' => $statusStr
             ];
@@ -286,8 +289,8 @@ class Order extends BaseController{
         $supLogic = model('Supporter', 'logic');
         $where = ['code' => $poInfo['sup_code']];
         $poInfo['sup_name'] = $supLogic->getSupName($where);
-        $poInfo['statusStr'] = empty($poInfo['u9_status']) ? self::STATUS_ARR[$poInfo['status']] : $poInfo['u9_status'];
-        $poInfo['isBizClosedStr'] = empty($poInfo['is_biz_closed'])?'否':'是';
+        $poInfo['statusStr'] = in_array($poInfo['u9_status_code'], [3, 4, 5]) ? $poInfo['u9_status'] : self::STATUS_ARR[$poInfo['status']];
+        $poInfo['isBizClosedStr'] = empty($poInfo['is_biz_closed']) ? '否' : '是';
         $poItemInfo = $poLogic->getPoItemInfo($id);
         $allAmount = 0;
         $hasDoubleUom = false;
@@ -308,7 +311,7 @@ class Order extends BaseController{
                 'finish',
                 'sup_cancel'
             ]) ? 999 : intval(($v['sup_confirm_date'] - $today)/(60*60*24));
-            $v['statusStr'] = empty($v['u9_status']) ? '执行中' : $v['u9_status'];
+            $v['statusStr'] = in_array($v['u9_status_code'], [3, 4, 5]) ? $v['u9_status'] : '执行中';
 
         }
         $this->assign('poInfo', $poInfo);

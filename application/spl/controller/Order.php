@@ -35,17 +35,17 @@ class Order extends Base{
                     }
                     if($key == 'status' && $data['status'] == 'zr_close'){
                         $where['status'] = 'finish';
-                        $where['u9_status'] = 3;
+                        $where['u9_status_code'] = 3;
                         continue;
                     }
                     if($key == 'status' && $data['status'] == 'dq_close'){
                         $where['status'] = 'finish';
-                        $where['u9_status'] = 4;
+                        $where['u9_status_code'] = 4;
                         continue;
                     }
                     if($key == 'status' && $data['status'] == 'ce_close'){
                         $where['status'] = 'finish';
-                        $where['u9_status'] = 5;
+                        $where['u9_status_code'] = 5;
                         continue;
                     }
                     $where[$key] = $data[$key];
@@ -100,11 +100,11 @@ class Order extends Base{
             //$returnInfo[$k]['pr_code'] = $v['pr_code'];
             //  $returnInfo[$k]['pr_date'] = date('Y-m-d',$offerLogic->getPrDate($v['pr_code']));
             if($v['status'] == 'finish'){
-                if($v['u9_status'] == 3){
+                if($v['u9_status_code'] == 3){
                     $v['status'] = 'zr_close';
-                }elseif($v['u9_status'] == 4){
+                }elseif($v['u9_status_code'] == 4){
                     $v['status'] = 'dq_close';
-                }elseif($v['u9_status'] == 5){
+                }elseif($v['u9_status_code'] == 5){
                     $v['status'] = 'ce_close';
                 }
             }
@@ -204,16 +204,11 @@ class Order extends Base{
             'executing' => '执行中',
             'finish' => '关闭',
         ];
-        $u9statusArr = [
-            '' => '',
-            '3' => '自然关闭',
-            '4' => '短缺关闭',
-            '5' => '超额关闭',
-        ];
 
         $statusStr = $statusArr[$codeInfo[0]['status']];
-        if($codeInfo[0]['u9_status']){
-            $statusStr = empty($codeInfo[0]['u9_status'])? $statusStr : $codeInfo[0]['u9_status'];
+        $u9Code = $codeInfo[0]['u9_status_code'];
+        if(in_array($u9Code,[3,4,5])){
+            $statusStr =  $codeInfo[0]['u9_status'];;
         }
         $codeInfo[0]['statusStr'] = $statusStr;
         $this->assign('codeInfo', $codeInfo[0]);

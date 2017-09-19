@@ -29,7 +29,7 @@ class SystemConfig extends Model{
             'lastApkUrl' => getSysconf('last_apk_url',''),
             'lastApkVersion' => getSysconf('last_apk_version',''),
             'lastApkVersionNum' => intval(getSysconf('last_apk_version_num','')),
-            'defaultAvatar' => 'http://opmnz562z.bkt.clouddn.com/b22e33502ca2e6e1d93a996e062e8f2d.png',
+            'defaultAvatar' => 'http://atw.img.antiwearvalve.com/b22e33502ca2e6e1d93a996e062e8f2d.png',
             'payWays' => [
                 '货到验收合格，票到120天付款',
                 '货到验收合格，票到90天付款',

@@ -160,7 +160,7 @@ class Plugs extends Base {
      * 七牛重新上传
      */
     public function uploadbyjs(){
-        $domain = 'opmnz562z.bkt.clouddn.com';
+        $domain = 'atw.img.antiwearvalve.com';
         $accessKey = sysconf('storage_qiniu_access_key');
         $secretKey = sysconf('storage_qiniu_secret_key');
         $bucket = sysconf('storage_qiniu_bucket');

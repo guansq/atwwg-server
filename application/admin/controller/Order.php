@@ -35,7 +35,7 @@ class Order extends BaseController{
         'contract_pass' => '审核通过',
         'contract_refuse' => '审核拒绝',
         'executing' => '执行中',
-        'finish' => '结束',
+        'finish' => '关闭',
     ];
 
     /*
@@ -69,9 +69,7 @@ class Order extends BaseController{
             'contract_pass' => '审核通过',
             'contract_refuse' => '审核拒绝',
             'executing' => '执行中',
-            'zr_close' => '自然关闭',
-            'dq_close' => '短缺关闭',
-            'ce_close' => '超额关闭',
+            'finish' => '关闭',
         );
         $this->assign('orderstatus', $orderStatus);
         $this->assign('allNums', $allNums);
@@ -311,7 +309,8 @@ class Order extends BaseController{
                 'finish',
                 'sup_cancel'
             ]) ? 999 : intval(($v['sup_confirm_date'] - $today)/(60*60*24));
-            $v['statusStr'] = in_array($v['u9_status_code'], [3, 4, 5]) ? $v['u9_status'] : '执行中';
+
+            $v['statusStr'] = in_array($v['u9_status_code'], [3, 4, 5]) ? $v['u9_status'] : $poInfo['statusStr'];
 
         }
         $this->assign('poInfo', $poInfo);

@@ -35,14 +35,14 @@ class Po extends BaseLogic{
             $list = PoModel::alias('po')
                 ->field('po.*,sup.name as sup_name')
                 ->join('supplier_info sup', 'po.sup_code = sup.code', 'LEFT')
-                ->order('po.update_at DESC')
+                ->order('po.order_code DESC')
                 ->select();
         }else{
             $list = PoModel::alias('po')
                 ->field('po.*,sup.name as sup_name')
                 ->where($where)
                 ->join('supplier_info sup', 'po.sup_code = sup.code', 'LEFT')
-                ->order('po.update_at DESC')
+                ->order('po.order_code DESC')
                 ->select();
             //$list = PoModel::where($where)->order('update_at DESC')->select();
         }

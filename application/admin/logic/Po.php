@@ -286,6 +286,9 @@ class Po extends BaseLogic{
             }
             $res = $this->placeOrderAll($itemInfo, $docTypeCode);//内部生成订单
             //dump($res);die;
+            if(empty($res)){
+                return resultArray(6000,'调用U9接口异常。');
+            }
             if($res['code'] != 2000){
                 return resultArray($res);
             }

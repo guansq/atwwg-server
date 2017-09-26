@@ -8,6 +8,7 @@
 
 namespace app\admin\controller;
 
+use app\admin\logic\RequireOrder as PRLogic;
 use PHPExcel;
 use PHPExcel_IOFactory;
 use service\HttpService;
@@ -496,6 +497,7 @@ class Enquiryorder extends BaseController{
         $io_id = input('param.io_id');
         //通过io_id得到io信息
         $ioLogic = model('Io', 'logic');
+        $prLogic = new PRLogic();
         $io = $ioLogic->getIoRecord(['id' => $io_id]);
         /*$poData = [
             'pr_code' => $io['pr_code'],
@@ -530,6 +532,7 @@ class Enquiryorder extends BaseController{
             'tc_uom_code' => $io['tc_uom_code'],          //交易单位编码
             'price_uom_code' =>$io['price_uom_code'],     //计价单位编码
             'tax_rate' => $io['tax_rate'],
+            'pro_no' => $prLogic->where('id',$io['pr_id'])->value('pro_no'),
             'pro_goods_num' => $io['tc_num'],
             'winbid_time' => $now,
             'create_at' => $now,

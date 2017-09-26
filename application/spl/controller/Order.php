@@ -546,50 +546,50 @@ class Order extends Base{
         }
         $PHPSheet->setTitle('采购订单列表'); //给当前活动sheet设置名称
         $PHPSheet->setCellValueExplicit('A1', '采购订单号');
-        $PHPSheet->setCellValueExplicit('B1', '请购订单号');
+        $PHPSheet->setCellValueExplicit('B1', '项目号');
         $PHPSheet->setCellValueExplicit('C1', '物料编号');
         $PHPSheet->setCellValueExplicit('D1', '物料描述');
-        $PHPSheet->setCellValueExplicit('E1', '供应商编号');
-        $PHPSheet->setCellValueExplicit('F1', '供应商名称');
-        $PHPSheet->setCellValueExplicit('G1', '要求交期');
-        $PHPSheet->setCellValueExplicit('H1', '承诺交期');
-        $PHPSheet->setCellValueExplicit('I1', '修改交期');
-        $PHPSheet->setCellValueExplicit('J1', '采购数量');
-        $PHPSheet->setCellValueExplicit('K1', '单价');
-        $PHPSheet->setCellValueExplicit('L1', '小计');
-        $PHPSheet->setCellValueExplicit('M1', '到货数量');
-        $PHPSheet->setCellValueExplicit('N1', '未交数量');
-        $PHPSheet->setCellValueExplicit('O1', '退货数量');
-        $PHPSheet->setCellValueExplicit('P1', '采购员');
-        $PHPSheet->setCellValueExplicit('Q1', '项目号');
-        $PHPSheet->setCellValueExplicit('R1', '状态');
+        $PHPSheet->setCellValueExplicit('E1', '要求交期');
+        $PHPSheet->setCellValueExplicit('F1', '承诺交期');
+        $PHPSheet->setCellValueExplicit('G1', '修改交期');
+        $PHPSheet->setCellValueExplicit('H1', '采购数量');
+        $PHPSheet->setCellValueExplicit('I1', '单价');
+        $PHPSheet->setCellValueExplicit('J1', '小计');
+        $PHPSheet->setCellValueExplicit('K1', '到货数量');
+        $PHPSheet->setCellValueExplicit('L1', '未交数量');
+        $PHPSheet->setCellValueExplicit('M1', '退货数量');
+        $PHPSheet->setCellValueExplicit('N1', '状态');
+       //$PHPSheet->setCellValueExplicit('O1', '');
+       //$PHPSheet->setCellValueExplicit('P1', '');  //采购员
+       //$PHPSheet->setCellValueExplicit('Q1', '');
+       //$PHPSheet->setCellValueExplicit('R1', '');
         $num = 1;
         foreach($list as $k => $v){
             $num++;
             $PHPSheet->setCellValueExplicit('A'.$num, $v['po_code'])
-                ->setCellValueExplicit('B'.$num, $v['pr_code'])
+                ->setCellValueExplicit('B'.$num, $v['pro_no'])
                 ->setCellValueExplicit('C'.$num, $v['item_code'])
                 ->setCellValueExplicit('D'.$num, $v['item_name'])
-                ->setCellValueExplicit('E'.$num, $v['sup_code'])
-                ->setCellValueExplicit('F'.$num, $v['sup_name'])
-                ->setCellValueExplicit('G'.$num, $v['req_date_fmt'])
-                ->setCellValueExplicit('H'.$num, $v['sup_confirm_date_fmt'])
-                ->setCellValueExplicit('I'.$num, $v['sup_update_date_fmt'])
-                ->setCellValue('J'.$num, $v['tc_num'])
-                ->setCellValue('K'.$num, $v['price'])
-                ->setCellValue('L'.$num, $v['price']*$v['tc_num'])
-                ->setCellValue('M'.$num, $v['arv_goods_num'])
-                ->setCellValue('N'.$num, $v['pro_goods_num'])
-                ->setCellValue('O'.$num, $v['return_goods_num'])
-                ->setCellValueExplicit('P'.$num, $v['purch_name'])
-                ->setCellValueExplicit('Q'.$num, $v['pro_no'])
-                ->setCellValueExplicit('R'.$num, empty($v['u9_status']) ? '执行中' : $v['u9_status']);
+                ->setCellValueExplicit('E'.$num, $v['req_date_fmt'])
+                ->setCellValueExplicit('F'.$num, $v['sup_confirm_date_fmt'])
+                ->setCellValueExplicit('G'.$num, $v['sup_update_date_fmt'])
+                ->setCellValueExplicit('H'.$num, $v['tc_num'])
+                ->setCellValueExplicit('I'.$num, $v['price'])
+                ->setCellValue('J'.$num, $v['price']*$v['tc_num'])
+                ->setCellValue('K'.$num, $v['arv_goods_num'] )
+                ->setCellValue('L'.$num, $v['pro_goods_num'])
+                ->setCellValue('M'.$num, $v['return_goods_num'])
+                ->setCellValue('N'.$num, empty($v['u9_status']) ? '执行中' : $v['u9_status']);
+                // ->setCellValue('O'.$num, )
+                // ->setCellValueExplicit('P'.$num, $v['purch_name'])
+                // ->setCellValueExplicit('Q'.$num, $v[''])
+                // ->setCellValueExplicit('R'.$num, empty($v['u9_status']) ? '执行中' : $v['u9_status']);
+            $PHPSheet->getStyle('H'.$num)->getNumberFormat()->setFormatCode('#,##0.00');
+            $PHPSheet->getStyle('I'.$num)->getNumberFormat()->setFormatCode('#,##0.00');
             $PHPSheet->getStyle('J'.$num)->getNumberFormat()->setFormatCode('#,##0.00');
             $PHPSheet->getStyle('K'.$num)->getNumberFormat()->setFormatCode('#,##0.00');
             $PHPSheet->getStyle('L'.$num)->getNumberFormat()->setFormatCode('#,##0.00');
             $PHPSheet->getStyle('M'.$num)->getNumberFormat()->setFormatCode('#,##0.00');
-            $PHPSheet->getStyle('N'.$num)->getNumberFormat()->setFormatCode('#,##0.00');
-            $PHPSheet->getStyle('O'.$num)->getNumberFormat()->setFormatCode('#,##0.00');
         }
 
         $PHPWriter = PHPExcel_IOFactory::createWriter($PHPExcel, 'Excel2007');//按照指定格式生成Excel文件，'Excel2007’表示生成2007版本的xlsx，

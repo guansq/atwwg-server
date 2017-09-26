@@ -21,6 +21,7 @@ class Io extends BaseLogic{
         'winbid' => '中标',
         'losebid' => '未中标',
         'un_tender' => '未投标',
+        'close' => '关闭', // 同步PR关闭
     ];
 
     function getIoList($start, $length, $where){

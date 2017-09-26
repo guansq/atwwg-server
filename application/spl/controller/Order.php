@@ -573,13 +573,13 @@ class Order extends Base{
                 ->setCellValueExplicit('E'.$num, $v['req_date_fmt'])
                 ->setCellValueExplicit('F'.$num, $v['sup_confirm_date_fmt'])
                 ->setCellValueExplicit('G'.$num, $v['sup_update_date_fmt'])
-                ->setCellValueExplicit('H'.$num, $v['tc_num'])
-                ->setCellValueExplicit('I'.$num, $v['price'])
+                ->setCellValue('H'.$num, $v['tc_num'])
+                ->setCellValue('I'.$num, $v['price'])
                 ->setCellValue('J'.$num, $v['price']*$v['tc_num'])
                 ->setCellValue('K'.$num, $v['arv_goods_num'] )
                 ->setCellValue('L'.$num, $v['pro_goods_num'])
                 ->setCellValue('M'.$num, $v['return_goods_num'])
-                ->setCellValue('N'.$num, empty($v['u9_status']) ? '执行中' : $v['u9_status']);
+                ->setCellValueExplicit('N'.$num, empty($v['u9_status']) ? '执行中' : $v['u9_status']);
                 // ->setCellValue('O'.$num, )
                 // ->setCellValueExplicit('P'.$num, $v['purch_name'])
                 // ->setCellValueExplicit('Q'.$num, $v[''])

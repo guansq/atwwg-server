@@ -34,6 +34,8 @@ class HttpService {
      * @return bool|string
      */
     public static function curl($url, $data = array(), $second = 600, $header = []) {
+        trace("HttpService::curl($url) 参数》》" );
+        trace($data);
         set_time_limit ($second);
         if (!empty($data)) {
             $url .= (stripos($url, '?') === FALSE ? '?' : '&');
@@ -98,6 +100,8 @@ class HttpService {
      * @return bool|string
      */
     static public function post($url, $data = [], $second = 30, $header = []) {
+        trace("HttpService::post($url) 参数》》" );
+        trace($data);
         self::_setUploadFile($data);
         $curl = curl_init();
         $data = http_build_query($data);

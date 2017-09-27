@@ -749,7 +749,7 @@ function placeOrder($itemInfo){
         'ValuationQty' => $itemInfo['tc_num'],//
         'ValuationUnit' => $itemInfo['price_uom_code'],//
         'srcDocPRLineNo' => $itemInfo['pr_ln'],
-        'ProCode' => $itemInfo['pro_no'],
+        'ProCode' => $itemInfo['pro_no'].'',
         'srcDocPRNo' => $itemInfo['pr_code'],
         'IsSpilt' => $itemInfo['is_spilt']
     ];

@@ -117,6 +117,10 @@ class HttpService {
         self::_setSsl($curl, $url);
         $content = curl_exec($curl);
         $status = curl_getinfo($curl);
+        trace("HttpService::post ==== 结果》》 content ：" );
+        trace($content);
+        trace("HttpService::post ==== 结果》》 status ：" );
+        trace($status);
         curl_close($curl);
         if (intval($status["http_code"]) == 200) {
             return $content;

@@ -513,6 +513,7 @@ class Enquiryorder extends BaseController{
         };*/
         $poItemData = [
             'po_id' => null,
+            'po_code' => null,
             'item_code' => $io['item_code'],
             'item_name' => $io['item_name'],
             'sup_code' => $io['sup_code'],

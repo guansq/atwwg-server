@@ -427,6 +427,8 @@ class Requireorder extends BaseController{
         $now = time();
         //生成poItem
         $poItemData = [
+            'po_id' => null,
+            'po_code' => null,
             'item_code' => $prInfo['item_code'],
             'item_name' => $prInfo['item_name'],
             'sup_code' => $data['appoint_sup_code'],
@@ -513,6 +515,8 @@ class Requireorder extends BaseController{
         foreach($prInfo as $pr){
             //生成poItem
             $poItemData = [
+                'po_id' => null,
+                'po_code' => null,
                 'item_code' => $pr['item_code'],
                 'item_name' => $pr['item_name'],
                 'sup_code' => $reqParams['supCode'],

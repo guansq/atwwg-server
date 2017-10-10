@@ -242,6 +242,16 @@ class Po extends BaseLogic{
      * 保存poItem
      */
     public function savePoItem($data){
+        $pi = PiModel::where('po_code', $data['po_code'])->where('po_ln', $data['po_ln'])->find();
+        if(!empty($pi)){
+            trace("savePoItem() 重复的PI [ po_code = $data[po_code],po_ln = $data[po_ln]]");
+            return PiModel::update($data, ['id' => $pi['id']]);
+        }
+        $pi = PiModel::where('pr_code', $data['pr_code'])->where('pr_ln', $data['pr_ln'])->find();
+        if(!empty($pi)){
+            trace("savePoItem() 重复的PI [ pr_code = $data[pr_code],pr_ln = $data[pr_ln]]");
+            return PiModel::update($data, ['id' => $pi['id']]);
+        }
         return $res = PiModel::create($data);
     }
 
@@ -287,7 +297,7 @@ class Po extends BaseLogic{
             $res = $this->placeOrderAll($itemInfo, $docTypeCode);//内部生成订单
             //dump($res);die;
             if(empty($res)){
-                return resultArray(6000,'调用U9接口异常。');
+                return resultArray(6000, '调用U9接口异常。');
             }
             if($res['code'] != 2000){
                 return resultArray($res);

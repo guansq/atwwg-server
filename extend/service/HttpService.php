@@ -68,7 +68,7 @@ class HttpService {
      * @param array $header 请求Header信息
      * @return bool|string
      */
-    public static function get($url, $data = array(), $second = 30, $header = []) {
+    public static function get($url, $data = array(), $second = 120, $header = []) {
         if (!empty($data)) {
             $url .= (stripos($url, '?') === FALSE ? '?' : '&');
             $url .= (is_array($data) ? http_build_query($data) : $data);
@@ -99,7 +99,7 @@ class HttpService {
      * @param array $header 请求Header信息
      * @return bool|string
      */
-    static public function post($url, $data = [], $second = 30, $header = []) {
+    static public function post($url, $data = [], $second = 120, $header = []) {
         trace("HttpService::post($url) 参数》》" );
         trace($data);
         self::_setUploadFile($data);

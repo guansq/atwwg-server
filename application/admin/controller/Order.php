@@ -8,6 +8,7 @@
 
 namespace app\admin\controller;
 
+use app\spl\logic\PoItem;
 use PHPExcel;
 use PHPExcel_IOFactory;
 use Qiniu\Auth as QiniuAuth;
@@ -219,6 +220,7 @@ class Order extends BaseController{
             $returnInfo[$k]['pro_no'] = $v['pro_no'];//U9生成订单编号
 
             $returnInfo[$k]['pr_code'] = $v['pr_code'];//请购单编号
+            $returnInfo[$k]['pr_ln'] = $v['pr_ln'];//请购单编号
             $returnInfo[$k]['pr_date'] = atwDate($poLogic->getPrDate($v['pr_code']));
             $returnInfo[$k]['create_at'] = '';//合并订单日期  date('Y-m-d', $v['create_at'])
 
@@ -548,6 +550,7 @@ class Order extends BaseController{
         $ids = input('param.ids');
         $idArr = explode('|', $ids);
         $poLogic = model('Po', 'logic');
+        $piLogic = new PoItem();
         $supCodeInfo = [];
         if(empty($ids)){
             return json(['code' => 4000, 'msg' => '请选择单据', 'data' => []]);
@@ -568,6 +571,11 @@ class Order extends BaseController{
         }
         if(count($supCodeInfo) != 1){
             return json(['code' => 4000, 'msg' => '抱歉，您选择的采购订单中包含多家供应商或采购订单中供应商已不存在', 'data' => []]);
+        }
+
+        $hasRepeatedPr = $piLogic->hasRepeatedPrByPiIds($idArr);
+        if($hasRepeatedPr){
+            return json(['code' => 4000, 'msg' => '有重复的请购单号+料号 请过滤后在提交。', 'data' => []]);
         }
         foreach($supCodeInfo as $k => $v){
             $sup_code = $k;

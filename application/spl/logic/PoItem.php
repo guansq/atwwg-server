@@ -137,6 +137,17 @@ class PoItem extends BaseLogic{
         dd(getTodayStartTime());
         $lotNo = '';
         $todayCnt = '';
+    }
 
+    /** todo 验证
+     * Author: W.W <will.wxx@qq.com>
+     * Describe: 统计重复的 pr_code pr_ln 数量
+     * @param $idArr
+     */
+    public function hasRepeatedPrByPiIds($idArr){
+        $ids = implode(',',$idArr);
+        $sql ="SELECT COUNT(*) AS cnt FROM {$this->table} WHERE id IN ($ids) GROUP BY pr_code,pr_ln  HAVING cnt>1";
+        $dbRet = $this->execute($sql);
+        return intval($dbRet);
     }
 }

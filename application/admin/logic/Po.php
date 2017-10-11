@@ -242,16 +242,19 @@ class Po extends BaseLogic{
      * 保存poItem
      */
     public function savePoItem($data){
-        $pi = PiModel::where('po_code', $data['po_code'])->where('po_ln', $data['po_ln'])->find();
-        if(!empty($pi)){
-            trace("savePoItem() 重复的PI [ po_code = $data[po_code],po_ln = $data[po_ln]]");
-            return PiModel::update($data, ['id' => $pi['id']]);
-        }
         $pi = PiModel::where('pr_code', $data['pr_code'])->where('pr_ln', $data['pr_ln'])->find();
         if(!empty($pi)){
-            trace("savePoItem() 重复的PI [ pr_code = $data[pr_code],pr_ln = $data[pr_ln]]");
+            trace("savePoItem() 重复的PI [ id= $pi[id], pr_code = $data[pr_code],pr_ln = $data[pr_ln]]");
             return PiModel::update($data, ['id' => $pi['id']]);
         }
+        if(!empty($data['po_code']) && !empty($data['po_ln'])){
+            $pi = PiModel::where('po_code', $data['po_code'])->where('po_ln', $data['po_ln'])->find();
+            if(!empty($pi)){
+                trace("savePoItem() 重复的PI [ id= $pi[id],po_code = $data[po_code],po_ln = $data[po_ln]]");
+                return PiModel::update($data, ['id' => $pi['id']]);
+            }
+        }
+
         return $res = PiModel::create($data);
     }
 
@@ -559,7 +562,10 @@ class Po extends BaseLogic{
                 break;
             }
 
-            PoModel::where('order_code', $pocode)->update(['status' => 'atw_cancel', 'cancel_cause' => $cancelCause]);
+            PoModel::where('order_code', $pocode)->update([
+                'status' => 'atw_cancel',
+                'cancel_cause' => $cancelCause
+            ]);
             PiModel::where('po_code', $pocode)->update(['status' => 'close']);
             $successCount++;
         }

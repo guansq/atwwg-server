@@ -468,7 +468,9 @@ class Order extends Base{
         $id = input('id');
         $poLogic = model('Order', 'logic');
         $sup_code = session('spl_user')['sup_code'];
-        $po = $poLogic->where('sup_code', $sup_code)->where('id', $id)->find();
+        $po = $poLogic->where('id', $id)
+            ->where('sup_code', $sup_code)
+            ->find();
         if(empty($po)){
             $this->error('无效的id='.$id, '');
         }

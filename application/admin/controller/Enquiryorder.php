@@ -514,6 +514,7 @@ class Enquiryorder extends BaseController{
         $poItemData = [
             'po_id' => null,
             'po_code' => null,
+            'po_ln' => null,
             'item_code' => $io['item_code'],
             'item_name' => $io['item_name'],
             'sup_code' => $io['sup_code'],
@@ -535,6 +536,7 @@ class Enquiryorder extends BaseController{
             'tax_rate' => $io['tax_rate'],
             'pro_no' => $prLogic->where('id',$io['pr_id'])->value('pro_no'),
             'pro_goods_num' => $io['tc_num'],
+            'status' => 'init',
             'winbid_time' => $now,
             'create_at' => $now,
             'update_at' => $now

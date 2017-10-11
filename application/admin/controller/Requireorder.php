@@ -429,6 +429,7 @@ class Requireorder extends BaseController{
         $poItemData = [
             'po_id' => null,
             'po_code' => null,
+            'po_ln' => null,
             'item_code' => $prInfo['item_code'],
             'item_name' => $prInfo['item_name'],
             'sup_code' => $data['appoint_sup_code'],
@@ -517,6 +518,7 @@ class Requireorder extends BaseController{
             $poItemData = [
                 'po_id' => null,
                 'po_code' => null,
+                'po_ln' => null,
                 'item_code' => $pr['item_code'],
                 'item_name' => $pr['item_name'],
                 'sup_code' => $reqParams['supCode'],

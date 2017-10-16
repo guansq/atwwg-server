@@ -53,7 +53,7 @@ class Chart extends BaseController{
             $startTime = strtotime($v);
             $endTime = getEndMonthTime($v);
             $avgPassVal = keepdecimal($suppLogic->getAvgPassRate($where,$startTime,$endTime));//合格率
-            $avgPassVal = initPerVal($avgPassVal, true, false)*1;//转化百分比
+            $avgPassVal = initPerVal($avgPassVal, true, false);//转化百分比
             $avgPassArr[$k] = $avgPassVal;
         }
         //得到数据
@@ -100,7 +100,7 @@ class Chart extends BaseController{
             $endTime = getEndMonthTime($v);
 
             $avgArvVal = keepdecimal($suppLogic->getAvgArvRate($where,$startTime,$endTime));//及时率
-            $avgArvVal = initPerVal($avgArvVal, true, false)*1;//转化百分比
+            $avgArvVal = initPerVal($avgArvVal, true, false);//转化百分比
             $avgArvArr[$k] = $avgArvVal;
         }
         //dump($allSup);

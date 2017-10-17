@@ -420,6 +420,7 @@
     $("[name='listcheck']").removeAttr("checked");//取消全选
   });
   var flag = 0;
+  var appoint_sup_code,item_id,pr_code,pr_id,item_code,appoint_sup_name;
   $(".submitbt").click(function(){
     var is_persent = $('#select_sup_box #is_persent_ck')[0].checked ? 1 : 0;
     $('input[name="listcheck"]:checked').each(function(){

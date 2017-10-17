@@ -29,14 +29,16 @@
       <div class="pb_15">
         <!--<button type="button" id="remove_btn" class="btn btn-info">删除</button>-->
         <button type="button" id="excel_out" class="btn btn-info" style="margin-right: 15px;">导出Excel</button>
-        <button type="button" id="sync_erp" class="btn btn-info" style="margin-right: 15px;">同步订单状态</button>
+        <!--<button type="button" id="sync_erp" class="btn btn-info" style="margin-right: 15px;">同步订单状态</button>-->
         <!--<button type="button" id="doorder_btn" class="btn btn-info">立即下单</button>-->
+        <button type="button" id="sync_po" class="btn btn-info" style="margin-right: 15px;">同步订单</button>
       </div>
       <div class="order_box" style="overflow: auto">
         <table id="example" class="display table table-bordered" cellspacing="0" width="2148">
           <thead>
           <tr>
             <th width="70">采购订单</th>
+            <th width="70">采购行号</th>
             <th width="70">请购订单</th>
             <th width="120">物料编号</th>
             <th width="200">物料描述</th>
@@ -122,7 +124,7 @@
           }
         },
       ],*/
-      "pageLength":10,
+      "pageLength":100,
       language:{
         "oPaginate":{
           "sFirst":"首页",
@@ -138,6 +140,7 @@
       },
       "columns":[
         {"data":"po_code"},
+        {"data":"po_ln"},
         {"data":"pr_code"},
         {"data":"item_code"},
         {"data":"item_name"},
@@ -243,6 +246,28 @@
       layer.closeAll();
     });
   })
+
+
+  //立即同步ERP
+  $("#sync_po").click(function(){
+    var loader = layer.msg('加载中', {
+      icon:16,
+      shade:0.01,
+      time:9999000,
+    });
+    $.get('{:url("Order/syncPO")}', function(ret){
+      if(!ret){
+        layer.alert('网络异常请稍后再试。', {icon:2});
+      }
+      if(ret.code == 2000){
+        layer.close(loader);
+        return true;
+      }
+      layer.alert(ret.msg, {icon:2});
+      layer.close(loader);
+      return false;
+    });
+  });
 </script>
 
 

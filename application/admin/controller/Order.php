@@ -289,7 +289,11 @@ class Order extends BaseController{
         $supLogic = model('Supporter', 'logic');
         $where = ['code' => $poInfo['sup_code']];
         $poInfo['sup_name'] = $supLogic->getSupName($where);
-        $poInfo['statusStr'] = in_array($poInfo['u9_status_code'], [3, 4, 5]) ? $poInfo['u9_status'] : self::STATUS_ARR[$poInfo['status']];
+        $poInfo['statusStr'] = in_array($poInfo['u9_status_code'], [
+            3,
+            4,
+            5
+        ]) ? $poInfo['u9_status'] : self::STATUS_ARR[$poInfo['status']];
         $poInfo['isBizClosedStr'] = empty($poInfo['is_biz_closed']) ? '否' : '是';
         $poItemInfo = $poLogic->getPoItemInfo($id);
         $allAmount = 0;
@@ -645,46 +649,48 @@ class Order extends BaseController{
         }
         $PHPSheet->setTitle('采购订单列表'); //给当前活动sheet设置名称
         $PHPSheet->setCellValueExplicit('A1', '采购订单号');
-        $PHPSheet->setCellValueExplicit('B1', '请购订单号');
-        $PHPSheet->setCellValueExplicit('C1', '物料编号');
-        $PHPSheet->setCellValueExplicit('D1', '物料描述');
-        $PHPSheet->setCellValueExplicit('E1', '供应商编号');
-        $PHPSheet->setCellValueExplicit('F1', '供应商名称');
-        $PHPSheet->setCellValueExplicit('G1', '要求交期');
-        $PHPSheet->setCellValueExplicit('H1', '承诺交期');
-        $PHPSheet->setCellValueExplicit('I1', '修改交期');
-        $PHPSheet->setCellValueExplicit('J1', '采购数量');
-        $PHPSheet->setCellValueExplicit('K1', '单价');
-        $PHPSheet->setCellValueExplicit('L1', '交易单位');
-        $PHPSheet->setCellValueExplicit('M1', '小计');
-        $PHPSheet->setCellValueExplicit('N1', '到货数量');
-        $PHPSheet->setCellValueExplicit('O1', '未交数量');
-        $PHPSheet->setCellValueExplicit('P1', '退货数量');
-        $PHPSheet->setCellValueExplicit('Q1', '采购员');
-        $PHPSheet->setCellValueExplicit('R1', '项目号');
-        $PHPSheet->setCellValueExplicit('S1', '状态');
+        $PHPSheet->setCellValueExplicit('B1', '采购单行号');
+        $PHPSheet->setCellValueExplicit('C1', '请购订单号');
+        $PHPSheet->setCellValueExplicit('D1', '物料编号');
+        $PHPSheet->setCellValueExplicit('E1', '物料描述');
+        $PHPSheet->setCellValueExplicit('F1', '供应商编号');
+        $PHPSheet->setCellValueExplicit('G1', '供应商名称');
+        $PHPSheet->setCellValueExplicit('H1', '要求交期');
+        $PHPSheet->setCellValueExplicit('I1', '承诺交期');
+        $PHPSheet->setCellValueExplicit('J1', '修改交期');
+        $PHPSheet->setCellValueExplicit('K1', '采购数量');
+        $PHPSheet->setCellValueExplicit('L1', '单价');
+        $PHPSheet->setCellValueExplicit('M1', '交易单位');
+        $PHPSheet->setCellValueExplicit('N1', '小计');
+        $PHPSheet->setCellValueExplicit('O1', '到货数量');
+        $PHPSheet->setCellValueExplicit('P1', '未交数量');
+        $PHPSheet->setCellValueExplicit('Q1', '退货数量');
+        $PHPSheet->setCellValueExplicit('R1', '采购员');
+        $PHPSheet->setCellValueExplicit('S1', '项目号');
+        $PHPSheet->setCellValueExplicit('T1', '状态');
         $num = 1;
         foreach($list as $k => $v){
             $num++;
             $PHPSheet->setCellValueExplicit('A'.$num, $v['po_code'])
-                ->setCellValueExplicit('B'.$num, $v['pr_code'])
-                ->setCellValueExplicit('C'.$num, $v['item_code'])
-                ->setCellValueExplicit('D'.$num, $v['item_name'])
-                ->setCellValueExplicit('E'.$num, $v['sup_code'])
-                ->setCellValueExplicit('F'.$num, $v['sup_name'])
-                ->setCellValueExplicit('G'.$num, $v['req_date_fmt'])
-                ->setCellValueExplicit('H'.$num, $v['sup_confirm_date_fmt'])
-                ->setCellValueExplicit('I'.$num, $v['sup_update_date_fmt'])
-                ->setCellValueExplicit('J'.$num, $v['tc_num_fmt'])
-                ->setCellValueExplicit('K'.$num, $v['price_fmt'])//$v['price_fmt']
-                ->setCellValueExplicit('L'.$num, $v['tc_uom'])
-                ->setCellValueExplicit('M'.$num, $v['price_subtotal_fmt'])
-                ->setCellValueExplicit('N'.$num, $v['arv_goods_num_fmt'])
-                ->setCellValueExplicit('O'.$num, $v['pro_goods_num_fmt'])
-                ->setCellValueExplicit('P'.$num, $v['return_goods_num'])
-                ->setCellValueExplicit('Q'.$num, $v['purch_name'])
-                ->setCellValueExplicit('R'.$num, $v['pro_no'])
-                ->setCellValueExplicit('S'.$num, empty($v['u9_status']) ? '执行中' : $v['u9_status']);
+                ->setCellValueExplicit('B'.$num, $v['po_ln'])
+                ->setCellValueExplicit('C'.$num, $v['pr_code'])
+                ->setCellValueExplicit('D'.$num, $v['item_code'])
+                ->setCellValueExplicit('E'.$num, $v['item_name'])
+                ->setCellValueExplicit('F'.$num, $v['sup_code'])
+                ->setCellValueExplicit('G'.$num, $v['sup_name'])
+                ->setCellValueExplicit('H'.$num, $v['req_date_fmt'])
+                ->setCellValueExplicit('I'.$num, $v['sup_confirm_date_fmt'])
+                ->setCellValueExplicit('J'.$num, $v['sup_update_date_fmt'])
+                ->setCellValueExplicit('K'.$num, $v['tc_num_fmt'])
+                ->setCellValueExplicit('L'.$num, $v['price_fmt'])//$v['price_fmt']
+                ->setCellValueExplicit('M'.$num, $v['tc_uom'])
+                ->setCellValueExplicit('N'.$num, $v['price_subtotal_fmt'])
+                ->setCellValueExplicit('O'.$num, $v['arv_goods_num_fmt'])
+                ->setCellValueExplicit('P'.$num, $v['pro_goods_num_fmt'])
+                ->setCellValueExplicit('Q'.$num, $v['return_goods_num'])
+                ->setCellValueExplicit('R'.$num, $v['purch_name'])
+                ->setCellValueExplicit('S'.$num, $v['pro_no'])
+                ->setCellValueExplicit('T'.$num, empty($v['u9_status']) ? '执行中' : $v['u9_status']);
             //  echo $v['price_fmt'].'<br/>';
         }
 

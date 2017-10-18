@@ -350,7 +350,7 @@
           }else{
             var msg = res.msg;
             if(res.result && res.result.Message){
-              msg += '<br/> 异常原因：' + res.result.Message;
+              msg += '<br/> U9抛出异常：' + res.result.Message;
             }
             layer.alert(msg,function(index){
               orderTables.ajax.reload();

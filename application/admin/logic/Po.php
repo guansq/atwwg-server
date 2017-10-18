@@ -262,7 +262,9 @@ class Po extends BaseLogic{
      * u9下采购单返回的$rtnLines 匹配 pi
      */
     function matePoLn($rtnLines, $pi){
+        trace('u9下采购单返回的$rtnLines 匹配 pi');
         if(empty($rtnLines) || empty($pi)){
+            trace('rtnLines==null || pi==null');
             return null;
         }
         foreach($rtnLines as $k => $v){
@@ -270,12 +272,15 @@ class Po extends BaseLogic{
                 $v = $rtnLines;
             }
             if($v['srcDocNo'] == $pi['pr_code'] && $v['srcLineNo'] == $pi['pr_ln']){
+                trace('LineNo ====');
+                trace($v['LineNo']);
                 return $v['LineNo'];
             }
             if(!is_numeric($k)){
                 break;
             }
         }
+        trace('没有匹配====');
         return null;
     }
 
@@ -293,7 +298,6 @@ class Po extends BaseLogic{
         foreach(self::U9_BIZ_TYPES as $bizType => $docTypeCode){
             //进行生成订单
             $itemInfo = $this->getPiByIdsAndBizType($idArr, $bizType);//单个子订单信息
-            //trace(json_encode($itemInfo));
             if(empty($itemInfo)){
                 continue;
             }
@@ -325,6 +329,8 @@ class Po extends BaseLogic{
             //生成关联关系
             $list = [];
             $rtnPoLine = empty($res['data']['rtnLines']['rtnPoLine']) ? [] : $res['data']['rtnLines']['rtnPoLine'];
+            trace("u9下采购单 ====== res['data']=");
+            trace($res['data']);
             foreach($itemInfo as $pi){
                 $list[] = [
                     'id' => $pi['id'],
@@ -341,6 +347,8 @@ class Po extends BaseLogic{
             /*foreach($idArr as $k=>$v){
                 $data[$k] = ['id'=>$v,'po_id'=>$po_id,'po_code'=>$res['data']['DocNo'],'create_at'=>date('Y-m-d',$now)];
             }*/
+            trace("u9下采购单 ====== list");
+            trace($list);
             $res = $this->updateAllPoid($list);
             $data = $list;
             //更改PR表status状态为已下单

@@ -244,13 +244,13 @@ class Po extends BaseLogic{
     public function savePoItem($data){
         $pi = PiModel::where('pr_code', $data['pr_code'])->where('pr_ln', $data['pr_ln'])->find();
         if(!empty($pi)){
-            trace("savePoItem() 重复的PI [ id= $pi[id], pr_code = $data[pr_code],pr_ln = $data[pr_ln]]");
+            trace("savePoItem() 重复的PI [ id= $pi[id], pr_code = $data[pr_code],pr_ln = $data[pr_ln] , item_code = $data[item_code]]");
             return PiModel::update($data, ['id' => $pi['id']]);
         }
         if(!empty($data['po_code']) && !empty($data['po_ln'])){
             $pi = PiModel::where('po_code', $data['po_code'])->where('po_ln', $data['po_ln'])->find();
             if(!empty($pi)){
-                trace("savePoItem() 重复的PI [ id= $pi[id],po_code = $data[po_code],po_ln = $data[po_ln]]");
+                trace("savePoItem() 重复的PI [ id= $pi[id],po_code = $data[po_code],po_ln = $data[po_ln],item_code = $data[item_code]]");
                 return PiModel::update($data, ['id' => $pi['id']]);
             }
         }

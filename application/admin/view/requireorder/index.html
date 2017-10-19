@@ -524,9 +524,10 @@
         return false;
       }
       $("#batch_select_sup_box").hide();
-      info = prTable.page.info();
-      var page = info.page;
-      $('#example').dataTable().fnPageChange(page);
+      //info = prTable.page.info();
+      //var page = info.page;
+      // $('#example').dataTable().fnPageChange(page);
+      $.form.refresh();
     });
   });
 

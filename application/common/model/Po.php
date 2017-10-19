@@ -13,7 +13,7 @@ class Po extends BaseModel{
     }
 
     public static function deletePoPi($code){
-        trace("deletePoPi poCode======$code");
+        trace("删除PI deletePoPi poCode======$code");
         self::where('order_code' ,$code)->delete();
         PoItem::where('po_code' ,$code)->delete();
     }

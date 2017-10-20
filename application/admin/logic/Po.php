@@ -370,7 +370,7 @@ class Po extends BaseLogic{
             sendSMS($sendInfo['phone'], self::CONTENT);
         }
         if($sendInfo['email'] || getenv('APP_DEBUG')){ //发送邮件
-            sendMail($sendInfo['email'], self::TITLE, self::CONTENT);
+            sendMail($sendInfo['email'], self::TITLE, self::CONTENT,$sendInfo['purch_email']);
         }
         if($sendInfo['push_token'] || getenv('APP_DEBUG')){ //发送token
             pushInfo($sendInfo['push_token'], self::TITLE, self::CONTENT);

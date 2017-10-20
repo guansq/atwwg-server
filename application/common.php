@@ -676,7 +676,7 @@ function sendSMS($phone, $content){
 /*
  * 发送邮件
  */
-function sendMail($to, $title, $content){
+function sendMail($to, $title, $content ,$from = 'info@antiwearvalve.com'){
     $to = getenv('APP_DEBUG') ? getenv('APP_DEBUG_EMAIL'):$to;
     $sendData = [
         'rt_appkey' => 'atw_wg',
@@ -684,7 +684,7 @@ function sendMail($to, $title, $content){
         'to' => $to,
         'subject' => $title,
         'html' => $content,
-        'from' => 'info@antiwearvalve.com',//平台的邮件头
+        'from' => $from,//平台的邮件头purch_email
     ];
     trace("发送邮件 =========== 参数：");
     trace($sendData);

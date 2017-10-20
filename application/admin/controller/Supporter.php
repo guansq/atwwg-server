@@ -388,7 +388,7 @@ class Supporter extends BaseController{
             }
             if($sendInfo['email']){ //发送邮件
                 //sendMail('94600115@qq.com',$title,$content);
-                sendMail($sendInfo['email'] ,$title , $content);
+                sendMail($sendInfo['email'] ,$title , $content ,$sendInfo['purch_email']);
             }
             if($sendInfo['push_token']){ //发送token
                 pushInfo($sendInfo['push_token'], $title, $content);

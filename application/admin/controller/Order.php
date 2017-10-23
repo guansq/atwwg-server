@@ -8,6 +8,7 @@
 
 namespace app\admin\controller;
 
+use app\admin\logic\Po;
 use app\spl\logic\PoItem;
 use PHPExcel;
 use PHPExcel_IOFactory;
@@ -80,7 +81,7 @@ class Order extends BaseController{
 
     public function getPoList(){
         $now = time();
-        $poLogic = model('Po', 'logic');
+        $poLogic = new Po();
         $get = input('param.');
         $where = [];
         // 应用搜索条件

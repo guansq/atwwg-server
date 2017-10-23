@@ -33,18 +33,24 @@ class Po extends BaseLogic{
 
         if(empty($where)){
             $list = PoModel::alias('po')
-                ->field('po.*,sup.name as sup_name')
+                ->field('po.*,sup.name as supname')
                 ->join('supplier_info sup', 'po.sup_code = sup.code', 'LEFT')
                 ->order('po.order_code DESC')
                 ->select();
         }else{
             $list = PoModel::alias('po')
-                ->field('po.*,sup.name as sup_name')
+                ->field('po.*,sup.name as supname')
                 ->where($where)
                 ->join('supplier_info sup', 'po.sup_code = sup.code', 'LEFT')
                 ->order('po.order_code DESC')
                 ->select();
             //$list = PoModel::where($where)->order('update_at DESC')->select();
+        }
+        if(empty($list)){
+            return $list;
+        }
+        foreach($list as $po){
+            $po['sup_name'] = empty($po['sup_name'])? $po['supname']:$po['sup_name'];
         }
         //echo $list;die;
         return $list;

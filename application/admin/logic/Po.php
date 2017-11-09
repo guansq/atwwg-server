@@ -80,10 +80,7 @@ class Po extends BaseLogic{
      * 得到订单下的item列表
      */
     function getPoItemInfo($po_id){
-        $list = PiModel::where('po_id', $po_id)->field('*, "" AS pro_no ')->select();
-        foreach($list as &$pi){
-            $pi['pro_no'] = model('RequireOrder', 'logic')->where('id', $pi->pr_id)->value('pro_no');
-        }
+        $list = PiModel::where('po_id', $po_id)->select();
         return $list;
     }
 

@@ -290,11 +290,7 @@ class Order extends BaseController{
         $supLogic = model('Supporter', 'logic');
         $where = ['code' => $poInfo['sup_code']];
         $poInfo['sup_name'] = $supLogic->getSupName($where);
-        $poInfo['statusStr'] = in_array($poInfo['u9_status_code'], [
-            3,
-            4,
-            5
-        ]) ? $poInfo['u9_status'] : self::STATUS_ARR[$poInfo['status']];
+        $poInfo['statusStr'] = in_array($poInfo['u9_status_code'], [3, 4, 5]) ? $poInfo['u9_status'] : self::STATUS_ARR[$poInfo['status']];
         $poInfo['isBizClosedStr'] = empty($poInfo['is_biz_closed']) ? '否' : '是';
         $poItemInfo = $poLogic->getPoItemInfo($id);
         $allAmount = 0;
@@ -386,7 +382,7 @@ class Order extends BaseController{
                 }
                 if($sendInfo['email']){ //发送邮件
                     //sendMail('94600115@qq.com',$title,$content);
-                    sendMail($sendInfo['email'], $title, $content ,$sendInfo['purch_email']);
+                    sendMail($sendInfo['email'], $title, $content, $sendInfo['purch_email']);
                 }
                 if($sendInfo['push_token']){ //发送token
                     pushInfo($sendInfo['push_token'], $title, $content);

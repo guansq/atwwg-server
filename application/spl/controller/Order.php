@@ -206,6 +206,8 @@ class Order extends Base{
         ];
 
         $statusStr = $statusArr[$codeInfo[0]['status']];
+        $statusStr .= $codeInfo[0]['status'] == 'contract_refuse' ?  ' 拒绝原因：'.$codeInfo[0]['remark']:'';
+
         $u9Code = $codeInfo[0]['u9_status_code'];
         if(in_array($u9Code,[3,4,5])){
             $statusStr =  $codeInfo[0]['u9_status'];;

@@ -460,14 +460,14 @@
       layer.closeAll();
       if(res.code == 2000){
         $("#select_sup_box").css("display", "none");
-        $("input[data-pr_id^=" + pr_id + "]").parent().next().html(res.data.sup_name)
+        $("input[data-pr_id^=" + pr_id + "]").parent().next().html(res.data.sup_name);
         //var str = '<a href="javascript:;" onclick="checkStatus(\'agree\','+pr_id+')">通过</a>&nbsp;&nbsp;<a href="javascript:;" onclick="checkStatus(\'refuse\','+pr_id+')">拒绝</a>';
         //$("input[data-pr_id^="+pr_id+"]") .parent().next().next().html(str)
         //prTable.ajax.reload();
-        info = prTable.page.info();
-        var page = info.page;
-        $('#example').dataTable().fnPageChange(page);
-        //$.form.reload();
+        // info = prTable.page.info();
+        // var page = info.page;
+        // $('#example').dataTable().fnPageChange(page);
+        $.form.reload();
       }else{
         layer.alert(res.msg);
       }

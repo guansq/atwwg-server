@@ -292,8 +292,9 @@ class Po extends BaseLogic{
      * Describe: u9下采购单
      * @param $idArr
      * @param $supCode
+     * @param $supName
      */
-    function placePoOrder($idArr, $supCode){
+    function placePoOrder($idArr, $supCode,$supName=''){
         trace("u9下采购单 ====== placePoOrder");
         $now = time();
         $supLogic = model('Supporter', 'logic');
@@ -318,6 +319,7 @@ class Po extends BaseLogic{
                 //'pr_code' => $itemInfo['pr_code'],
                 'order_code' => $res['data']['DocNo'],
                 'sup_code' => $supCode,
+                'sup_name' => $supName,
                 'doc_date' => $now,
                 'is_include_tax' => 1,      //是否含税
                 'status' => 'init',

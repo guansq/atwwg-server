@@ -92,7 +92,7 @@ class Order extends BaseController{
                 }else if($key == 'sup_code'){
                     $where['po.sup_code'] = ['like', "%{$get[$key]}%"];
                 }else if($key == 'sup_name'){
-                    $where['sup.name'] = ['like', "%{$get[$key]}%"];
+                    $where['po.sup_name'] = ['like', "%{$get[$key]}%"];
                 }else if($key == 'status'){
                     $where['po.status'] = $get['status'];
                     if($get['status'] == 'zr_close'){
@@ -550,7 +550,7 @@ class Order extends BaseController{
         $now = time();
         $ids = input('param.ids');
         $idArr = explode('|', $ids);
-        $poLogic = model('Po', 'logic');
+        $poLogic = new Po();
         $piLogic = new PoItem();
         $supCodeInfo = [];
         if(empty($ids)){
@@ -583,7 +583,7 @@ class Order extends BaseController{
             $sup_name = $v;
         }
 
-        return returnJson($poLogic->placePoOrder($idArr, $sup_code));
+        return returnJson($poLogic->placePoOrder($idArr, $sup_code,$sup_name ));
 
     }
 

@@ -248,7 +248,7 @@ class Order extends BaseController{
     public function getPiPage(){
 
         // 申请资源 获取参数
-        $poLogic = model('Po', 'logic');
+        $poLogic = new Po();
         $reqParams = $this->getReqParams(['start' => 0, 'length' => 10, 'searchKwd' => []]);
         $pageIndex = ceil($reqParams['start']/$reqParams['length']) + 1;
         $piPage = $poLogic->getPoItemPage($reqParams['searchKwd'], $pageIndex, $reqParams['length']);
@@ -280,7 +280,7 @@ class Order extends BaseController{
         $this->assign('title', $this->title);
         $id = input('get.id');
         //echo $id;
-        $poLogic = model('Po', 'logic');
+        $poLogic = new Po();
         $poInfo = $poLogic->getPoInfo($id);
         $prLogic = model('RequireOrder', 'logic');
         //dump($id);die;

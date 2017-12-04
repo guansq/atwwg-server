@@ -416,9 +416,10 @@
   var flag = 0;
   var appoint_sup_code,item_id,pr_code,pr_id,item_code,appoint_sup_name;
   $(".submitbt").click(function(){
+    flag=appoint_sup_code=item_id=pr_code=pr_id=item_code=appoint_sup_name = 0;
     var is_persent = $('#select_sup_box #is_persent_ck')[0].checked ? 1 : 0;
     $('input[name="listcheck"]:checked').each(function(){
-      flag = 1;
+      flag ++;
       appoint_sup_code = $(this).attr('data-sup_code');
       item_id = $(this).attr('data-pr_id');
       pr_code = $(this).attr('data-pr_code');
@@ -447,6 +448,8 @@
       'is_persent':is_persent
     };
 
+    // console.log(sendObj);
+    // return false;
     if((!price || price <= 0) && !is_persent){
       alert('填写的价格不能为空！');
       return;
@@ -468,6 +471,7 @@
         // var page = info.page;
         // $('#example').dataTable().fnPageChange(page);
         $.form.reload();
+        // location.reload();
       }else{
         layer.alert(res.msg);
       }

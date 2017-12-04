@@ -32,7 +32,7 @@
       <table class="table table-bordered">
         <thead>
         <tr>
-          <th>序号</th>
+          <th>采购单行号</th>
           <th>请购单号</th>
           <th>料号</th>
           <th>物料描述</th>
@@ -61,7 +61,7 @@
         {else /}
         <tr class="">
         {/if}
-          <td>{$i}</td>
+          <td>{$vo['po_ln']}</td>
           <td>{$vo['pr_code']}</td>
           <td>{$vo['item_code']}</td>
           <td>{$vo['item_name']}</td>

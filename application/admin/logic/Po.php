@@ -80,7 +80,7 @@ class Po extends BaseLogic{
      * 得到订单下的item列表
      */
     function getPoItemInfo($po_id){
-        $list = PiModel::where('po_id', $po_id)->select();
+        $list = PiModel::where('po_id', $po_id)->order('po_ln', 'ASC')->select();
         return $list;
     }
 
@@ -525,7 +525,8 @@ class Po extends BaseLogic{
             ->join('atw_u9_pr pr', 'pr.id = pi.pr_id', 'LEFT')
             ->where($where)
             ->whereNotNull('pi.po_code')
-            ->order('pi.update_at', 'DESC')
+            ->order('pi.po_code', 'DESC')
+            ->order('pi.po_ln', 'ASC')
             ->limit($page->getItemStart(), $length)
             ->field($fields)
             ->select();

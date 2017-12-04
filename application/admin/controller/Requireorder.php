@@ -74,7 +74,7 @@ class Requireorder extends BaseController{
             'winbid' => '中标',
             'wait' => '待下单',
             'order' => '关闭', //文案展示客户要求
-            'close' => '关闭',
+            'close' => '短缺关闭', //客户为了区分其他状态 ， 目前关闭的PR只有短缺关闭状态
         ];
 
         $checkStatus = [

@@ -4,6 +4,7 @@
 /.idea
 /.svn
 /composer.lock
+/composer.show
 /nbproject
 /static/runtime/
 /.env

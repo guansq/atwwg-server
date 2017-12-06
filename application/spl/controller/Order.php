@@ -8,6 +8,8 @@
 
 namespace app\spl\controller;
 
+use app\spl\logic\SupplierInfo;
+use app\spl\logic\SystemAdmin;
 use PHPExcel;
 use PHPExcel_IOFactory;
 use service\HttpService;
@@ -220,7 +222,8 @@ class Order extends Base{
     public function cancel(){
         $id = input('id');
         $poLogic = model('Order', 'logic');
-        $supLogic = model('SupplierInfo', 'logic');
+        $supLogic =new SupplierInfo();
+        $adminLogic = new SystemAdmin();
         $po = $poLogic->find($id);
         if(empty($po)){
             returnJson(4004);
@@ -231,29 +234,22 @@ class Order extends Base{
         // 通知到责任采购
         $supCode = session('spl_user')['sup_code'];
         $supInfo = $supLogic->findByCode($supCode);
+        $adminInfo = $adminLogic->findByUsername($supInfo['purch_code']);
         trace("供应商取消了订单：id=$id  .供应商信息：");
-        trace(json_encode($supInfo));
+        trace(json_encode($supCode));
+        trace(json_encode($adminInfo));
         $msg = "供应商[$supInfo[code] $supInfo[name]]取消了采购订单[$po[order_code]]。供应商联系方式：$supInfo[ctc_name] $supInfo[mobile] $supInfo[phone] $supInfo[email]。 \n -- 物供平台 ".date('Y-m-d H:i');
-        if(!empty($supInfo['purch_email'])){
-            $sendData = [
-                'rt_appkey' => getenv('APP_RT_APP_KEY'),
-                'fromName' => '安特威物供平台',//发送人名
-                'to' => $supInfo['purch_email'],
-                'subject' => '供应商取消采购订单',
-                'html' => $msg.' 本邮件由安特威物供平台系统发送，请勿回复。',
-                'from' => 'atwwg@antiwearvalve.com',//平台的邮件头
-            ];
-            $emailRet =  HttpService::curl(getenv('APP_API_MSG').'SendEmail/sendHtml', $sendData);
-            trace($emailRet);
+        if(!empty($adminInfo['mail'])){
+            sendMail($adminInfo['mail'], '安特威物供平台', $msg.' 本邮件由安特威物供平台系统发送，请勿回复。' );
         }
-        if(!empty($supInfo['purch_mobile'])){
+        if(!empty($adminInfo['phone'])){
             // $sendData = [
             //     'mobile' => $supInfo['purch_mobile'],
             //     'rt_appkey' => getenv('APP_RT_APP_KEY'),
             //     'text' => $msg,
             // ];
             // $smsRet = HttpService::curl(getenv('APP_API_MSG').'SendSms/sendText', $sendData);
-            sendSms( $supInfo['purch_mobile'],$msg);
+            sendSms( $adminInfo['phone'],$msg);
             //trace($smsRet);
         }
         return json(['code' => 2000, 'msg' => '成功', 'data' => []]);

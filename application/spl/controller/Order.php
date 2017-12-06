@@ -231,6 +231,8 @@ class Order extends Base{
         // 通知到责任采购
         $supCode = session('spl_user')['sup_code'];
         $supInfo = $supLogic->findByCode($supCode);
+        trace("供应商取消了订单：id=$id  .供应商信息：");
+        trace(json_encode($supInfo));
         $msg = "供应商[$supInfo[code] $supInfo[name]]取消了采购订单[$po[order_code]]。供应商联系方式：$supInfo[ctc_name] $supInfo[mobile] $supInfo[phone] $supInfo[email]。 \n -- 物供平台 ".date('Y-m-d H:i');
         if(!empty($supInfo['purch_email'])){
             $sendData = [
@@ -241,15 +243,18 @@ class Order extends Base{
                 'html' => $msg.' 本邮件由安特威物供平台系统发送，请勿回复。',
                 'from' => 'atwwg@antiwearvalve.com',//平台的邮件头
             ];
-            HttpService::curl(getenv('APP_API_MSG').'SendEmail/sendHtml', $sendData);
+            $emailRet =  HttpService::curl(getenv('APP_API_MSG').'SendEmail/sendHtml', $sendData);
+            trace($emailRet);
         }
         if(!empty($supInfo['purch_mobile'])){
-            $sendData = [
-                'mobile' => $supInfo['purch_mobile'],
-                'rt_appkey' => getenv('APP_RT_APP_KEY'),
-                'text' => $msg,
-            ];
-            HttpService::curl(getenv('APP_API_MSG').'SendSms/sendText', $sendData);//sendSms($data)
+            // $sendData = [
+            //     'mobile' => $supInfo['purch_mobile'],
+            //     'rt_appkey' => getenv('APP_RT_APP_KEY'),
+            //     'text' => $msg,
+            // ];
+            // $smsRet = HttpService::curl(getenv('APP_API_MSG').'SendSms/sendText', $sendData);
+            sendSms( $supInfo['purch_mobile'],$msg);
+            //trace($smsRet);
         }
         return json(['code' => 2000, 'msg' => '成功', 'data' => []]);
     }
